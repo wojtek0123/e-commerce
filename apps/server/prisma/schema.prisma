@@ -18,13 +18,34 @@ model Product {
 }
 
 model User {
-  id           String @id @default(uuid())
-  name         String
-  surname      String
-  email        String
-  phone        String
-  city         String
-  Street       String
-  house_number String
-  home_number  String
+  id        String @id @default(uuid())
+  firstName String
+  surname   String
+  email     String @unique
+  password  String
+  role      Role   @default(USER)
+
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  UserDetails UserDetails?
+
+  @@map("user")
+}
+
+model UserDetails {
+  id          String @id @default(uuid())
+  phone       String
+  city        String
+  street      String
+  houseNumber String
+  homeNumber  String
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @unique
+}
+
+enum Role {
+  ADMIN
+  USER
+  ROOT
 }
