@@ -11,10 +11,12 @@ datasource db {
 }
 
 model Product {
-  id          String  @id @default(uuid())
+  id          Int     @id @default(autoincrement())
   name        String
   description String
   price       Decimal
+
+  @@map("product")
 }
 
 model User {
@@ -42,6 +44,8 @@ model UserDetails {
 
   user   User   @relation(fields: [userId], references: [id])
   userId String @unique
+
+  @@map("userDetails")
 }
 
 enum Role {
