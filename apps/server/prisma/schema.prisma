@@ -10,18 +10,37 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+generator nestjsDto {
+  provider                        = "prisma-generator-nestjs-dto"
+  output                          = "../src/generated/nestjs-dto"
+  outputToNestJsResourceStructure = "false"
+  flatResourceStructure           = "false"
+  exportRelationModifierClasses   = "true"
+  reExport                        = "false"
+  createDtoPrefix                 = "Create"
+  updateDtoPrefix                 = "Update"
+  dtoSuffix                       = "Dto"
+  entityPrefix                    = ""
+  entitySuffix                    = ""
+  classValidation                 = "false"
+  fileNamingStyle                 = "camel"
+  noDependencies                  = "false"
+  outputType                      = "class"
+  prettier                        = "true"
+}
+
 model Product {
-  id                 Int              @id @default(autoincrement())
+  id                 Int               @id @default(autoincrement())
   name               String
   description        String
   price              Decimal
-  createdAt          DateTime         @default(now())
-  updatedAt          DateTime         @updatedAt
-  productCategory    ProductCategory  @relation(fields: [productCategoryId], references: [id])
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+  productCategory    ProductCategory?  @relation(fields: [productCategoryId], references: [id])
   productCategoryId  Int
-  productInventory   ProductInventory @relation(fields: [productInventoryId], references: [id])
-  productInventoryId Int              @unique
-  discount           Discount         @relation(fields: [discountId], references: [id])
+  productInventory   ProductInventory? @relation(fields: [productInventoryId], references: [id])
+  productInventoryId Int               @unique
+  discount           Discount?         @relation(fields: [discountId], references: [id])
   discountId         Int
   cartItem           CartItem?
   orderItems         OrderItems?

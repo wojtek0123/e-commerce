@@ -1,6 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { User as PrismaUser } from '@prisma/client';
 import { Exclude } from 'class-transformer';
+import { UserAddress } from '../../user-addresses/entities/user-address.entity';
+import { ShoppingSession } from '../../shopping-sessions/entities/shopping-session.entity';
+import { OrderDetail } from '../../order-details/entities/order-detail.entity';
+import { UserPayment } from '../../user-payments/entities/user-payment.entity';
 
 export class User implements PrismaUser {
   constructor(partial: Partial<User>) {
@@ -45,4 +49,27 @@ export class User implements PrismaUser {
 
   @Exclude()
   password: string;
+
+  @ApiProperty({
+    isArray: true,
+    required: false,
+  })
+  userDetails?: UserAddress[];
+  @ApiProperty({
+    required: false,
+    nullable: true,
+  })
+  shoppingSession?: ShoppingSession | null;
+
+  @ApiProperty({
+    isArray: true,
+    required: false,
+  })
+  OrderDetails?: OrderDetail[];
+
+  @ApiProperty({
+    isArray: true,
+    required: false,
+  })
+  UserPayment?: UserPayment[];
 }
