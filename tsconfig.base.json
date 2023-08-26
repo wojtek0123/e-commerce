@@ -14,7 +14,20 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@e-commerce/client-web-app/browse/data-access": [
+        "libs/client-web-app/browse/data-access/src/index.ts"
+      ],
+      "@e-commerce/client-web-app/browse/feature": [
+        "libs/client-web-app/browse/feature/src/index.ts"
+      ],
+      "@e-commerce/client-web-app/browse/ui": [
+        "libs/client-web-app/browse/ui/src/index.ts"
+      ],
+      "@e-commerce/client-web-app/browse/util": [
+        "libs/client-web-app/browse/util/src/index.ts"
+      ]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }

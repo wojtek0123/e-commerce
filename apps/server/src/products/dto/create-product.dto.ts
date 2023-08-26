@@ -16,4 +16,9 @@ export class CreateProductDto {
   @IsNotEmpty()
   @ApiProperty()
   price: number;
+
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty()
+  image: string;
 }

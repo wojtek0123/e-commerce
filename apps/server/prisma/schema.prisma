@@ -30,71 +30,38 @@ generator nestjsDto {
 }
 
 model Product {
-  id                 Int               @id @default(autoincrement())
-  name               String
-  description        String
-  price              Decimal
-  createdAt          DateTime          @default(now())
-  updatedAt          DateTime          @updatedAt
-  productCategory    ProductCategory?  @relation(fields: [productCategoryId], references: [id])
-  productCategoryId  Int
-  productInventory   ProductInventory? @relation(fields: [productInventoryId], references: [id])
-  productInventoryId Int               @unique
-  discount           Discount?         @relation(fields: [discountId], references: [id])
-  discountId         Int
-  cartItem           CartItem?
-  orderItems         OrderItems?
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String
+  price       Decimal
+  image       String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  // productCategory    ProductCategory?  @relation(fields: [productCategoryId], references: [id])
+  // productCategoryId  Int
+  // productInventory   ProductInventory? @relation(fields: [productInventoryId], references: [id])
+  // productInventoryId Int               @unique
+  // discount           Discount?         @relation(fields: [discountId], references: [id])
+  // discountId         Int
+  // cartItem           CartItem?
+  // orderItems         OrderItems?
 
   @@map("product")
 }
 
-model ProductCategory {
-  id          Int       @id @default(autoincrement())
-  name        String
-  description String
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  product     Product[]
-
-  @@map("product_category")
-}
-
-model ProductInventory {
-  id        Int      @id @default(autoincrement())
-  quantity  Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  product   Product?
-
-  @@map("product_inventory")
-}
-
-model Discount {
-  id              Int       @id @default(autoincrement())
-  name            String
-  description     String
-  discountPercent Decimal
-  active          Boolean
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-  Product         Product[]
-
-  @@map("discount")
-}
-
 model User {
-  id              String           @id @default(uuid())
-  firstName       String
-  surname         String
-  email           String           @unique
-  password        String
-  role            Role             @default(USER)
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
-  userDetails     UserAddress[]
-  shoppingSession ShoppingSession?
-  OrderDetails    OrderDetails[]
-  UserPayment     UserPayment[]
+  id          String        @id @default(uuid())
+  firstName   String
+  surname     String
+  email       String        @unique
+  password    String
+  role        Role          @default(USER)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  userDetails UserAddress[]
+  // shoppingSession ShoppingSession?
+  // OrderDetails    OrderDetails[]
+  // UserPayment     UserPayment[]
 
   @@map("user")
 }
@@ -112,80 +79,114 @@ model UserAddress {
   @@map("user_address")
 }
 
-model ShoppingSession {
-  id        Int        @id @default(autoincrement())
-  total     Decimal
-  createdAt DateTime   @default(now())
-  user      User       @relation(fields: [userId], references: [id])
-  userId    String     @unique
-  CartItem  CartItem[]
+// model ProductCategory {
+//   id          Int      @id @default(autoincrement())
+//   name        String
+//   description String
+//   createdAt   DateTime @default(now())
+//   updatedAt   DateTime @updatedAt
+//   product     Product[]
 
-  @@map("shopping_session")
-}
+//   @@map("product_category")
+// }
 
-model CartItem {
-  id                Int              @id @default(autoincrement())
-  quantity          Int
-  createdAt         DateTime         @default(now())
-  updatedAt         DateTime         @updatedAt
-  shoppingSession   ShoppingSession? @relation(fields: [shoppingSessionId], references: [id])
-  shoppingSessionId Int?
-  product           Product?         @relation(fields: [productId], references: [id])
-  productId         Int?             @unique
+// model ProductInventory {
+//   id        Int      @id @default(autoincrement())
+//   quantity  Int
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+//   product   Product?
 
-  @@map("cart_item")
-}
+//   @@map("product_inventory")
+// }
 
-model OrderDetails {
-  id               Int             @id @default(autoincrement())
-  total            Decimal
-  createdAt        DateTime        @default(now())
-  updatedAt        DateTime        @updatedAt
-  user             User?           @relation(fields: [userId], references: [id])
-  userId           String?
-  paymentDetails   PaymentDetails? @relation(fields: [paymentDetailsId], references: [id])
-  paymentDetailsId Int?            @unique
-  OrderItems       OrderItems[]
+// model Discount {
+//   id              Int      @id @default(autoincrement())
+//   name            String
+//   description     String
+//   discountPercent Decimal
+//   active          Boolean
+//   createdAt       DateTime @default(now())
+//   updatedAt       DateTime @updatedAt
+//   Product         Product[]
 
-  @@map("order_details")
-}
+//   @@map("discount")
 
-model PaymentDetails {
-  id           Int           @id @default(autoincrement())
-  amount       Int
-  provider     String
-  status       String
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  OrderDetails OrderDetails?
+// }
+// model ShoppingSession {
+//   id        Int        @id @default(autoincrement())
+//   total     Decimal
+//   createdAt DateTime   @default(now())
+//   user      User       @relation(fields: [userId], references: [id])
+//   userId    String     @unique
+//   CartItem  CartItem[]
 
-  @@map("payment_details")
-}
+//   @@map("shopping_session")
+// }
 
-model OrderItems {
-  id        Int          @id @default(autoincrement())
-  quantity  Int
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @updatedAt
-  order     OrderDetails @relation(fields: [orderId], references: [id])
-  orderId   Int
-  product   Product      @relation(fields: [productId], references: [id])
-  productId Int          @unique
+// model CartItem {
+//   id                Int              @id @default(autoincrement())
+//   quantity          Int
+//   createdAt         DateTime         @default(now())
+//   updatedAt         DateTime         @updatedAt
+//   shoppingSession   ShoppingSession? @relation(fields: [shoppingSessionId], references: [id])
+//   shoppingSessionId Int?
+//   product           Product?         @relation(fields: [productId], references: [id])
+//   productId         Int?             @unique
 
-  @@map("order_items")
-}
+//   @@map("cart_item")
+// }
 
-model UserPayment {
-  id            Int      @id @default(autoincrement())
-  paymentType   String
-  provider      String
-  accountNumber String
-  expiry        DateTime
-  user          User     @relation(fields: [userId], references: [id])
-  userId        String
+// model OrderDetails {
+//   id               Int             @id @default(autoincrement())
+//   total            Decimal
+//   createdAt        DateTime        @default(now())
+//   updatedAt        DateTime        @updatedAt
+//   user             User?           @relation(fields: [userId], references: [id])
+//   userId           String?
+//   paymentDetails   PaymentDetails? @relation(fields: [paymentDetailsId], references: [id])
+//   paymentDetailsId Int?            @unique
+//   OrderItems       OrderItems[]
 
-  @@map("user_payment")
-}
+//   @@map("order_details")
+// }
+
+// model PaymentDetails {
+//   id           Int           @id @default(autoincrement())
+//   amount       Int
+//   provider     String
+//   status       String
+//   createdAt    DateTime      @default(now())
+//   updatedAt    DateTime      @updatedAt
+//   OrderDetails OrderDetails?
+
+//   @@map("payment_details")
+// }
+
+// model OrderItems {
+//   id        Int          @id @default(autoincrement())
+//   quantity  Int
+//   createdAt DateTime     @default(now())
+//   updatedAt DateTime     @updatedAt
+//   order     OrderDetails @relation(fields: [orderId], references: [id])
+//   orderId   Int
+//   product   Product      @relation(fields: [productId], references: [id])
+//   productId Int          @unique
+
+//   @@map("order_items")
+// }
+
+// model UserPayment {
+//   id            Int      @id @default(autoincrement())
+//   paymentType   String
+//   provider      String
+//   accountNumber String
+//   expiry        DateTime
+//   user          User     @relation(fields: [userId], references: [id])
+//   userId        String
+
+//   @@map("user_payment")
+// }
 
 enum Role {
   ADMIN
