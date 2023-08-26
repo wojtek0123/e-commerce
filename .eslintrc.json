@@ -17,7 +17,6 @@
                 "onlyDependOnLibsWithTags": [
                   "type:feature",
                   "type:ui",
-                  // "type:domain-logic",
                   "type:util",
                   "type:data-access"
                 ]
@@ -30,7 +29,6 @@
                 "sourceTag": "type:feature",
                 "onlyDependOnLibsWithTags": [
                   "type:ui",
-                  // "type:domain-logic",
                   "type:data-access",
                   "type:util"
                 ]
