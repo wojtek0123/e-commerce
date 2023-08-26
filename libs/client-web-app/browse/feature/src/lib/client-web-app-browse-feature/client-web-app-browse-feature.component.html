@@ -1,0 +1,6 @@
+<form [formGroup]="form" class="form" (ngSubmit)="onSubmit()">
+  <input type="text" formControlName="name" />
+  <input type="text" formControlName="description" />
+  <input type="number" formControlName="price" />
+  <button type="submit" class="submit">Submit</button>
+</form>
