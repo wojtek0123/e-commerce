@@ -7,10 +7,9 @@ import { BrowseDataAccessService } from '@e-commerce/client-web-app/browse/data-
   selector: 'e-commerce-client-web-app-browse-feature',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './client-web-app-browse-feature.component.html',
-  styleUrls: ['./client-web-app-browse-feature.component.css'],
+  templateUrl: './add-product-form.component.html',
 })
-export class ClientWebAppBrowseFeatureComponent {
+export class AddProductFormComponent {
   fb = inject(FormBuilder);
   browseAccessDataService = inject(BrowseDataAccessService);
   form = this.fb.group({
@@ -18,10 +17,18 @@ export class ClientWebAppBrowseFeatureComponent {
     description: this.fb.control(''),
     price: this.fb.control(0),
   });
+  fileToUpload: File | null = null;
 
-  onSubmit() {
-    console.log('submitted');
-    console.log(this.form.value);
+  handleFileInput(target: EventTarget | null) {
+    const file = (target as HTMLInputElement).files?.item(0);
+    const imagePattern = `/(jpg|jpeg|png)$/i`;
+
+    if (!file?.type.match(imagePattern)) return;
+
+    this.fileToUpload = file;
+  }
+
+  async onSubmit() {
     const name = this.form.value.name;
     const description = this.form.value.description;
     const price = this.form.value.price;
@@ -29,9 +36,15 @@ export class ClientWebAppBrowseFeatureComponent {
     if (!name) return;
     if (!description) return;
     if (!price) return;
+    if (!this.fileToUpload) return;
+
+    const image = await this.browseAccessDataService.uploadImage(
+      this.fileToUpload,
+      name
+    );
 
     this.browseAccessDataService
-      .createProduct(name, description, price)
+      .createProduct(name, description, price, image.path)
       .subscribe((data) => console.log(data));
   }
 }

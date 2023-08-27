@@ -1,6 +1,6 @@
 import { Route } from '@angular/router';
-import { ClientWebAppBrowseFeatureComponent } from './client-web-app-browse-feature/client-web-app-browse-feature.component';
+import { AddProductFormComponent } from './add-product-form/add-product-form.component';
 
-export const clientWebAppBrowseFeatureRoutes: Route[] = [
-  { path: '', component: ClientWebAppBrowseFeatureComponent },
+export const browseFeatureRoutes: Route[] = [
+  { path: 'add', component: AddProductFormComponent },
 ];
