@@ -1,11 +1,16 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { createClient } from '@supabase/supabase-js';
+import { supabase } from 'libs/shared/data-access/src/lib/supabase';
+import { Product } from '../models/product.model';
+import { products } from '../data/dummy-data';
+import { of } from 'rxjs';
 
-const supabase = createClient(
-  'https://yvvxjwoqcsvhrocqgmje.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl2dnhqd29xY3N2aHJvY3FnbWplIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODk4NzE5OTgsImV4cCI6MjAwNTQ0Nzk5OH0.MvKn3BbnST-gFv_nEIo3o4Pp90KeibSKiTjCHeDhhTk'
-);
+interface CreateProduct {
+  name: string;
+  description: string;
+  price: number;
+  image: string;
+}
 
 @Injectable({ providedIn: 'root' })
 export class BrowseDataAccessService {
@@ -23,19 +28,19 @@ export class BrowseDataAccessService {
     return data;
   }
 
-  createProduct(
-    name: string,
-    description: string,
-    price: number,
-    image: string
-  ) {
+  createProduct$(product: CreateProduct) {
     const body = {
-      name,
-      description,
-      price,
-      image,
+      name: product.name,
+      description: product.description,
+      price: product.price,
+      image: product.image,
     };
 
     return this.http.post('http://localhost:3000/products', body);
+  }
+
+  getProducts$() {
+    // return this.http.get<Product[]>('http:localhost:3000/products');
+    return of(products);
   }
 }

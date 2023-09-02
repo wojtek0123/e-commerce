@@ -1,13 +1,14 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { BrowseDataAccessService } from '@e-commerce/client-web-app/browse/data-access';
 
 @Component({
-  selector: 'e-commerce-client-web-app-browse-feature',
+  selector: 'e-commerce-add-product',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './add-product-form.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddProductFormComponent {
   fb = inject(FormBuilder);
@@ -44,7 +45,7 @@ export class AddProductFormComponent {
     );
 
     this.browseAccessDataService
-      .createProduct(name, description, price, image.path)
+      .createProduct$({ name, description, price, image: image.path })
       .subscribe((data) => console.log(data));
   }
 }

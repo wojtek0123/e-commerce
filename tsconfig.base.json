@@ -26,7 +26,8 @@
       ],
       "@e-commerce/client-web-app/browse/util": [
         "libs/client-web-app/browse/util/src/index.ts"
-      ]
+      ],
+      "@e-commerce/shared/data-access": ["libs/shared/data-access/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
