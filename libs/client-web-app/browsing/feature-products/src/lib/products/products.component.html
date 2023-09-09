@@ -1,0 +1,30 @@
+<h2 class="font-bold text-3xl">Products</h2>
+<div class="grid gap-6 grid-cols-[repeat(auto-fit,minmax(20rem,1fr))]">
+  <a
+    [routerLink]="['/product/details/', product.id]"
+    class="flex flex-col rounded-lg hover:shadow-[0.5rem_0.5rem_0.5rem_0.5rem_rgba(0,0,0,0.7)] transition-shadow"
+    *ngFor="let product of products$ | async"
+  >
+    <img
+      [src]="getImage(product.image)"
+      [alt]="product.name"
+      class="w-full rounded-lg"
+    />
+    <div class="p-4 flex flex-col justify-between h-full">
+      <div class="flex flex-col mt-3">
+        <h3 class="text-2xl font-bold">{{ product.name }}</h3>
+        <p>{{ product.description }}</p>
+      </div>
+      <div class="flex justify-between items-center mt-3">
+        <span class="text-xl">{{ product.price }}$</span>
+        <button
+          type="button"
+          class="rounded-lg py-1 px-4 bg-white text-black border-2 border-black hover:bg-slate-100"
+          (click)="onAddToCart($event)"
+        >
+          Add to cart
+        </button>
+      </div>
+    </div>
+  </a>
+</div>

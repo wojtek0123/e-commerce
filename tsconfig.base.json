@@ -15,17 +15,20 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@e-commerce/client-web-app/browse/data-access": [
-        "libs/client-web-app/browse/data-access/src/index.ts"
+      "@e-commerce/client-web-app/browsing/data-access": [
+        "libs/client-web-app/browsing/data-access/src/index.ts"
       ],
-      "@e-commerce/client-web-app/browse/feature": [
-        "libs/client-web-app/browse/feature/src/index.ts"
+      "@e-commerce/client-web-app/browsing/feature-add-product": [
+        "libs/client-web-app/browsing/feature-add-product/src/index.ts"
       ],
-      "@e-commerce/client-web-app/browse/ui": [
-        "libs/client-web-app/browse/ui/src/index.ts"
+      "@e-commerce/client-web-app/browsing/feature-product": [
+        "libs/client-web-app/browsing/feature-product/src/index.ts"
       ],
-      "@e-commerce/client-web-app/browse/util": [
-        "libs/client-web-app/browse/util/src/index.ts"
+      "@e-commerce/client-web-app/browsing/feature-products": [
+        "libs/client-web-app/browsing/feature-products/src/index.ts"
+      ],
+      "@e-commerce/client-web-app/shared/api-types": [
+        "libs/client-web-app/shared/api-types/src/index.ts"
       ],
       "@e-commerce/shared/data-access": ["libs/shared/data-access/src/index.ts"]
     }

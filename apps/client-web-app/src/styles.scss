@@ -3,3 +3,22 @@
 @tailwind utilities;
 
 /* You can add global styles to this file, and also import other style files */
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  overflow-x: hidden;
+  min-height: 100svh;
+  width: 100%;
+  font-family: 'Roboto', sans-serif;
+  padding: 0 1rem;
+}

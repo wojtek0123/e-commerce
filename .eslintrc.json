@@ -23,7 +23,7 @@
               },
               {
                 "sourceTag": "type:data-access",
-                "onlyDependOnLibsWithTags": ["type:util"]
+                "onlyDependOnLibsWithTags": ["type:util", "type:shared"]
               },
               {
                 "sourceTag": "type:feature",
@@ -38,8 +38,8 @@
                 "onlyDependOnLibsWithTags": ["type:util"]
               },
               {
-                "sourceTag": "type:domain-logic",
-                "onlyDependOnLibsWithTags": ["type:util"]
+                "sourceTag": "type:shared",
+                "onlyDependOnLibsWithTags": []
               },
               {
                 "sourceTag": "scope:client-web-app",
