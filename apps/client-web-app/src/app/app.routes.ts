@@ -1,12 +1,5 @@
 import { Route } from '@angular/router';
 import { NxWelcomeComponent } from './nx-welcome.component';
-import { ProductsComponent } from '@e-commerce/client-web-app/browsing/feature-products';
-import { provideState } from '@ngrx/store';
-import {
-  productsEffects,
-  productsFeature,
-} from '@e-commerce/client-web-app/browsing/data-access';
-import { provideEffects } from '@ngrx/effects';
 
 export const appRoutes: Route[] = [
   {
@@ -15,8 +8,10 @@ export const appRoutes: Route[] = [
   },
   {
     path: 'products',
-    component: ProductsComponent,
-    providers: [provideState(productsFeature), provideEffects(productsEffects)],
+    loadChildren: () =>
+      import('@e-commerce/client-web-app/browsing/feature-products').then(
+        (routes) => routes.productsRoutes
+      ),
   },
   {
     path: 'product/details/:id',
