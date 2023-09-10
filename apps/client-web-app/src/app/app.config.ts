@@ -7,6 +7,7 @@ import { appRoutes } from './app.routes';
 import { provideHttpClient } from '@angular/common/http';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { provideStore } from '@ngrx/store';
+import { provideAnimations } from '@angular/platform-browser/animations';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -14,5 +15,6 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(),
     provideStore(),
     provideRouter(appRoutes, withEnabledBlockingInitialNavigation()),
-  ],
+    provideAnimations()
+],
 };

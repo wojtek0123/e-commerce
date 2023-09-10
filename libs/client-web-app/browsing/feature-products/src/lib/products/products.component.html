@@ -18,10 +18,13 @@
       <div class="flex justify-between items-center mt-3">
         <span class="text-xl">{{ product.price }}$</span>
         <button
+          mat-fab
+          extended
           type="button"
-          class="rounded-lg py-1 px-4 bg-white text-black border-2 border-black hover:bg-slate-100"
+          class="py-1 px-4 !bg-blue-500 !text-white border-2 border-black hover:bg-blue-400"
           (click)="onAddToCart($event)"
         >
+          <mat-icon>add_shopping_cart</mat-icon>
           Add to cart
         </button>
       </div>
