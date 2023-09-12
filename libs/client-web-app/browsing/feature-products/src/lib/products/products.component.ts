@@ -37,8 +37,5 @@ export class ProductsComponent implements OnInit {
     return publicUrl;
   }
 
-  onAddToCart(event: Event) {
-    event.preventDefault();
-    event.stopImmediatePropagation();
-  }
+  onAddToCart() {}
 }

@@ -1,15 +1,36 @@
 <button
-  mat-fab
-  extended
-  class="!shadow-none !py-1 !px-4 !rounded-lg"
+  class="rounded-lg flex items-center gap-2"
   type="button"
   [ngClass]="{
-    '!bg-green-500 !text-white hover:!bg-green-600': color === 'accent',
-    '!bg-black !text-white hover:!bg-black/90':
-      color === 'primary',
+    'bg-green-500 hover:bg-green-600': type === 'accent',
+    'pointer-events-none bg-gray-400 hover:bg-gray-400': disabled,
+    'bg-black hover:bg-zinc-900': type === 'primary',
+    'bg-transparent border-2 border-black hover:bg-slate-100':
+      type === 'outline',
+    'bg-transparent': type === 'basic',
+    'bg-red-500': type === 'warning',
+    'py-1 px-4': size === 'small',
+    'py-3 px-6': size === 'medium',
+    'py-5 px-8': size === 'large',
   }"
   (click)="onClick($event)"
 >
-  <mat-icon *ngIf="iconName">{{ iconName }}</mat-icon>
-  <span class="!text-xs">{{ name }}</span>
+  <mat-icon
+    *ngIf="iconName"
+    [ngClass]="{
+      '!text-black': type === 'outline' || type === 'basic',
+      '!text-white': type === 'primary' || type === 'accent' || type === 'warning',
+      '!text-gray-500': disabled,
+    }"
+    >{{ iconName }}</mat-icon
+  >
+  <span
+    *ngIf="name"
+    [ngClass]="{
+      'text-black': type === 'outline' || type === 'basic',
+      'text-white': type === 'primary' || type === 'accent' || type === 'warning',
+      '!text-gray-500': disabled,
+    }"
+    >{{ name }}</span
+  >
 </button>

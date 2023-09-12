@@ -17,10 +17,12 @@ import { MatIconModule } from '@angular/material/icon';
   imports: [CommonModule, MatButtonModule, MatIconModule],
 })
 export class ButtonComponent {
-  @Input({ required: true }) name = '';
+  @Input() name: string | null = null;
   @Input() iconName: string | null = null;
-  @Input() disable = false;
-  @Input() color: 'primary' | 'accent' | 'warning' | 'disabled' = 'primary';
+  @Input() disabled = false;
+  @Input() type: 'outline' | 'primary' | 'warning' | 'accent' | 'basic' =
+    'primary';
+  @Input() size: 'small' | 'medium' | 'large' = 'medium';
   @Output() clickEvent = new EventEmitter();
 
   onClick(event: Event) {
