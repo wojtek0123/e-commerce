@@ -2,7 +2,7 @@
 <div class="grid gap-6 grid-cols-[repeat(auto-fit,minmax(20rem,1fr))]">
   <a
     [routerLink]="['/product/details/', product.id]"
-    class="flex flex-col rounded-lg hover:shadow-[0.5rem_0.5rem_0.5rem_0.5rem_rgba(0,0,0,0.7)] transition-shadow"
+    class="flex flex-col rounded-lg shadow-default hover:scale-105 transition-transform"
     *ngFor="let product of products$ | async"
   >
     <img
@@ -17,16 +17,12 @@
       </div>
       <div class="flex justify-between items-center mt-3">
         <span class="text-xl">{{ product.price }}$</span>
-        <button
-          mat-fab
-          extended
-          type="button"
-          class="py-1 px-4 !bg-blue-500 !text-white border-2 border-black hover:bg-blue-400"
-          (click)="onAddToCart($event)"
-        >
-          <mat-icon>add_shopping_cart</mat-icon>
-          Add to cart
-        </button>
+        <e-commerce-button
+          name="Add to cart"
+          iconName="add_shopping_cart"
+          color="accent"
+          (clickEvent)="onAddToCart($event)"
+        ></e-commerce-button>
       </div>
     </div>
   </a>

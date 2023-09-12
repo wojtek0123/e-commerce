@@ -12,14 +12,13 @@ import {
 import { CommonModule } from '@angular/common';
 import { supabase } from 'libs/shared/data-access/src/lib/supabase';
 import { RouterModule } from '@angular/router';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
+import { ButtonComponent } from '@e-commerce/shared/ui';
 
 @Component({
   selector: 'e-commerce-products',
   templateUrl: './products.component.html',
   standalone: true,
-  imports: [CommonModule, RouterModule, MatButtonModule, MatIconModule],
+  imports: [CommonModule, RouterModule, ButtonComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductsComponent implements OnInit {
