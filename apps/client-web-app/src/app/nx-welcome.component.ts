@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -851,5 +851,6 @@ nx affected:e2e</pre>
     </div>
   `,
   styles: [],
+  encapsulation: ViewEncapsulation.None,
 })
 export class NxWelcomeComponent {}
