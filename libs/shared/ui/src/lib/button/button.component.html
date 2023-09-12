@@ -1,0 +1,15 @@
+<button
+  mat-fab
+  extended
+  class="!shadow-none !py-1 !px-4 !rounded-lg"
+  type="button"
+  [ngClass]="{
+    '!bg-green-500 !text-white hover:!bg-green-600': color === 'accent',
+    '!bg-black !text-white hover:!bg-black/90':
+      color === 'primary',
+  }"
+  (click)="onClick($event)"
+>
+  <mat-icon *ngIf="iconName">{{ iconName }}</mat-icon>
+  <span class="!text-xs">{{ name }}</span>
+</button>
