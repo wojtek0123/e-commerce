@@ -3,15 +3,22 @@ import { AuthService } from './auth.service';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { AuthEntity } from './entity/auth.entity';
 import { LoginDto } from './dto/login.dto';
+import { CreateUserDto } from '../users/dto/create-user.dto';
 
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post()
+  @Post('/login')
   @ApiOkResponse({ type: AuthEntity })
   login(@Body() { email, password }: LoginDto) {
     return this.authService.login(email, password);
+  }
+
+  @Post('/register')
+  @ApiOkResponse({ type: AuthEntity })
+  register(@Body() user: CreateUserDto) {
+    return this.authService.register(user);
   }
 }
