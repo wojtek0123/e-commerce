@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { hash } from 'bcrypt';
+import { Prisma } from '@prisma/client';
 
 export const roundsOfHashing = 10;
 
@@ -10,34 +9,87 @@ export const roundsOfHashing = 10;
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
-  async create(createUserDto: CreateUserDto) {
-    const hashedPassword = await hash(createUserDto.password, roundsOfHashing);
+  async create(data: Prisma.UserCreateInput) {
+    const hashedPassword = await hash(data.password, roundsOfHashing);
 
-    createUserDto.password = hashedPassword;
-
-    return this.prisma.user.create({ data: createUserDto });
+    return this.prisma.user.create({
+      data: { ...data, password: hashedPassword },
+    });
   }
 
   findAll() {
-    return this.prisma.user.findMany();
+    return this.prisma.user.findMany({
+      select: {
+        password: false,
+        id: true,
+        createdAt: true,
+        email: true,
+        firstName: true,
+        role: true,
+        surname: true,
+        updatedAt: true,
+      },
+    });
   }
 
-  findOne(id: string) {
-    return this.prisma.user.findUnique({ where: { id } });
+  findOne(where: Prisma.UserWhereUniqueInput) {
+    return this.prisma.user.findUnique({
+      where,
+      select: {
+        password: false,
+        id: true,
+        createdAt: true,
+        email: true,
+        firstName: true,
+        role: true,
+        surname: true,
+        updatedAt: true,
+      },
+    });
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto) {
-    if (updateUserDto.password) {
-      updateUserDto.password = await hash(
-        updateUserDto.password,
+  async update(
+    where: Prisma.UserWhereUniqueInput,
+    data: Prisma.UserUpdateInput
+  ) {
+    if (data.password) {
+      const hashedPassword = await hash(
+        data.password.toString(),
         roundsOfHashing
       );
+
+      data = { ...data, password: hashedPassword };
     }
 
-    return this.prisma.user.update({ where: { id }, data: updateUserDto });
+    return this.prisma.user.update({
+      where,
+      data,
+      select: {
+        password: false,
+        id: true,
+        createdAt: true,
+        email: true,
+        firstName: true,
+        role: true,
+        surname: true,
+        updatedAt: true,
+      },
+    });
   }
 
-  remove(id: string) {
-    return this.prisma.user.delete({ where: { id } });
+  remove(where: Prisma.UserWhereUniqueInput) {
+    return this.prisma.user.delete({
+      where,
+      select: {
+        password: false,
+        id: true,
+        createdAt: true,
+        email: true,
+        firstName: true,
+        role: true,
+        surname: true,
+        updatedAt: true,
+      },
+    });
   }
 }

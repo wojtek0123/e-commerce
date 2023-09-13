@@ -9,16 +9,15 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import {
   ApiBearerAuth,
   ApiCreatedResponse,
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { User } from './entities/user.entity';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { Prisma } from '@prisma/client';
+import { UserDto } from './dto/user.dto';
 
 @ApiTags('users')
 @Controller('users')
@@ -26,41 +25,43 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  @ApiCreatedResponse({ type: User })
-  async create(@Body() createUserDto: CreateUserDto) {
-    return new User(await this.usersService.create(createUserDto));
+  @ApiCreatedResponse({ type: UserDto })
+  async create(@Body() createUserDto: Prisma.UserCreateInput) {
+    return this.usersService.create(createUserDto);
   }
 
   @Get()
+  @ApiOkResponse({ type: UserDto, isArray: true })
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  @ApiOkResponse({ type: User, isArray: true })
   async findAll() {
-    const users = await this.usersService.findAll();
-    return users.map((user) => new User(user));
+    return this.usersService.findAll();
   }
 
   @Get(':id')
+  @ApiOkResponse({ type: UserDto })
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  @ApiOkResponse({ type: User })
-  async findOne(@Param('id') id: string) {
-    return new User(await this.usersService.findOne(id));
+  async findOne(@Param('id') id: Prisma.UserWhereUniqueInput) {
+    return this.usersService.findOne(id);
   }
 
   @Patch(':id')
+  @ApiCreatedResponse({ type: UserDto })
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  @ApiCreatedResponse({ type: User })
-  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return new User(await this.usersService.update(id, updateUserDto));
+  async update(
+    @Param('id') id: Prisma.UserWhereUniqueInput,
+    @Body() updateUserDto: Prisma.UserUpdateInput
+  ) {
+    return this.usersService.update(id, updateUserDto);
   }
 
   @Delete(':id')
+  @ApiOkResponse({ type: UserDto })
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  @ApiOkResponse({ type: User })
-  async remove(@Param('id') id: string) {
-    return new User(await this.usersService.remove(id));
+  async remove(@Param('id') id: Prisma.UserWhereUniqueInput) {
+    return await this.usersService.remove(id);
   }
 }

@@ -8,10 +8,9 @@ import {
   Delete,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
-import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { Product } from './entities/product.entity';
+import { Prisma } from '@prisma/client';
+import { ProductDto } from './dto/product.dto';
 
 @ApiTags('products')
 @Controller('products')
@@ -19,32 +18,35 @@ export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Post()
-  @ApiCreatedResponse({ type: Product })
-  create(@Body() createProductDto: CreateProductDto) {
-    return this.productsService.create(createProductDto);
+  @ApiCreatedResponse({ type: ProductDto })
+  create(@Body() data: Prisma.ProductCreateInput) {
+    return this.productsService.create(data);
   }
 
   @Get()
-  @ApiOkResponse({ type: Product, isArray: true })
+  @ApiOkResponse({ type: ProductDto, isArray: true })
   findAll() {
     return this.productsService.findAll();
   }
 
   @Get(':id')
-  @ApiOkResponse({ type: Product })
-  findOne(@Param('id') id: string) {
-    return this.productsService.findOne(+id);
+  @ApiOkResponse({ type: ProductDto })
+  findOne(@Param('id') id: Prisma.ProductWhereUniqueInput) {
+    return this.productsService.findOne(id);
   }
 
   @Patch(':id')
-  @ApiCreatedResponse({ type: Product })
-  update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
-    return this.productsService.update(+id, updateProductDto);
+  @ApiCreatedResponse({ type: ProductDto })
+  update(
+    @Param('id') id: Prisma.ProductWhereUniqueInput,
+    @Body() data: Prisma.ProductUpdateInput
+  ) {
+    return this.productsService.update(id, data);
   }
 
   @Delete(':id')
-  @ApiOkResponse({ type: Product })
-  remove(@Param('id') id: string) {
-    return this.productsService.remove(+id);
+  @ApiOkResponse({ type: ProductDto })
+  remove(@Param('id') id: Prisma.ProductWhereUniqueInput) {
+    return this.productsService.remove(id);
   }
 }

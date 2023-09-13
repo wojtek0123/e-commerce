@@ -6,16 +6,15 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
-import { AuthEntity } from './entity/auth.entity';
 import { compare, hash } from 'bcrypt';
-import { CreateUserDto } from '../users/dto/create-user.dto';
 import { roundsOfHashing } from '../users/users.service';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
   constructor(private prisma: PrismaService, private jwtService: JwtService) {}
 
-  async login(email: string, password: string): Promise<AuthEntity> {
+  async login(email: string, password: string) {
     const user = await this.prisma.user.findUnique({ where: { email } });
 
     if (!user) {
@@ -33,19 +32,19 @@ export class AuthService {
     };
   }
 
-  async register(user: CreateUserDto): Promise<AuthEntity> {
+  async register(data: Prisma.UserCreateInput) {
     const isUserExists = await this.prisma.user.findUnique({
-      where: { email: user.email },
+      where: { email: data.email },
     });
 
     if (isUserExists) {
       throw new BadRequestException('User already exists');
     }
 
-    const hashedPassword = await hash(user.password, roundsOfHashing);
+    const hashedPassword = await hash(data.password, roundsOfHashing);
 
     const createdUser = await this.prisma.user.create({
-      data: { ...user, password: hashedPassword },
+      data: { ...data, password: hashedPassword },
     });
 
     return {
