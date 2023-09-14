@@ -1,0 +1,76 @@
+<nav class="flex items-center justify-between py-4 mx-4 md:py-6 lg:mx-36">
+  <div class="flex items-center gap-4 xl:gap-8">
+    <h1 class="text-xl md:text-2xl lg:text-4xl">
+      <span class="text-blue-400 font-bold">Story</span
+      ><span class="text-foreground-0 uppercase">Stash</span>
+    </h1>
+    <e-commerce-divider
+      position="vertical"
+      class="hidden lg:block"
+    ></e-commerce-divider>
+    <ul class="flex items-center gap-4">
+      <li>
+        <a
+          [routerLink]="'/'"
+          routerLinkActive="underline underline-offset-8 decoration-blue-400 decoration-2"
+          [routerLinkActiveOptions]="{ exact: true }"
+          eCommerceButton
+          brand="basic"
+          class="text-2xl text-foreground-600 capitalize"
+          >home</a
+        >
+      </li>
+      <li>
+        <a
+          [routerLink]="'/products'"
+          routerLinkActive="underline underline-offset-8 decoration-blue-400 decoration-2"
+          [routerLinkActiveOptions]="{ exact: true }"
+          eCommerceButton
+          brand="basic"
+          class="text-2xl text-foreground-600 capitalize"
+          >products</a
+        >
+      </li>
+    </ul>
+  </div>
+  <div class="flex items-center gap-4 lg:gap-8">
+    <a
+      eCommerceButton
+      [routerLink]="['/register']"
+      routerLinkActive="router-link-active"
+      size="small"
+      brand="primary"
+      class="lg:hidden"
+    >
+      sign up
+    </a>
+    <a
+      eCommerceButton
+      [routerLink]="['/register']"
+      routerLinkActive="router-link-active"
+      size="large"
+      brand="primary"
+      class="hidden lg:block"
+    >
+      sign up
+    </a>
+    <a
+      eCommerceButton
+      [routerLink]="['/register']"
+      routerLinkActive="router-link-active"
+      size="large"
+      brand="outline"
+      class="hidden lg:block"
+    >
+      login
+    </a>
+    <e-commerce-icon-button
+      iconName="menu"
+      brand="basic"
+      size="small"
+      class="lg:hidden !p-0"
+    ></e-commerce-icon-button>
+  </div>
+</nav>
+<!-- <div class="w-full h-[0.05rem] bg-background-700"></div> -->
+<e-commerce-divider></e-commerce-divider>
