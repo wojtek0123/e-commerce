@@ -1,0 +1,15 @@
+<button
+  eCommerceButton
+  [size]="size"
+  [brand]="brand"
+  class="flex items-center gap-2"
+  type="button"
+  (click)="onClick($event)"
+>
+  <mat-icon
+    *ngIf="iconName"
+    class="!w-8 !h-8 !text-4xl !flex !items-center !justify-center"
+    >{{ iconName }}</mat-icon
+  >
+  <span *ngIf="name">{{ name }}</span>
+</button>
