@@ -1,19 +1,25 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Product } from '@prisma/client';
+import { Book } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime/library';
 
-export class ProductDto implements Product {
+export class BookDto implements Book {
   @ApiProperty()
   id: number;
+
+  @ApiProperty()
+  title: string;
+
+  @ApiProperty()
+  coverImage: string;
 
   @ApiProperty()
   description: string;
 
   @ApiProperty()
-  image: string;
+  language: string;
 
   @ApiProperty()
-  name: string;
+  numberPages: number;
 
   @ApiProperty()
   price: Decimal;
@@ -23,4 +29,10 @@ export class ProductDto implements Product {
 
   @ApiProperty()
   updatedAt: Date;
+
+  @ApiProperty()
+  publishingDate: Date;
+
+  @ApiProperty()
+  publisherId: number;
 }

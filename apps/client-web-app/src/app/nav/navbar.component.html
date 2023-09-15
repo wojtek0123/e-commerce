@@ -4,34 +4,36 @@
       <span class="text-blue-400 font-bold">Story</span
       ><span class="text-foreground-0 uppercase">Stash</span>
     </h1>
-    <e-commerce-divider
-      position="vertical"
-      class="hidden lg:block"
-    ></e-commerce-divider>
-    <ul class="flex items-center gap-4">
-      <li>
-        <a
-          [routerLink]="'/'"
-          routerLinkActive="underline underline-offset-8 decoration-blue-400 decoration-2"
-          [routerLinkActiveOptions]="{ exact: true }"
-          eCommerceButton
-          brand="basic"
-          class="text-2xl text-foreground-600 capitalize"
-          >home</a
-        >
-      </li>
-      <li>
-        <a
-          [routerLink]="'/products'"
-          routerLinkActive="underline underline-offset-8 decoration-blue-400 decoration-2"
-          [routerLinkActiveOptions]="{ exact: true }"
-          eCommerceButton
-          brand="basic"
-          class="text-2xl text-foreground-600 capitalize"
-          >products</a
-        >
-      </li>
-    </ul>
+    <div class="hidden items-center gap-4 xl:gap-8 lg:flex">
+      <e-commerce-divider
+        position="vertical"
+        class="hidden lg:block"
+      ></e-commerce-divider>
+      <ul class="flex items-center gap-4">
+        <li>
+          <a
+            [routerLink]="'/'"
+            routerLinkActive="underline underline-offset-8 decoration-blue-400 decoration-2"
+            [routerLinkActiveOptions]="{ exact: true }"
+            eCommerceButton
+            brand="basic"
+            class="text-2xl text-foreground-600 capitalize"
+            >home</a
+          >
+        </li>
+        <li>
+          <a
+            [routerLink]="'/products'"
+            routerLinkActive="underline underline-offset-8 decoration-blue-400 decoration-2"
+            [routerLinkActiveOptions]="{ exact: true }"
+            eCommerceButton
+            brand="basic"
+            class="text-2xl text-foreground-600 capitalize"
+            >products</a
+          >
+        </li>
+      </ul>
+    </div>
   </div>
   <div class="flex items-center gap-4 lg:gap-8">
     <a
