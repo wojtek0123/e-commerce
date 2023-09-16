@@ -3,7 +3,7 @@ import { Book } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime/library';
 
 export class BookDto implements Book {
-  @ApiProperty()
+  @ApiProperty({ readOnly: true })
   id: number;
 
   @ApiProperty()
