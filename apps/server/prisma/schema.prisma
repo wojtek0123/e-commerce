@@ -48,9 +48,9 @@ model Book {
 }
 
 model BookAuthor {
-  book       Book     @relation(fields: [bookId], references: [id])
+  book       Book     @relation(fields: [bookId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   bookId     Int
-  author     Author   @relation(fields: [authorId], references: [id])
+  author     Author   @relation(fields: [authorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   authorId   Int
   createdAt  DateTime @default(now())
   updatedAat DateTime @updatedAt
