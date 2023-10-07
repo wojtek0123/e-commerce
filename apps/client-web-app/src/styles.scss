@@ -1,14 +1,16 @@
-@tailwind base;
 @tailwind components;
 @tailwind utilities;
+@tailwind base;
 
-/* You can add global styles to this file, and also import other style files */
+@import 'primeng/resources/themes/viva-dark/theme.css';
+@import 'primeng/resources/primeng.css';
+
 *,
 *::after,
 *::before {
   box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+  // margin: 0;
+  // padding: 0;
 }
 
 html {
