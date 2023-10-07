@@ -8,10 +8,7 @@ export const appRoutes: Route[] = [
   },
   {
     path: 'products',
-    loadChildren: () =>
-      import('@e-commerce/client-web-app/browsing/feature-products').then(
-        (routes) => routes.productsRoutes
-      ),
+    component: NxWelcomeComponent,
   },
   {
     path: 'product/details/:id',

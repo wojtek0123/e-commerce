@@ -17,7 +17,6 @@ export class ButtonDirective {
   }
 
   getBrand() {
-    console.log(this.brand);
     if (this.brand === 'primary') {
       return [
         'bg-blue-400',
