@@ -31,11 +31,7 @@
         "libs/client-web-app/shared/api-types/src/index.ts"
       ],
       "@e-commerce/server/publishers": ["libs/server/publishers/src/index.ts"],
-      "@e-commerce/shared/data-access": [
-        "libs/shared/data-access/src/index.ts"
-      ],
-      "@e-commerce/shared/ui": ["libs/shared/ui/src/index.ts"],
-      "@e-commerce/ui": ["shared/src/index.ts"]
+      "@e-commerce/shared/data-access": ["libs/shared/data-access/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

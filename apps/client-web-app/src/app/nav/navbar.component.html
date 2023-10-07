@@ -1,78 +1,59 @@
-<nav class="flex items-center justify-between py-4 mx-4 md:py-6 lg:mx-36">
-  <div class="flex items-center gap-4 xl:gap-8">
-    <h1 class="text-xl md:text-2xl lg:text-4xl">
-      <span class="text-blue-400 font-bold">Story</span
-      ><span class="text-foreground-0 uppercase">Stash</span>
-    </h1>
-    <div class="hidden items-center gap-4 xl:gap-8 lg:flex">
-      <e-commerce-divider
-        position="vertical"
-        class="hidden lg:block"
-      ></e-commerce-divider>
-      <ul class="flex items-center gap-4">
-        <li>
-          <a
-            [routerLink]="'/'"
-            routerLinkActive="underline underline-offset-8 decoration-blue-400 decoration-2"
-            [routerLinkActiveOptions]="{ exact: true }"
-            eCommerceButton
-            brand="basic"
-            class="text-2xl text-foreground-600 capitalize"
-            >home</a
-          >
-        </li>
-        <li>
-          <a
-            [routerLink]="'/products'"
-            routerLinkActive="underline underline-offset-8 decoration-blue-400 decoration-2"
-            [routerLinkActiveOptions]="{ exact: true }"
-            eCommerceButton
-            brand="basic"
-            class="text-2xl text-foreground-600 capitalize"
-            >products</a
-          >
-        </li>
-      </ul>
+<div class="shadow-5">
+  <nav
+    class="flex align-items-center justify-content-between py-4 mx-4 lg:mx-36"
+  >
+    <div class="flex align-items-center gap-4 xl:gap-8">
+      <h1 class="text-xl md:text-2xl lg:text-[2rem]">
+        <span class="font-bold text-primary">Story</span
+        ><span class="uppercase">Stash</span>
+      </h1>
+      <div class="hidden items-center gap-4 xl:gap-8 lg:flex">
+        <p-divider layout="vertical"></p-divider>
+        <ul class="flex items-center gap-4 list-none">
+          <li>
+            <a
+              [routerLink]="'/'"
+              routerLinkActive="underline"
+              [routerLinkActiveOptions]="{ exact: true }"
+              eCommerceButton
+              brand="basic"
+              class="text-xl text-white capitalize"
+              >home</a
+            >
+          </li>
+          <li>
+            <a
+              [routerLink]="'/products'"
+              routerLinkActive="underline"
+              [routerLinkActiveOptions]="{ exact: true }"
+              eCommerceButton
+              brand="basic"
+              class="text-xl text-white capitalize"
+              >products</a
+            >
+          </li>
+        </ul>
+      </div>
     </div>
-  </div>
-  <div class="flex items-center gap-4 lg:gap-8">
-    <a
-      eCommerceButton
-      [routerLink]="['/register']"
-      routerLinkActive="router-link-active"
-      size="small"
-      brand="primary"
-      class="lg:hidden"
-    >
-      sign up
-    </a>
-    <a
-      eCommerceButton
-      [routerLink]="['/register']"
-      routerLinkActive="router-link-active"
-      size="large"
-      brand="primary"
-      class="hidden lg:block"
-    >
-      sign up
-    </a>
-    <a
-      eCommerceButton
-      [routerLink]="['/register']"
-      routerLinkActive="router-link-active"
-      size="large"
-      brand="outline"
-      class="hidden lg:block"
-    >
-      login
-    </a>
-    <e-commerce-icon-button
-      iconName="menu"
-      brand="basic"
-      size="small"
-      class="lg:hidden !p-0"
-    ></e-commerce-icon-button>
-  </div>
-</nav>
-<!-- <div class="w-full h-[0.05rem] bg-background-800"></div> -->
-<e-commerce-divider></e-commerce-divider>
+    <div class="flex items-center gap-1 md:gap-4">
+      <p-button
+        tabindex="-1"
+        label="sign up"
+        [routerLink]="['/register']"
+        styleClass="p-button-link"
+      ></p-button>
+      <p-button
+        class="hidden sm:block"
+        tabindex="-1"
+        label="login"
+        [routerLink]="['/login']"
+        styleClass="p-button-link"
+      ></p-button>
+      <p-button
+        icon="pi pi-align-right"
+        styleClass="p-button-text"
+        class="lg:hidden"
+      ></p-button>
+    </div>
+  </nav>
+</div>
