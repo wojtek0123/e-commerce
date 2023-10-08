@@ -1,11 +1,13 @@
 import { Route } from '@angular/router';
 import { NxWelcomeComponent } from './nx-welcome.component';
-import { LayoutComponent } from './layout/layout.component';
 
 export const appRoutes: Route[] = [
   {
     path: '',
-    component: LayoutComponent,
+    loadChildren: () =>
+      import('@e-commerce/client-web-app/browsing/feature-home').then(
+        (routes) => routes.featureHomeRoutes
+      ),
   },
   {
     path: 'products',

@@ -21,6 +21,9 @@
       "@e-commerce/client-web-app/browsing/feature-add-product": [
         "libs/client-web-app/browsing/feature-add-product/src/index.ts"
       ],
+      "@e-commerce/client-web-app/browsing/feature-home": [
+        "libs/client-web-app/browsing/feature-home/src/index.ts"
+      ],
       "@e-commerce/client-web-app/browsing/feature-product": [
         "libs/client-web-app/browsing/feature-product/src/index.ts"
       ],
