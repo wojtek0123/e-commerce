@@ -2,9 +2,11 @@
 @import 'primeng/resources/primeng.css';
 @import 'primeflex/primeflex.css';
 @import 'primeicons/primeicons.css';
+@import './assets/primeflex-extra.scss';
 
 :root {
-  --border-radius: 2rem;
+  --border-radius: 0.5rem;
+  --header-height: 4.8125rem;
 }
 
 html {
