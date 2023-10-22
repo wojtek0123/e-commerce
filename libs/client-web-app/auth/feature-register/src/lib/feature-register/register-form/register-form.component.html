@@ -1,0 +1,93 @@
+<ng-container *ngIf="form$ | async as form">
+  <e-commerce-form-wrapper
+    [link]="{ url: '../sign-in', name: 'Log in' }"
+    title="Create a new account!"
+    text="Already a member?"
+    submitButtonLabel="Register"
+    [formState]="form"
+    (submitEvent)="onRegister(form.isInvalid, form.isPristine)"
+  >
+    <div class="flex flex-column w-full">
+      <div class="p-float-label">
+        <input
+          pInputText
+          id="email"
+          class="p-inputtext-sm"
+          autocomplete="off"
+          [ngClass]="{
+            'ng-invalid ng-dirty':
+              form.isSubmitted &&
+              (form.controls.email.isInvalid || !form.value.email?.length)
+          }"
+          [ngrxFormControlState]="form.controls.email"
+        />
+        <label for="email">Email </label>
+      </div>
+      <small
+        class="text-red-500 mt-1"
+        *ngIf="form.isSubmitted && !form.value.email?.length"
+        >This field is required</small
+      >
+      <small
+        class="text-red-500 mt-1"
+        *ngIf="form.isSubmitted && form.controls.email.errors.email"
+        >Enter valid email</small
+      >
+    </div>
+    <div class="flex flex-column w-full">
+      <div class="p-float-label">
+        <p-password
+          [ngClass]="{
+            'ng-invalid ng-dirty':
+              form.isSubmitted &&
+              (form.controls.password.isInvalid || !form.value.password?.length)
+          }"
+          id="password"
+          class="p-inputtext-sm"
+          [feedback]="false"
+          [toggleMask]="true"
+          [ngrxFormControlState]="form.controls.password"
+        ></p-password>
+        <label for="password">Password</label>
+      </div>
+      <small
+        class="text-red-500 mt-1"
+        *ngIf="form.isSubmitted && form.controls.password.errors.minLength"
+        >Password should have at least 6 characters</small
+      >
+      <small
+        class="text-red-500 mt-1"
+        *ngIf="form.isSubmitted && !form.value.password?.length"
+        >This field is required</small
+      >
+    </div>
+    <div class="flex flex-column w-full">
+      <div class="p-float-label">
+        <p-password
+          [ngClass]="{
+            'ng-invalid ng-dirty':
+              form.isSubmitted &&
+              (form.controls.confirmPassword.isInvalid ||
+                !form.value.confirmPassword?.length)
+          }"
+          id="confirm-password"
+          class="p-inputtext-sm"
+          [feedback]="false"
+          [toggleMask]="true"
+          [ngrxFormControlState]="form.controls.confirmPassword"
+        ></p-password>
+        <label for="confirm-password">Confirm password</label>
+      </div>
+      <small
+        class="text-red-500 mt-1"
+        *ngIf="form.isSubmitted && !form.value.confirmPassword?.length"
+        >This field is required</small
+      >
+      <small
+        class="text-red-500 mt-1"
+        *ngIf="form.isSubmitted && form.controls.confirmPassword.errors.equalTo"
+        >Passwords are different</small
+      >
+    </div>
+  </e-commerce-form-wrapper>
+</ng-container>

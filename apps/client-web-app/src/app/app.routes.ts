@@ -21,8 +21,11 @@ export const appRoutes: Route[] = [
     component: NxWelcomeComponent,
   },
   {
-    path: 'register',
-    component: NxWelcomeComponent,
+    path: 'auth',
+    loadChildren: () =>
+      import('@e-commerce/client-web-app/auth/feature-register').then(
+        (routes) => routes.featureRegisterRoutes
+      ),
   },
   {
     path: 'login',

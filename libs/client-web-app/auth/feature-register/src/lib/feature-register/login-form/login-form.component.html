@@ -1,0 +1,60 @@
+<ng-container *ngIf="form$ | async as form">
+  <e-commerce-form-wrapper
+    [link]="{ url: '../sign-up', name: 'Create an account' }"
+    [formState]="form"
+    title="Welcome back!"
+    text="Are you new here?"
+    submitButtonLabel="Log in"
+    (submitEvent)="onLogin(form.isInvalid, form.isPristine)"
+  >
+    <div class="flex flex-column w-full">
+      <div class="p-float-label">
+        <input
+          pInputText
+          id="email"
+          autocomplete="off"
+          class="p-inputtext-sm"
+          [ngClass]="{
+            'ng-invalid ng-dirty':
+              form.isSubmitted &&
+              (form.controls.email.isInvalid || !form.value.email?.length)
+          }"
+          [ngrxFormControlState]="form.controls.email"
+        />
+        <label for="email">Email</label>
+      </div>
+      <small
+        class="text-red-500 mt-1"
+        *ngIf="form.isSubmitted && !form.value.email?.length"
+        >This field is required
+      </small>
+      <small
+        class="text-red-500 mt-1"
+        *ngIf="form.isSubmitted && form.controls.email.errors.email"
+        >Enter valid email
+      </small>
+    </div>
+    <div class="flex flex-column w-full">
+      <div class="p-float-label">
+        <p-password
+          class="p-inputtext-sm"
+          id="password"
+          [feedback]="false"
+          [toggleMask]="true"
+          [ngClass]="{
+            'ng-invalid ng-dirty':
+              form.isSubmitted &&
+              (form.controls.password.isInvalid || !form.value.password?.length)
+          }"
+          [ngrxFormControlState]="form.controls.password"
+        ></p-password>
+        <label for="password">Password</label>
+      </div>
+      <small
+        class="text-red-500 mt-1"
+        *ngIf="form.isSubmitted && !form.value.password?.length"
+        >This field is required</small
+      >
+    </div>
+  </e-commerce-form-wrapper>
+</ng-container>
