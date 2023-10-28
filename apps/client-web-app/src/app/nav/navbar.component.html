@@ -1,5 +1,9 @@
-<div class="shadow-5 surface-card nav-height">
-  <nav class="flex align-items-center justify-content-between md:py-1 mx-4">
+<div
+  class="shadow-5 surface-card nav-height flex align-items-center justify-content-between w-full"
+>
+  <nav
+    class="flex align-items-center justify-content-between md:py-1 mx-4 w-full"
+  >
     <div class="flex align-items-center gap-4 xl:gap-8">
       <h1 class="text-xl md:text-2xl lg:text-[2rem]">
         <span class="font-bold text-primary">Story</span
@@ -29,20 +33,18 @@
         </li>
       </ul>
     </div>
-    <div class="flex items-center gap-1 md:gap-4">
-      <p-button
-        tabindex="-1"
-        label="sign up"
-        [routerLink]="['/auth', 'sign-up']"
-        class="hidden lg:block"
-        styleClass="p-button-link"
-      ></p-button>
-      <p-button
-        tabindex="-1"
-        label="login"
-        [routerLink]="['/auth', 'sign-in']"
-        styleClass="p-button-link"
-      ></p-button>
+    <div class="flex align-items-center gap-3 md:gap-4">
+      <a
+        class="no-underline text-primary font-bold px-3 py-1"
+        routerLink="/auth/sign-up"
+        routerLinkActive="underline"
+        >Sign up</a
+      >
+      <a
+        class="no-underline text-primary hidden font-bold px-3 py-1 lg:block"
+        routerLink="/auth/sign-in"
+        >Log in</a
+      >
       <p-button
         icon="pi pi-align-right"
         styleClass="p-button-text"

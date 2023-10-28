@@ -3,15 +3,18 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
-  HostBinding,
-  OnInit,
   Output,
   inject,
 } from '@angular/core';
 import { InputTextModule } from 'primeng/inputtext';
-import { NgrxFormsModule } from 'ngrx-forms';
-import { selectRegisterForm } from '@e-commerce/client-web-app/auth/data-access-auth';
-import { FormsModule } from '@angular/forms';
+import {
+  FormsModule,
+  FormBuilder,
+  Validators,
+  ReactiveFormsModule,
+  AbstractControl,
+  ValidationErrors,
+} from '@angular/forms';
 import { PasswordModule } from 'primeng/password';
 import { ButtonModule } from 'primeng/button';
 import { Store } from '@ngrx/store';
@@ -29,34 +32,78 @@ import { FormWrapperComponent } from '@e-commerce/client-web-app/auth/ui-auth';
     AsyncPipe,
     NgClass,
     InputTextModule,
-    NgrxFormsModule,
     FormsModule,
     PasswordModule,
     ButtonModule,
     RouterLink,
     FormWrapperComponent,
+    ReactiveFormsModule,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RegisterFormComponent implements OnInit {
+export class RegisterFormComponent {
   private store = inject(Store);
+  private fb = inject(FormBuilder);
 
   @Output() clickEvent = new EventEmitter<void>();
-  @HostBinding('class') class = 'max-w-20rem w-full';
 
-  form$ = this.store.select(selectRegisterForm);
+  submitted = false;
+  registerForm = this.fb.group({
+    email: this.fb.control('', [Validators.required, Validators.email]),
+    passwords: this.fb.group(
+      {
+        password: this.fb.control('', [
+          Validators.required,
+          Validators.minLength(6),
+        ]),
+        confirmPassword: this.fb.control('', [Validators.required]),
+      },
+      {
+        validators: [this.matchPassword()],
+      }
+    ),
+  });
 
-  ngOnInit(): void {
-    this.store.dispatch(authActions.clearForm({ formId: 'register' }));
+  get passwordsControls() {
+    return this.registerForm.controls.passwords.controls;
   }
 
-  onRegister(isInvalid: boolean, isPristine: boolean) {
-    if (isInvalid || isPristine) {
-      this.store.dispatch(
-        authActions.markFormAsSubmitted({ formId: 'register' })
-      );
-      return;
-    }
-    this.store.dispatch(authActions.register());
+  matchPassword() {
+    return (formGroup: AbstractControl): ValidationErrors | null => {
+      const passwordControl = formGroup.get('password');
+      const confirmPasswordControl = formGroup.get('confirmPassword');
+
+      if (!passwordControl || !confirmPasswordControl) {
+        return null;
+      }
+
+      if (
+        confirmPasswordControl.errors &&
+        !confirmPasswordControl.errors['passwordMismatch']
+      ) {
+        return null;
+      }
+
+      if (passwordControl.value !== confirmPasswordControl.value) {
+        confirmPasswordControl.setErrors({ passwordMismatch: true });
+        return { passwordMismatch: true };
+      } else {
+        confirmPasswordControl.setErrors(null);
+        return null;
+      }
+    };
+  }
+
+  onRegister() {
+    this.submitted = true;
+
+    if (this.registerForm.invalid) return;
+
+    this.store.dispatch(
+      authActions.register({
+        email: this.registerForm.value.email ?? '',
+        password: this.registerForm.value.passwords?.password ?? '',
+      })
+    );
   }
 }

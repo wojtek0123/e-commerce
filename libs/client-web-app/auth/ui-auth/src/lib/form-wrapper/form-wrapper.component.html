@@ -14,7 +14,7 @@
   </div>
   <form
     class="flex flex-column gap-3 w-full max-w-30rem xl:align-items-center"
-    [ngrxFormState]="formState"
+    [formGroup]="formGroup"
     (submit)="onSubmit()"
   >
     <ng-content></ng-content>

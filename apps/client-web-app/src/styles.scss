@@ -33,3 +33,7 @@ button {
 p-button.w-full .p-button {
   width: 100% !important;
 }
+
+.p-inputtext:enabled:focus {
+  box-shadow: none !important;
+}

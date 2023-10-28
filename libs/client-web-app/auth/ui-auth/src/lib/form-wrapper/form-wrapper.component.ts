@@ -8,12 +8,12 @@ import { ButtonModule } from 'primeng/button';
 import { NgIf } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { EventEmitter } from '@angular/core';
-import { FormGroupState, NgrxFormsModule } from 'ngrx-forms';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'e-commerce-form-wrapper',
   standalone: true,
-  imports: [ButtonModule, NgIf, RouterLink, NgrxFormsModule],
+  imports: [ButtonModule, NgIf, RouterLink, ReactiveFormsModule],
   templateUrl: './form-wrapper.component.html',
   styleUrls: ['./form-wrapper.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -23,7 +23,7 @@ export class FormWrapperComponent {
   @Input({ required: true }) text!: string;
   @Input({ required: true }) link!: { url: string; name: string };
   @Input({ required: true }) submitButtonLabel!: string;
-  @Input({ required: true }) formState!: FormGroupState<any>;
+  @Input({ required: true }) formGroup!: FormGroup;
   @Output() submitEvent = new EventEmitter<void>();
 
   onSubmit() {
