@@ -8,7 +8,7 @@ import { ButtonModule } from 'primeng/button';
 import { NgIf } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { EventEmitter } from '@angular/core';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'e-commerce-form-wrapper',
@@ -23,10 +23,10 @@ export class FormWrapperComponent {
   @Input({ required: true }) text!: string;
   @Input({ required: true }) link!: { url: string; name: string };
   @Input({ required: true }) submitButtonLabel!: string;
-  @Input({ required: true }) formGroup!: FormGroup;
   @Output() submitEvent = new EventEmitter<void>();
 
-  onSubmit() {
+  onSubmit(event: Event) {
+    event.preventDefault();
     this.submitEvent.emit();
   }
 }

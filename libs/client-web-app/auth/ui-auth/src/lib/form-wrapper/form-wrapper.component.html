@@ -14,8 +14,7 @@
   </div>
   <form
     class="flex flex-column gap-3 w-full max-w-30rem xl:align-items-center"
-    [formGroup]="formGroup"
-    (submit)="onSubmit()"
+    (submit)="onSubmit($event)"
   >
     <ng-content></ng-content>
     <p-button
