@@ -32,23 +32,32 @@ export class AuthService {
     };
   }
 
-  async register(data: Prisma.UserCreateInput) {
+  async register(email: string, password: string) {
     const isUserExists = await this.prisma.user.findUnique({
-      where: { email: data.email },
+      where: { email: email },
     });
 
     if (isUserExists) {
       throw new BadRequestException('User already exists');
     }
 
-    const hashedPassword = await hash(data.password, roundsOfHashing);
+    const hashedPassword = await hash(password, roundsOfHashing);
+    const data: Prisma.UserCreateInput = {
+      email,
+      password,
+    };
 
     const createdUser = await this.prisma.user.create({
       data: { ...data, password: hashedPassword },
     });
+    const bearerToken = this.jwtService.sign(
+      { userId: createdUser.id }
+      // { algorithm: 'RS256', expiresIn: '7d', subject: createdUser.id }
+    );
+    // console.log(bearerToken);
 
     return {
-      accessToken: this.jwtService.sign({ userId: createdUser.id }),
+      accessToken: bearerToken,
     };
   }
 }

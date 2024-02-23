@@ -1,11 +1,5 @@
 import { NgIf, AsyncPipe, NgClass } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Output,
-  inject,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { InputTextModule } from 'primeng/inputtext';
 import {
   FormsModule,
@@ -25,7 +19,6 @@ import { FormWrapperComponent } from '@e-commerce/client-web-app/auth/ui-auth';
 @Component({
   selector: 'e-commerce-register-form',
   templateUrl: './register-form.component.html',
-  styleUrls: ['./register-form.component.css'],
   standalone: true,
   imports: [
     NgIf,
@@ -44,8 +37,6 @@ import { FormWrapperComponent } from '@e-commerce/client-web-app/auth/ui-auth';
 export class RegisterFormComponent {
   private store = inject(Store);
   private fb = inject(FormBuilder);
-
-  @Output() clickEvent = new EventEmitter<void>();
 
   submitted = false;
   registerForm = this.fb.group({

@@ -4,6 +4,7 @@ import { ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
 import { Prisma } from '@prisma/client';
 import { AuthDto } from './dto/auth.dto';
 import { LoginDto } from './dto/login.dto';
+import { RegisterDto } from './dto/register.dto';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -17,8 +18,8 @@ export class AuthController {
   }
 
   @Post('/register')
-  @ApiCreatedResponse({ type: AuthDto })
-  register(@Body() data: Prisma.UserCreateInput) {
-    return this.authService.register(data);
+  @ApiCreatedResponse({ type: RegisterDto })
+  register(@Body() { email, password }: RegisterDto) {
+    return this.authService.register(email, password);
   }
 }

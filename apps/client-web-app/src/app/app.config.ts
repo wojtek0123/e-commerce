@@ -11,7 +11,7 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideStoreDevtools({ logOnly: !isDevMode() }),
+    provideStoreDevtools({ logOnly: !isDevMode() , connectInZone: true}),
     provideHttpClient(),
     provideStore(),
     provideRouter(appRoutes, withEnabledBlockingInitialNavigation()),

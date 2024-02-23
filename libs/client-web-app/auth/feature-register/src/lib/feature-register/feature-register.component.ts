@@ -1,17 +1,9 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnInit,
-  inject,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RegisterFormComponent } from './register-form/register-form.component';
-import { Store } from '@ngrx/store';
 import { LoginFormComponent } from './login-form/login-form.component';
 import { ButtonModule } from 'primeng/button';
 import { TabMenuModule } from 'primeng/tabmenu';
 import { NgIf } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
-import { authActions } from '@e-commerce/client-web-app/auth/data-access-auth';
 
 @Component({
   selector: 'e-commerce-client-web-app-auth-feature-register',
@@ -24,15 +16,7 @@ import { authActions } from '@e-commerce/client-web-app/auth/data-access-auth';
     NgIf,
   ],
   templateUrl: './feature-register.component.html',
-  styleUrls: ['./feature-register.component.css'],
+  styleUrls: ['./feature-register.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FeatureRegisterComponent implements OnInit {
-  private store = inject(Store);
-  private router = inject(ActivatedRoute);
-
-  ngOnInit() {
-    console.log();
-    this.store.dispatch(authActions.init());
-  }
-}
+export class FeatureRegisterComponent {}

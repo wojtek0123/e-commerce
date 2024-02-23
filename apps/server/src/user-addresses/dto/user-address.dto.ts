@@ -6,6 +6,12 @@ export class UserAddressDto implements UserAddress {
   id: string;
 
   @ApiProperty()
+  firstName: string;
+
+  @ApiProperty()
+  surname: string;
+
+  @ApiProperty()
   city: string;
 
   @ApiProperty()

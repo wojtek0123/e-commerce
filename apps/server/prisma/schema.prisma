@@ -77,8 +77,6 @@ model Publisher {
 
 model User {
   id          String        @id @default(uuid())
-  firstName   String
-  surname     String
   email       String        @unique
   password    String
   role        Role          @default(USER)
@@ -91,6 +89,8 @@ model User {
 
 model UserAddress {
   id          String @id @default(uuid())
+  firstName   String
+  surname     String
   phone       String
   city        String
   street      String

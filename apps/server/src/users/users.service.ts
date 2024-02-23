@@ -24,9 +24,7 @@ export class UsersService {
         id: true,
         createdAt: true,
         email: true,
-        firstName: true,
         role: true,
-        surname: true,
         updatedAt: true,
       },
     });
@@ -40,9 +38,7 @@ export class UsersService {
         id: true,
         createdAt: true,
         email: true,
-        firstName: true,
         role: true,
-        surname: true,
         updatedAt: true,
       },
     });
@@ -69,9 +65,7 @@ export class UsersService {
         id: true,
         createdAt: true,
         email: true,
-        firstName: true,
         role: true,
-        surname: true,
         updatedAt: true,
       },
     });
@@ -85,9 +79,7 @@ export class UsersService {
         id: true,
         createdAt: true,
         email: true,
-        firstName: true,
         role: true,
-        surname: true,
         updatedAt: true,
       },
     });
