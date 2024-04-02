@@ -1,11 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsDate, IsNumber, IsString } from 'class-validator';
 
-export class BookDto {
-  @ApiProperty({ readOnly: true })
-  @IsNumber()
-  id: number;
-
+export class CreateBook {
   @ApiProperty()
   @IsString()
   title: string;
@@ -32,13 +28,13 @@ export class BookDto {
   })
   price: number;
 
-  @ApiProperty()
-  @IsDate()
-  createdAt: Date;
-
-  @ApiProperty()
-  @IsDate()
-  updatedAt: Date;
+  // @ApiProperty()
+  // @IsDate()
+  // createdAt: Date;
+  //
+  // @ApiProperty()
+  // @IsDate()
+  // updatedAt: Date;
 
   @ApiProperty()
   @IsDate()

@@ -29,6 +29,16 @@ datasource db {
 //   prettier                        = "true"
 // }
 
+model Category {
+  id        Int      @id @default(autoincrement())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Book      Book[]
+
+  @@map("category")
+}
+
 model Book {
   id             Int          @id @default(autoincrement())
   title          String
@@ -43,6 +53,8 @@ model Book {
   publisher      Publisher    @relation(fields: [publisherId], references: [id])
   publisherId    Int
   bookAuthor     BookAuthor[]
+  category       Category     @relation(fields: [categoryId], references: [id])
+  categoryId     Int
 
   @@map("book")
 }

@@ -48,7 +48,7 @@ export class BooksController {
   @Patch(':id')
   @ApiOperation({ summary: 'Update a book' })
   @ApiCreatedResponse({ type: BookDto })
-  update(@Param('id') id: string, @Body() data) {
+  update(@Param('id') id: string, @Body() data: Prisma.BookUpdateInput) {
     return this.booksService.update({ id: +id }, data);
   }
 

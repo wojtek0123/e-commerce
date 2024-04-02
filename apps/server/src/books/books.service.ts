@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { type Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
@@ -10,8 +10,10 @@ export class BooksService {
     return this.prisma.book.create({ data });
   }
 
-  findAll() {
-    return this.prisma.book.findMany();
+  findAll(where?: Prisma.BookWhereInput) {
+    return this.prisma.book.findMany({
+      where,
+    });
   }
 
   findOne(where: Prisma.BookWhereUniqueInput) {
