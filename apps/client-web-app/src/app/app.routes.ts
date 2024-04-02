@@ -5,14 +5,14 @@ export const appRoutes: Route[] = [
   {
     path: '',
     loadChildren: () =>
-      import('@e-commerce/client-web-app/browsing/feature-home').then(
+      import('@e-commerce/client-web-app/products/feature-home').then(
         (routes) => routes.featureHomeRoutes
       ),
   },
   {
     path: 'products',
     loadChildren: () =>
-      import('@e-commerce/client-web-app/browsing/feature-products').then(
+      import('@e-commerce/client-web-app/products/feature-products').then(
         (routes) => routes.productsRoutes
       ),
   },

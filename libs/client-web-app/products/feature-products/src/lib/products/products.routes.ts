@@ -3,7 +3,7 @@ import { provideState } from '@ngrx/store';
 import {
   productsEffects,
   productsFeature,
-} from '@e-commerce/client-web-app/browsing/data-access';
+} from '@e-commerce/client-web-app/products/data-access';
 import { provideEffects } from '@ngrx/effects';
 
 import { ProductsComponent } from './products.component';

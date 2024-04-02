@@ -24,20 +24,20 @@
       "@e-commerce/client-web-app/auth/ui-auth": [
         "libs/client-web-app/auth/ui-auth/src/index.ts"
       ],
-      "@e-commerce/client-web-app/browsing/data-access": [
-        "libs/client-web-app/browsing/data-access/src/index.ts"
+      "@e-commerce/client-web-app/products/data-access": [
+        "libs/client-web-app/products/data-access/src/index.ts"
       ],
-      "@e-commerce/client-web-app/browsing/feature-add-product": [
-        "libs/client-web-app/browsing/feature-add-product/src/index.ts"
+      "@e-commerce/client-web-app/products/feature-add-product": [
+        "libs/client-web-app/products/feature-add-product/src/index.ts"
       ],
-      "@e-commerce/client-web-app/browsing/feature-home": [
-        "libs/client-web-app/browsing/feature-home/src/index.ts"
+      "@e-commerce/client-web-app/products/feature-home": [
+        "libs/client-web-app/products/feature-home/src/index.ts"
       ],
-      "@e-commerce/client-web-app/browsing/feature-product": [
-        "libs/client-web-app/browsing/feature-product/src/index.ts"
+      "@e-commerce/client-web-app/products/feature-product": [
+        "libs/client-web-app/products/feature-product/src/index.ts"
       ],
-      "@e-commerce/client-web-app/browsing/feature-products": [
-        "libs/client-web-app/browsing/feature-products/src/index.ts"
+      "@e-commerce/client-web-app/products/feature-products": [
+        "libs/client-web-app/products/feature-products/src/index.ts"
       ],
       "@e-commerce/client-web-app/shared/api-types": [
         "libs/client-web-app/shared/api-types/src/index.ts"
