@@ -24,6 +24,9 @@
       "@e-commerce/client-web-app/auth/ui-auth": [
         "libs/client-web-app/auth/ui-auth/src/index.ts"
       ],
+      "@e-commerce/client-web-app/home/ui": [
+        "libs/client-web-app/home/ui/src/index.ts"
+      ],
       "@e-commerce/client-web-app/products/data-access": [
         "libs/client-web-app/products/data-access/src/index.ts"
       ],
@@ -43,7 +46,10 @@
         "libs/client-web-app/shared/api-types/src/index.ts"
       ],
       "@e-commerce/server/publishers": ["libs/server/publishers/src/index.ts"],
-      "@e-commerce/shared/data-access": ["libs/shared/data-access/src/index.ts"]
+      "@e-commerce/shared/data-access": [
+        "libs/shared/data-access/src/index.ts"
+      ],
+      "@e-commerce/store": ["libs/client-web-app/home/data-access/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

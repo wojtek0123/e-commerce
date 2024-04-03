@@ -24,12 +24,12 @@
       <small
         class="text-red-500 mt-1"
         *ngIf="loginForm.controls.email.errors?.['required']"
-        >This field is required
+        >To pole jest wymagane
       </small>
       <small
         class="text-red-500 mt-1"
         *ngIf="loginForm.controls.email.errors?.['email']"
-        >Enter valid email
+        >Wpisz poprawny adres email
       </small>
     </ng-container>
   </div>
@@ -46,13 +46,13 @@
         "
         [formControl]="loginForm.controls.password"
       ></p-password>
-      <label for="password">Password</label>
+      <label for="password">Hasło</label>
     </div>
     <ng-container *ngIf="loginForm.controls.password.dirty || submitted">
       <small
         class="text-red-500 mt-1"
         *ngIf="loginForm.controls.password.errors?.['required']"
-        >This field is required
+        >To pole jest wymagane
       </small>
     </ng-container>
   </div>

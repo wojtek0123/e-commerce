@@ -20,18 +20,9 @@
       />
       <label for="email">Email</label>
     </div>
-    <ng-container *ngIf="registerForm.controls.email.dirty || submitted">
-      <small
-        class="text-red-500 mt-1"
-        *ngIf="registerForm.controls.email.errors?.['required']"
-        >This field is required</small
-      >
-      <small
-        class="text-red-500 mt-1"
-        *ngIf="registerForm.controls.email.errors?.['email']"
-        >Enter valid email</small
-      >
-    </ng-container>
+    <ng-container *ngIf="registerForm.controls.email.dirty || submitted"
+      >To pole jest wymagane</ng-container
+    >
   </div>
   <div class="flex flex-column w-full">
     <div class="p-float-label">
@@ -46,20 +37,11 @@
         [toggleMask]="true"
         [formControl]="passwordsControls.password"
       ></p-password>
-      <label for="password">Password</label>
+      <label for="password">Hasło</label>
     </div>
-    <ng-container *ngIf="passwordsControls.password.dirty || submitted">
-      <small
-        class="text-red-500 mt-1"
-        *ngIf="passwordsControls.password.errors?.['minlength']"
-        >Password should have at least 6 characters</small
-      >
-      <small
-        class="text-red-500 mt-1"
-        *ngIf="passwordsControls.password.errors?.['required']"
-        >This field is required</small
-      >
-    </ng-container>
+    <ng-container *ngIf="passwordsControls.password.dirty || submitted"
+      >Hasło powinno mieć co najmniej 6 znaków</ng-container
+    >
   </div>
   <div class="flex flex-column w-full">
     <div class="p-float-label">
@@ -74,19 +56,19 @@
         [toggleMask]="true"
         [formControl]="passwordsControls.confirmPassword"
       ></p-password>
-      <label for="confirm-password">Confirm password</label>
+      <label for="confirm-password">Potwierdzenie hasła</label>
     </div>
     <ng-container *ngIf="passwordsControls.confirmPassword.dirty || submitted">
       <small
         class="text-red-500 mt-1"
         *ngIf="passwordsControls.confirmPassword.errors?.['required']"
       >
-        This field is required
+        To pole jest wymagane
       </small>
       <small
         class="text-red-500 mt-1"
         *ngIf="registerForm.controls.passwords.errors?.['passwordMismatch']"
-        >Passwords are different
+        >Hasła są różne
       </small>
     </ng-container>
   </div>
