@@ -1,7 +1,7 @@
 import { createFeature, createReducer, on } from '@ngrx/store';
 import { productsActions } from './products.actions';
 
-import { Product } from '@e-commerce/client-web-app/shared/api-types';
+import { Product } from '@e-commerce/client-web-app/shared/data-access/api-types';
 
 export interface ProductsState {
   products: Product[];

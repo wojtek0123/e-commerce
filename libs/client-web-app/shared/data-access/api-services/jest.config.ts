@@ -1,9 +1,10 @@
 /* eslint-disable */
 export default {
-  displayName: 'client-web-app-home-ui',
-  preset: '../../../../jest.preset.js',
+  displayName: 'category-api',
+  preset: '../../../../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
-  coverageDirectory: '../../../../coverage/libs/client-web-app/home/ui',
+  coverageDirectory:
+    '../../../../../coverage/libs/client-web-app/shared/data-access/api-services',
   transform: {
     '^.+\\.(ts|mjs|js|html)$': [
       'jest-preset-angular',

@@ -1,5 +1,5 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
-import { Product } from '@e-commerce/client-web-app/shared/api-types';
+import { Product } from '@e-commerce/client-web-app/shared/data-access/api-types';
 
 export const productsActions = createActionGroup({
   source: 'Products',

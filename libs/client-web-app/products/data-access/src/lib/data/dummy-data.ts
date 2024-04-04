@@ -1,4 +1,4 @@
-import { Product } from '@e-commerce/client-web-app/shared/api-types';
+import { Product } from '@e-commerce/client-web-app/shared/data-access/api-types';
 
 export const products: Product[] = [
   {
