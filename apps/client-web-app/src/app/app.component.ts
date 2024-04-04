@@ -4,30 +4,18 @@ import {
   OnInit,
   inject,
 } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { NxWelcomeComponent } from './nx-welcome.component';
-import { LayoutComponent } from './layout/layout.component';
-import { ButtonModule } from 'primeng/button';
-import { CommonModule } from '@angular/common';
+import { RouterOutlet } from '@angular/router';
 import { PrimeNGConfig } from 'primeng/api';
 
 @Component({
   standalone: true,
-  imports: [
-    NxWelcomeComponent,
-    RouterModule,
-    LayoutComponent,
-    ButtonModule,
-    CommonModule,
-  ],
+  imports: [RouterOutlet],
   selector: 'e-commerce-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
+  template: `<router-outlet />`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent implements OnInit {
   private primengConfig = inject(PrimeNGConfig);
-  title = 'client-web-app';
 
   ngOnInit(): void {
     this.primengConfig.ripple = true;

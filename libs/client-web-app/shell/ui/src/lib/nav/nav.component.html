@@ -9,7 +9,7 @@
         <span class="font-bold text-primary">Story</span
         ><span class="uppercase">Stash</span>
       </h1>
-      <p-divider layout="vertical"></p-divider>
+      <p-divider layout="vertical" />
       <ul
         class="align-items-center justify-content-center gap-4 list-none m-0 p-0 hidden lg:flex"
       >
@@ -17,7 +17,6 @@
           <a
             [routerLink]="'/'"
             routerLinkActive="underline"
-            [routerLinkActiveOptions]="{ exact: true }"
             class="text-xl text-white capitalize no-underline py-1 px-3"
             >home</a
           >
@@ -26,7 +25,6 @@
           <a
             [routerLink]="'/products'"
             routerLinkActive="underline"
-            [routerLinkActiveOptions]="{ exact: true }"
             class="text-xl text-white capitalize no-underline py-1 px-3"
             >products</a
           >
@@ -38,12 +36,12 @@
         class="no-underline text-primary font-bold px-3 py-1"
         routerLink="/auth/sign-up"
         routerLinkActive="underline"
-        >Sign up</a
+        >Zarejestruj się</a
       >
       <a
         class="no-underline text-primary hidden font-bold px-3 py-1 lg:block"
         routerLink="/auth/sign-in"
-        >Log in</a
+        >Zaloguj się</a
       >
       <p-button
         icon="pi pi-align-right"

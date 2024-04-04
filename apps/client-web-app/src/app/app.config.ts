@@ -1,20 +1,23 @@
+import { provideHttpClient } from '@angular/common/http';
 import { ApplicationConfig, isDevMode } from '@angular/core';
+import { provideAnimations } from '@angular/platform-browser/animations';
 import {
   provideRouter,
   withEnabledBlockingInitialNavigation,
 } from '@angular/router';
-import { appRoutes } from './app.routes';
-import { provideHttpClient } from '@angular/common/http';
-import { provideStoreDevtools } from '@ngrx/store-devtools';
+import { clientWebAppShellRoutes } from '@e-commerce/client-web-app/shell/feature';
 import { provideStore } from '@ngrx/store';
-import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideStoreDevtools } from '@ngrx/store-devtools';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideStoreDevtools({ logOnly: !isDevMode() , connectInZone: true}),
+    provideStoreDevtools({ logOnly: !isDevMode(), connectInZone: true }),
     provideHttpClient(),
     provideStore(),
-    provideRouter(appRoutes, withEnabledBlockingInitialNavigation()),
+    provideRouter(
+      clientWebAppShellRoutes,
+      withEnabledBlockingInitialNavigation()
+    ),
     provideAnimations(),
   ],
 };
