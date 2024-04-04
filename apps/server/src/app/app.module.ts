@@ -7,6 +7,7 @@ import { AuthModule } from '../auth/auth.module';
 import { BooksModule } from '../books/books.module';
 import { AuthorsModule } from '../authors/authors.module';
 import { PublishersModule } from '../publishers/publishers.module';
+import { CategoriesModule } from '../categories/categories.module';
 
 @Module({
   controllers: [AppController],
@@ -17,6 +18,7 @@ import { PublishersModule } from '../publishers/publishers.module';
     BooksModule,
     AuthorsModule,
     PublishersModule,
+    CategoriesModule,
   ],
 })
 export class AppModule {}
