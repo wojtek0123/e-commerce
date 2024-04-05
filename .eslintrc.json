@@ -44,6 +44,15 @@
               {
                 "sourceTag": "scope:client-web-app",
                 "onlyDependOnLibsWithTags": ["scope:client-web-app"]
+              },
+              {
+                "sourceTag": "type:shell-feature",
+                "onlyDependOnLibsWithTags": [
+                  "type:feature",
+                  "type:ui",
+                  "type:data-access",
+                  "type:util"
+                ]
               }
             ]
           }
