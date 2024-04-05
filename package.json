@@ -100,7 +100,11 @@
     "tslib": "^2.6.1",
     "typescript": "5.4.3"
   },
-  "prisma": {
-    "seed": "ts-node prisma/seed.ts"
+  "overrides": {
+    "@supabase/supabase-js": {
+      "dependencies": {
+        "@supabase/auth-js": "2.61.0"
+      }
+    }
   }
 }
