@@ -11,23 +11,10 @@ export interface LoginState {
 
 export interface AuthState {
   accessToken: string | null;
-  //   forms: {
-  //     register: FormGroupState<RegisterState>;
-  //     login: FormGroupState<LoginState>;
-  //   };
+  status: 'idle' | 'loading' | 'ok' | 'error';
 }
 
 export const initialState: AuthState = {
   accessToken: null,
-  // forms: {
-  //   register: createFormGroupState<RegisterState>('register', {
-  //     email: null,
-  //     password: null,
-  //     confirmPassword: null,
-  //   }),
-  //   login: createFormGroupState<LoginState>('login', {
-  //     email: null,
-  //     password: null,
-  //   }),
-  // },
+  status: 'idle',
 };
