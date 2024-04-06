@@ -2,25 +2,15 @@
   class="justify-content-center flex flex-column w-full align-items-center h-full"
 >
   <div class="flex flex-column align-items-start mb-4 max-w-30rem w-full">
-    <h2 class="text-2xl md:text-3xl xl:text-5xl">{{ title }}</h2>
+    <h2 class="text-2xl md:text-3xl xl:text-5xl">{{ header }}</h2>
     <div class="flex align-items-center text-sm xl:text-base">
-      <span>{{ text }}</span>
+      <span>{{ subtitle }}</span>
       <a
         [routerLink]="[link.url]"
-        class="font-medium no-underline ml-2 text-primary cursor-pointer"
+        class="font-medium no-underline ml-2 text-primary cursor-pointer hover:underline"
         >{{ link.name }}</a
       >
     </div>
   </div>
-  <form
-    class="flex flex-column gap-3 w-full max-w-30rem xl:align-items-center"
-    (submit)="onSubmit($event)"
-  >
-    <ng-content></ng-content>
-    <p-button
-      type="submit"
-      class="w-full mt-4"
-      [label]="submitButtonLabel"
-    ></p-button>
-  </form>
+  <ng-content></ng-content>
 </div>

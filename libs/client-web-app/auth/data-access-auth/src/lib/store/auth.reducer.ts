@@ -1,11 +1,6 @@
 import { createFeature, createReducer, on } from '@ngrx/store';
-import {
-  AuthState,
-  LoginState,
-  RegisterState,
-  initialState,
-} from './auth.state';
 import { authActions } from './auth.actions';
+import { AuthState, initialState } from './auth.state';
 
 export const authFeature = createFeature({
   name: 'auth',
@@ -13,9 +8,9 @@ export const authFeature = createFeature({
     initialState,
     on(
       authActions.login,
-      (state): AuthState => ({
+      (state, { valid }): AuthState => ({
         ...state,
-        status: 'loading',
+        status: valid ? 'loading' : 'error',
       })
     ),
     on(
@@ -28,16 +23,17 @@ export const authFeature = createFeature({
     ),
     on(
       authActions.loginFailure,
-      (state, { error }): AuthState => ({
+      (state, { responseError }): AuthState => ({
         ...state,
         status: 'error',
+        errorMessage: responseError.error.message,
       })
     ),
     on(
       authActions.register,
-      (state): AuthState => ({
+      (state, { valid }): AuthState => ({
         ...state,
-        status: 'loading',
+        status: valid ? 'loading' : 'error',
       })
     ),
     on(
@@ -50,9 +46,10 @@ export const authFeature = createFeature({
     ),
     on(
       authActions.registerFailure,
-      (state, { error }): AuthState => ({
+      (state, { responseError }): AuthState => ({
         ...state,
         status: 'error',
+        errorMessage: responseError.error.message,
       })
     )
   ),

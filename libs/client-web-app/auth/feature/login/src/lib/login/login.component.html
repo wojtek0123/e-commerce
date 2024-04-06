@@ -1,59 +1,79 @@
 <e-commerce-form-wrapper
   [link]="{ url: '../register', name: 'Stwórz konto!' }"
-  title="Witaj ponownie!"
-  text="Jesteś tutaj nowy?"
-  submitButtonLabel="Zaloguj się"
-  (submitEvent)="onLogin()"
+  header="Witaj ponownie!"
+  subtitle="Jesteś tutaj nowy?"
 >
-  <div class="flex flex-column w-full">
-    <div class="p-float-label">
-      <input
-        pInputText
-        id="email"
-        autocomplete="off"
-        [class]="
-          loginForm.controls.email.invalid && submitted
-            ? 'ng-invalid ng-dirty'
-            : ''
-        "
-        [formControl]="loginForm.controls.email"
-      />
-      <label for="email">Email</label>
-    </div>
-    <ng-container *ngIf="loginForm.controls.email.dirty || submitted">
-      <small
-        class="text-red-500 mt-1"
-        *ngIf="loginForm.controls.email.errors?.['required']"
-        >To pole jest wymagane
-      </small>
-      <small
-        class="text-red-500 mt-1"
-        *ngIf="loginForm.controls.email.errors?.['email']"
-        >Wpisz poprawny adres email
-      </small>
+  <form
+    [formGroup]="loginForm"
+    class="flex flex-column gap-3 w-full max-w-30rem xl:align-items-center"
+    (submit)="onSubmit()"
+  >
+    <ng-container
+      *ngIf="{
+        status: status$ | async,
+        errorMessage: errorMessage$ | async
+      } as vm"
+    >
+      <div class="flex flex-column w-full">
+        <p-floatLabel>
+          <input
+            #email
+            pInputText
+            id="email"
+            autocomplete="off"
+            [ngClass]="{ 'ng-dirty ng-invalid': vm.status === 'error' }"
+            formControlName="email"
+          />
+          <label for="email">Email</label>
+        </p-floatLabel>
+        <ng-container
+          *ngIf="loginForm.controls.email.dirty || vm.status === 'error'"
+        >
+          <small
+            class="text-red-500 mt-1"
+            *ngIf="loginForm.controls.email.errors?.['required'] && !vm.errorMessage"
+            >To pole jest wymagane
+          </small>
+          <small
+            class="text-red-500 mt-1"
+            *ngIf="loginForm.controls.email.errors?.['email']"
+            >Wpisz poprawny adres email
+          </small>
+        </ng-container>
+      </div>
+      <div class="flex flex-column w-full">
+        <p-floatLabel>
+          <p-password
+            id="password"
+            [feedback]="false"
+            [toggleMask]="true"
+            [ngClass]="{ 'ng-dirty ng-invalid': vm.status === 'error' }"
+            formControlName="password"
+          ></p-password>
+          <label for="password">Hasło</label>
+        </p-floatLabel>
+        <ng-container
+          *ngIf="loginForm.controls.password.dirty || vm.status === 'error'"
+        >
+          <small
+            class="text-red-500 mt-1"
+            *ngIf="loginForm.controls.password.errors?.['required'] && !vm.errorMessage"
+            >To pole jest wymagane
+          </small>
+        </ng-container>
+        <div class="text-red-500 mt-4" *ngIf="vm.errorMessage">
+          {{ vm.errorMessage }}
+        </div>
+
+        <p-button
+          type="submit"
+          label="Zaloguj się!"
+          [loading]="vm.status === 'loading'"
+          loading-icon="pi pi-spin pi-spinner"
+          iconPos="right"
+          class="w-full mt-4"
+        ></p-button>
+      </div>
     </ng-container>
-  </div>
-  <div class="flex flex-column w-full">
-    <div class="p-float-label">
-      <p-password
-        id="password"
-        [feedback]="false"
-        [toggleMask]="true"
-        [class]="
-          loginForm.controls.password.invalid && submitted
-            ? 'ng-invalid ng-dirty'
-            : ''
-        "
-        [formControl]="loginForm.controls.password"
-      ></p-password>
-      <label for="password">Hasło</label>
-    </div>
-    <ng-container *ngIf="loginForm.controls.password.dirty || submitted">
-      <small
-        class="text-red-500 mt-1"
-        *ngIf="loginForm.controls.password.errors?.['required']"
-        >To pole jest wymagane
-      </small>
-    </ng-container>
-  </div>
+  </form>
 </e-commerce-form-wrapper>

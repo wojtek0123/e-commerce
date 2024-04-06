@@ -1,3 +1,8 @@
 import { authFeature } from './auth.reducer';
 
-export const { selectAuthState } = authFeature;
+const { selectStatus, selectErrorMessage } = authFeature;
+
+export const authSelectors = {
+  selectStatus,
+  selectErrorMessage,
+};

@@ -1,75 +1,114 @@
 <e-commerce-form-wrapper
   [link]="{ url: '../login', name: 'Zaloguj się!' }"
-  title="Stwórz nowe konto!"
-  text="Masz już konto?"
-  submitButtonLabel="Zarejestruj się"
-  (submitEvent)="onRegister()"
+  header="Stwórz nowe konto!"
+  subtitle="Masz już konto?"
 >
-  <div class="flex flex-column w-full">
-    <div class="p-float-label">
-      <input
-        pInputText
-        id="email"
-        [class]="
-          registerForm.controls.email.invalid && submitted
-            ? 'ng-invalid ng-dirty'
-            : ''
-        "
-        autocomplete="off"
-        [formControl]="registerForm.controls.email"
-      />
-      <label for="email">Email</label>
-    </div>
-    <ng-container *ngIf="registerForm.controls.email.dirty || submitted"
-      >To pole jest wymagane</ng-container
+  <form
+    [formGroup]="registerForm"
+    class="flex flex-column gap-3 w-full max-w-30rem xl:align-items-center"
+    (submit)="onSubmit()"
+  >
+    <ng-container
+      *ngIf="{
+        status: status$ | async,
+        errorMessage: errorMessage$ | async
+      } as vm"
     >
-  </div>
-  <div class="flex flex-column w-full">
-    <div class="p-float-label">
-      <p-password
-        id="password"
-        [class]="
-          passwordsControls.password.invalid && submitted
-            ? 'ng-invalid ng-dirty'
-            : ''
-        "
-        [feedback]="false"
-        [toggleMask]="true"
-        [formControl]="passwordsControls.password"
-      ></p-password>
-      <label for="password">Hasło</label>
-    </div>
-    <ng-container *ngIf="passwordsControls.password.dirty || submitted"
-      >Hasło powinno mieć co najmniej 6 znaków</ng-container
-    >
-  </div>
-  <div class="flex flex-column w-full">
-    <div class="p-float-label">
-      <p-password
-        id="confirm-password"
-        [class]="
-          passwordsControls.confirmPassword.invalid && submitted
-            ? 'ng-invalid ng-dirty'
-            : ''
-        "
-        [feedback]="false"
-        [toggleMask]="true"
-        [formControl]="passwordsControls.confirmPassword"
-      ></p-password>
-      <label for="confirm-password">Potwierdzenie hasła</label>
-    </div>
-    <ng-container *ngIf="passwordsControls.confirmPassword.dirty || submitted">
-      <small
-        class="text-red-500 mt-1"
-        *ngIf="passwordsControls.confirmPassword.errors?.['required']"
-      >
-        To pole jest wymagane
-      </small>
-      <small
-        class="text-red-500 mt-1"
-        *ngIf="registerForm.controls.passwords.errors?.['passwordMismatch']"
-        >Hasła są różne
-      </small>
+      <div class="flex flex-column w-full">
+        <p-floatLabel>
+          <input
+            pInputText
+            id="email"
+            autocomplete="off"
+            formControlName="email"
+            [ngClass]="{ 'ng-dirty ng-invalid': vm.status === 'error' }"
+          />
+          <label for="email">Email</label>
+        </p-floatLabel>
+        <ng-container
+          *ngIf="registerForm.controls.email.dirty || vm.status === 'error'"
+        >
+          <small
+            class="text-red-500 mt-1"
+            *ngIf="registerForm.controls.email.errors?.['required']"
+          >
+            To pole jest wymagane
+          </small>
+          <small
+            class="text-red-500 mt-1"
+            *ngIf="registerForm.controls.email.errors?.['email'] && !vm.errorMessage"
+          >
+            Niepoprawny email
+          </small>
+        </ng-container>
+      </div>
+      <div class="flex flex-column w-full">
+        <p-floatLabel>
+          <p-password
+            id="password"
+            [feedback]="false"
+            [toggleMask]="true"
+            [ngClass]="{ 'ng-dirty ng-invalid': vm.status === 'error' }"
+            formControlName="password"
+          ></p-password>
+          <label for="password">Hasło</label>
+        </p-floatLabel>
+        <ng-container
+          *ngIf="registerForm.controls.password.dirty || vm.status === 'error'"
+        >
+          <small
+            class="text-red-500 mt-1"
+            *ngIf="registerForm.controls.password.errors?.['minlength']"
+            >Hasło powinno mieć co najmniej 6 znaków</small
+          >
+          <small
+            class="text-red-500 mt-1"
+            *ngIf="registerForm.controls.password.errors?.['required'] && !vm.errorMessage"
+            >To pole jest wymagane</small
+          >
+        </ng-container>
+      </div>
+      <div class="flex flex-column w-full">
+        <p-floatLabel>
+          <p-password
+            id="confirm-password"
+            [feedback]="false"
+            [toggleMask]="true"
+            [ngClass]="{ 'ng-dirty ng-invalid': vm.status === 'error' }"
+            formControlName="confirmPassword"
+          ></p-password>
+          <label for="confirm-password">Potwierdzenie hasła</label>
+        </p-floatLabel>
+        <ng-container
+          *ngIf="
+            registerForm.controls.confirmPassword.dirty || vm.status === 'error'
+          "
+        >
+          <small
+            class="text-red-500 mt-1"
+            *ngIf="registerForm.controls.confirmPassword.errors?.['required'] && !vm.errorMessage"
+          >
+            To pole jest wymagane
+          </small>
+          <small
+            class="text-red-500 mt-1"
+            *ngIf="registerForm.errors?.['passwordMismatch']"
+            >Hasła są różne
+          </small>
+        </ng-container>
+        <div class="mt-4 text-red-500" *ngIf="vm.errorMessage">
+          {{ vm.errorMessage }}
+        </div>
+
+        <p-button
+          type="submit"
+          [label]="'Zarejestruj się'"
+          [loading]="vm.status === 'loading'"
+          loading-icon="pi pi-spin pi-spinner"
+          iconPos="right"
+          class="w-full mt-4"
+        ></p-button>
+      </div>
     </ng-container>
-  </div>
+  </form>
 </e-commerce-form-wrapper>

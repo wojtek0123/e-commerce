@@ -1,19 +1,20 @@
 import { inject } from '@angular/core';
-import { Actions, concatLatestFrom, createEffect, ofType } from '@ngrx/effects';
-import { authActions } from './auth.actions';
-import { catchError, filter, map, of, switchMap, tap } from 'rxjs';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { catchError, filter, map, of, switchMap } from 'rxjs';
 import { AuthService } from '../services/auth.service';
-import { Store } from '@ngrx/store';
+import { authActions } from './auth.actions';
 
 export const login$ = createEffect(
   (actions$ = inject(Actions), authService = inject(AuthService)) => {
     return actions$.pipe(
       ofType(authActions.login),
-      tap((data) => console.log(data)),
+      filter(({ valid }) => valid),
       switchMap(({ email, password }) =>
         authService.login$(email, password).pipe(
           map(({ accessToken }) => authActions.loginSuccess({ accessToken })),
-          catchError((error) => of(authActions.loginFailure({ error })))
+          catchError((responseError) =>
+            of(authActions.loginFailure({ responseError }))
+          )
         )
       )
     );
@@ -25,13 +26,15 @@ export const register$ = createEffect(
   (actions$ = inject(Actions), authService = inject(AuthService)) => {
     return actions$.pipe(
       ofType(authActions.register),
-      tap((data) => console.log(data)),
+      filter(({ valid }) => valid),
       switchMap(({ email, password }) =>
         authService.register$(email, password).pipe(
           map(({ accessToken }) =>
             authActions.registerSuccess({ accessToken })
           ),
-          catchError((error) => of(authActions.loginFailure({ error })))
+          catchError((responseError) =>
+            of(authActions.loginFailure({ responseError: responseError }))
+          )
         )
       )
     );
