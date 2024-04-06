@@ -49,17 +49,12 @@ describe('ClientWebAppAuthFeatureRegisterComponent', () => {
     expect(matchPasswordError).toStrictEqual({ passwordMismatch: true });
   });
 
-  it('should change "submitted" property to true', () => {
-    component.onRegister();
-    expect(component.submitted).toBe(true);
-  });
-
   it('should not dispatch when form is invalid', () => {
     const spyDispatch = jest.spyOn(component['store'], 'dispatch');
-    component.onRegister();
+    component.onSubmit();
 
     expect(component.registerForm.invalid).toBeTruthy();
-    expect(spyDispatch).not.toBeCalled();
+    expect(spyDispatch).toBeCalled();
   });
 
   it('should dispatch when form is valid', () => {
@@ -67,14 +62,13 @@ describe('ClientWebAppAuthFeatureRegisterComponent', () => {
     const registerFormControls = component.registerForm.controls;
 
     registerFormControls.email.setValue('test@test.com');
-    registerFormControls.passwords.controls.password.setValue('password');
-    registerFormControls.passwords.controls.confirmPassword.setValue(
-      'password'
-    );
-
-    component.onRegister();
+    registerFormControls.password.setValue('password');
+    registerFormControls.confirmPassword.setValue('password');
 
     expect(component.registerForm.valid).toBeTruthy();
+
+    component.onSubmit();
+
     expect(spyDispatch).toBeCalledTimes(1);
   });
 
@@ -88,10 +82,8 @@ describe('ClientWebAppAuthFeatureRegisterComponent', () => {
     const registerFormGroup = component.registerForm;
     const registerFormValues = {
       email: '',
-      passwords: {
-        password: '',
-        confirmPassword: '',
-      },
+      password: '',
+      confirmPassword: '',
     };
     expect(registerFormGroup.value).toEqual(registerFormValues);
   });
@@ -105,13 +97,9 @@ describe('ClientWebAppAuthFeatureRegisterComponent', () => {
     const confirmPasswordInput = registerForm[2];
 
     const emailControl = component.registerForm.get('email');
-    const passwordsGroup = component.registerForm.get('passwords');
-    const passwordControl = component.registerForm
-      .get('passwords')
-      ?.get('password');
-    const confirmPasswordControl = component.registerForm
-      .get('passwords')
-      ?.get('confirmPassword');
+    const passwordControl = component.registerForm.get('password');
+    const confirmPasswordControl =
+      component.registerForm.get('confirmPassword');
 
     expect(emailInput.value).toEqual(emailControl?.value);
     expect(emailControl?.errors).not.toBeNull();
@@ -125,8 +113,7 @@ describe('ClientWebAppAuthFeatureRegisterComponent', () => {
     expect(confirmPasswordControl?.errors).not.toBeNull();
     expect(confirmPasswordControl?.errors?.['required']).toBeTruthy();
 
-    expect(passwordsGroup?.errors).toBeNull();
-    expect(passwordsGroup?.errors?.['passwordMismatch']).toBeFalsy();
+    expect(registerForm?.errors?.['passwordMismatch']).toBeFalsy();
   });
 
   it('check email validators for email control', () => {
@@ -182,42 +169,27 @@ describe('ClientWebAppAuthFeatureRegisterComponent', () => {
   });
 
   it('check min length validators for password', () => {
-    const passwordControl = component.registerForm
-      .get('passwords')
-      ?.get('password');
+    const passwordControl = component.registerForm?.get('password');
 
-    passwordControl?.setValue('test');
+    component.registerForm.controls.password?.setValue('test');
 
     expect(passwordControl?.value).toBe('test');
     expect(passwordControl?.errors).not.toBeNull();
     expect(passwordControl?.errors?.['minlength']).toBeTruthy();
 
-    passwordControl?.setValue('test12');
+    component.registerForm.controls.password?.setValue('test12');
 
     expect(passwordControl?.value).toBe('test12');
     expect(passwordControl?.errors).toBeNull();
     expect(passwordControl?.errors?.['minlength']).toBeUndefined();
   });
 
-  it('should get passwordsControls return passwords group controls', () => {
-    const passwordsGroup = component.registerForm.get('passwords');
-
-    expect(passwordsGroup?.get('password')).toEqual(
-      component.passwordsControls.password
-    );
-    expect(passwordsGroup?.get('confirmPassword')).toEqual(
-      component.passwordsControls.confirmPassword
-    );
-  });
-
   it('check register form is valid when validators are fulfilled', () => {
     const registerForm = component.registerForm;
 
     registerForm.controls.email.setValue('test@test.pl');
-    registerForm.controls.passwords.controls.password.setValue('password');
-    registerForm.controls.passwords.controls.confirmPassword.setValue(
-      'password'
-    );
+    registerForm.controls.password.setValue('password');
+    registerForm.controls.confirmPassword.setValue('password');
 
     expect(registerForm.errors).toBeNull();
   });
