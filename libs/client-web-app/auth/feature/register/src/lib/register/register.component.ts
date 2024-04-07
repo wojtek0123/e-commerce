@@ -11,7 +11,7 @@ import { RouterLink } from '@angular/router';
 import {
   authActions,
   authSelectors,
-} from '@e-commerce/client-web-app/auth/data-access-auth';
+} from '@e-commerce/client-web-app/auth/data-access';
 import { FormWrapperComponent } from '@e-commerce/client-web-app/auth/ui/form-wrapper';
 import { Store } from '@ngrx/store';
 import { ButtonModule } from 'primeng/button';
