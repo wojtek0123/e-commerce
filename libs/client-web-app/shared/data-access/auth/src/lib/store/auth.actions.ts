@@ -2,8 +2,8 @@ import { createActionGroup, emptyProps, props } from '@ngrx/store';
 import {
   ResponseError,
   User,
+  Session,
 } from '@e-commerce/client-web-app/shared/data-access/api-types';
-import { Session } from '../models/session.model';
 
 export const authActions = createActionGroup({
   source: 'Auth',

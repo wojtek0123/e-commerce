@@ -7,7 +7,7 @@ import { NavComponent } from '../nav/nav.component';
   standalone: true,
   imports: [RouterOutlet, NavComponent],
   template: `
-    <e-commerce-nav />
+    <lib-e-commerce-nav />
     <div class="px-4">
       <router-outlet />
     </div>

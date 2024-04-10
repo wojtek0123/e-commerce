@@ -31,6 +31,7 @@
         </li>
       </ul>
     </div>
+    @if ({user: user$ | async}; as vm) { @if (!vm.user) {
     <div class="flex align-items-center gap-3 md:gap-4">
       <a
         class="no-underline text-primary font-bold px-3 py-1"
@@ -49,5 +50,17 @@
         class="lg:hidden"
       ></p-button>
     </div>
+    } @else {
+    <p-menu #menu [model]="items" [popup]="true"></p-menu>
+    <button
+      pButton
+      type="button"
+      (click)="menu.toggle($event)"
+      class="flex flex-column justify-content-center"
+    >
+      <i class="pi pi-user" style="font-size: 1.75rem"></i>
+      <span>Twoje konto</span>
+    </button>
+    }}
   </nav>
 </div>
