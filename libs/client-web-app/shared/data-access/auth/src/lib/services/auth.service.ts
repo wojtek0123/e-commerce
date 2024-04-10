@@ -1,7 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { User } from '@e-commerce/client-web-app/shared/data-access/api-types';
-import { Session } from '../models/session.model';
+import {
+  User,
+  Session,
+} from '@e-commerce/client-web-app/shared/data-access/api-types';
 
 @Injectable()
 export class AuthService {

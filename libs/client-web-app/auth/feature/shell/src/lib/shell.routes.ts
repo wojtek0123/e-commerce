@@ -28,10 +28,10 @@ export const shellRoutes: Route[] = [
           ),
       },
     ],
-    providers: [
-      provideState(authFeature),
-      provideEffects([authEffects]),
-      AuthService,
-    ],
+    // providers: [
+    //   provideState(authFeature),
+    //   provideEffects([authEffects]),
+    //   AuthService,
+    // ],
   },
 ];

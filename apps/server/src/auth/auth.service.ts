@@ -28,7 +28,11 @@ export class AuthService {
     }
 
     return {
-      accessToken: this.jwtService.sign({ userId: user.id }),
+      accessToken: this.jwtService.sign(
+        { userId: user.id },
+        { algorithm: 'RS256', expiresIn: '120s', subject: user.id }
+      ),
+      user,
     };
   }
 
@@ -51,13 +55,14 @@ export class AuthService {
       data: { ...data, password: hashedPassword },
     });
     const bearerToken = this.jwtService.sign(
-      { userId: createdUser.id }
-      // { algorithm: 'RS256', expiresIn: '7d', subject: createdUser.id }
+      { userId: createdUser.id },
+      { algorithm: 'RS256', expiresIn: '120s', subject: createdUser.id }
     );
     // console.log(bearerToken);
 
     return {
       accessToken: bearerToken,
+      user: createdUser,
     };
   }
 }

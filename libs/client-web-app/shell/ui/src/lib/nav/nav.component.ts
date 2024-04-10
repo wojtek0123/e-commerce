@@ -1,14 +1,34 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DividerModule } from 'primeng/divider';
 import { ButtonModule } from 'primeng/button';
+import { Store } from '@ngrx/store';
+import { authSelectors } from '@e-commerce/client-web-app/auth/data-access';
+import { AsyncPipe } from '@angular/common';
+import { MenuItem, MessageService } from 'primeng/api';
+import { MenuModule } from 'primeng/menu';
 
 @Component({
-  selector: 'e-commerce-nav',
+  selector: 'lib-e-commerce-nav',
   standalone: true,
-  imports: [RouterLink, DividerModule, ButtonModule],
+  imports: [RouterLink, DividerModule, ButtonModule, AsyncPipe, MenuModule],
   templateUrl: './nav.component.html',
   styleUrl: './nav.component.css',
 })
-export class NavComponent {}
+export class NavComponent {
+  private store = inject(Store);
+
+  user$ = this.store.select(authSelectors.selectUser);
+
+  items: MenuItem[] = [
+    {
+      label: 'Log out',
+      icon: 'pi pi-sign-out',
+      command: () => this.logout(),
+    },
+  ];
+
+  logout() {
+    console.log('logout');
+  }
+}
