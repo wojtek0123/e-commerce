@@ -1,12 +1,5 @@
 import { Route } from '@angular/router';
 import { ShellComponent } from './shell/shell.component';
-import {
-  AuthService,
-  authEffects,
-  authFeature,
-} from '@e-commerce/client-web-app/auth/data-access';
-import { provideState } from '@ngrx/store';
-import { provideEffects } from '@ngrx/effects';
 
 export const shellRoutes: Route[] = [
   {
@@ -28,10 +21,5 @@ export const shellRoutes: Route[] = [
           ),
       },
     ],
-    // providers: [
-    //   provideState(authFeature),
-    //   provideEffects([authEffects]),
-    //   AuthService,
-    // ],
   },
 ];

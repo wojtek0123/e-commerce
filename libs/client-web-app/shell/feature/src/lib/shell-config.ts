@@ -4,7 +4,7 @@ import {
   authActions,
   authFeature,
   authEffects,
-} from '@e-commerce/clint-web-app/shared/data-access/auth';
+} from '@e-commerce/client-web-app/shared/data-access/auth';
 import { provideEffects } from '@ngrx/effects';
 import { Store, provideState } from '@ngrx/store';
 

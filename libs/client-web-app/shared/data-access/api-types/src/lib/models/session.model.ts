@@ -1,6 +1,11 @@
-import { User } from '@e-commerce/client-web-app/shared/data-access/api-types';
+import { User } from './user.model';
 
 export interface Session {
-  accessToken: string;
+  tokens: Token;
   user: User;
+}
+
+export interface Token {
+  accessToken: string;
+  refreshToken: string;
 }

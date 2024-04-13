@@ -11,9 +11,8 @@ export const login$ = createEffect(
       filter(({ valid }) => valid),
       switchMap(({ email, password }) =>
         authService.login$(email, password).pipe(
-          map(({ accessToken, user }) =>
-            authActions.loginSuccess({ accessToken, user })
-          ),
+          tap(console.log),
+          map((session) => authActions.loginSuccess(session)),
           catchError((responseError) =>
             of(authActions.loginFailure({ responseError }))
           )
@@ -31,9 +30,7 @@ export const register$ = createEffect(
       filter(({ valid }) => valid),
       switchMap(({ email, password }) =>
         authService.register$(email, password).pipe(
-          map(({ accessToken, user }) =>
-            authActions.registerSuccess({ accessToken, user })
-          ),
+          map((session) => authActions.registerSuccess(session)),
           catchError((responseError) =>
             of(authActions.loginFailure({ responseError: responseError }))
           )
@@ -48,9 +45,7 @@ export const loginSuccess$ = createEffect(
   (actions$ = inject(Actions), authService = inject(AuthService)) => {
     return actions$.pipe(
       ofType(authActions.loginSuccess),
-      tap(({ accessToken, user }) => {
-        authService.setSession({ accessToken, user });
-      })
+      tap((session) => authService.setSession(session))
     );
   },
   { functional: true, dispatch: false }
@@ -65,6 +60,23 @@ export const init$ = createEffect(
 
         return authActions.initSuccess({ session });
       })
+    );
+  },
+  { functional: true }
+);
+
+export const getRefreshToken$ = createEffect(
+  (actions$ = inject(Actions), authService = inject(AuthService)) => {
+    return actions$.pipe(
+      ofType(authActions.getRefreshToken),
+      switchMap(({ id, refreshToken }) =>
+        authService.getRefreshToken$(id, refreshToken).pipe(
+          map((token) => authActions.getRefreshTokenSuccess(token)),
+          catchError((responseError) =>
+            of(authActions.getRefreshTokenFailure(responseError))
+          )
+        )
+      )
     );
   },
   { functional: true }

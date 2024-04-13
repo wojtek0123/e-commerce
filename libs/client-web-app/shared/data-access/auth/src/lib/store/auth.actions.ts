@@ -1,8 +1,9 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
 import {
   ResponseError,
-  User,
   Session,
+  User,
+  Token,
 } from '@e-commerce/client-web-app/shared/data-access/api-types';
 
 export const authActions = createActionGroup({
@@ -11,10 +12,13 @@ export const authActions = createActionGroup({
     init: emptyProps(),
     initSuccess: props<{ session: Session | null }>(),
     login: props<{ email: string; password: string; valid: boolean }>(),
-    loginSuccess: props<{ accessToken: string; user: User }>(),
+    loginSuccess: props<Session>(),
     loginFailure: props<{ responseError: ResponseError }>(),
     register: props<{ email: string; password: string; valid: boolean }>(),
-    registerSuccess: props<{ accessToken: string; user: User }>(),
+    registerSuccess: props<Session>(),
     registerFailure: props<{ responseError: ResponseError }>(),
+    getRefreshToken: props<{ id: User['id']; refreshToken: string }>(),
+    getRefreshTokenSuccess: props<Token>(),
+    getRefreshTokenFailure: props<{ responseError: ResponseError }>(),
   },
 });

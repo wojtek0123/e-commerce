@@ -15,7 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@e-commerce/clint-web-app/shared/data-access/auth": [
+      "@e-commerce/client-web-app/shared/data-access/auth": [
         "libs/client-web-app/shared/data-access/auth/src/index.ts"
       ],
       "@e-commerce/client-web-app/auth/data-access": [

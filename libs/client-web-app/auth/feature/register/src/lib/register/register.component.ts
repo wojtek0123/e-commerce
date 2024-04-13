@@ -11,7 +11,7 @@ import { RouterLink } from '@angular/router';
 import {
   authActions,
   authSelectors,
-} from '@e-commerce/client-web-app/auth/data-access';
+} from '@e-commerce/client-web-app/shared/data-access/auth';
 import { FormWrapperComponent } from '@e-commerce/client-web-app/auth/ui/form-wrapper';
 import { Store } from '@ngrx/store';
 import { ButtonModule } from 'primeng/button';
@@ -47,12 +47,18 @@ export class RegisterComponent {
 
   registerForm = this.fb.group(
     {
-      email: this.fb.control('', [Validators.required, Validators.email]),
-      password: this.fb.control('', [
-        Validators.required,
-        Validators.minLength(6),
-      ]),
-      confirmPassword: this.fb.control('', [Validators.required]),
+      email: this.fb.control('', {
+        validators: [Validators.required, Validators.email],
+        updateOn: 'blur',
+      }),
+      password: this.fb.control('', {
+        validators: [Validators.required, Validators.minLength(6)],
+        updateOn: 'blur',
+      }),
+      confirmPassword: this.fb.control('', {
+        validators: [Validators.required],
+        updateOn: 'blur',
+      }),
     },
     { validators: this.matchPassword() }
   );
@@ -84,8 +90,15 @@ export class RegisterComponent {
   }
 
   onSubmit() {
+    const element = document.activeElement as
+      | HTMLInputElement
+      | HTMLButtonElement
+      | undefined;
+
+    element?.blur();
     const { valid } = this.registerForm;
     const { email, password } = this.registerForm.value;
+    element?.focus();
 
     this.store.dispatch(
       authActions.register({
@@ -94,7 +107,5 @@ export class RegisterComponent {
         valid,
       })
     );
-
-    this.registerForm.reset();
   }
 }

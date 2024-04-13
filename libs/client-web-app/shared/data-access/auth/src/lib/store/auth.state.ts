@@ -16,14 +16,17 @@ export interface LoginState {
 
 export interface AuthState {
   user: User | null;
-  accessToken: string | null;
+  tokens: {
+    accessToken: string;
+    refreshToken: string;
+  } | null;
   status: ApiStatus;
   errorMessage: string | null;
 }
 
 export const initialState: AuthState = {
   user: null,
-  accessToken: null,
+  tokens: null,
   status: 'idle',
   errorMessage: null,
 };
