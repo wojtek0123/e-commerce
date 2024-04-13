@@ -18,6 +18,7 @@ import {
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Prisma } from '@prisma/client';
 import { UserDto } from './dto/user.dto';
+import { AccessTokenGuard } from '../utils/access-token.guard';
 
 @ApiTags('users')
 @Controller('users')
@@ -48,7 +49,7 @@ export class UsersController {
 
   @Patch(':id')
   @ApiCreatedResponse({ type: UserDto })
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(AccessTokenGuard)
   @ApiBearerAuth()
   async update(
     @Param('id') id: Prisma.UserWhereUniqueInput,
@@ -59,7 +60,7 @@ export class UsersController {
 
   @Delete(':id')
   @ApiOkResponse({ type: UserDto })
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(AccessTokenGuard)
   @ApiBearerAuth()
   async remove(@Param('id') id: Prisma.UserWhereUniqueInput) {
     return await this.usersService.remove(id);

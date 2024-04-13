@@ -5,21 +5,26 @@ import { PrismaModule } from '../prisma/prisma.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { UsersModule } from '../users/users.module';
-import { JwtStrategy } from './jwt.strategy';
-
-export const jwtSecret = 'zjP9h6ZI5LoSKCRj';
+import { AccessTokenStrategy } from './access-token.strategy';
+import { RefreshTokenStrategy } from './refresh-token.strategy';
+import { ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
     PrismaModule,
     PassportModule,
     JwtModule.register({
-      secret: jwtSecret,
-      signOptions: { expiresIn: '5m' },
+      secret: process.env.JWT_ACCESS_SECRET,
+      signOptions: { expiresIn: '120s' },
     }),
     UsersModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy],
+  providers: [
+    AuthService,
+    ConfigService,
+    AccessTokenStrategy,
+    RefreshTokenStrategy,
+  ],
 })
 export class AuthModule {}

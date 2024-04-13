@@ -88,9 +88,10 @@ model Publisher {
 }
 
 model User {
-  id          String        @id @default(uuid())
+  id          Int        @id @default(autoincrement())
   email       String        @unique
   password    String
+  refreshToken String?
   role        Role          @default(USER)
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
@@ -100,7 +101,7 @@ model User {
 }
 
 model UserAddress {
-  id          String @id @default(uuid())
+  id          Int @id @default(autoincrement())
   firstName   String
   surname     String
   phone       String
@@ -109,7 +110,7 @@ model UserAddress {
   houseNumber String
   homeNumber  String
   user        User   @relation(fields: [userId], references: [id])
-  userId      String
+  userId      Int
 
   @@map("user_address")
 }
