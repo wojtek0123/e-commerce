@@ -10,7 +10,7 @@ export const authFeature = createFeature({
       authActions.initSuccess,
       (state, { session }): AuthState => ({
         ...state,
-        accessToken: session?.accessToken ?? null,
+        tokens: session?.tokens ?? null,
         user: session?.user ?? null,
       })
     ),
@@ -23,9 +23,9 @@ export const authFeature = createFeature({
     ),
     on(
       authActions.loginSuccess,
-      (state, { accessToken, user }): AuthState => ({
+      (state, { tokens, user }): AuthState => ({
         ...state,
-        accessToken,
+        tokens,
         user,
         status: 'ok',
       })
@@ -47,9 +47,9 @@ export const authFeature = createFeature({
     ),
     on(
       authActions.registerSuccess,
-      (state, { accessToken, user }): AuthState => ({
+      (state, { tokens, user }): AuthState => ({
         ...state,
-        accessToken,
+        tokens,
         user,
         status: 'ok',
       })

@@ -17,11 +17,14 @@
       <div class="flex flex-column w-full">
         <p-floatLabel>
           <input
-            #email
+            autofocus
             pInputText
             id="email"
             autocomplete="off"
-            [ngClass]="{ 'ng-dirty ng-invalid': vm.status === 'error' }"
+            [ngClass]="{
+              'ng-dirty ng-invalid':
+                vm.status === 'error' && loginForm.controls.email.invalid
+            }"
             formControlName="email"
           />
           <label for="email">Email</label>
@@ -47,7 +50,10 @@
             id="password"
             [feedback]="false"
             [toggleMask]="true"
-            [ngClass]="{ 'ng-dirty ng-invalid': vm.status === 'error' }"
+            [ngClass]="{
+              'ng-dirty ng-invalid':
+                vm.status === 'error' && loginForm.controls.password.invalid
+            }"
             formControlName="password"
           ></p-password>
           <label for="password">Hasło</label>
@@ -57,9 +63,14 @@
         >
           <small
             class="text-red-500 mt-1"
+            *ngIf="loginForm.controls.password.errors?.['minlength']"
+            >Hasło powinno mieć co najmniej 6 znaków</small
+          >
+          <small
+            class="text-red-500 mt-1"
             *ngIf="loginForm.controls.password.errors?.['required'] && !vm.errorMessage"
-            >To pole jest wymagane
-          </small>
+            >To pole jest wymagane</small
+          >
         </ng-container>
         <div class="text-red-500 mt-4" *ngIf="vm.errorMessage">
           {{ vm.errorMessage }}

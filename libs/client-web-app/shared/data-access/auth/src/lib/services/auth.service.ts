@@ -3,7 +3,9 @@ import { Injectable, inject } from '@angular/core';
 import {
   User,
   Session,
+  Token,
 } from '@e-commerce/client-web-app/shared/data-access/api-types';
+import { tap } from 'rxjs';
 
 @Injectable()
 export class AuthService {
@@ -15,10 +17,7 @@ export class AuthService {
       password,
     };
 
-    return this.http.post<{ accessToken: string; user: User }>(
-      'http://localhost:3000/auth/login',
-      body
-    );
+    return this.http.post<Session>('http://localhost:3000/auth/login', body);
   }
 
   register$(email: string | null, password: string | null) {
@@ -27,27 +26,46 @@ export class AuthService {
       password,
     };
 
-    return this.http.post<{ accessToken: string; user: User }>(
-      'http://localhost:3000/auth/register',
-      body
-    );
+    return this.http.post<Session>('http://localhost:3000/auth/register', body);
   }
 
-  setSession({ accessToken, user }: Session) {
-    localStorage.setItem('access_token', JSON.stringify(accessToken));
+  setSession({ tokens, user }: Session) {
+    localStorage.setItem('access_token', JSON.stringify(tokens.accessToken));
+    localStorage.setItem('refresh_token', JSON.stringify(tokens.refreshToken));
     localStorage.setItem('user', JSON.stringify(user));
   }
 
   getSession(): Session | null {
-    const token = localStorage.getItem('access_token');
+    const accessToken = localStorage.getItem('access_token');
+    const refreshToken = localStorage.getItem('refresh_token');
     const user = localStorage.getItem('user');
 
-    if (!token || !user) return null;
-    return { accessToken: JSON.parse(token), user: JSON.parse(user) };
+    if (!accessToken || !refreshToken || !user) return null;
+    return {
+      tokens: {
+        accessToken: JSON.parse(accessToken),
+        refreshToken: JSON.parse(refreshToken),
+      },
+      user: JSON.parse(user),
+    };
   }
 
-  logout() {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('user');
+  logout(id: User['id']) {
+    return this.http.get<User>(`https://localhost:3000/auth/logout/${id}`).pipe(
+      tap(() => {
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('refresh_token');
+        localStorage.removeItem('user');
+      })
+    );
+  }
+
+  getRefreshToken$(id: User['id'], refreshToken: string) {
+    const body = {
+      id,
+      refreshToken,
+    };
+
+    return this.http.post<Token>('https://localhost:3000/auth/refresh', body);
   }
 }

@@ -21,7 +21,10 @@
             id="email"
             autocomplete="off"
             formControlName="email"
-            [ngClass]="{ 'ng-dirty ng-invalid': vm.status === 'error' }"
+            [ngClass]="{
+              'ng-dirty ng-invalid':
+                vm.status === 'error' && registerForm.controls.email.invalid
+            }"
           />
           <label for="email">Email</label>
         </p-floatLabel>
@@ -48,7 +51,10 @@
             id="password"
             [feedback]="false"
             [toggleMask]="true"
-            [ngClass]="{ 'ng-dirty ng-invalid': vm.status === 'error' }"
+            [ngClass]="{
+              'ng-dirty ng-invalid':
+                vm.status === 'error' && registerForm.controls.password.invalid
+            }"
             formControlName="password"
           ></p-password>
           <label for="password">Hasło</label>
@@ -74,7 +80,11 @@
             id="confirm-password"
             [feedback]="false"
             [toggleMask]="true"
-            [ngClass]="{ 'ng-dirty ng-invalid': vm.status === 'error' }"
+            [ngClass]="{
+              'ng-dirty ng-invalid':
+                vm.status === 'error' &&
+                registerForm.controls.confirmPassword.invalid
+            }"
             formControlName="confirmPassword"
           ></p-password>
           <label for="confirm-password">Potwierdzenie hasła</label>
