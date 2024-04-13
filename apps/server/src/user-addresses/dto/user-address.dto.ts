@@ -3,7 +3,7 @@ import { UserAddress } from '@prisma/client';
 
 export class UserAddressDto implements UserAddress {
   @ApiProperty()
-  id: string;
+  id: number;
 
   @ApiProperty()
   firstName: string;
@@ -27,5 +27,5 @@ export class UserAddressDto implements UserAddress {
   street: string;
 
   @ApiProperty()
-  userId: string;
+  userId: number;
 }
