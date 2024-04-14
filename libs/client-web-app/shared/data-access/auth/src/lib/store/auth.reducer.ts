@@ -61,6 +61,54 @@ export const authFeature = createFeature({
         status: 'error',
         errorMessage: responseError.error.message,
       })
+    ),
+    on(
+      authActions.logout,
+      (state): AuthState => ({
+        ...state,
+        status: 'loading',
+      })
+    ),
+    on(
+      authActions.logoutSuccess,
+      (state): AuthState => ({
+        ...state,
+        tokens: null,
+        user: null,
+        status: 'ok',
+      })
+    ),
+    on(
+      authActions.logoutFailure,
+      (state, { responseError }): AuthState => ({
+        ...state,
+        status: 'error',
+        errorMessage: responseError.error.message,
+      })
+    ),
+    on(
+      authActions.getRefreshToken,
+      (state): AuthState => ({
+        ...state,
+        status: 'loading',
+      })
+    ),
+    on(
+      authActions.getRefreshTokenSuccess,
+      (state, { tokens }): AuthState => ({
+        ...state,
+        status: 'ok',
+        tokens,
+      })
+    ),
+    on(
+      authActions.getRefreshTokenFailure,
+      (state, { responseError }): AuthState => ({
+        ...state,
+        status: 'error',
+        tokens: null,
+        errorMessage: responseError.error.message,
+      })
     )
   ),
 });

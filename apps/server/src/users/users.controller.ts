@@ -18,7 +18,7 @@ import {
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Prisma } from '@prisma/client';
 import { UserDto } from './dto/user.dto';
-import { AccessTokenGuard } from '../utils/access-token.guard';
+import { AccessTokenGuard } from '../common/guards/access-token.guard';
 
 @ApiTags('users')
 @Controller('users')

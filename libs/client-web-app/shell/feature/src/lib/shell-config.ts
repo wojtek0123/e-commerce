@@ -1,24 +1,25 @@
-import { APP_INITIALIZER, ApplicationConfig } from '@angular/core';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { ApplicationConfig } from '@angular/core';
 import {
   AuthService,
-  authActions,
   authFeature,
   authEffects,
 } from '@e-commerce/client-web-app/shared/data-access/auth';
 import { provideEffects } from '@ngrx/effects';
-import { Store, provideState } from '@ngrx/store';
+import { provideState } from '@ngrx/store';
+import {
+  authInterceptor,
+  unAuthErrorInterceptor as unAuthErrorInterceptor,
+  AppInitializerProvider,
+} from '@e-commerce/utils';
 
 export const shellConfig: ApplicationConfig = {
   providers: [
     AuthService,
-    {
-      provide: APP_INITIALIZER,
-      useFactory: (store: Store) => () => {
-        store.dispatch(authActions.init());
-      },
-      multi: true,
-      deps: [Store],
-    },
+    AppInitializerProvider,
+    provideHttpClient(
+      withInterceptors([authInterceptor, unAuthErrorInterceptor])
+    ),
     provideState(authFeature),
     provideEffects([authEffects]),
   ],

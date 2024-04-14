@@ -3,7 +3,10 @@ import { RouterLink } from '@angular/router';
 import { DividerModule } from 'primeng/divider';
 import { ButtonModule } from 'primeng/button';
 import { Store } from '@ngrx/store';
-import { authSelectors } from '@e-commerce/client-web-app/shared/data-access/auth';
+import {
+  authActions,
+  authSelectors,
+} from '@e-commerce/client-web-app/shared/data-access/auth';
 import { AsyncPipe } from '@angular/common';
 import { MenuItem } from 'primeng/api';
 import { MenuModule } from 'primeng/menu';
@@ -30,5 +33,6 @@ export class NavComponent {
 
   logout() {
     console.log('logout');
+    this.store.dispatch(authActions.logout());
   }
 }
