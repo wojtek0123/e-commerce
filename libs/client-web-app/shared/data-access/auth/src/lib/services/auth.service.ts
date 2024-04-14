@@ -35,6 +35,17 @@ export class AuthService {
     localStorage.setItem('user', JSON.stringify(user));
   }
 
+  removeSession() {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+    localStorage.removeItem('user');
+  }
+
+  updateTokens({ accessToken, refreshToken }: Session['tokens']) {
+    localStorage.setItem('access_token', JSON.stringify(accessToken));
+    localStorage.setItem('refresh_token', JSON.stringify(refreshToken));
+  }
+
   getSession(): Session | null {
     const accessToken = localStorage.getItem('access_token');
     const refreshToken = localStorage.getItem('refresh_token');
@@ -50,8 +61,12 @@ export class AuthService {
     };
   }
 
-  logout(id: User['id']) {
-    return this.http.get<User>(`https://localhost:3000/auth/logout/${id}`).pipe(
+  logout$(id: User['id']) {
+    const body = {
+      id,
+    };
+
+    return this.http.post<User>(`http://localhost:3000/auth/logout`, body).pipe(
       tap(() => {
         localStorage.removeItem('access_token');
         localStorage.removeItem('refresh_token');
@@ -66,6 +81,6 @@ export class AuthService {
       refreshToken,
     };
 
-    return this.http.post<Token>('https://localhost:3000/auth/refresh', body);
+    return this.http.post<Token>('http://localhost:3000/auth/refresh', body);
   }
 }

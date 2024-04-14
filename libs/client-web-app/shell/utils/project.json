@@ -1,16 +1,16 @@
 {
-  "name": "client-web-app/shared/utils",
+  "name": "utils",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/client-web-app/shared/utils/src",
+  "sourceRoot": "libs/client-web-app/shell/utils/src",
   "prefix": "lib",
   "projectType": "library",
-  "tags": ["scope:client-web-app", "type:utils"],
+  "tags": ["scope:client-web-app", "type:util"],
   "targets": {
     "test": {
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "libs/client-web-app/shared/utils/jest.config.ts"
+        "jestConfig": "libs/client-web-app/shell/utils/jest.config.ts"
       }
     },
     "lint": {

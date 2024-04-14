@@ -1,11 +1,11 @@
-import { Body, Controller, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthDto } from './dto/auth.dto';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
-import { AccessTokenGuard } from '../utils/access-token.guard';
-import { RefreshTokenGuard } from '../utils/refresh-token.guard';
+import { AccessTokenGuard } from '../common/guards/access-token.guard';
+import { RefreshTokenGuard } from '../common/guards/refresh-token.guard';
 import { UserDto } from '../users/dto/user.dto';
 import { TokenDto } from './dto/token.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
@@ -32,8 +32,8 @@ export class AuthController {
   @UseGuards(AccessTokenGuard)
   @Post('logout')
   @ApiCreatedResponse({ type: UserDto })
-  @ApiOperation({ summary: 'Log out' })
-  logout(@Param('id') id: number) {
+  @ApiOperation({ summary: 'Log out from the user account' })
+  logout(@Body() { id }: { id: number }) {
     return this.authService.logout(id);
   }
 

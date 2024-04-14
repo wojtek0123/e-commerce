@@ -1,8 +1,10 @@
 import { inject } from '@angular/core';
-import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { Actions, concatLatestFrom, createEffect, ofType } from '@ngrx/effects';
 import { catchError, filter, map, of, switchMap, tap } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 import { authActions } from './auth.actions';
+import { Store } from '@ngrx/store';
+import { authSelectors } from './auth.selectors';
 
 export const login$ = createEffect(
   (actions$ = inject(Actions), authService = inject(AuthService)) => {
@@ -41,10 +43,10 @@ export const register$ = createEffect(
   { functional: true }
 );
 
-export const loginSuccess$ = createEffect(
+export const setSession$ = createEffect(
   (actions$ = inject(Actions), authService = inject(AuthService)) => {
     return actions$.pipe(
-      ofType(authActions.loginSuccess),
+      ofType(authActions.loginSuccess, authActions.registerSuccess),
       tap((session) => authService.setSession(session))
     );
   },
@@ -71,10 +73,43 @@ export const getRefreshToken$ = createEffect(
       ofType(authActions.getRefreshToken),
       switchMap(({ id, refreshToken }) =>
         authService.getRefreshToken$(id, refreshToken).pipe(
-          map((token) => authActions.getRefreshTokenSuccess(token)),
+          map((tokens) => authActions.getRefreshTokenSuccess({ tokens })),
           catchError((responseError) =>
             of(authActions.getRefreshTokenFailure(responseError))
           )
+        )
+      )
+    );
+  },
+  { functional: true }
+);
+
+export const getRefreshTokenSuccess$ = createEffect(
+  (actions$ = inject(Actions), authService = inject(AuthService)) => {
+    return actions$.pipe(
+      ofType(authActions.getRefreshTokenSuccess),
+      tap(({ tokens }) => {
+        authService.updateTokens(tokens);
+      })
+    );
+  },
+  { functional: true, dispatch: false }
+);
+
+export const logout$ = createEffect(
+  (
+    actions$ = inject(Actions),
+    authService = inject(AuthService),
+    store = inject(Store)
+  ) => {
+    return actions$.pipe(
+      ofType(authActions.logout),
+      concatLatestFrom(() => store.select(authSelectors.selectUser)),
+      filter(([, user]) => !!user?.id),
+      switchMap(([, user]) =>
+        authService.logout$(user?.id ?? '').pipe(
+          map(() => authActions.logoutSuccess()),
+          catchError((error) => of(authActions.logoutFailure(error)))
         )
       )
     );

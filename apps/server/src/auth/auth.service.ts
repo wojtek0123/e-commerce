@@ -69,6 +69,7 @@ export class AuthService {
   }
 
   async logout(id: number) {
+    console.log(id);
     return this.prisma.user.update({
       where: { id },
       data: { refreshToken: null },
@@ -92,7 +93,7 @@ export class AuthService {
         },
         {
           secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
-          expiresIn: '15m',
+          expiresIn: '2m',
         }
       ),
       this.jwtService.signAsync(
@@ -115,11 +116,12 @@ export class AuthService {
 
   async refreshTokens(id: number, refreshToken: string) {
     const user = await this.prisma.user.findUnique({ where: { id } });
+    console.log(user);
 
     if (!user || !user.refreshToken)
       throw new ForbiddenException('Access Denied');
 
-    const refreshTokenMatches = await compare(user.refreshToken, refreshToken);
+    const refreshTokenMatches = await compare(refreshToken, user.refreshToken);
 
     if (!refreshTokenMatches) throw new ForbiddenException('Access Denied');
 
