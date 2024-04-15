@@ -1,5 +1,6 @@
 import { Route } from '@angular/router';
 import { BaseLayoutComponent } from '@e-commerce/client-web-app/shell/ui';
+import { authGuard } from '@e-commerce/client-web-app/shared/utils';
 
 export const clientWebAppShellRoutes: Route[] = [
   {
@@ -26,7 +27,12 @@ export const clientWebAppShellRoutes: Route[] = [
           import('@e-commerce/client-web-app/auth/feature/shell').then(
             (r) => r.shellRoutes
           ),
+        canActivate: [authGuard],
       },
     ],
+  },
+  {
+    path: '**',
+    redirectTo: '/',
   },
 ];

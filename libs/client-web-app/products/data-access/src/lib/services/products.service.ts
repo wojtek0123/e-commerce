@@ -1,9 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { supabase } from 'libs/shared/data-access/src/lib/supabase';
 import { products } from '../data/dummy-data';
 import { of } from 'rxjs';
-import { Product } from '@e-commerce/client-web-app/shared/data-access/api-types';
 
 interface CreateProduct {
   name: string;
@@ -15,18 +13,6 @@ interface CreateProduct {
 @Injectable({ providedIn: 'root' })
 export class ProductsService {
   private http = inject(HttpClient);
-
-  async uploadImage(image: File, name: string) {
-    const { data, error } = await supabase.storage
-      .from('images')
-      .upload(`${name}/${image.name}`, image);
-
-    if (error) {
-      throw new Error(error.message);
-    }
-
-    return data;
-  }
 
   createProduct$(product: CreateProduct) {
     const body = {
