@@ -11,7 +11,7 @@ import {
   authInterceptor,
   unAuthErrorInterceptor as unAuthErrorInterceptor,
   AppInitializerProvider,
-} from '@e-commerce/utils';
+} from '@e-commerce/client-web-app/shell/utils';
 
 export const shellConfig: ApplicationConfig = {
   providers: [
