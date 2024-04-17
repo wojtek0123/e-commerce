@@ -73,7 +73,9 @@
       "@e-commerce/shared/data-access": [
         "libs/shared/data-access/src/index.ts"
       ],
-      "@e-commerce/utils": ["libs/client-web-app/shell/utils/src/index.ts"]
+      "@e-commerce/client-web-app/shell/utils": [
+        "libs/client-web-app/shell/utils/src/index.ts"
+      ]
     }
   },
   "exclude": ["node_modules", "tmp"]

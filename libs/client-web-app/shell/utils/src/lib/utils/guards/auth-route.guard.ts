@@ -6,7 +6,7 @@ import {
   RouterStateSnapshot,
 } from '@angular/router';
 
-export const authGuard: CanActivateFn = (
+export const authRouteGuard: CanActivateFn = (
   _next: ActivatedRouteSnapshot,
   state: RouterStateSnapshot
 ) => {
@@ -15,14 +15,10 @@ export const authGuard: CanActivateFn = (
   const accessToken = localStorage.getItem('access_token');
   const refreshToken = localStorage.getItem('refresh_token');
 
-  if (!accessToken || !refreshToken) {
-    router.navigate(['/auth/login']);
-    return true;
+  if (accessToken && refreshToken && state.url.includes('auth')) {
+    router.navigate(['/']);
+    return false;
   }
-  // else if (state.url.includes('auth')) {
-  //   router.navigate(['/']);
-  //   return false;
-  // }
 
   return true;
 };
