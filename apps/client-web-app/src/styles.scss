@@ -30,6 +30,10 @@ button {
   border-radius: var(--border-radius);
 }
 
+a.p-button {
+  border-radius: var(--border-radius);
+}
+
 p-button.w-full .p-button {
   width: 100% !important;
 }
