@@ -10,7 +10,7 @@
           <p-button (click)="categoriesMenu.toggle($event)" iconPos="right" [icon]="
               categoriesMenu.visible ? 'pi pi-angle-up' : 'pi pi-angle-down'
             " label="Kategorie"></p-button>
-          <p-menu #categoriesMenu [popup]="true" [model]="[]" />
+          <p-menu class="p-menu-two-columns" #categoriesMenu [popup]="true" [model]="(categories$ | async) ?? []" />
         </li>
         <li>
           <a [routerLink]="'/nowosci'" routerLinkActive="underline"
