@@ -41,3 +41,23 @@ p-button.w-full .p-button {
 .p-inputtext:enabled:focus {
   box-shadow: none !important;
 }
+
+.p-menu-two-columns .p-menu {
+  width: max-content !important;
+  border-radius: var(--border-radius);
+  padding: 0.5rem;
+
+  & ul {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+}
+
+.p-menu .p-menuitem>.p-menuitem-content {
+  border-radius: var(--border-radius);
+}
+
+.p-menu {
+  margin-top: 0.5rem;
+}

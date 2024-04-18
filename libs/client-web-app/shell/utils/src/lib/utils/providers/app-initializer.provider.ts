@@ -3,6 +3,7 @@ import {
   AuthService,
   authActions,
 } from '@e-commerce/client-web-app/shared/data-access/auth';
+import { categoryActions } from '@e-commerce/client-web-app/shared/data-access/category';
 import { Store } from '@ngrx/store';
 import { jwtDecode } from 'jwt-decode';
 
@@ -19,6 +20,7 @@ const initializeAppFactory = (store: Store, authService: AuthService) => () => {
   }
 
   store.dispatch(authActions.init());
+  store.dispatch(categoryActions.getCategories());
 };
 
 export const AppInitializerProvider: Provider = {
