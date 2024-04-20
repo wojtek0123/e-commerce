@@ -12,11 +12,9 @@ import {
 } from '@e-commerce/client-web-app/shared/data-access/category';
 import { provideEffects } from '@ngrx/effects';
 import { provideState } from '@ngrx/store';
-import {
-  authInterceptor,
-  unAuthErrorInterceptor as unAuthErrorInterceptor,
-  AppInitializerProvider,
-} from '@e-commerce/client-web-app/shell/utils';
+import { AppInitializerProvider } from './providers/app-initializer.provider';
+import { authInterceptor } from './interceptors/auth.interceptor';
+import { unAuthErrorInterceptor } from './interceptors/unauth-error.interceptor';
 
 export const shellConfig: ApplicationConfig = {
   providers: [
