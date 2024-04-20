@@ -7,7 +7,7 @@ import {
   authActions,
   authSelectors,
 } from '@e-commerce/client-web-app/shared/data-access/auth';
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, NgClass } from '@angular/common';
 import { MenuItem } from 'primeng/api';
 import { MenuModule } from 'primeng/menu';
 import { Observable, map } from 'rxjs';
@@ -25,6 +25,7 @@ import { MegaMenuModule } from 'primeng/megamenu';
     MenuModule,
     MegaMenuModule,
     RouterLink,
+    NgClass,
   ],
   templateUrl: './nav.component.html',
 })
@@ -35,7 +36,12 @@ export class NavComponent {
     .select(categorySelectors.selectCategories)
     .pipe(
       map((categories) =>
-        categories.map((category) => ({ label: category.name }))
+        !categories.length
+          ? [{ label: 'Pokaż wszystkie', routerLink: '' }]
+          : categories.map((category) => ({
+              label: category.name,
+              routerLink: '',
+            }))
       )
     );
 
@@ -45,32 +51,32 @@ export class NavComponent {
       map((tokens) =>
         tokens
           ? [
-            {
-              label: 'Zamówienia',
-              icon: 'pi pi-book',
-            },
-            {
-              label: 'Ustawienia',
-              icon: 'pi pi-cog',
-            },
-            {
-              label: 'Log out',
-              icon: 'pi pi-sign-out',
-              command: () => this.store.dispatch(authActions.logout()),
-            },
-          ]
+              {
+                label: 'Zamówienia',
+                icon: 'pi pi-book',
+              },
+              {
+                label: 'Ustawienia',
+                icon: 'pi pi-cog',
+              },
+              {
+                label: 'Log out',
+                icon: 'pi pi-sign-out',
+                command: () => this.store.dispatch(authActions.logout()),
+              },
+            ]
           : [
-            {
-              label: 'Zaloguj się',
-              icon: 'pi pi-sign-in',
-              routerLink: '/auth/login',
-            },
-            {
-              label: 'Zarejestruj się',
-              icon: 'pi pi-user-plus',
-              routerLink: '/auth/register',
-            },
-          ]
+              {
+                label: 'Zaloguj się',
+                icon: 'pi pi-sign-in',
+                routerLink: '/auth/login',
+              },
+              {
+                label: 'Zarejestruj się',
+                icon: 'pi pi-user-plus',
+                routerLink: '/auth/register',
+              },
+            ]
       )
     );
 }

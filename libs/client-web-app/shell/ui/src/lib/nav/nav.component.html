@@ -1,47 +1,91 @@
-<div class="shadow-5 surface-card nav-height flex align-items-center justify-content-between w-full">
-  <nav class="flex align-items-center justify-content-between md:py-1 mx-4 w-full">
+<div
+  class="shadow-5 surface-card nav-height flex align-items-center justify-content-between w-full"
+>
+  <nav
+    class="flex align-items-center justify-content-between md:py-1 mx-4 w-full"
+  >
     <div class="flex align-items-center gap-4 xl:gap-8">
-      <h1 class="text-xl md:text-2xl lg:text-[2rem]">
-        <span class="font-bold text-primary">Story</span><span class="uppercase">Stash</span>
-      </h1>
+      <a
+        routerLink="/"
+        class="text-xl md:text-2xl lg:text-[2rem] text-white no-underline"
+      >
+        <span class="font-bold text-primary">Story</span
+        ><span class="uppercase">Stash</span>
+      </a>
       <p-divider layout="vertical" />
-      <ul class="align-items-center justify-content-center gap-4 list-none m-0 p-0 hidden lg:flex">
+      <ul
+        class="align-items-center justify-content-center gap-4 list-none m-0 p-0 hidden lg:flex"
+      >
         <li>
-          <p-button (click)="categoriesMenu.toggle($event)" iconPos="right" [icon]="
+          @if ({categories: categories$ | async}; as vm) {
+          <p-button
+            (click)="categoriesMenu.toggle($event)"
+            iconPos="right"
+            [icon]="
               categoriesMenu.visible ? 'pi pi-angle-up' : 'pi pi-angle-down'
-            " label="Kategorie"></p-button>
-          <p-menu class="p-menu-two-columns" #categoriesMenu [popup]="true" [model]="(categories$ | async) ?? []" />
+            "
+            label="Kategorie"
+          ></p-button>
+          <p-menu
+            [ngClass]="{ 'p-menu-two-columns': !vm.categories?.length }"
+            #categoriesMenu
+            [popup]="true"
+            [model]="vm.categories ?? []"
+          />
+          }
         </li>
         <li>
-          <a [routerLink]="'/nowosci'" routerLinkActive="underline"
-            class="text-xl text-white capitalize no-underline py-1 px-3">nowości</a>
+          <a
+            [routerLink]="'/nowosci'"
+            routerLinkActive="underline"
+            class="text-xl text-white capitalize no-underline py-1 px-3"
+            >nowości</a
+          >
         </li>
         <li>
-          <a [routerLink]="'/bestsellery'" routerLinkActive="underline"
-            class="text-xl text-white capitalize no-underline py-1 px-3">bestsellery</a>
+          <a
+            [routerLink]="'/bestsellery'"
+            routerLinkActive="underline"
+            class="text-xl text-white capitalize no-underline py-1 px-3"
+            >bestsellery</a
+          >
         </li>
         <li>
-          <a [routerLink]="'/promocje'" routerLinkActive="underline"
-            class="text-xl text-white capitalize no-underline py-1 px-3">promocje</a>
+          <a
+            [routerLink]="'/promocje'"
+            routerLinkActive="underline"
+            class="text-xl text-white capitalize no-underline py-1 px-3"
+            >promocje</a
+          >
         </li>
         <li>
-          <a [routerLink]="'/zapowiedzi'" routerLinkActive="underline"
-            class="text-xl text-white capitalize no-underline py-1 px-3">zapowiedzi</a>
+          <a
+            [routerLink]="'/zapowiedzi'"
+            routerLinkActive="underline"
+            class="text-xl text-white capitalize no-underline py-1 px-3"
+            >zapowiedzi</a
+          >
         </li>
       </ul>
     </div>
 
     <div class="flex align-items-center gap-2">
       <p-menu #menu [model]="(menuItems$ | async) ?? []" [popup]="true" />
-      <p-button type="button" [text]="true" (click)="menu.toggle($event)"
-        class="flex flex-column justify-content-center">
+      <p-button
+        type="button"
+        [text]="true"
+        (click)="menu.toggle($event)"
+        class="flex flex-column justify-content-center"
+      >
         <span class="flex flex-column justify-content-center">
           <i class="pi pi-user" style="font-size: 1.5rem"></i>
           <span class="text-xs">Twoje konto</span>
         </span>
       </p-button>
-      <a class="p-button p-button-text flex flex-column justify-content-center no-underline border-radius"
-        routerLink="/cart">
+      <a
+        class="p-button p-button-text flex flex-column justify-content-center no-underline border-radius"
+        routerLink="/cart"
+      >
         <i class="pi pi-shopping-cart" style="font-size: 1.5rem"></i>
         <span class="text-xs">Koszyk</span>
       </a>
