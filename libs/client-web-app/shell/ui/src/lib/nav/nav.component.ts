@@ -2,17 +2,11 @@ import { Component, effect, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DividerModule } from 'primeng/divider';
 import { ButtonModule } from 'primeng/button';
-import { Store } from '@ngrx/store';
-import {
-  // authActions,
-  // authSelectors,
-  AuthStore,
-} from '@e-commerce/client-web-app/shared/data-access/auth';
+import { AuthStore } from '@e-commerce/client-web-app/shared/data-access/auth';
 import { AsyncPipe, NgClass } from '@angular/common';
 import { MenuItem } from 'primeng/api';
 import { MenuModule } from 'primeng/menu';
-import { Observable, map } from 'rxjs';
-import { categorySelectors } from '@e-commerce/client-web-app/shared/data-access/category';
+import { CategoryStore } from '@e-commerce/client-web-app/shared/data-access/category';
 import { MegaMenuModule } from 'primeng/megamenu';
 
 @Component({
@@ -31,8 +25,31 @@ import { MegaMenuModule } from 'primeng/megamenu';
   templateUrl: './nav.component.html',
 })
 export class NavComponent {
-  private store = inject(Store);
   private authStore = inject(AuthStore);
+  private categoryStore = inject(CategoryStore);
+
+  authTokens = this.authStore.tokens;
+
+  categories: MenuItem[] = [
+    {
+      label: 'Pokaż wszystkie',
+      routerLink: '/ksiazki',
+      queryParams: { category: 'wszystkie' },
+    },
+  ];
+
+  menuItems: MenuItem[] = [
+    {
+      label: 'Zaloguj się',
+      icon: 'pi pi-sign-in',
+      routerLink: '/auth/login',
+    },
+    {
+      label: 'Zarejestruj się',
+      icon: 'pi pi-user-plus',
+      routerLink: '/auth/register',
+    },
+  ];
 
   constructor() {
     effect(() => {
@@ -65,41 +82,12 @@ export class NavComponent {
                 routerLink: '/auth/register',
               },
             ];
+
+      this.categories = this.categoryStore.categories().map((category) => ({
+        label: category.name,
+        routerLink: '/ksiazki',
+        queryParams: { category: category.name },
+      }));
     });
   }
-
-  authTokens = this.authStore.tokens;
-
-  categories$: Observable<MenuItem[]> = this.store
-    .select(categorySelectors.selectCategories)
-    .pipe(
-      map((categories) =>
-        !categories.length
-          ? [
-              {
-                label: 'Pokaż wszystkie',
-                routerLink: '/ksiazki',
-                queryParams: { category: 'wszystkie' },
-              },
-            ]
-          : categories.map((category) => ({
-              label: category.name,
-              routerLink: '/ksiazki',
-              queryParams: { category: category.name },
-            }))
-      )
-    );
-
-  menuItems: MenuItem[] = [
-    {
-      label: 'Zaloguj się',
-      icon: 'pi pi-sign-in',
-      routerLink: '/auth/login',
-    },
-    {
-      label: 'Zarejestruj się',
-      icon: 'pi pi-user-plus',
-      routerLink: '/auth/register',
-    },
-  ];
 }
