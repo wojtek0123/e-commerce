@@ -76,7 +76,7 @@
     </div>
 
     <div class="flex align-items-center gap-2">
-      <p-menu #menu [model]="(menuItems$ | async) ?? []" [popup]="true" />
+      <p-menu #menu [model]="menuItems" [popup]="true" />
       <p-button
         type="button"
         [text]="true"

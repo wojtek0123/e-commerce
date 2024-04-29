@@ -3,7 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import {
   User,
   Session,
-  Token,
+  Tokens,
 } from '@e-commerce/client-web-app/shared/data-access/api-types';
 import { tap } from 'rxjs';
 
@@ -17,7 +17,9 @@ export class AuthService {
       password,
     };
 
-    return this.http.post<Session>('http://localhost:3000/auth/login', body);
+    return this.http
+      .post<Session>('http://localhost:3000/auth/login', body)
+      .pipe(tap((session) => this.setSession(session)));
   }
 
   register$(email: string | null, password: string | null) {
@@ -26,7 +28,30 @@ export class AuthService {
       password,
     };
 
-    return this.http.post<Session>('http://localhost:3000/auth/register', body);
+    return this.http
+      .post<Session>('http://localhost:3000/auth/register', body)
+      .pipe(tap((session) => this.setSession(session)));
+  }
+
+  logout$(id: User['id']) {
+    const body = {
+      id,
+    };
+
+    return this.http
+      .post<User>(`http://localhost:3000/auth/logout`, body)
+      .pipe(tap(() => this.removeSession()));
+  }
+
+  getRefreshToken$(id: User['id'], refreshToken: string) {
+    const body = {
+      id,
+      refreshToken,
+    };
+
+    return this.http
+      .post<Tokens>('http://localhost:3000/auth/refresh', body)
+      .pipe(tap((tokens) => this.updateTokens(tokens)));
   }
 
   setSession({ tokens, user }: Session) {
@@ -52,6 +77,7 @@ export class AuthService {
     const user = localStorage.getItem('user');
 
     if (!accessToken || !refreshToken || !user) return null;
+
     return {
       tokens: {
         accessToken: JSON.parse(accessToken),
@@ -59,28 +85,5 @@ export class AuthService {
       },
       user: JSON.parse(user),
     };
-  }
-
-  logout$(id: User['id']) {
-    const body = {
-      id,
-    };
-
-    return this.http.post<User>(`http://localhost:3000/auth/logout`, body).pipe(
-      tap(() => {
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('refresh_token');
-        localStorage.removeItem('user');
-      })
-    );
-  }
-
-  getRefreshToken$(id: User['id'], refreshToken: string) {
-    const body = {
-      id,
-      refreshToken,
-    };
-
-    return this.http.post<Token>('http://localhost:3000/auth/refresh', body);
   }
 }

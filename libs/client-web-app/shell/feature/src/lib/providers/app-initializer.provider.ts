@@ -1,8 +1,5 @@
 import { APP_INITIALIZER, Provider } from '@angular/core';
-import {
-  AuthService,
-  authActions,
-} from '@e-commerce/client-web-app/shared/data-access/auth';
+import { AuthService } from '@e-commerce/client-web-app/shared/data-access/auth';
 import { categoryActions } from '@e-commerce/client-web-app/shared/data-access/category';
 import { Store } from '@ngrx/store';
 import { jwtDecode } from 'jwt-decode';
@@ -19,7 +16,6 @@ const initializeAppFactory = (store: Store, authService: AuthService) => () => {
     }
   }
 
-  store.dispatch(authActions.init());
   store.dispatch(categoryActions.getCategories());
 };
 

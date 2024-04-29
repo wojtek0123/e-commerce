@@ -1,11 +1,11 @@
 import { User } from './user.model';
 
 export interface Session {
-  tokens: Token;
+  tokens: Tokens;
   user: User;
 }
 
-export interface Token {
+export interface Tokens {
   accessToken: string;
   refreshToken: string;
 }

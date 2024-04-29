@@ -1,11 +1,12 @@
-import { Component, inject } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DividerModule } from 'primeng/divider';
 import { ButtonModule } from 'primeng/button';
 import { Store } from '@ngrx/store';
 import {
-  authActions,
-  authSelectors,
+  // authActions,
+  // authSelectors,
+  AuthStore,
 } from '@e-commerce/client-web-app/shared/data-access/auth';
 import { AsyncPipe, NgClass } from '@angular/common';
 import { MenuItem } from 'primeng/api';
@@ -31,6 +32,43 @@ import { MegaMenuModule } from 'primeng/megamenu';
 })
 export class NavComponent {
   private store = inject(Store);
+  private authStore = inject(AuthStore);
+
+  constructor() {
+    effect(() => {
+      this.menuItems =
+        !!this.authTokens()?.accessToken && !!this.authTokens()?.refreshToken
+          ? [
+              {
+                label: 'Zamówienia',
+                icon: 'pi pi-book',
+              },
+              {
+                label: 'Ustawienia',
+                icon: 'pi pi-cog',
+              },
+              {
+                label: 'Log out',
+                icon: 'pi pi-sign-out',
+                command: () => this.authStore.logout(),
+              },
+            ]
+          : [
+              {
+                label: 'Zaloguj się',
+                icon: 'pi pi-sign-in',
+                routerLink: '/auth/login',
+              },
+              {
+                label: 'Zarejestruj się',
+                icon: 'pi pi-user-plus',
+                routerLink: '/auth/register',
+              },
+            ];
+    });
+  }
+
+  authTokens = this.authStore.tokens;
 
   categories$: Observable<MenuItem[]> = this.store
     .select(categorySelectors.selectCategories)
@@ -52,38 +90,16 @@ export class NavComponent {
       )
     );
 
-  menuItems$: Observable<MenuItem[]> = this.store
-    .select(authSelectors.selectTokens)
-    .pipe(
-      map((tokens) =>
-        tokens
-          ? [
-              {
-                label: 'Zamówienia',
-                icon: 'pi pi-book',
-              },
-              {
-                label: 'Ustawienia',
-                icon: 'pi pi-cog',
-              },
-              {
-                label: 'Log out',
-                icon: 'pi pi-sign-out',
-                command: () => this.store.dispatch(authActions.logout()),
-              },
-            ]
-          : [
-              {
-                label: 'Zaloguj się',
-                icon: 'pi pi-sign-in',
-                routerLink: '/auth/login',
-              },
-              {
-                label: 'Zarejestruj się',
-                icon: 'pi pi-user-plus',
-                routerLink: '/auth/register',
-              },
-            ]
-      )
-    );
+  menuItems: MenuItem[] = [
+    {
+      label: 'Zaloguj się',
+      icon: 'pi pi-sign-in',
+      routerLink: '/auth/login',
+    },
+    {
+      label: 'Zarejestruj się',
+      icon: 'pi pi-user-plus',
+      routerLink: '/auth/register',
+    },
+  ];
 }
