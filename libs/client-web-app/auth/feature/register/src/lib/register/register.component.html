@@ -8,109 +8,83 @@
     class="flex flex-column gap-3 w-full max-w-30rem xl:align-items-center"
     (submit)="onSubmit()"
   >
-    <ng-container>
-      <div class="flex flex-column w-full">
-        <p-floatLabel>
-          <input
-            pInputText
-            id="email"
-            autocomplete="off"
-            formControlName="email"
-            [ngClass]="{
-              'ng-dirty ng-invalid':
-                !!errorMessage && registerForm.controls.email.invalid
-            }"
-          />
-          <label for="email">Email</label>
-        </p-floatLabel>
-        <ng-container
-          *ngIf="registerForm.controls.email.dirty || !!errorMessage"
-        >
-          <small
-            class="text-red-500 mt-1"
-            *ngIf="registerForm.controls.email.errors?.['required']"
-          >
-            To pole jest wymagane
-          </small>
-          <small
-            class="text-red-500 mt-1"
-            *ngIf="registerForm.controls.email.errors?.['email'] && !errorMessage"
-          >
-            Niepoprawny email
-          </small>
-        </ng-container>
+    <div class="flex flex-column w-full">
+      <p-floatLabel>
+        <input
+          pInputText
+          id="email"
+          autocomplete="off"
+          formControlName="email"
+          [ngClass]="{
+            'ng-dirty ng-invalid':
+              !!errorMessage && registerForm.controls.email.invalid
+          }"
+        />
+        <label for="email">Email</label>
+      </p-floatLabel>
+      @if (registerForm.controls.email.dirty || !!errorMessage) { @if
+      (registerForm.controls.email.getError('required')) {
+      <small class="text-red-500 mt-1"> To pole jest wymagane </small>
+      } @else if (registerForm.controls.email.getError('email')) {
+      <small class="text-red-500 mt-1"> Niepoprawny email </small>
+      } }
+    </div>
+    <div class="flex flex-column w-full">
+      <p-floatLabel>
+        <p-password
+          id="password"
+          [feedback]="false"
+          [toggleMask]="true"
+          [ngClass]="{
+            'ng-dirty ng-invalid':
+              errorMessage && registerForm.controls.password.invalid
+          }"
+          formControlName="password"
+        ></p-password>
+        <label for="password">Hasło</label>
+      </p-floatLabel>
+      @if (registerForm.controls.password.dirty || !!errorMessage) { @if
+      (registerForm.controls.password.getError('minlength')) {
+      <small class="text-red-500 mt-1"
+        >Hasło powinno mieć co najmniej 6 znaków</small
+      >
+      } @else if (registerForm.controls.password.getError('required')) {
+      <small class="text-red-500 mt-1">To pole jest wymagane</small>
+      } }
+    </div>
+    <div class="flex flex-column w-full">
+      <p-floatLabel>
+        <p-password
+          id="confirm-password"
+          [feedback]="false"
+          [toggleMask]="true"
+          [ngClass]="{
+            'ng-dirty ng-invalid':
+              errorMessage && registerForm.controls.confirmPassword.invalid
+          }"
+          formControlName="confirmPassword"
+        ></p-password>
+        <label for="confirm-password">Potwierdzenie hasła</label>
+      </p-floatLabel>
+      @if (registerForm.controls.confirmPassword.dirty || !!errorMessage) { @if
+      (registerForm.controls.confirmPassword.getError('required')) {
+      <small class="text-red-500 mt-1"> To pole jest wymagane </small>
+      } @else if (registerForm.getError('passwordMismatch')) {
+      <small class="text-red-500 mt-1">Hasła są różne </small>
+      } } @if(!!errorMessage) {
+      <div class="mt-4 text-red-500">
+        {{ errorMessage }}
       </div>
-      <div class="flex flex-column w-full">
-        <p-floatLabel>
-          <p-password
-            id="password"
-            [feedback]="false"
-            [toggleMask]="true"
-            [ngClass]="{
-              'ng-dirty ng-invalid':
-                errorMessage && registerForm.controls.password.invalid
-            }"
-            formControlName="password"
-          ></p-password>
-          <label for="password">Hasło</label>
-        </p-floatLabel>
-        <ng-container
-          *ngIf="registerForm.controls.password.dirty || !!errorMessage"
-        >
-          <small
-            class="text-red-500 mt-1"
-            *ngIf="registerForm.controls.password.errors?.['minlength']"
-            >Hasło powinno mieć co najmniej 6 znaków</small
-          >
-          <small
-            class="text-red-500 mt-1"
-            *ngIf="registerForm.controls.password.errors?.['required']"
-            >To pole jest wymagane</small
-          >
-        </ng-container>
-      </div>
-      <div class="flex flex-column w-full">
-        <p-floatLabel>
-          <p-password
-            id="confirm-password"
-            [feedback]="false"
-            [toggleMask]="true"
-            [ngClass]="{
-              'ng-dirty ng-invalid':
-                errorMessage && registerForm.controls.confirmPassword.invalid
-            }"
-            formControlName="confirmPassword"
-          ></p-password>
-          <label for="confirm-password">Potwierdzenie hasła</label>
-        </p-floatLabel>
-        <ng-container
-          *ngIf="registerForm.controls.confirmPassword.dirty || !!errorMessage"
-        >
-          <small
-            class="text-red-500 mt-1"
-            *ngIf="registerForm.controls.confirmPassword.errors?.['required']"
-          >
-            To pole jest wymagane
-          </small>
-          <small
-            class="text-red-500 mt-1"
-            *ngIf="registerForm.errors?.['passwordMismatch']"
-            >Hasła są różne
-          </small>
-        </ng-container>
-        <div class="mt-4 text-red-500" *ngIf="errorMessage">
-          {{ errorMessage }}
-        </div>
+      }
 
-        <p-button
-          type="submit"
-          [label]="'Zarejestruj się'"
-          [loading]="status() === 'loading'"
-          loading-icon="pi pi-spin pi-spinner"
-          iconPos="right"
-          class="w-full mt-4"
-        ></p-button>
-      </div>
-    </ng-container>
+      <p-button
+        type="submit"
+        [label]="'Zarejestruj się'"
+        [loading]="status() === 'loading'"
+        loading-icon="pi pi-spin pi-spinner"
+        iconPos="right"
+        class="w-full mt-4"
+      ></p-button>
+    </div>
   </form>
 </e-commerce-form-wrapper>
