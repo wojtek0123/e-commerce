@@ -17,7 +17,7 @@
         class="align-items-center justify-content-center gap-4 list-none m-0 p-0 hidden lg:flex"
       >
         <li>
-          @if ({categories: categories$ | async}; as vm) {
+          @if (categories$ | async; as categories) {
           <p-button
             (click)="categoriesMenu.toggle($event)"
             iconPos="right"
@@ -27,24 +27,28 @@
             label="Kategorie"
           ></p-button>
           <p-menu
-            [ngClass]="{ 'p-menu-two-columns': !vm.categories?.length }"
+            [ngClass]="{
+              'p-menu-two-columns': categories.length > 1
+            }"
             #categoriesMenu
             [popup]="true"
-            [model]="vm.categories ?? []"
+            [model]="categories ?? []"
           />
           }
         </li>
         <li>
           <a
-            [routerLink]="'/nowosci'"
+            [routerLink]="'/ksiazki'"
             routerLinkActive="underline"
+            [queryParams]="{ tag: 'new' }"
             class="text-xl text-white capitalize no-underline py-1 px-3"
             >nowości</a
           >
         </li>
         <li>
           <a
-            [routerLink]="'/bestsellery'"
+            [routerLink]="'/ksiazki'"
+            [queryParams]="{ tag: 'bestseller' }"
             routerLinkActive="underline"
             class="text-xl text-white capitalize no-underline py-1 px-3"
             >bestsellery</a
@@ -52,7 +56,8 @@
         </li>
         <li>
           <a
-            [routerLink]="'/promocje'"
+            [routerLink]="'/ksiazki'"
+            [queryParams]="{ tag: 'promocja' }"
             routerLinkActive="underline"
             class="text-xl text-white capitalize no-underline py-1 px-3"
             >promocje</a
@@ -60,7 +65,8 @@
         </li>
         <li>
           <a
-            [routerLink]="'/zapowiedzi'"
+            [routerLink]="'/ksiazki'"
+            [queryParams]="{ tag: 'nadchodzace' }"
             routerLinkActive="underline"
             class="text-xl text-white capitalize no-underline py-1 px-3"
             >zapowiedzi</a

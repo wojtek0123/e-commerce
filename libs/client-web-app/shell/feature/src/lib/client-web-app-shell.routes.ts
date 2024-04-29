@@ -1,6 +1,5 @@
 import { Route } from '@angular/router';
 import { BaseLayoutComponent } from '@e-commerce/client-web-app/shell/ui';
-import { authGuard } from '@e-commerce/client-web-app/shared/utils';
 import { authRouteGuard } from '@e-commerce/client-web-app/shell/utils';
 
 export const clientWebAppShellRoutes: Route[] = [
@@ -16,6 +15,13 @@ export const clientWebAppShellRoutes: Route[] = [
           ),
       },
       {
+        path: 'ksiazki',
+        loadChildren: () =>
+          import('@e-commerce/client-web-app/books/feature/books').then(
+            (r) => r.clientWebAppBooksFeatureBooksRoutes
+          ),
+      },
+      {
         path: 'products',
         loadChildren: () =>
           import('@e-commerce/client-web-app/products/feature-products').then(
@@ -28,12 +34,12 @@ export const clientWebAppShellRoutes: Route[] = [
           import('@e-commerce/client-web-app/auth/feature/shell').then(
             (r) => r.shellRoutes
           ),
-        canActivate: [authRouteGuard]
+        canActivate: [authRouteGuard],
       },
       {
         path: 'cart',
-        redirectTo: '/'
-      }
+        redirectTo: '/',
+      },
     ],
   },
   {

@@ -37,10 +37,17 @@ export class NavComponent {
     .pipe(
       map((categories) =>
         !categories.length
-          ? [{ label: 'Pokaż wszystkie', routerLink: '' }]
+          ? [
+              {
+                label: 'Pokaż wszystkie',
+                routerLink: '/ksiazki',
+                queryParams: { category: 'wszystkie' },
+              },
+            ]
           : categories.map((category) => ({
               label: category.name,
-              routerLink: '',
+              routerLink: '/ksiazki',
+              queryParams: { category: category.name },
             }))
       )
     );
