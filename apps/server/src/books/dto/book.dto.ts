@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDate, IsNumber, IsString } from 'class-validator';
+import { Tag } from '@prisma/client';
+import { IsDate, IsEnum, IsNumber, IsString } from 'class-validator';
 
 export class BookDto {
   @ApiProperty({ readOnly: true })
@@ -47,4 +48,8 @@ export class BookDto {
   @ApiProperty()
   @IsNumber()
   publisherId: number;
+
+  @ApiProperty()
+  @IsEnum(Tag)
+  tag: Tag;
 }
