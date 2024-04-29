@@ -8,12 +8,7 @@
     class="flex flex-column gap-3 w-full max-w-30rem xl:align-items-center"
     (submit)="onSubmit()"
   >
-    <ng-container
-      *ngIf="{
-        status: status$ | async,
-        errorMessage: errorMessage$ | async
-      } as vm"
-    >
+    <ng-container>
       <div class="flex flex-column w-full">
         <p-floatLabel>
           <input
@@ -23,18 +18,16 @@
             autocomplete="off"
             [ngClass]="{
               'ng-dirty ng-invalid':
-                vm.status === 'error' && loginForm.controls.email.invalid
+                !!errorMessage && loginForm.controls.email.invalid
             }"
             formControlName="email"
           />
           <label for="email">Email</label>
         </p-floatLabel>
-        <ng-container
-          *ngIf="loginForm.controls.email.dirty || vm.status === 'error'"
-        >
+        <ng-container *ngIf="loginForm.controls.email.dirty || errorMessage">
           <small
             class="text-red-500 mt-1"
-            *ngIf="loginForm.controls.email.errors?.['required'] && !vm.errorMessage"
+            *ngIf="loginForm.controls.email.errors?.['required'] && errorMessage"
             >To pole jest wymagane
           </small>
           <small
@@ -52,14 +45,14 @@
             [toggleMask]="true"
             [ngClass]="{
               'ng-dirty ng-invalid':
-                vm.status === 'error' && loginForm.controls.password.invalid
+                errorMessage && loginForm.controls.password.invalid
             }"
             formControlName="password"
           ></p-password>
           <label for="password">Hasło</label>
         </p-floatLabel>
         <ng-container
-          *ngIf="loginForm.controls.password.dirty || vm.status === 'error'"
+          *ngIf="loginForm.controls.password.dirty || !!errorMessage"
         >
           <small
             class="text-red-500 mt-1"
@@ -68,18 +61,18 @@
           >
           <small
             class="text-red-500 mt-1"
-            *ngIf="loginForm.controls.password.errors?.['required'] && !vm.errorMessage"
+            *ngIf="loginForm.controls.password.errors?.['required'] && errorMessage"
             >To pole jest wymagane</small
           >
         </ng-container>
-        <div class="text-red-500 mt-4" *ngIf="vm.errorMessage">
-          {{ vm.errorMessage }}
+        <div class="text-red-500 mt-4" *ngIf="errorMessage">
+          {{ errorMessage }}
         </div>
 
         <p-button
           type="submit"
           label="Zaloguj się!"
-          [loading]="vm.status === 'loading'"
+          [loading]="status() === 'loading'"
           loading-icon="pi pi-spin pi-spinner"
           iconPos="right"
           class="w-full mt-4"

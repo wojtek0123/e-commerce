@@ -28,8 +28,7 @@ export const categoryFeature = createFeature({
       categoryActions.getCategoriesFailure,
       (state, { responseError }): CategoryState => ({
         ...state,
-        status: 'error',
-        errorMessage: responseError.error.message,
+        status: { error: responseError.error.message },
       })
     )
   ),

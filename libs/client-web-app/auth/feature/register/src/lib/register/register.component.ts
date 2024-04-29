@@ -1,5 +1,10 @@
 import { AsyncPipe, NgClass, NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  inject,
+} from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -7,17 +12,15 @@ import {
   ValidationErrors,
   Validators,
 } from '@angular/forms';
-import { RouterLink } from '@angular/router';
-import {
-  authActions,
-  authSelectors,
-} from '@e-commerce/client-web-app/shared/data-access/auth';
+import { Router, RouterLink } from '@angular/router';
+import { AuthStore } from '@e-commerce/client-web-app/shared/data-access/auth';
 import { FormWrapperComponent } from '@e-commerce/client-web-app/auth/ui/form-wrapper';
-import { Store } from '@ngrx/store';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { FloatLabelModule } from 'primeng/floatlabel';
+import { getErrorMessage } from '@e-commerce/client-web-app/shared/data-access/api-types';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'e-commerce-register',
@@ -39,11 +42,20 @@ import { FloatLabelModule } from 'primeng/floatlabel';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RegisterComponent {
-  private store = inject(Store);
+  private authStore = inject(AuthStore);
   private fb = inject(FormBuilder);
+  private router = inject(Router);
 
-  status$ = this.store.select(authSelectors.selectStatus);
-  errorMessage$ = this.store.select(authSelectors.selectErrorMessage);
+  constructor() {
+    effect(() => {
+      this.errorMessage = getErrorMessage(this.status());
+
+      if (this.status() === 'ok') this.router.navigate(['/']);
+    });
+  }
+
+  status = this.authStore.status;
+  errorMessage = getErrorMessage(this.status());
 
   registerForm = this.fb.group(
     {
@@ -100,12 +112,10 @@ export class RegisterComponent {
     const { email, password } = this.registerForm.value;
     element?.focus();
 
-    this.store.dispatch(
-      authActions.register({
-        email: email ?? '',
-        password: password ?? '',
-        valid,
-      })
-    );
+    this.authStore.register({
+      email: email ?? '',
+      password: password ?? '',
+      valid,
+    });
   }
 }

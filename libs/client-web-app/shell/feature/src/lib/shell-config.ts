@@ -2,8 +2,9 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { ApplicationConfig } from '@angular/core';
 import {
   AuthService,
-  authFeature,
-  authEffects,
+  AuthStore,
+  // authFeature,
+  // authEffects,
 } from '@e-commerce/client-web-app/shared/data-access/auth';
 import {
   categoryFeature,
@@ -24,8 +25,9 @@ export const shellConfig: ApplicationConfig = {
     provideHttpClient(
       withInterceptors([authInterceptor, unAuthErrorInterceptor])
     ),
-    provideState(authFeature),
+    AuthStore,
+    // provideState(authFeature),
     provideState(categoryFeature),
-    provideEffects([authEffects, categoryEffects]),
+    provideEffects([categoryEffects]),
   ],
 };

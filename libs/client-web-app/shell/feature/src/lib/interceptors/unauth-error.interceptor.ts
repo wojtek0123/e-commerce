@@ -8,17 +8,20 @@ import {
 import { Observable, catchError, of, switchMap } from 'rxjs';
 import {
   AuthService,
-  authActions,
+  AuthStore,
 } from '@e-commerce/client-web-app/shared/data-access/auth';
 import { inject } from '@angular/core';
-import { Store } from '@ngrx/store';
 
 export const unAuthErrorInterceptor: HttpInterceptorFn = (
   req: HttpRequest<unknown>,
   next: HttpHandlerFn
 ): Observable<HttpEvent<unknown>> => {
-  const store = inject(Store);
+  const authStore = inject(AuthStore);
   const authService = inject(AuthService);
+
+  if (req.url.includes('auth/login')) {
+    return next(req);
+  }
 
   return next(req).pipe(
     catchError((error: HttpResponse<Record<string, string>>) => {
@@ -32,7 +35,7 @@ export const unAuthErrorInterceptor: HttpInterceptorFn = (
             .getRefreshToken$(session.user.id, session.tokens.refreshToken)
             .pipe(
               switchMap((tokens) => {
-                store.dispatch(authActions.getRefreshTokenSuccess({ tokens }));
+                authStore.setTokens(tokens);
 
                 return next(
                   req.clone({
@@ -46,7 +49,6 @@ export const unAuthErrorInterceptor: HttpInterceptorFn = (
               catchError((error) => {
                 if (error.status === 401 || error.status === 403) {
                   authService.logout$(session.user.id);
-                  store.dispatch(authActions.getRefreshTokenFailure(error));
                 }
                 return of(error);
               })

@@ -8,12 +8,7 @@
     class="flex flex-column gap-3 w-full max-w-30rem xl:align-items-center"
     (submit)="onSubmit()"
   >
-    <ng-container
-      *ngIf="{
-        status: status$ | async,
-        errorMessage: errorMessage$ | async
-      } as vm"
-    >
+    <ng-container>
       <div class="flex flex-column w-full">
         <p-floatLabel>
           <input
@@ -23,13 +18,13 @@
             formControlName="email"
             [ngClass]="{
               'ng-dirty ng-invalid':
-                vm.status === 'error' && registerForm.controls.email.invalid
+                !!errorMessage && registerForm.controls.email.invalid
             }"
           />
           <label for="email">Email</label>
         </p-floatLabel>
         <ng-container
-          *ngIf="registerForm.controls.email.dirty || vm.status === 'error'"
+          *ngIf="registerForm.controls.email.dirty || !!errorMessage"
         >
           <small
             class="text-red-500 mt-1"
@@ -39,7 +34,7 @@
           </small>
           <small
             class="text-red-500 mt-1"
-            *ngIf="registerForm.controls.email.errors?.['email'] && !vm.errorMessage"
+            *ngIf="registerForm.controls.email.errors?.['email'] && !errorMessage"
           >
             Niepoprawny email
           </small>
@@ -53,14 +48,14 @@
             [toggleMask]="true"
             [ngClass]="{
               'ng-dirty ng-invalid':
-                vm.status === 'error' && registerForm.controls.password.invalid
+                errorMessage && registerForm.controls.password.invalid
             }"
             formControlName="password"
           ></p-password>
           <label for="password">Hasło</label>
         </p-floatLabel>
         <ng-container
-          *ngIf="registerForm.controls.password.dirty || vm.status === 'error'"
+          *ngIf="registerForm.controls.password.dirty || !!errorMessage"
         >
           <small
             class="text-red-500 mt-1"
@@ -69,7 +64,7 @@
           >
           <small
             class="text-red-500 mt-1"
-            *ngIf="registerForm.controls.password.errors?.['required'] && !vm.errorMessage"
+            *ngIf="registerForm.controls.password.errors?.['required']"
             >To pole jest wymagane</small
           >
         </ng-container>
@@ -82,21 +77,18 @@
             [toggleMask]="true"
             [ngClass]="{
               'ng-dirty ng-invalid':
-                vm.status === 'error' &&
-                registerForm.controls.confirmPassword.invalid
+                errorMessage && registerForm.controls.confirmPassword.invalid
             }"
             formControlName="confirmPassword"
           ></p-password>
           <label for="confirm-password">Potwierdzenie hasła</label>
         </p-floatLabel>
         <ng-container
-          *ngIf="
-            registerForm.controls.confirmPassword.dirty || vm.status === 'error'
-          "
+          *ngIf="registerForm.controls.confirmPassword.dirty || !!errorMessage"
         >
           <small
             class="text-red-500 mt-1"
-            *ngIf="registerForm.controls.confirmPassword.errors?.['required'] && !vm.errorMessage"
+            *ngIf="registerForm.controls.confirmPassword.errors?.['required']"
           >
             To pole jest wymagane
           </small>
@@ -106,14 +98,14 @@
             >Hasła są różne
           </small>
         </ng-container>
-        <div class="mt-4 text-red-500" *ngIf="vm.errorMessage">
-          {{ vm.errorMessage }}
+        <div class="mt-4 text-red-500" *ngIf="errorMessage">
+          {{ errorMessage }}
         </div>
 
         <p-button
           type="submit"
           [label]="'Zarejestruj się'"
-          [loading]="vm.status === 'loading'"
+          [loading]="status() === 'loading'"
           loading-icon="pi pi-spin pi-spinner"
           iconPos="right"
           class="w-full mt-4"
