@@ -17,7 +17,6 @@
         class="align-items-center justify-content-center gap-4 list-none m-0 p-0 hidden lg:flex"
       >
         <li>
-          @if (categories$ | async; as categories) {
           <p-button
             (click)="categoriesMenu.toggle($event)"
             iconPos="right"
@@ -32,9 +31,8 @@
             }"
             #categoriesMenu
             [popup]="true"
-            [model]="categories ?? []"
+            [model]="categories"
           />
-          }
         </li>
         <li>
           <a
