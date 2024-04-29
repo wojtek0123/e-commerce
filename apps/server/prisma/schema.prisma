@@ -34,7 +34,7 @@ model Category {
   name      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  Book      Book[]
+  books     Book[]
 
   @@map("category")
 }
@@ -42,19 +42,20 @@ model Category {
 model Book {
   id             Int          @id @default(autoincrement())
   title          String
-  description    String
-  language       String
-  numberPages    Int
-  publishingDate DateTime
-  price          Decimal
-  coverImage     String
+  description    String?
+  language       String?
+  numberPages    Int?
+  publishingDate DateTime?
+  price          Float
+  coverImage     String?
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
   publisher      Publisher    @relation(fields: [publisherId], references: [id])
   publisherId    Int
-  bookAuthor     BookAuthor[]
+  authors        BookAuthor[]
   category       Category     @relation(fields: [categoryId], references: [id])
   categoryId     Int
+  tag            Tag?
 
   @@map("book")
 }
@@ -72,36 +73,36 @@ model BookAuthor {
 }
 
 model Author {
-  id         Int          @id @default(autoincrement())
-  name       String
-  bookAuthor BookAuthor[]
+  id    Int          @id @default(autoincrement())
+  name  String
+  books BookAuthor[]
 
   @@map("author")
 }
 
 model Publisher {
-  id   Int    @id @default(autoincrement())
-  name String
-  book Book[]
+  id    Int    @id @default(autoincrement())
+  name  String
+  books Book[]
 
   @@map("publisher")
 }
 
 model User {
-  id          Int        @id @default(autoincrement())
-  email       String        @unique
-  password    String
+  id           Int           @id @default(autoincrement())
+  email        String        @unique
+  password     String
   refreshToken String?
-  role        Role          @default(USER)
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  userDetails UserAddress[]
+  role         Role          @default(USER)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  userDetails  UserAddress[]
 
   @@map("user")
 }
 
 model UserAddress {
-  id          Int @id @default(autoincrement())
+  id          Int    @id @default(autoincrement())
   firstName   String
   surname     String
   phone       String
@@ -118,4 +119,11 @@ model UserAddress {
 enum Role {
   ADMIN
   USER
+}
+
+enum Tag {
+  NOWE
+  BESTSELLER
+  NADCHODZACE
+  PROMOCJE
 }

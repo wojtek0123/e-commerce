@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { type Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
+import { GetBooksBodyDto } from './dto/get-books.dto';
 
 @Injectable()
 export class BooksService {
@@ -13,6 +14,28 @@ export class BooksService {
   findAll(where?: Prisma.BookWhereInput) {
     return this.prisma.book.findMany({
       where,
+    });
+  }
+
+  findMany({
+    categoryIdsIn,
+    tagEquals,
+    titleLike,
+    priceFrom,
+    priceTo,
+  }: GetBooksBodyDto) {
+    return this.prisma.book.findMany({
+      where: {
+        OR: [
+          { tag: { equals: tagEquals } },
+          { categoryId: { in: categoryIdsIn } },
+          { title: { contains: titleLike, mode: 'insensitive' } },
+          { price: { gte: priceFrom, lte: priceTo } },
+        ],
+      },
+      include: {
+        authors: true,
+      },
     });
   }
 
