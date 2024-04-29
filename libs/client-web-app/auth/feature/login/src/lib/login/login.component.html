@@ -8,76 +8,63 @@
     class="flex flex-column gap-3 w-full max-w-30rem xl:align-items-center"
     (submit)="onSubmit()"
   >
-    <ng-container>
-      <div class="flex flex-column w-full">
-        <p-floatLabel>
-          <input
-            autofocus
-            pInputText
-            id="email"
-            autocomplete="off"
-            [ngClass]="{
-              'ng-dirty ng-invalid':
-                !!errorMessage && loginForm.controls.email.invalid
-            }"
-            formControlName="email"
-          />
-          <label for="email">Email</label>
-        </p-floatLabel>
-        <ng-container *ngIf="loginForm.controls.email.dirty || errorMessage">
-          <small
-            class="text-red-500 mt-1"
-            *ngIf="loginForm.controls.email.errors?.['required'] && errorMessage"
-            >To pole jest wymagane
-          </small>
-          <small
-            class="text-red-500 mt-1"
-            *ngIf="loginForm.controls.email.errors?.['email']"
-            >Wpisz poprawny adres email
-          </small>
-        </ng-container>
+    <div class="flex flex-column w-full">
+      <p-floatLabel>
+        <input
+          autofocus
+          pInputText
+          id="email"
+          autocomplete="off"
+          [ngClass]="{
+            'ng-dirty ng-invalid':
+              !!errorMessage && loginForm.controls.email.invalid
+          }"
+          formControlName="email"
+        />
+        <label for="email">Email</label>
+      </p-floatLabel>
+      @if (loginForm.controls.email.dirty || !!errorMessage) { @if
+      (loginForm.controls.email.getError('required')) {
+      <small class="text-red-500 mt-1">To pole jest wymagane </small>
+      } @else if (loginForm.controls.email.getError('email')) {
+      <small class="text-red-500 mt-1">Wpisz poprawny adres email </small>
+      } }
+    </div>
+    <div class="flex flex-column w-full">
+      <p-floatLabel>
+        <p-password
+          id="password"
+          [feedback]="false"
+          [toggleMask]="true"
+          [ngClass]="{
+            'ng-dirty ng-invalid':
+              errorMessage && loginForm.controls.password.invalid
+          }"
+          formControlName="password"
+        ></p-password>
+        <label for="password">Hasło</label>
+      </p-floatLabel>
+      @if(loginForm.controls.password.dirty || !!errorMessage) { @if
+      (loginForm.controls.password.getError('minlength')) {
+      <small class="text-red-500 mt-1"
+        >Hasło powinno mieć co najmniej 6 znaków</small
+      >
+      } @if (loginForm.controls.password.getError('required')) {
+      <small class="text-red-500 mt-1">To pole jest wymagane</small>
+      } } @if (!!errorMessage) {
+      <div class="text-red-500 mt-4">
+        {{ errorMessage }}
       </div>
-      <div class="flex flex-column w-full">
-        <p-floatLabel>
-          <p-password
-            id="password"
-            [feedback]="false"
-            [toggleMask]="true"
-            [ngClass]="{
-              'ng-dirty ng-invalid':
-                errorMessage && loginForm.controls.password.invalid
-            }"
-            formControlName="password"
-          ></p-password>
-          <label for="password">Hasło</label>
-        </p-floatLabel>
-        <ng-container
-          *ngIf="loginForm.controls.password.dirty || !!errorMessage"
-        >
-          <small
-            class="text-red-500 mt-1"
-            *ngIf="loginForm.controls.password.errors?.['minlength']"
-            >Hasło powinno mieć co najmniej 6 znaków</small
-          >
-          <small
-            class="text-red-500 mt-1"
-            *ngIf="loginForm.controls.password.errors?.['required'] && errorMessage"
-            >To pole jest wymagane</small
-          >
-        </ng-container>
-        <div class="text-red-500 mt-4" *ngIf="errorMessage">
-          {{ errorMessage }}
-        </div>
+      }
 
-        <p-button
-          type="submit"
-          label="Zaloguj się!"
-          [loading]="status() === 'loading'"
-          loading-icon="pi pi-spin pi-spinner"
-          iconPos="right"
-          class="w-full mt-4"
-        ></p-button>
-      </div>
-    </ng-container>
+      <p-button
+        type="submit"
+        label="Zaloguj się!"
+        [loading]="status() === 'loading'"
+        loading-icon="pi pi-spin pi-spinner"
+        iconPos="right"
+        class="w-full mt-4"
+      ></p-button>
+    </div>
   </form>
 </e-commerce-form-wrapper>
