@@ -1,0 +1,33 @@
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import {
+  Book,
+  BookTag,
+  Category,
+} from '@e-commerce/client-web-app/shared/data-access/api-types';
+
+@Injectable()
+export class BooksApiService {
+  private http = inject(HttpClient);
+
+  getBooks$(opts: {
+    title?: string;
+    categoryIds?: Category['id'][];
+    tag?: BookTag;
+    publishDateFrom?: string;
+    publishedDateTo?: string;
+    publisherIds?: number[];
+    priceFrom?: number;
+    priceTo?: number;
+    authorName?: string;
+    authorIds?: number[];
+  }) {
+    let body = {};
+
+    if (opts.title) body = { ...body, titleLike: opts.title };
+    if (opts.tag) body = { ...body, tagEquals: opts.tag };
+    if (opts.categoryIds) body = { ...body, categoryIdsIn: opts.categoryIds };
+
+    return this.http.post<Book[]>('http://localhost:3000/books', body);
+  }
+}

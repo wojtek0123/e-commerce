@@ -1,4 +1,4 @@
-import { inject } from '@angular/core';
+import { computed, inject } from '@angular/core';
 import {
   ApiStatus,
   Category,
@@ -7,6 +7,7 @@ import {
 import {
   patchState,
   signalStore,
+  withComputed,
   withHooks,
   withMethods,
   withState,
@@ -29,6 +30,9 @@ const initialCategoryState: CategoryState = {
 export const CategoryStore = signalStore(
   { providedIn: 'root' },
   withState(initialCategoryState),
+  withComputed(({ categories }) => ({
+    categoriesCount: computed(() => categories().length),
+  })),
   withMethods((store, categoryApi = inject(CategoryApiService)) => ({
     getCategories: rxMethod<void>(
       pipe(

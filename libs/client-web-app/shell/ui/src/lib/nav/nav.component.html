@@ -1,72 +1,80 @@
 <div
-  class="shadow-5 surface-card nav-height flex align-items-center justify-content-between w-full"
+  class="shadow-5 surface-card nav-height flex align-items-center justify-content-between w-full z-5"
 >
   <nav
-    class="flex align-items-center justify-content-between md:py-1 mx-4 w-full"
+    class="flex nav-height align-items-center justify-content-between md:py-1 mx-4 w-full"
   >
-    <div class="flex align-items-center gap-4 xl:gap-8">
+    <div class="flex align-items-center gap-4">
       <a
         routerLink="/"
-        class="text-xl md:text-2xl lg:text-[2rem] text-white no-underline"
+        class="text-xl md:text-2xl xl:text-[2rem] text-white no-underline"
       >
         <span class="font-bold text-primary">Story</span
         ><span class="uppercase">Stash</span>
       </a>
       <p-divider layout="vertical" />
       <ul
-        class="align-items-center justify-content-center gap-4 list-none m-0 p-0 hidden lg:flex"
+        class="align-items-center justify-content-center gap-4 list-none m-0 p-0 hidden xl:flex"
       >
         <li>
           <p-button
             (click)="categoriesMenu.toggle($event)"
             iconPos="right"
             [icon]="
-              categoriesMenu.visible ? 'pi pi-angle-up' : 'pi pi-angle-down'
+              categoriesMenu.visible
+                ? navPosition() === 'top'
+                  ? 'pi pi-angle-up'
+                  : 'pi pi-angle-down'
+                : navPosition() === 'top'
+                ? 'pi pi-angle-down'
+                : 'pi pi-angle-up'
             "
             label="Kategorie"
           ></p-button>
           <p-menu
             [ngClass]="{
-              'p-menu-two-columns': categories.length > 1
+              'p-menu-two-columns': categories().length > 1,
+              'p-menu-bottom': navPosition() === 'bottom',
+              'p-menu-top': navPosition() === 'top'
             }"
             #categoriesMenu
             [popup]="true"
-            [model]="categories"
+            [model]="categories()"
           />
         </li>
         <li>
           <a
             [routerLink]="'/ksiazki'"
             routerLinkActive="underline"
-            [queryParams]="{ tag: 'new' }"
-            class="text-xl text-white capitalize no-underline py-1 px-3"
+            [queryParams]="{ tag: bookTag.NOWE }"
+            class="text-lg text-white capitalize no-underline py-1 px-3"
             >nowości</a
           >
         </li>
         <li>
           <a
             [routerLink]="'/ksiazki'"
-            [queryParams]="{ tag: 'bestseller' }"
+            [queryParams]="{ tag: bookTag.BESTSELLER }"
             routerLinkActive="underline"
-            class="text-xl text-white capitalize no-underline py-1 px-3"
+            class="text-lg text-white capitalize no-underline py-1 px-3"
             >bestsellery</a
           >
         </li>
         <li>
           <a
             [routerLink]="'/ksiazki'"
-            [queryParams]="{ tag: 'promocja' }"
+            [queryParams]="{ tag: bookTag.PROMOCJE }"
             routerLinkActive="underline"
-            class="text-xl text-white capitalize no-underline py-1 px-3"
+            class="text-lg text-white capitalize no-underline py-1 px-3"
             >promocje</a
           >
         </li>
         <li>
           <a
             [routerLink]="'/ksiazki'"
-            [queryParams]="{ tag: 'nadchodzace' }"
+            [queryParams]="{ tag: bookTag.NADCHODZACE }"
             routerLinkActive="underline"
-            class="text-xl text-white capitalize no-underline py-1 px-3"
+            class="text-lg text-white capitalize no-underline py-1 px-3"
             >zapowiedzi</a
           >
         </li>
@@ -74,12 +82,12 @@
     </div>
 
     <div class="flex align-items-center gap-2">
-      <p-menu #menu [model]="menuItems" [popup]="true" />
+      <p-menu #menu [model]="menuItems()" [popup]="true" />
       <p-button
         type="button"
         [text]="true"
         (click)="menu.toggle($event)"
-        class="flex flex-column justify-content-center"
+        class="hidden flex-column justify-content-center md:flex"
       >
         <span class="flex flex-column justify-content-center">
           <i class="pi pi-user" style="font-size: 1.5rem"></i>
@@ -87,12 +95,41 @@
         </span>
       </p-button>
       <a
-        class="p-button p-button-text flex flex-column justify-content-center no-underline border-radius"
+        class="hidden p-button p-button-text flex-column justify-content-center no-underline border-radius md:flex"
         routerLink="/cart"
       >
         <i class="pi pi-shopping-cart" style="font-size: 1.5rem"></i>
         <span class="text-xs">Koszyk</span>
       </a>
+
+      <p-button
+        (click)="showSidebar()"
+        icon="pi pi-align-left"
+        class="xl:hidden"
+      ></p-button>
+      <p-sidebar
+        #sidebarRef
+        [(visible)]="sidebarVisible"
+        position="left"
+        appendTo="body"
+      >
+        <ng-template pTemplate="header">
+          <div
+            class="text-xl md:text-2xl xl:text-[2rem] text-white no-underline"
+          >
+            <span class="font-bold text-primary">Story</span>
+            <span class="uppercase">Stash</span>
+          </div>
+        </ng-template>
+        <p-accordion [multiple]="false" [activeIndex]="[]">
+          <p-accordionTab header="Kategorie">
+            <p-menu [model]="categories()" class="p-menu-sidebar"></p-menu>
+          </p-accordionTab>
+          <p-accordionTab header="Użytkownik" class="md:hidden">
+            <p-menu [model]="menuItems()" class="p-menu-sidebar" />
+          </p-accordionTab>
+        </p-accordion>
+      </p-sidebar>
     </div>
   </nav>
 </div>

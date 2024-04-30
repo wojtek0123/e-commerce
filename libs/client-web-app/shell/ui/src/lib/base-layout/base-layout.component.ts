@@ -6,9 +6,16 @@ import { NavComponent } from '../nav/nav.component';
   selector: 'lib-base-layout',
   standalone: true,
   imports: [RouterOutlet, NavComponent],
+  styles: [
+    `
+      .container {
+        min-height: calc(100svh - var(--header-height));
+      }
+    `,
+  ],
   template: `
-    <lib-e-commerce-nav />
-    <div class="px-4">
+    <lib-e-commerce-nav class="sticky top-0" />
+    <div class="p-4 container">
       <router-outlet />
     </div>
   `,

@@ -1,13 +1,22 @@
-import { Component, effect, inject } from '@angular/core';
+import {
+  Component,
+  HostBinding,
+  computed,
+  inject,
+  input,
+  signal,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DividerModule } from 'primeng/divider';
 import { ButtonModule } from 'primeng/button';
 import { AuthStore } from '@e-commerce/client-web-app/shared/data-access/auth';
 import { AsyncPipe, NgClass } from '@angular/common';
-import { MenuItem } from 'primeng/api';
 import { MenuModule } from 'primeng/menu';
-import { CategoryStore } from '@e-commerce/client-web-app/shared/data-access/category';
 import { MegaMenuModule } from 'primeng/megamenu';
+import { SidebarModule } from 'primeng/sidebar';
+import { CategoryStore } from '@e-commerce/client-web-app/shared/data-access/category';
+import { AccordionModule } from 'primeng/accordion';
+import { BookTag } from '@e-commerce/client-web-app/shared/data-access/api-types';
 
 @Component({
   selector: 'lib-e-commerce-nav',
@@ -21,6 +30,8 @@ import { MegaMenuModule } from 'primeng/megamenu';
     MegaMenuModule,
     RouterLink,
     NgClass,
+    SidebarModule,
+    AccordionModule,
   ],
   templateUrl: './nav.component.html',
 })
@@ -28,66 +39,95 @@ export class NavComponent {
   private authStore = inject(AuthStore);
   private categoryStore = inject(CategoryStore);
 
+  navPosition = input<'top' | 'bottom'>('top');
+
+  bookTag = BookTag;
+
+  sidebarVisible = signal(false);
   authTokens = this.authStore.tokens;
+  categories = computed(() =>
+    !this.categoryStore.categoriesCount()
+      ? [
+          {
+            label: 'Pokaż wszystkie',
+            routerLink: '/ksiazki',
+            queryParams: { category: 'wszystkie' },
+            command: () => {
+              if (this.sidebarVisible()) {
+                this.sidebarVisible.set(false);
+              }
+            },
+          },
+        ]
+      : this.categoryStore.categories().map((category) => ({
+          label: category.name,
+          routerLink: '/ksiazki',
+          queryParams: { category: category.name.toLowerCase() },
+          state: { categoryIds: [category.id] },
+          command: () => {
+            if (this.sidebarVisible()) {
+              this.sidebarVisible.set(false);
+            }
+          },
+        }))
+  );
+  menuItems = computed(() =>
+    !!this.authTokens()?.accessToken && !!this.authTokens()?.refreshToken
+      ? [
+          {
+            label: 'Zamówienia',
+            icon: 'pi pi-book',
+            command: () => {
+              if (this.sidebarVisible()) {
+                this.sidebarVisible.set(false);
+              }
+            },
+          },
+          {
+            label: 'Ustawienia',
+            icon: 'pi pi-cog',
+            command: () => {
+              if (this.sidebarVisible()) {
+                this.sidebarVisible.set(false);
+              }
+            },
+          },
+          {
+            label: 'Log out',
+            icon: 'pi pi-sign-out',
+            command: () => {
+              this.authStore.logout();
+              if (this.sidebarVisible()) {
+                this.sidebarVisible.set(false);
+              }
+            },
+          },
+        ]
+      : [
+          {
+            label: 'Zaloguj się',
+            icon: 'pi pi-sign-in',
+            routerLink: '/auth/login',
+            command: () => {
+              if (this.sidebarVisible()) {
+                this.sidebarVisible.set(false);
+              }
+            },
+          },
+          {
+            label: 'Zarejestruj się',
+            icon: 'pi pi-user-plus',
+            routerLink: '/auth/register',
+            command: () => {
+              if (this.sidebarVisible()) {
+                this.sidebarVisible.set(false);
+              }
+            },
+          },
+        ]
+  );
 
-  categories: MenuItem[] = [
-    {
-      label: 'Pokaż wszystkie',
-      routerLink: '/ksiazki',
-      queryParams: { category: 'wszystkie' },
-    },
-  ];
+  showSidebar = () => this.sidebarVisible.set(true);
 
-  menuItems: MenuItem[] = [
-    {
-      label: 'Zaloguj się',
-      icon: 'pi pi-sign-in',
-      routerLink: '/auth/login',
-    },
-    {
-      label: 'Zarejestruj się',
-      icon: 'pi pi-user-plus',
-      routerLink: '/auth/register',
-    },
-  ];
-
-  constructor() {
-    effect(() => {
-      this.menuItems =
-        !!this.authTokens()?.accessToken && !!this.authTokens()?.refreshToken
-          ? [
-              {
-                label: 'Zamówienia',
-                icon: 'pi pi-book',
-              },
-              {
-                label: 'Ustawienia',
-                icon: 'pi pi-cog',
-              },
-              {
-                label: 'Log out',
-                icon: 'pi pi-sign-out',
-                command: () => this.authStore.logout(),
-              },
-            ]
-          : [
-              {
-                label: 'Zaloguj się',
-                icon: 'pi pi-sign-in',
-                routerLink: '/auth/login',
-              },
-              {
-                label: 'Zarejestruj się',
-                icon: 'pi pi-user-plus',
-                routerLink: '/auth/register',
-              },
-            ];
-
-      this.categories = this.categoryStore.categories().map((category) => ({
-        label: category.name,
-        routerLink: '/ksiazki',
-        queryParams: { category: category.name },
-      }));
-    });
-  }
+  @HostBinding('class') class = 'z-1';
 }

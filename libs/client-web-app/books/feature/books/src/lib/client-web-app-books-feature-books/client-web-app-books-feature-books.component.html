@@ -1,1 +1,36 @@
-<p>client-web-app-books-feature-books works!</p>
+<div class="grid-auto-fit">
+  @if (status() === 'loading') { @for (_ of skeletons;track $index) {
+  <p-skeleton></p-skeleton>
+  } } @for (book of books(); track book.id) {
+  <p-card [header]="book.title" [style]="{ width: '100%', maxWidth: '34rem' }">
+    <ng-template pTemplate="header">
+      <img
+        alt="Card"
+        [src]="
+          book.coverImage
+            ? book.coverImage
+            : 'https://primefaces.org/cdn/primeng/images/usercard.png'
+        "
+      />
+    </ng-template>
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed
+      consequuntur error repudiandae numquam deserunt quisquam repellat libero
+      asperiores earum nam nobis, culpa ratione quam perferendis esse,
+      cupiditate neque quas!
+    </p>
+
+    <ng-template pTemplate="footer">
+      <p-button label="Dodaj to koszyka" icon="pi pi-check"></p-button>
+      <!-- <p-button -->
+      <!--   label="Cancel" -->
+      <!--   icon="pi pi-times" -->
+      <!--   styleClass="p-button-secondary" -->
+      <!--   [style]="{ 'margin-left': '.5em' }" -->
+      <!-- ></p-button> -->
+    </ng-template>
+  </p-card>
+  } @empty {
+  <div>No data to display!</div>
+  }
+</div>
