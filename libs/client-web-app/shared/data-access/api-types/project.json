@@ -3,7 +3,7 @@
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/client-web-app/shared/api-types/src",
   "prefix": "e-commerce",
-  "tags": ["scope:client-web-app", "type:shared"],
+  "tags": ["scope:client-web-app", "type:data-access"],
   "projectType": "library",
   "targets": {
     "test": {

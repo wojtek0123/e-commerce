@@ -30,6 +30,9 @@
       "@e-commerce/client-web-app/auth/ui/form-wrapper": [
         "libs/client-web-app/auth/ui/form-wrapper/src/index.ts"
       ],
+      "@e-commerce/client-web-app/books/data-access": [
+        "libs/client-web-app/books/data-access/src/index.ts"
+      ],
       "@e-commerce/client-web-app/books/feature/books": [
         "libs/client-web-app/books/feature/books/src/index.ts"
       ],
