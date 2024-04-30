@@ -24,15 +24,21 @@ export class BooksService {
     priceFrom,
     priceTo,
   }: GetBooksBodyDto) {
-    return this.prisma.book.findMany({
-      where: {
+    let where: Prisma.BookScalarWhereInput = {};
+
+    if (categoryIdsIn || tagEquals || titleLike || priceFrom || priceTo) {
+      where = {
         OR: [
           { tag: { equals: tagEquals } },
           { categoryId: { in: categoryIdsIn } },
           { title: { contains: titleLike, mode: 'insensitive' } },
           { price: { gte: priceFrom, lte: priceTo } },
         ],
-      },
+      };
+    }
+
+    return this.prisma.book.findMany({
+      where,
       include: {
         authors: true,
       },
