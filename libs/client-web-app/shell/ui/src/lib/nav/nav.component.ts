@@ -51,7 +51,7 @@ export class NavComponent {
           {
             label: 'Pokaż wszystkie',
             routerLink: '/ksiazki',
-            queryParams: { category: 'wszystkie' },
+            // queryParams: { categories: 'wszystkie' },
             command: () => {
               if (this.sidebarVisible()) {
                 this.sidebarVisible.set(false);
@@ -62,7 +62,9 @@ export class NavComponent {
       : this.categoryStore.categories().map((category) => ({
           label: category.name,
           routerLink: '/ksiazki',
-          queryParams: { category: category.name.toLowerCase() },
+          queryParams: {
+            categories: category.name.toLowerCase().split(' ').join('_'),
+          },
           state: { categoryIds: [category.id] },
           command: () => {
             if (this.sidebarVisible()) {

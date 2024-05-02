@@ -29,7 +29,7 @@ export class BookEntity implements Book {
   @ApiProperty()
   coverImage: string;
 
-  @ApiProperty()
+  @ApiProperty({ required: false })
   @IsOptional()
   description: string;
 
