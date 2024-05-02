@@ -5,7 +5,7 @@ import {
   HttpRequest,
   HttpResponse,
 } from '@angular/common/http';
-import { Observable, catchError, of, switchMap } from 'rxjs';
+import { Observable, catchError, of, switchMap, throwError } from 'rxjs';
 import {
   AuthService,
   AuthStore,
@@ -18,10 +18,6 @@ export const unAuthErrorInterceptor: HttpInterceptorFn = (
 ): Observable<HttpEvent<unknown>> => {
   const authStore = inject(AuthStore);
   const authService = inject(AuthService);
-
-  if (req.url.includes('auth/login')) {
-    return next(req);
-  }
 
   return next(req).pipe(
     catchError((error: HttpResponse<Record<string, string>>) => {
@@ -55,7 +51,7 @@ export const unAuthErrorInterceptor: HttpInterceptorFn = (
             );
         }
       }
-      return of(error);
+      return throwError(() => error);
     })
   );
 };
