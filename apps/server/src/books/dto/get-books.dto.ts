@@ -10,51 +10,51 @@ import {
 import { Tag } from '@prisma/client';
 
 export class GetBooksBodyDto {
-  @ApiProperty()
-  @IsEnum(Tag)
+  @ApiProperty({ required: false, isArray: true })
+  // @IsEnum(Tag)
   @IsOptional()
-  tagEquals: Tag;
+  tagsIn: Tag[];
 
-  @ApiProperty()
+  @ApiProperty({ required: false, isArray: true })
   @IsOptional()
   @IsArray()
   categoryIdsIn: number[];
 
-  @ApiProperty()
+  @ApiProperty({ required: false })
   @IsOptional()
   @IsString()
   titleLike: string;
 
-  @ApiProperty()
+  @ApiProperty({ required: false })
   @IsOptional()
   @IsDate()
   publishDateFrom: Date;
 
-  @ApiProperty()
+  @ApiProperty({ required: false })
   @IsOptional()
   @IsDate()
   publishDateTo: Date;
 
-  @ApiProperty()
+  @ApiProperty({ required: false, isArray: true })
   @IsOptional()
   publisherIdsIn: number[];
 
-  @ApiProperty()
+  @ApiProperty({ required: false })
   @IsOptional()
   @IsNumber()
   priceFrom: number;
 
-  @ApiProperty()
+  @ApiProperty({ required: false })
   @IsOptional()
   @IsNumber()
   priceTo: number;
 
-  @ApiProperty()
+  @ApiProperty({ required: false })
   @IsOptional()
   @IsString()
   authorLike: string;
 
-  @ApiProperty()
+  @ApiProperty({ required: false, isArray: true })
   @IsOptional()
   @IsArray()
   authorIn: string[];

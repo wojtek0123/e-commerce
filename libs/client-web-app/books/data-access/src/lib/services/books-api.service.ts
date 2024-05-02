@@ -13,7 +13,7 @@ export class BooksApiService {
   getBooks$(opts: {
     title?: string;
     categoryIds?: Category['id'][];
-    tag?: BookTag;
+    tagsIn?: BookTag[];
     publishDateFrom?: string;
     publishedDateTo?: string;
     publisherIds?: number[];
@@ -24,9 +24,10 @@ export class BooksApiService {
   }) {
     let body = {};
 
-    if (opts.title) body = { ...body, titleLike: opts.title };
-    if (opts.tag) body = { ...body, tagEquals: opts.tag };
-    if (opts.categoryIds) body = { ...body, categoryIdsIn: opts.categoryIds };
+    if (opts.title?.length) body = { ...body, titleLike: opts.title };
+    if (opts.tagsIn?.length) body = { ...body, tagsIn: opts.tagsIn };
+    if (opts.categoryIds?.length)
+      body = { ...body, categoryIdsIn: opts.categoryIds };
 
     return this.http.post<Book[]>('http://localhost:3000/books', body);
   }

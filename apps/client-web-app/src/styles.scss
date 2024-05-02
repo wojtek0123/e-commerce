@@ -74,10 +74,23 @@ p-button.w-full .p-button {
 .grid-auto-fit {
   display: grid;
   gap: 2rem;
+  width: 100%;
+  grid-template-columns: 1fr;
   place-items: center;
-  grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
 }
 
+@media (min-width: 760px) {
+  .grid-auto-fit {
+    grid-template-columns: repeat(2, 1fr);
+    place-items: normal;
+  }
+}
+
+@media (min-width: 990px) {
+  .grid-auto-fit {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
 .p-menu-sidebar .p-menu {
   border: none;
   background-color: transparent;

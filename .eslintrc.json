@@ -22,10 +22,6 @@
                 ]
               },
               {
-                "sourceTag": "type:data-access",
-                "onlyDependOnLibsWithTags": ["type:utils", "type:data-access"]
-              },
-              {
                 "sourceTag": "type:feature",
                 "onlyDependOnLibsWithTags": [
                   "type:feature",
@@ -35,12 +31,16 @@
                 ]
               },
               {
-                "sourceTag": "type:ui",
+                "sourceTag": "type:data-access",
                 "onlyDependOnLibsWithTags": ["type:utils", "type:data-access"]
               },
               {
-                "sourceTag": "type:shared",
-                "onlyDependOnLibsWithTags": []
+                "sourceTag": "type:ui",
+                "onlyDependOnLibsWithTags": [
+                  "type:utils",
+                  "type:data-access",
+                  "type:ui"
+                ]
               },
               {
                 "sourceTag": "type:utils",
@@ -49,15 +49,6 @@
               {
                 "sourceTag": "scope:client-web-app",
                 "onlyDependOnLibsWithTags": ["scope:client-web-app"]
-              },
-              {
-                "sourceTag": "type:shell-feature",
-                "onlyDependOnLibsWithTags": [
-                  "type:feature",
-                  "type:ui",
-                  "type:data-access",
-                  "type:utils"
-                ]
               }
             ]
           }

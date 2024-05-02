@@ -19,17 +19,17 @@ export class BooksService {
 
   findMany({
     categoryIdsIn,
-    tagEquals,
+    tagsIn,
     titleLike,
     priceFrom,
     priceTo,
   }: GetBooksBodyDto) {
     let where: Prisma.BookScalarWhereInput = {};
 
-    if (categoryIdsIn || tagEquals || titleLike || priceFrom || priceTo) {
+    if (categoryIdsIn || tagsIn || titleLike || priceFrom || priceTo) {
       where = {
-        OR: [
-          { tag: { equals: tagEquals } },
+        AND: [
+          { tag: { in: tagsIn } },
           { categoryId: { in: categoryIdsIn } },
           { title: { contains: titleLike, mode: 'insensitive' } },
           { price: { gte: priceFrom, lte: priceTo } },
