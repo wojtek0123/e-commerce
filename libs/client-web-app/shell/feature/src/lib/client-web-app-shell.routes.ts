@@ -17,8 +17,8 @@ export const clientWebAppShellRoutes: Route[] = [
       {
         path: 'ksiazki',
         loadChildren: () =>
-          import('@e-commerce/client-web-app/books/feature/books').then(
-            (r) => r.clientWebAppBooksFeatureBooksRoutes
+          import('@e-commerce/client-web-app/browse/feature/books').then(
+            (r) => r.booksRoutes
           ),
       },
       {

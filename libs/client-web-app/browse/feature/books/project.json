@@ -1,0 +1,20 @@
+{
+  "name": "client-web-app-browse-feature-books",
+  "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/client-web-app/browse/feature/books/src",
+  "prefix": "lib",
+  "projectType": "library",
+  "tags": ["scope:client-web-app", "type:feature"],
+  "targets": {
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "libs/client-web-app/browse/feature/books/jest.config.ts"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}
