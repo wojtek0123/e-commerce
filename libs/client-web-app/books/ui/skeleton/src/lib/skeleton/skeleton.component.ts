@@ -9,7 +9,11 @@ import { SkeletonModule } from 'primeng/skeleton';
     <div
       class="max-w-34rem border border-round surface-border surface-card flex flex-column mx-auto"
     >
-      <p-skeleton class="border-round" width="100%" height="14.5rem" />
+      <p-skeleton
+        class="border-round max-w-34rem"
+        width="100%"
+        height="14.5rem"
+      />
 
       <div class="flex flex-column gap-4 p-4">
         <p-skeleton class="border-round" width="10rem" height="2rem" />
@@ -26,5 +30,5 @@ import { SkeletonModule } from 'primeng/skeleton';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SkeletonComponent {
-  @HostBinding('class') class = 'w-full';
+  @HostBinding('class') class = 'w-full max-w-34rem';
 }

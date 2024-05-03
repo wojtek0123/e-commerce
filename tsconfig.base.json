@@ -15,6 +15,9 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@e-commerce/client-web-app/books/ui/books-view": [
+        "libs/client-web-app/books/ui/books-view/src/index.ts"
+      ],
       "@e-commerce/client-web-app/auth/feature-register": [
         "libs/client-web-app/auth/feature-register/src/index.ts"
       ],
@@ -30,11 +33,20 @@
       "@e-commerce/client-web-app/auth/ui/form-wrapper": [
         "libs/client-web-app/auth/ui/form-wrapper/src/index.ts"
       ],
+      "@e-commerce/client-web-app/book/ui/search": [
+        "libs/client-web-app/books/ui/search/src/index.ts"
+      ],
       "@e-commerce/client-web-app/books/data-access": [
         "libs/client-web-app/books/data-access/src/index.ts"
       ],
       "@e-commerce/client-web-app/books/feature/books": [
         "libs/client-web-app/books/feature/books/src/index.ts"
+      ],
+      "@e-commerce/client-web-app/books/ui/filters": [
+        "libs/client-web-app/books/ui/filters/src/index.ts"
+      ],
+      "@e-commerce/client-web-app/books/ui/skeleton": [
+        "libs/client-web-app/books/ui/skeleton/src/index.ts"
       ],
       "@e-commerce/client-web-app/home/data-access/store": [
         "libs/client-web-app/home/data-access/src/index.ts"
@@ -82,12 +94,7 @@
         "libs/client-web-app/shell/utils/src/index.ts"
       ],
       "@e-commerce/server/publishers": ["libs/server/publishers/src/index.ts"],
-      "@e-commerce/shared/data-access": [
-        "libs/shared/data-access/src/index.ts"
-      ],
-      "@e-commerce/client-web-app/books/ui/skeleton": [
-        "libs/client-web-app/books/ui/skeleton/src/index.ts"
-      ]
+      "@e-commerce/shared/data-access": ["libs/shared/data-access/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

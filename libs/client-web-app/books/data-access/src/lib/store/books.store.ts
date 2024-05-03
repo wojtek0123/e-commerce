@@ -82,7 +82,6 @@ export const BooksStore = signalStore(
       )
     ),
     setFilters: (filters: Partial<BooksFilters>) => {
-      console.log(filters);
       patchState(store, { filters: { ...store.filters(), ...filters } });
 
       // const queryParams: Params = {};
@@ -92,9 +91,6 @@ export const BooksStore = signalStore(
       //   queryParams,
       //   queryParamsHandling: 'merge',
       // });
-    },
-    initFilters: () => {
-      patchState(store, { filters: initialBooksState.filters });
     },
   }))
 );
