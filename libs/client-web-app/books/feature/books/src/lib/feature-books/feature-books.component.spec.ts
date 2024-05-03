@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ClientWebAppBooksFeatureBooksComponent } from './client-web-app-books-feature-books.component';
+import { FeatureBooksComponent } from './feature-books.component';
 
 describe('ClientWebAppBooksFeatureBooksComponent', () => {
-  let component: ClientWebAppBooksFeatureBooksComponent;
-  let fixture: ComponentFixture<ClientWebAppBooksFeatureBooksComponent>;
+  let component: FeatureBooksComponent;
+  let fixture: ComponentFixture<FeatureBooksComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ClientWebAppBooksFeatureBooksComponent],
+      imports: [FeatureBooksComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ClientWebAppBooksFeatureBooksComponent);
+    fixture = TestBed.createComponent(FeatureBooksComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

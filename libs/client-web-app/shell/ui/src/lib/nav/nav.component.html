@@ -47,6 +47,7 @@
             [routerLink]="'/ksiazki'"
             routerLinkActive="underline"
             [queryParams]="{ tag: bookTag.NOWE }"
+            [state]="{ clear: true }"
             class="text-lg text-white capitalize no-underline py-1 px-3"
             >nowości</a
           >
@@ -55,6 +56,7 @@
           <a
             [routerLink]="'/ksiazki'"
             [queryParams]="{ tag: bookTag.BESTSELLER }"
+            [state]="{ clear: true }"
             routerLinkActive="underline"
             class="text-lg text-white capitalize no-underline py-1 px-3"
             >bestsellery</a
@@ -64,6 +66,7 @@
           <a
             [routerLink]="'/ksiazki'"
             [queryParams]="{ tag: bookTag.PROMOCJE }"
+            [state]="{ clear: true }"
             routerLinkActive="underline"
             class="text-lg text-white capitalize no-underline py-1 px-3"
             >promocje</a
@@ -73,6 +76,7 @@
           <a
             [routerLink]="'/ksiazki'"
             [queryParams]="{ tag: bookTag.NADCHODZACE }"
+            [state]="{ clear: true }"
             routerLinkActive="underline"
             class="text-lg text-white capitalize no-underline py-1 px-3"
             >zapowiedzi</a

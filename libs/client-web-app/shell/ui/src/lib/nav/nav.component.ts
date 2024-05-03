@@ -65,7 +65,7 @@ export class NavComponent {
           queryParams: {
             categories: category.name.toLowerCase().split(' ').join('_'),
           },
-          state: { categoryIds: [category.id] },
+          state: { categoryIds: [category.id], clear: true },
           command: () => {
             if (this.sidebarVisible()) {
               this.sidebarVisible.set(false);

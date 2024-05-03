@@ -1,5 +1,5 @@
 import { Route } from '@angular/router';
-import { ClientWebAppBooksFeatureBooksComponent } from './client-web-app-books-feature-books/client-web-app-books-feature-books.component';
+import { FeatureBooksComponent } from './feature-books/feature-books.component';
 import {
   BooksApiService,
   BooksStore,
@@ -8,7 +8,7 @@ import {
 export const clientWebAppBooksFeatureBooksRoutes: Route[] = [
   {
     path: '',
-    component: ClientWebAppBooksFeatureBooksComponent,
+    component: FeatureBooksComponent,
     providers: [BooksApiService, BooksStore],
   },
 ];
