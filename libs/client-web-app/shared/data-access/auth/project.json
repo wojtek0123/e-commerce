@@ -4,7 +4,7 @@
   "sourceRoot": "libs/client-web-app/shared/data-access/auth/src",
   "prefix": "lib",
   "projectType": "library",
-  "tags": ["scope:client-web-app", "type:data-access"],
+  "tags": ["scope:client-web-app", "type:shared-data-access"],
   "targets": {
     "test": {
       "executor": "@nx/jest:jest",
