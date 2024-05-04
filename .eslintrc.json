@@ -18,32 +18,55 @@
                   "type:feature",
                   "type:ui",
                   "type:utils",
-                  "type:data-access"
+                  "type:data-access",
+                  "type:shared-data-access",
+                  "type:shared-utils",
+                  "type:shared-ui"
                 ]
               },
               {
                 "sourceTag": "type:feature",
                 "onlyDependOnLibsWithTags": [
-                  "type:feature",
                   "type:ui",
                   "type:data-access",
-                  "type:utils"
+                  "type:utils",
+                  "type:shared-data-access",
+                  "type:shared-utils",
+                  "type:shared-ui"
                 ]
               },
               {
                 "sourceTag": "type:data-access",
-                "onlyDependOnLibsWithTags": ["type:utils", "type:data-access"]
+                "onlyDependOnLibsWithTags": [
+                  "type:utils",
+                  "type:shared-data-access",
+                  "type:shared-utils"
+                ]
+              },
+              {
+                "sourceTag": "type:shared-data-access",
+                "onlyDependOnLibsWithTags": ["type:utils", "type:shared-utils"]
               },
               {
                 "sourceTag": "type:ui",
                 "onlyDependOnLibsWithTags": [
                   "type:utils",
                   "type:data-access",
-                  "type:ui"
+                  "type:shared-data-access",
+                  "type:shared-ui",
+                  "type:shared-utils"
                 ]
               },
               {
+                "sourceTag": "type:shared-ui",
+                "onlyDependOnLibsWithTags": ["type:utils", "type:data-access"]
+              },
+              {
                 "sourceTag": "type:utils",
+                "onlyDependOnLibsWithTags": ["type:shared-utils"]
+              },
+              {
+                "sourceTag": "type:shared-utils",
                 "onlyDependOnLibsWithTags": []
               },
               {

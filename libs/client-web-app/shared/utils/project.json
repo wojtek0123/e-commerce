@@ -4,7 +4,7 @@
   "sourceRoot": "libs/client-web-app/shared/utils/src",
   "prefix": "lib",
   "projectType": "library",
-  "tags": ["scope:client-web-app", "type:utils"],
+  "tags": ["scope:client-web-app", "type:shared-utils"],
   "targets": {
     "test": {
       "executor": "@nx/jest:jest",
