@@ -12,23 +12,16 @@ import { inject } from '@angular/core';
 import { BooksApiService } from '../services/books-api.service';
 import { tapResponse } from '@ngrx/operators';
 import { ActivatedRoute, Router } from '@angular/router';
-
-interface BooksFilters {
-  title: string | null;
-  tags: BookTag[] | null;
-  categories: Category[] | null;
-}
+import { BooksFilters } from '../models/books-filters.model';
 
 interface BooksState {
   books: Book[];
-  categories: Category[];
   status: ApiStatus;
   filters: BooksFilters;
 }
 
 const initialBooksState: BooksState = {
   books: [],
-  categories: [],
   status: 'idle',
   filters: {
     title: null,
@@ -46,26 +39,7 @@ export const BooksStore = signalStore(
       route = inject(ActivatedRoute),
       router = inject(Router)
     ) => ({
-      getBooks: rxMethod<{ categoryIds?: number[]; tags?: BookTag[] }>(
-        pipe(
-          tap(() => patchState(store, { status: 'loading' })),
-          switchMap(({ tags, categoryIds }) =>
-            booksApi.getBooks$({ tagsIn: tags, categoryIds }).pipe(
-              tapResponse({
-                next: (books) => {
-                  patchState(store, { status: 'ok', books });
-                },
-                error: (responseError: ResponseError) => {
-                  patchState(store, {
-                    status: { error: responseError.error.message },
-                  });
-                },
-              })
-            )
-          )
-        )
-      ),
-      filterBooks: rxMethod<void>(
+      getFilterBooks: rxMethod<void>(
         pipe(
           tap(() => patchState(store, { status: 'loading' })),
           switchMap(() =>
@@ -116,6 +90,22 @@ export const BooksStore = signalStore(
       },
       clearFilters: () => {
         patchState(store, { filters: initialBooksState.filters });
+
+        router.navigate([], {
+          relativeTo: route,
+          queryParams: null,
+        });
+      },
+      clearFilter: (filter: keyof BooksFilters) => {
+        patchState(store, (state) => ({
+          filters: { ...state.filters, [filter]: null },
+        }));
+
+        router.navigate([], {
+          relativeTo: route,
+          queryParams: { [filter]: null },
+          queryParamsHandling: 'merge',
+        });
       },
     })
   )

@@ -22,10 +22,15 @@ import {
 } from '@e-commerce/client-web-app/shared/data-access/api-types';
 import { ButtonModule } from 'primeng/button';
 import { CategoryStore } from '@e-commerce/client-web-app/shared/data-access/category';
-import { BooksStore } from '@e-commerce/client-web-app/browse/data-access';
+import {
+  BooksStore,
+  BooksFilters,
+} from '@e-commerce/client-web-app/browse/data-access';
 import { FilterSkeletonComponent } from '../components/filter-skeleton/filter-skeleton.component';
 import { ActivatedRoute } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { AccordionModule } from 'primeng/accordion';
+import { BadgeModule } from 'primeng/badge';
 
 @Component({
   selector: 'lib-filters',
@@ -37,56 +42,83 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     ButtonModule,
     SkeletonModule,
     FilterSkeletonComponent,
+    AccordionModule,
+    BadgeModule,
   ],
   template: `
     <form
-      [formGroup]="filtersForm"
-      (submit)="filterBooks()"
-      class="flex flex-column gap-4"
+      [formGroup]="selectedFiltersForm"
+      class="flex flex-column gap-4 sticky top-header-height pb-4"
     >
-      <div
-        class="overflow-y-auto flex flex-column gap-4 filter-container sticky top-0"
-      >
-        <div class="flex flex-column gap-2">
-          <h3 class="text-lg m-0 text-center">Tagi</h3>
+      <p-accordion class="flex-column gap-4 filter-container">
+        <p-accordionTab>
+          <ng-template pTemplate="header">
+            <span class="font-bold white-space-nowrap">Tagi</span>
+            <p-badge
+              [value]="(selectedFiltersForm.value.tags?.length ?? 0).toString()"
+              class="ml-2"
+              styleClass="p-badge-secondary"
+            />
+            <p-button
+              class="ml-3"
+              icon="pi pi-trash"
+              [text]="true"
+              (onClick)="clearFilter($event, 'tags')"
+            ></p-button>
+          </ng-template>
           <p-listbox
             [options]="tags()"
             optionLabel="name"
             optionValue="value"
-            formControlName="selectedTags"
+            formControlName="tags"
             [filter]="true"
             [checkbox]="true"
             [multiple]="true"
             [listStyle]="{ 'max-height': '13rem', height: '13rem' }"
             (onChange)="onChangeTagFilter($event)"
           />
-        </div>
+        </p-accordionTab>
         @if (categoryStatus() === 'ok') {
-        <div class="flex flex-column gap-2">
-          <h3 class="text-lg m-0 text-center">Kategorie</h3>
+        <p-accordionTab>
+          <ng-template pTemplate="header">
+            <span class="font-bold white-space-nowrap">Kategorie</span>
+            <p-badge
+              [value]="
+                (selectedFiltersForm.value.categories?.length ?? 0).toString()
+              "
+              class="ml-2"
+              styleClass="p-badge-secondary"
+            />
+            <p-button
+              class="ml-3"
+              icon="pi pi-trash"
+              [text]="true"
+              (onClick)="clearFilter($event, 'categories')"
+            ></p-button>
+          </ng-template>
           <p-listbox
             [options]="categories"
             optionLabel="name"
             optionVale="id"
-            formControlName="selectedCategories"
+            formControlName="categories"
             [filter]="true"
             [checkbox]="true"
             [multiple]="true"
-            [listStyle]="{ 'max-height': '44.5rem', height: '44.5rem' }"
+            [listStyle]="{ 'max-height': 'max-content', height: '100%' }"
             (onChange)="onChangeCategoryFilter($event)"
           />
-        </div>
+        </p-accordionTab>
         } @else if (categoryStatus() === 'loading') {
         <lib-filter-skeleton [numberOfSkeletons]="10" />
         }@else {
         <div>Błąd</div>
         }
-      </div>
+      </p-accordion>
       <p-button
-        label="Filtruj"
-        type="submit"
-        class="w-full"
-        styleClass="p-button-secondary"
+        icon="pi pi-trash"
+        label="Wyczyść filtry"
+        class="w-full mt-2"
+        (onClick)="clearFilters()"
       ></p-button>
     </form>
   `,
@@ -96,10 +128,19 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
         .p-listbox .p-listbox-header .p-listbox-filter {
           padding: 0.5rem;
         }
+
+        .p-accordion .p-accordion-content {
+          padding: 0;
+        }
       }
 
       .filter-container {
-        max-height: calc(100svh - var(--header-height) - 12rem);
+        height: 100%;
+        max-height: calc(100svh - var(--header-height) - 10rem);
+      }
+
+      .top-header-height {
+        top: calc(var(--header-height) + 1.5rem);
       }
     `,
   ],
@@ -120,9 +161,9 @@ export class FiltersComponent implements OnInit {
 
   tags = signal<typeof allBookTags>([...allBookTags]);
 
-  filtersForm = new FormGroup({
-    selectedTags: new FormControl<BookTag[] | null>(null),
-    selectedCategories: new FormControl<Category[] | null>(null),
+  selectedFiltersForm = new FormGroup({
+    tags: new FormControl<BookTag[] | null>(null),
+    categories: new FormControl<Category[] | null>(null),
   });
 
   async ngOnInit() {
@@ -150,27 +191,27 @@ export class FiltersComponent implements OnInit {
 
         if (clear) {
           this.booksStore.clearFilters();
-          this.filtersForm.setValue({
-            selectedCategories: null,
-            selectedTags: null,
+          this.selectedFiltersForm.setValue({
+            categories: null,
+            tags: null,
           });
           history.replaceState({}, '');
         }
 
         if (selectedCategories?.length) {
-          this.filtersForm.patchValue({
-            selectedCategories: selectedCategories as Category[],
+          this.selectedFiltersForm.patchValue({
+            categories: selectedCategories as Category[],
           });
           this.booksStore.updateFilterCategories(
             selectedCategories as Category[]
           );
         }
         if (tags) {
-          this.filtersForm.patchValue({ selectedTags: tags });
+          this.selectedFiltersForm.patchValue({ tags });
           this.booksStore.updateFilterTags(tags ?? null);
         }
 
-        this.booksStore.filterBooks();
+        this.booksStore.getFilterBooks();
       });
   }
 
@@ -182,7 +223,23 @@ export class FiltersComponent implements OnInit {
     this.booksStore.updateFilterTags(event.value);
   }
 
-  filterBooks() {
-    this.booksStore.filterBooks();
+  clearFilters() {
+    this.booksStore.clearFilters();
+
+    this.selectedFiltersForm.setValue({
+      categories: null,
+      tags: null,
+    });
+
+    this.booksStore.getFilterBooks();
+  }
+
+  clearFilter(event: Event, filter: keyof BooksFilters) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+
+    this.selectedFiltersForm.get(filter)?.setValue(null);
+    this.booksStore.clearFilter(filter);
+    this.booksStore.getFilterBooks();
   }
 }

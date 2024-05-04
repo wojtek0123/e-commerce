@@ -33,11 +33,11 @@
           ></p-button>
           <p-menu
             [ngClass]="{
-              'p-menu-two-columns': categories().length > 1,
               'p-menu-bottom': navPosition() === 'bottom',
               'p-menu-top': navPosition() === 'top'
             }"
             #categoriesMenu
+            class="p-menu-two-columns"
             [popup]="true"
             [model]="categories()"
           />

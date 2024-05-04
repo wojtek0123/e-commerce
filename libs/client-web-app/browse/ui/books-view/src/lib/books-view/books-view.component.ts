@@ -9,7 +9,7 @@ import { BooksStore } from '@e-commerce/client-web-app/browse/data-access';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { SkeletonModule } from 'primeng/skeleton';
-import { SkeletonComponent } from '@e-commerce/client-web-app/browse/ui/skeleton';
+import { SkeletonComponent } from '../components/skeleton/skeleton.component';
 
 @Component({
   selector: 'lib-books-view',
@@ -50,9 +50,13 @@ import { SkeletonComponent } from '@e-commerce/client-web-app/browse/ui/skeleton
         </ng-template>
       </p-card>
       } @empty {
-      <div>Brak danych do wyświetlenia!</div>
+      <div class="text-center grid-all-columns mt-8">
+        <span class="text-3xl">Nie znaleziono żadnych książek!</span>
+      </div>
       }} @else {
-      <div>Błąd podczas pobierania danych!</div>
+      <div class="text-center grid-all-columns mt-8">
+        <span class="text-3xl text-error">Błąd podczas pobierania danych!</span>
+      </div>
       }
     </div>
   `,
@@ -61,7 +65,7 @@ import { SkeletonComponent } from '@e-commerce/client-web-app/browse/ui/skeleton
 export class BooksViewComponent {
   private booksStore = inject(BooksStore);
 
-  @HostBinding('class') class = 'w-full';
+  @HostBinding('class') class = 'w-full min-content-height';
 
   books = computed(() => this.booksStore.books());
   status = computed(() => this.booksStore.status());

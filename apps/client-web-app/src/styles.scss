@@ -35,6 +35,10 @@ button {
   border-radius: var(--border-radius);
 }
 
+button.p-button-rounded {
+  border-radius: 50%;
+}
+
 a.p-button {
   border-radius: var(--border-radius);
 }
@@ -77,6 +81,14 @@ p-button.w-full .p-button {
   width: 100%;
   grid-template-columns: 1fr;
   place-items: center;
+}
+
+.grid-all-columns {
+  grid-column: 1 / -1;
+}
+
+.min-content-height {
+  min-height: calc(100svh - var(--header-height) - 10rem);
 }
 
 @media (min-width: 660px) {
