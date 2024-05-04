@@ -46,7 +46,7 @@
           <a
             [routerLink]="'/ksiazki'"
             routerLinkActive="underline"
-            [queryParams]="{ tag: bookTag.NOWE }"
+            [queryParams]="{ tags: bookTag.NOWE }"
             [state]="{ clear: true }"
             class="text-lg text-white capitalize no-underline py-1 px-3"
             >nowości</a
@@ -55,7 +55,7 @@
         <li>
           <a
             [routerLink]="'/ksiazki'"
-            [queryParams]="{ tag: bookTag.BESTSELLER }"
+            [queryParams]="{ tags: bookTag.BESTSELLER }"
             [state]="{ clear: true }"
             routerLinkActive="underline"
             class="text-lg text-white capitalize no-underline py-1 px-3"
@@ -65,7 +65,7 @@
         <li>
           <a
             [routerLink]="'/ksiazki'"
-            [queryParams]="{ tag: bookTag.PROMOCJE }"
+            [queryParams]="{ tags: bookTag.PROMOCJE }"
             [state]="{ clear: true }"
             routerLinkActive="underline"
             class="text-lg text-white capitalize no-underline py-1 px-3"
@@ -75,7 +75,7 @@
         <li>
           <a
             [routerLink]="'/ksiazki'"
-            [queryParams]="{ tag: bookTag.NADCHODZACE }"
+            [queryParams]="{ tags: bookTag.NADCHODZACE }"
             [state]="{ clear: true }"
             routerLinkActive="underline"
             class="text-lg text-white capitalize no-underline py-1 px-3"
