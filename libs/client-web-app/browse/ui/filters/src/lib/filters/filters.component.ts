@@ -24,7 +24,7 @@ import { ButtonModule } from 'primeng/button';
 import { CategoryStore } from '@e-commerce/client-web-app/shared/data-access/category';
 import { BooksStore } from '@e-commerce/client-web-app/browse/data-access';
 import { FilterSkeletonComponent } from '../components/filter-skeleton/filter-skeleton.component';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
@@ -65,8 +65,9 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
         <div class="flex flex-column gap-2">
           <h3 class="text-lg m-0 text-center">Kategorie</h3>
           <p-listbox
-            [options]="categories()"
+            [options]="categories"
             optionLabel="name"
+            optionVale="id"
             formControlName="selectedCategories"
             [filter]="true"
             [checkbox]="true"
@@ -109,83 +110,76 @@ export class FiltersComponent implements OnInit {
   private booksStore = inject(BooksStore);
   private route = inject(ActivatedRoute);
   private destroyRef = inject(DestroyRef);
-  private router = inject(Router);
 
   @HostBinding('class') class = 'max-w-24rem w-full hidden xl:block';
 
   categoryStatus = this.categoryStore.status;
-  categories = this.categoryStore.categories;
+  categories: Category[] = [];
 
   categorySkeletons = new Array(10);
 
   tags = signal<typeof allBookTags>([...allBookTags]);
 
   filtersForm = new FormGroup({
-    selectedTags: new FormControl<BookTag[] | null>(
-      this.booksStore.filters.tags()
-    ),
-    selectedCategories: new FormControl<Category[] | null>(
-      this.booksStore.filters.categories()
-    ),
+    selectedTags: new FormControl<BookTag[] | null>(null),
+    selectedCategories: new FormControl<Category[] | null>(null),
   });
 
-  ngOnInit(): void {
-    if (this.categoryStatus() !== 'ok') {
-      this.categoryStore.getCategories();
-    }
+  async ngOnInit() {
+    this.categories = this.route.snapshot.data['categories'];
 
     this.route.queryParams
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((param) => {
-        const tags = param['tag'] ? [param['tag'] as BookTag] : null;
-        const categoryIds = history.state['categoryIds'];
-
-        let selectedCategory: Category | undefined = undefined;
-
-        if (categoryIds) {
-          selectedCategory = this.categories().find(
-            (c) => c.id === categoryIds[0]
-          );
-        }
+        const tags = (param['tags'] as BookTag | undefined)?.split(',') as
+          | BookTag[]
+          | undefined;
+        const categoryNames = (
+          param['categories'] as Category['name'] | undefined
+        )
+          ?.split(',')
+          .map((c) => c.split('_').join(' '));
 
         const clear = history.state['clear'];
 
-        console.log(clear);
+        const selectedCategories = categoryNames?.length
+          ? categoryNames.map((name) =>
+              this.categories.find((c) => c.name.toLowerCase() === name)
+            )
+          : null;
 
         if (clear) {
+          this.booksStore.clearFilters();
           this.filtersForm.setValue({
-            selectedCategories: selectedCategory ? [selectedCategory] : null,
-            selectedTags: tags,
+            selectedCategories: null,
+            selectedTags: null,
           });
-
           history.replaceState({}, '');
-        } else {
-          this.filtersForm.setValue({
-            selectedTags: this.booksStore.filters.tags(),
-            selectedCategories: this.booksStore.filters.categories(),
-          });
         }
 
-        this.booksStore.setFilters({
-          tags: this.filtersForm.value.selectedTags,
-          categories: this.filtersForm.value.selectedCategories,
-        });
-
-        this.router.navigate([], {
-          relativeTo: this.route,
-          queryParams: {},
-        });
+        if (selectedCategories?.length) {
+          this.filtersForm.patchValue({
+            selectedCategories: selectedCategories as Category[],
+          });
+          this.booksStore.updateFilterCategories(
+            selectedCategories as Category[]
+          );
+        }
+        if (tags) {
+          this.filtersForm.patchValue({ selectedTags: tags });
+          this.booksStore.updateFilterTags(tags ?? null);
+        }
 
         this.booksStore.filterBooks();
       });
   }
 
   onChangeCategoryFilter(event: ListboxChangeEvent) {
-    this.booksStore.setFilters({ categories: event.value });
+    this.booksStore.updateFilterCategories(event.value);
   }
 
   onChangeTagFilter(event: ListboxChangeEvent) {
-    this.booksStore.setFilters({ tags: event.value });
+    this.booksStore.updateFilterTags(event.value);
   }
 
   filterBooks() {

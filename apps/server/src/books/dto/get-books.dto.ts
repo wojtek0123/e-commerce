@@ -2,7 +2,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   IsArray,
   IsDate,
-  IsEnum,
   IsNumber,
   IsOptional,
   IsString,
@@ -11,7 +10,6 @@ import { Tag } from '@prisma/client';
 
 export class GetBooksBodyDto {
   @ApiProperty({ required: false, isArray: true })
-  // @IsEnum(Tag)
   @IsOptional()
   tagsIn: Tag[];
 

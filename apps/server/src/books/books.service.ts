@@ -17,7 +17,7 @@ export class BooksService {
     });
   }
 
-  findMany({
+  async findMany({
     categoryIdsIn,
     tagsIn,
     titleLike,

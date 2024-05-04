@@ -41,7 +41,7 @@ export class SearchComponent {
   setFilterTitle(event: Event) {
     const value = (event.target as HTMLInputElement).value;
 
-    this.booksStore.setFilters({ title: value || null });
+    // this.booksStore.setFilters({ title: value || null });
   }
 
   filterBooks() {
