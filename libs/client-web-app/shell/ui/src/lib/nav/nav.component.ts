@@ -49,10 +49,10 @@ export class NavComponent {
     !this.categoryStore.categoriesCount()
       ? [
           {
-            label: 'Pokaż wszystkie',
-            routerLink: '/ksiazki',
-            // queryParams: { categories: 'wszystkie' },
+            label: 'Błąd! Spróbuj ponownie',
+            icon: 'pi pi-refresh',
             command: () => {
+              this.categoryStore.getCategories();
               if (this.sidebarVisible()) {
                 this.sidebarVisible.set(false);
               }

@@ -45,6 +45,6 @@ export class SearchComponent {
   }
 
   filterBooks() {
-    this.booksStore.filterBooks();
+    this.booksStore.getFilterBooks();
   }
 }
