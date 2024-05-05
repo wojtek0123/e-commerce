@@ -15,7 +15,8 @@ import { FormsModule } from '@angular/forms';
 import { debounce } from 'lodash';
 import { ActivatedRoute } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { filter, tap } from 'rxjs';
+import { filter } from 'rxjs';
+import { RouterConfig } from '@e-commerce/client-web-app/browse/utils/router-config';
 
 @Component({
   selector: 'lib-search',
@@ -64,14 +65,15 @@ export class SearchComponent implements OnInit {
   ngOnInit(): void {
     this.route.queryParams
       .pipe(
-        tap(console.log),
-        filter((params) => !!params['search']),
+        filter((params) => !!params[RouterConfig.searchQueryParams]),
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe((params) => {
-        const search = params['search'] as string | undefined;
+        const search = params[RouterConfig.searchQueryParams] as
+          | string
+          | undefined;
 
-        const clear = history.state['clear'];
+        const clear = history.state[RouterConfig.clearHistoryState];
 
         if (clear) {
           this.clearInput();
