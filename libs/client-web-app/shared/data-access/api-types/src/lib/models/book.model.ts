@@ -23,8 +23,8 @@ export enum BookTag {
 }
 
 export const allBookTags = [
-  { name: BookTag.BESTSELLER.toLowerCase(), value: BookTag.BESTSELLER },
-  { name: BookTag.NOWE.toLowerCase(), value: BookTag.NOWE },
-  { name: BookTag.NADCHODZACE.toLowerCase(), value: BookTag.NADCHODZACE },
-  { name: BookTag.PROMOCJE.toLowerCase(), value: BookTag.PROMOCJE },
+  BookTag.BESTSELLER,
+  BookTag.NOWE,
+  BookTag.NADCHODZACE,
+  BookTag.PROMOCJE,
 ];
