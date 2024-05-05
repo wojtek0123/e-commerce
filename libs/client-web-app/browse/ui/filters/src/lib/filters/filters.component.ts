@@ -31,6 +31,7 @@ import { ActivatedRoute } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AccordionModule } from 'primeng/accordion';
 import { BadgeModule } from 'primeng/badge';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'lib-filters',
@@ -170,7 +171,10 @@ export class FiltersComponent implements OnInit {
     this.categories = this.route.snapshot.data['categories'];
 
     this.route.queryParams
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(
+        filter((params) => params['tags'] || params['categories']),
+        takeUntilDestroyed(this.destroyRef)
+      )
       .subscribe((param) => {
         const tags = (param['tags'] as BookTag | undefined)?.split(',') as
           | BookTag[]

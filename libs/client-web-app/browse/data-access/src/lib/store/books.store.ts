@@ -1,4 +1,10 @@
-import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
+import {
+  patchState,
+  signalStore,
+  withHooks,
+  withMethods,
+  withState,
+} from '@ngrx/signals';
 import {
   ApiStatus,
   Book,
@@ -88,12 +94,25 @@ export const BooksStore = signalStore(
           queryParamsHandling: 'merge',
         });
       },
-      clearFilters: () => {
-        patchState(store, { filters: initialBooksState.filters });
+      updateFilterTitle: (value: string | null) => {
+        patchState(store, (state) => ({
+          filters: { ...state.filters, title: value },
+        }));
 
         router.navigate([], {
           relativeTo: route,
-          queryParams: null,
+          queryParams: { search: value },
+          queryParamsHandling: 'merge',
+        });
+      },
+      clearFilters: () => {
+        patchState(store, (state) => ({
+          filters: { ...initialBooksState.filters, title: state.filters.title },
+        }));
+
+        router.navigate([], {
+          relativeTo: route,
+          queryParams: { search: store.filters.title() },
         });
       },
       clearFilter: (filter: keyof BooksFilters) => {
@@ -108,5 +127,14 @@ export const BooksStore = signalStore(
         });
       },
     })
-  )
+  ),
+  withHooks({
+    onInit(store) {
+      store.getFilterBooks();
+      console.log('init');
+    },
+    onDestroy() {
+      console.log('destroy');
+    },
+  })
 );
