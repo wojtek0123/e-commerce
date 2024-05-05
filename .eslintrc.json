@@ -70,6 +70,18 @@
                 "onlyDependOnLibsWithTags": []
               },
               {
+                "sourceTag": "type:shell",
+                "onlyDependOnLibsWithTags": [
+                  "type:feature",
+                  "type:ui",
+                  "type:data-access",
+                  "type:utils",
+                  "type:shared-data-access",
+                  "type:shared-utils",
+                  "type:shared-ui"
+                ]
+              },
+              {
                 "sourceTag": "scope:client-web-app",
                 "onlyDependOnLibsWithTags": ["scope:client-web-app"]
               }

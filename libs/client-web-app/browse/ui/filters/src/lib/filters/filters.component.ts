@@ -26,6 +26,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AccordionModule } from 'primeng/accordion';
 import { filter } from 'rxjs';
 import { FilterAccordionTabComponent } from '../components/filter-accordion/filter-accordion.component';
+import { RouterConfig } from '@e-commerce/client-web-app/browse/utils/router-config';
 
 @Component({
   selector: 'lib-filters',
@@ -114,19 +115,25 @@ export class FiltersComponent implements OnInit {
   categories = signal<Category[]>([]);
 
   async ngOnInit() {
-    this.categories.set(this.route.snapshot.data['categories']);
+    this.categories.set(this.route.snapshot.data[RouterConfig.categoriesData]);
 
     this.route.queryParams
       .pipe(
-        filter((params) => params['tags'] || params['categories']),
+        filter(
+          (params) =>
+            params[RouterConfig.tagsQueryParams] ||
+            params[RouterConfig.categoriesQueryParams]
+        ),
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe((param) => {
-        const tags = (param['tags'] as BookTag | undefined)?.split(',') as
-          | BookTag[]
-          | undefined;
+        const tags = (
+          param[RouterConfig.tagsQueryParams] as BookTag | undefined
+        )?.split(',') as BookTag[] | undefined;
         const categoryNames = (
-          param['categories'] as Category['name'] | undefined
+          param[RouterConfig.categoriesQueryParams] as
+            | Category['name']
+            | undefined
         )
           ?.split(',')
           .map((c) => c.split('_').join(' '));
@@ -137,7 +144,7 @@ export class FiltersComponent implements OnInit {
             )
           : null;
 
-        if (history.state['clear']) {
+        if (history.state[RouterConfig.clearHistoryState]) {
           this.booksStore.clearFilters();
           history.replaceState({}, '');
         }

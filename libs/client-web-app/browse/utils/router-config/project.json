@@ -1,0 +1,20 @@
+{
+  "name": "router-config",
+  "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/client-web-app/browse/utils/router-config/src",
+  "prefix": "lib",
+  "projectType": "library",
+  "tags": ["scope:client-web-app", "type:utils"],
+  "targets": {
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "libs/client-web-app/browse/utils/router-config/jest.config.ts"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}
