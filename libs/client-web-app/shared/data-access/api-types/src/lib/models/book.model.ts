@@ -13,6 +13,16 @@ export interface Book {
   language?: string;
   tag?: BookTag;
   price: number;
+  authors: {
+    bookId: Book['id'];
+    authorId: number;
+    createdAt: string;
+    updatedAt: string;
+    author: {
+      id: number;
+      name: string;
+    };
+  }[];
 }
 
 export enum BookTag {

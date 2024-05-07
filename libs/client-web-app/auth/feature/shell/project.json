@@ -1,5 +1,5 @@
 {
-  "name": "shell",
+  "name": "client-web-app/auth/feature/shell",
   "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/client-web-app/auth/feature/shell/src",
   "prefix": "e-commerce",

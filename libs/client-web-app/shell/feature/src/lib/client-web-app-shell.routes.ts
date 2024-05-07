@@ -18,8 +18,8 @@ export const clientWebAppShellRoutes: Route[] = [
       {
         path: appRouterConfig.browse.basePath,
         loadChildren: () =>
-          import('@e-commerce/client-web-app/browse/feature/books').then(
-            (r) => r.booksRoutes
+          import('@e-commerce/client-web-app/browse/feature/shell').then(
+            (r) => r.shellRoutes
           ),
       },
       {
