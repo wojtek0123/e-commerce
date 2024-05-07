@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { GetBooksBodyDto } from './dto/get-books.dto';
@@ -40,13 +40,23 @@ export class BooksService {
     return this.prisma.book.findMany({
       where,
       include: {
-        authors: true,
+        authors: {
+          include: {
+            author: true,
+          },
+        },
       },
     });
   }
 
-  findOne(where: Prisma.BookWhereUniqueInput) {
-    return this.prisma.book.findUnique({ where });
+  async findOne(where: Prisma.BookWhereUniqueInput) {
+    const book = await this.prisma.book.findUnique({ where });
+
+    if (!book) {
+      throw new NotFoundException('Book not found');
+    }
+
+    return book;
   }
 
   update(where: Prisma.BookWhereUniqueInput, data: Prisma.BookUpdateInput) {

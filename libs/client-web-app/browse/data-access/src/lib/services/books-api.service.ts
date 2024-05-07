@@ -31,4 +31,8 @@ export class BooksApiService {
 
     return this.http.post<Book[]>('http://localhost:3000/books', body);
   }
+
+  getBook$(id: Book['id']) {
+    return this.http.get<Book>(`http://localhost:3000/books/${id}`);
+  }
 }
