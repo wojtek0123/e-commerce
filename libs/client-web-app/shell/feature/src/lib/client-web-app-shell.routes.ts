@@ -1,21 +1,22 @@
 import { Route } from '@angular/router';
 import { BaseLayoutComponent } from '@e-commerce/client-web-app/shell/ui';
 import { authRouteGuard } from '@e-commerce/client-web-app/shell/utils';
+import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-config';
 
 export const clientWebAppShellRoutes: Route[] = [
   {
-    path: '',
+    path: appRouterConfig.defaultPath,
     component: BaseLayoutComponent,
     children: [
       {
-        path: '',
+        path: appRouterConfig.defaultPath,
         loadChildren: () =>
           import('@e-commerce/client-web-app/products/feature-home').then(
             (r) => r.featureHomeRoutes
           ),
       },
       {
-        path: 'ksiazki',
+        path: appRouterConfig.browse.basePath,
         loadChildren: () =>
           import('@e-commerce/client-web-app/browse/feature/books').then(
             (r) => r.booksRoutes
@@ -29,7 +30,7 @@ export const clientWebAppShellRoutes: Route[] = [
           ),
       },
       {
-        path: 'auth',
+        path: appRouterConfig.auth.basePath,
         loadChildren: () =>
           import('@e-commerce/client-web-app/auth/feature/shell').then(
             (r) => r.shellRoutes
@@ -38,12 +39,16 @@ export const clientWebAppShellRoutes: Route[] = [
       },
       {
         path: 'cart',
-        redirectTo: '/',
+        redirectTo: appRouterConfig.defaultPath,
+      },
+      {
+        path: '**',
+        redirectTo: appRouterConfig.defaultPath,
       },
     ],
   },
   {
     path: '**',
-    redirectTo: '/',
+    redirectTo: appRouterConfig.defaultPath,
   },
 ];

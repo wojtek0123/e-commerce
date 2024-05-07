@@ -16,7 +16,7 @@ import { debounce } from 'lodash';
 import { ActivatedRoute } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter } from 'rxjs';
-import { RouterConfig } from '@e-commerce/client-web-app/browse/utils/router-config';
+import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-config';
 
 @Component({
   selector: 'lib-search',
@@ -65,15 +65,15 @@ export class SearchComponent implements OnInit {
   ngOnInit(): void {
     this.route.queryParams
       .pipe(
-        filter((params) => !!params[RouterConfig.searchQueryParams]),
+        filter((params) => !!params[appRouterConfig.browse.searchQueryParams]),
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe((params) => {
-        const search = params[RouterConfig.searchQueryParams] as
+        const search = params[appRouterConfig.browse.searchQueryParams] as
           | string
           | undefined;
 
-        const clear = history.state[RouterConfig.clearHistoryState];
+        const clear = history.state[appRouterConfig.browse.clearHistoryState];
 
         if (clear) {
           this.clearInput();

@@ -5,14 +5,14 @@ import {
   BooksStore,
 } from '@e-commerce/client-web-app/browse/data-access';
 import { categoriesResolver } from './resolvers/categories.resolver';
-import { RouterConfig } from '@e-commerce/client-web-app/browse/utils/router-config';
+import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-config';
 
 export const booksRoutes: Route[] = [
   {
-    path: '',
+    path: appRouterConfig.defaultPath,
     component: FeatureBooksComponent,
     resolve: {
-      [RouterConfig.categoriesData]: categoriesResolver,
+      [appRouterConfig.browse.categoriesData]: categoriesResolver,
     },
     providers: [BooksApiService, BooksStore],
   },

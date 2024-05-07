@@ -19,7 +19,7 @@ import { BooksApiService } from '../services/books-api.service';
 import { tapResponse } from '@ngrx/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BooksFilters } from '../models/books-filters.model';
-import { RouterConfig } from '@e-commerce/client-web-app/browse/utils/router-config';
+import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-config';
 
 interface BooksState {
   books: Book[];
@@ -81,7 +81,7 @@ export const BooksStore = signalStore(
         router.navigate([], {
           relativeTo: route,
           queryParams: {
-            [RouterConfig.categoriesQueryParams]: queryCats || null,
+            [appRouterConfig.browse.categoriesQueryParams]: queryCats || null,
           },
           queryParamsHandling: 'merge',
         });
@@ -92,7 +92,7 @@ export const BooksStore = signalStore(
         router.navigate([], {
           relativeTo: route,
           queryParams: {
-            [RouterConfig.tagsQueryParams]: tags?.join(',') || null,
+            [appRouterConfig.browse.tagsQueryParams]: tags?.join(',') || null,
           },
           queryParamsHandling: 'merge',
         });
@@ -104,7 +104,7 @@ export const BooksStore = signalStore(
 
         router.navigate([], {
           relativeTo: route,
-          queryParams: { [RouterConfig.searchQueryParams]: value },
+          queryParams: { [appRouterConfig.browse.searchQueryParams]: value },
           queryParamsHandling: 'merge',
         });
       },
@@ -119,7 +119,7 @@ export const BooksStore = signalStore(
         router.navigate([], {
           relativeTo: route,
           queryParams: {
-            [RouterConfig.searchQueryParams]: store.filters.search(),
+            [appRouterConfig.browse.searchQueryParams]: store.filters.search(),
           },
         });
       },

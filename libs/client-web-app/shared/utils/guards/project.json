@@ -1,7 +1,7 @@
 {
-  "name": "client-web-app/shared/utils",
-  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/client-web-app/shared/utils/src",
+  "name": "client-web-app/shared/utils/guards",
+  "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/client-web-app/shared/utils/guards/src",
   "prefix": "lib",
   "projectType": "library",
   "tags": ["scope:client-web-app", "type:shared-utils"],
@@ -10,7 +10,7 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "libs/client-web-app/shared/utils/jest.config.ts"
+        "jestConfig": "libs/client-web-app/shared/utils/guards/jest.config.ts"
       }
     },
     "lint": {
