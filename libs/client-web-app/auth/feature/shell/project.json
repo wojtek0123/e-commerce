@@ -3,7 +3,7 @@
   "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/client-web-app/auth/feature/shell/src",
   "prefix": "e-commerce",
-  "tags": ["scope:client-web-app", "type:feature"],
+  "tags": ["scope:client-web-app", "type:shell"],
   "projectType": "library",
   "targets": {
     "test": {

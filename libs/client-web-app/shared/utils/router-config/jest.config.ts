@@ -4,7 +4,7 @@ export default {
   preset: '../../../../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
   coverageDirectory:
-    '../../../../../coverage/libs/client-web-app/browse/utils/router-config',
+    '../../../../../coverage/libs/client-web-app/shared/utils/router-config',
   transform: {
     '^.+\\.(ts|mjs|js|html)$': [
       'jest-preset-angular',

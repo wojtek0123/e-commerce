@@ -21,67 +21,30 @@
             (click)="categoriesMenu.toggle($event)"
             iconPos="right"
             [icon]="
-              categoriesMenu.visible
-                ? navPosition() === 'top'
-                  ? 'pi pi-angle-up'
-                  : 'pi pi-angle-down'
-                : navPosition() === 'top'
-                ? 'pi pi-angle-down'
-                : 'pi pi-angle-up'
+              categoriesMenu.visible ? 'pi pi-angle-up' : 'pi pi-angle-down'
             "
             label="Kategorie"
           ></p-button>
           <p-menu
-            [ngClass]="{
-              'p-menu-bottom': navPosition() === 'bottom',
-              'p-menu-top': navPosition() === 'top'
-            }"
             #categoriesMenu
             class="p-menu-two-columns"
             [popup]="true"
             [model]="categories()"
           />
         </li>
+        @for (item of navItems; track item.id) {
         <li>
           <a
-            [routerLink]="'/ksiazki'"
+            [routerLink]="item.url"
             routerLinkActive="underline"
-            [queryParams]="{ tags: bookTag.NOWE }"
-            [state]="{ clear: true }"
+            [queryParams]="item.queryParams"
+            [state]="item.state"
             class="text-lg text-white capitalize no-underline py-1 px-3"
-            >nowości</a
           >
+            {{ item.name }}
+          </a>
         </li>
-        <li>
-          <a
-            [routerLink]="'/ksiazki'"
-            [queryParams]="{ tags: bookTag.BESTSELLER }"
-            [state]="{ clear: true }"
-            routerLinkActive="underline"
-            class="text-lg text-white capitalize no-underline py-1 px-3"
-            >bestsellery</a
-          >
-        </li>
-        <li>
-          <a
-            [routerLink]="'/ksiazki'"
-            [queryParams]="{ tags: bookTag.PROMOCJE }"
-            [state]="{ clear: true }"
-            routerLinkActive="underline"
-            class="text-lg text-white capitalize no-underline py-1 px-3"
-            >promocje</a
-          >
-        </li>
-        <li>
-          <a
-            [routerLink]="'/ksiazki'"
-            [queryParams]="{ tags: bookTag.NADCHODZACE }"
-            [state]="{ clear: true }"
-            routerLinkActive="underline"
-            class="text-lg text-white capitalize no-underline py-1 px-3"
-            >zapowiedzi</a
-          >
-        </li>
+        }
       </ul>
     </div>
 

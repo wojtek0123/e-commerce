@@ -55,6 +55,7 @@ p-button.w-full .p-button {
   width: max-content !important;
   border-radius: var(--border-radius);
   padding: 0.5rem;
+  margin-top: 0.5rem;
 
   & ul {
     display: grid !important;
@@ -65,14 +66,6 @@ p-button.w-full .p-button {
 
 .p-menu .p-menuitem > .p-menuitem-content {
   border-radius: var(--border-radius);
-}
-
-.p-menu-top .p-menu {
-  margin-top: 0.5rem;
-}
-
-.p-menu-bottom .p-menu {
-  margin-top: -2rem;
 }
 
 .grid-auto-fit {
