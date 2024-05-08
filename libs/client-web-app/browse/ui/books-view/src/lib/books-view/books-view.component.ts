@@ -47,8 +47,8 @@ import { getBrowserRouteDetails } from '@e-commerce/client-web-app/shared/utils/
               "
             />
           </ng-template>
-          @for (author of book.authors; track $index) {
-          <span>{{ author.author.name }}</span>
+          @for (author of book.authors; track author.id) {
+          <span>{{ author.name }}</span>
           }
           <ng-template pTemplate="footer">
             <div class="flex align-items-center justify-content-between">

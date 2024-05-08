@@ -1,46 +1,47 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDate, IsNumber, IsString } from 'class-validator';
+import { Prisma } from '@prisma/client';
+import { IsDate, IsNumber, IsOptional, IsString } from 'class-validator';
 
-export class CreateBook {
-  @ApiProperty()
+export class CreateBook implements Prisma.BookCreateInput {
+  @ApiProperty({ type: String })
   @IsString()
   title: string;
 
-  @ApiProperty()
+  @ApiProperty({ type: String, required: false })
   @IsString()
-  coverImage: string;
+  @IsOptional()
+  coverImage?: string;
 
-  @ApiProperty()
+  @ApiProperty({ type: String, required: false })
   @IsString()
-  description: string;
+  @IsOptional()
+  description?: string;
 
-  @ApiProperty()
+  @ApiProperty({ type: String, required: false })
   @IsString()
-  language: string;
+  @IsOptional()
+  language?: string;
 
-  @ApiProperty()
+  @ApiProperty({ type: Number, required: false })
   @IsNumber()
-  numberPages: number;
+  @IsOptional()
+  pages?: number;
 
-  @ApiProperty()
+  @ApiProperty({ type: Number })
   @IsNumber({
     maxDecimalPlaces: 2,
   })
   price: number;
 
-  // @ApiProperty()
-  // @IsDate()
-  // createdAt: Date;
-  //
-  // @ApiProperty()
-  // @IsDate()
-  // updatedAt: Date;
-
-  @ApiProperty()
+  @ApiProperty({ type: String, required: false })
   @IsDate()
-  publishingDate: Date;
+  @IsOptional()
+  publishingDate: string;
 
   @ApiProperty()
   @IsNumber()
-  publisherId: number;
+  publisher?: Prisma.PublisherCreateNestedOneWithoutBooksInput;
+
+  @ApiProperty()
+  category: Prisma.CategoryCreateNestedOneWithoutBooksInput;
 }

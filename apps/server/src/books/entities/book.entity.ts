@@ -1,48 +1,52 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { $Enums, Book } from '@prisma/client';
-import { Decimal } from '@prisma/client/runtime/library';
+import { $Enums, Book, Tag } from '@prisma/client';
 import { IsNumber, IsOptional } from 'class-validator';
+import { AuthorEntity } from '../../authors/enities/author.entity';
+import { AuthorDto } from '../../authors/dto/author.dto';
 
 export class BookEntity implements Book {
-  @ApiProperty()
+  @ApiProperty({ type: String })
   title: string;
 
-  @ApiProperty()
+  @ApiProperty({ type: String })
   createdAt: Date;
 
-  @ApiProperty()
+  @ApiProperty({ required: false, type: String })
   updatedAt: Date;
 
-  @ApiProperty()
+  @ApiProperty({ required: false, type: String })
   @IsOptional()
-  publishingDate: Date;
+  publishedDate: Date;
 
-  @ApiProperty()
-  numberPages: number;
+  @ApiProperty({ type: Number })
+  pages: number;
 
-  @ApiProperty()
+  @ApiProperty({ type: Number })
   publisherId: number;
 
-  @ApiProperty()
+  @ApiProperty({ type: Number })
   categoryId: number;
 
-  @ApiProperty()
+  @ApiProperty({ required: false, type: String })
   coverImage: string;
 
-  @ApiProperty({ required: false })
+  @ApiProperty({ required: false, type: String })
   @IsOptional()
   description: string;
 
-  @ApiProperty()
+  @ApiProperty({ type: String })
   language: string;
 
-  @ApiProperty()
+  @ApiProperty({ type: Number })
   @IsNumber()
   id: number;
 
-  @ApiProperty()
+  @ApiProperty({ enum: Tag, required: false })
   tag: $Enums.Tag;
 
-  @ApiProperty()
+  @ApiProperty({ type: Number })
   price: number;
+
+  @ApiProperty({ isArray: true, type: AuthorDto })
+  authors: AuthorEntity[];
 }

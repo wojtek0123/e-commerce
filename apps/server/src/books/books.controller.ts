@@ -8,7 +8,6 @@ import {
   Delete,
 } from '@nestjs/common';
 import { BooksService } from './books.service';
-import { BookDto } from './dto/book.dto';
 import { Prisma } from '@prisma/client';
 import {
   ApiBody,
@@ -29,7 +28,7 @@ export class BooksController {
   @Post('create')
   @ApiOperation({ summary: 'Create a book' })
   @ApiBody({ type: BookEntity })
-  @ApiCreatedResponse({ type: BookDto })
+  @ApiCreatedResponse({ type: BookEntity })
   create(@Body() data: Prisma.BookCreateInput) {
     return this.booksService.create(data);
   }

@@ -20,7 +20,7 @@ export class UpdateBookBodyDto implements Prisma.BookUpdateInput {
   category?: Prisma.CategoryUpdateOneRequiredWithoutBooksNestedInput;
 
   @ApiPropertyOptional()
-  publisher?: Prisma.PublisherUpdateOneRequiredWithoutBooksNestedInput;
+  publisher?: Prisma.PublisherUpdateOneWithoutBooksNestedInput;
 
   @ApiPropertyOptional()
   coverImage?: string | Prisma.NullableStringFieldUpdateOperationsInput;

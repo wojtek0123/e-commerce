@@ -6,22 +6,16 @@ export interface Book {
   createdAt: string;
   updatedAt: string;
   description?: string;
-  publishingDate?: string;
-  numberPages?: number;
+  publishedDate?: string;
+  pages?: number;
   categoryId: Category['id'];
   coverImage?: string;
   language?: string;
   tag?: BookTag;
   price: number;
   authors: {
-    bookId: Book['id'];
-    authorId: number;
-    createdAt: string;
-    updatedAt: string;
-    author: {
-      id: number;
-      name: string;
-    };
+    id: number;
+    name: string;
   }[];
 }
 

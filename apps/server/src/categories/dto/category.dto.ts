@@ -2,19 +2,19 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsDate, IsNumber, IsString } from 'class-validator';
 
 export class CategoryDto {
-  @ApiProperty({ readOnly: true })
+  @ApiProperty({ readOnly: true, type: Number })
   @IsNumber()
   id: number;
 
-  @ApiProperty()
+  @ApiProperty({ type: String })
   @IsString()
   name: string;
 
-  @ApiProperty()
+  @ApiProperty({ type: String })
   @IsDate()
   createdAt: Date;
 
-  @ApiProperty()
+  @ApiProperty({ type: String })
   @IsDate()
   updatedAt: Date;
 }
