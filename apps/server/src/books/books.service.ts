@@ -37,7 +37,7 @@ export class BooksService {
       };
     }
 
-    return this.prisma.book.findMany({
+    const books = await this.prisma.book.findMany({
       where,
       include: {
         authors: {
@@ -47,16 +47,24 @@ export class BooksService {
         },
       },
     });
+
+    return books.map((book) => ({
+      ...book,
+      authors: book.authors.map((a) => a.author),
+    }));
   }
 
   async findOne(where: Prisma.BookWhereUniqueInput) {
-    const book = await this.prisma.book.findUnique({ where });
+    const book = await this.prisma.book.findUnique({
+      where,
+      include: { authors: { include: { author: true } } },
+    });
 
     if (!book) {
       throw new NotFoundException('Book not found');
     }
 
-    return book;
+    return { ...book, authors: book.authors.map((a) => a.author) };
   }
 
   update(where: Prisma.BookWhereUniqueInput, data: Prisma.BookUpdateInput) {

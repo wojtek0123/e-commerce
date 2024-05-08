@@ -40,22 +40,22 @@ model Category {
 }
 
 model Book {
-  id             Int          @id @default(autoincrement())
-  title          String
-  description    String?
-  language       String?
-  numberPages    Int?
-  publishingDate DateTime?
-  price          Float
-  coverImage     String?
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
-  publisher      Publisher    @relation(fields: [publisherId], references: [id])
-  publisherId    Int
-  authors        BookAuthor[]
-  category       Category     @relation(fields: [categoryId], references: [id])
-  categoryId     Int
-  tag            Tag?
+  id            Int          @id @default(autoincrement())
+  title         String
+  description   String?
+  language      String?
+  pages         Int?
+  publishedDate DateTime?
+  price         Float
+  coverImage    String?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  publisher     Publisher?   @relation(fields: [publisherId], references: [id])
+  publisherId   Int?
+  authors       BookAuthor[]
+  category      Category     @relation(fields: [categoryId], references: [id])
+  categoryId    Int
+  tag           Tag?
 
   @@map("book")
 }

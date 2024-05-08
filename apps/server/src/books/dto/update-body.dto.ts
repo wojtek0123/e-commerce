@@ -3,51 +3,47 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class UpdateBookBodyDto implements Prisma.BookUpdateInput {
-  @ApiProperty()
+  @ApiProperty({ type: String, required: false })
   @IsOptional()
   @IsString()
-  title?: string | Prisma.StringFieldUpdateOperationsInput | undefined;
+  title?: string;
 
-  @ApiProperty()
+  @ApiProperty({ type: String, required: false })
   @IsOptional()
   @IsString()
-  description?: string | Prisma.StringFieldUpdateOperationsInput;
+  description?: string;
 
-  @ApiProperty()
+  @ApiProperty({ type: Number, required: false })
   @IsOptional()
   @IsNumber()
-  price?: number | Prisma.FloatFieldUpdateOperationsInput;
+  price?: number;
 
-  @ApiProperty({ isArray: true })
-  @IsOptional()
-  authors?: Prisma.BookAuthorUpdateManyWithoutBookNestedInput;
-
-  @ApiProperty()
+  @ApiProperty({ type: String, required: false })
   @IsOptional()
   @IsString()
-  language?: string | Prisma.StringFieldUpdateOperationsInput;
+  language?: string;
 
-  @ApiProperty()
+  @ApiProperty({ type: Number, required: false })
   @IsOptional()
   @IsNumber()
-  numberPages?: number | Prisma.IntFieldUpdateOperationsInput;
+  pages?: number;
 
-  @ApiProperty()
+  @ApiProperty({ type: String, required: false })
   @IsOptional()
   @IsString()
-  publishingDate?: string | Prisma.DateTimeFieldUpdateOperationsInput | Date;
+  publishingDate?: string;
 
-  @ApiProperty()
+  @ApiProperty({ enum: Tag, required: false })
   @IsOptional()
   @IsEnum(Tag)
-  tag?: Prisma.NullableEnumTagFieldUpdateOperationsInput | $Enums.Tag;
+  tag?: $Enums.Tag;
 
-  @ApiProperty()
+  @ApiProperty({ type: Number, required: false })
   @IsOptional()
-  category?: Prisma.CategoryUpdateOneRequiredWithoutBooksNestedInput;
+  categoryId?: number;
 
-  @ApiProperty()
+  @ApiProperty({ type: String, required: false })
   @IsOptional()
   @IsString()
-  coverImage?: string | Prisma.StringFieldUpdateOperationsInput;
+  coverImage?: string;
 }
