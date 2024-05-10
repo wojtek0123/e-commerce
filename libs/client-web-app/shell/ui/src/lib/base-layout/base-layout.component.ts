@@ -11,15 +11,11 @@ import { NavComponent } from '../nav/nav.component';
       .container {
         min-height: calc(100svh - var(--header-height));
       }
-
-      .max-content-width {
-        max-width: 87.5rem;
-      }
     `,
   ],
   template: `
     <lib-e-commerce-nav class="sticky top-0" />
-    <div class="p-4 container mx-auto max-content-width">
+    <div class="p-4 container mx-auto">
       <router-outlet />
     </div>
   `,

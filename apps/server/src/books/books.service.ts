@@ -57,7 +57,7 @@ export class BooksService {
   async findOne(where: Prisma.BookWhereUniqueInput) {
     const book = await this.prisma.book.findUnique({
       where,
-      include: { authors: { include: { author: true } } },
+      include: { authors: { include: { author: true } }, category: true },
     });
 
     if (!book) {

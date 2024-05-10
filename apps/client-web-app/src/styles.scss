@@ -7,6 +7,8 @@
 :root {
   --border-radius: 0.5rem;
   --header-height: 4.8125rem;
+  --accent-color: #f48fb1;
+  --max-card-width: 24rem;
 }
 
 html {
@@ -72,8 +74,14 @@ p-button.w-full .p-button {
   display: grid;
   gap: 2rem;
   width: 100%;
-  grid-template-columns: 1fr;
-  place-items: center;
+  grid-template-columns: repeat(auto-fit, minmax(20rem, var(--max-card-width)));
+  place-content: center;
+}
+
+@media (min-width: 668px) {
+  .grid-auto-fit {
+    place-content: start;
+  }
 }
 
 .grid-all-columns {
@@ -84,18 +92,6 @@ p-button.w-full .p-button {
   min-height: calc(100svh - var(--header-height) - 10rem);
 }
 
-@media (min-width: 660px) {
-  .grid-auto-fit {
-    grid-template-columns: repeat(2, 1fr);
-    place-items: normal;
-  }
-}
-
-@media (min-width: 990px) {
-  .grid-auto-fit {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
 .p-menu-sidebar .p-menu {
   border: none;
   background-color: transparent;
@@ -124,4 +120,14 @@ p-button.w-full .p-button {
 
 .height-content {
   height: calc(100svh - var(--header-height) - 3rem);
+}
+
+.p-breadcrumb {
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+.text-accent-color {
+  color: var(--accent-color);
 }

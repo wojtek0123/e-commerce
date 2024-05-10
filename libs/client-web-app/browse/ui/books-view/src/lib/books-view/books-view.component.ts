@@ -34,12 +34,11 @@ import { getBrowserRouteDetails } from '@e-commerce/client-web-app/shared/utils/
       >
         <p-card
           [header]="book.title"
-          [style]="{ width: '100%', maxWidth: '34rem' }"
+          [style]="{ width: '100%', maxWidth: '24rem' }"
         >
           <ng-template pTemplate="header">
             <img
               alt="Card"
-              class="h-23rem"
               [src]="
                 book.coverImage
                   ? book.coverImage

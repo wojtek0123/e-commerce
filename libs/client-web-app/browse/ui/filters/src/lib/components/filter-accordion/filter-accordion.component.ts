@@ -31,8 +31,6 @@ import { ListboxChangeEvent, ListboxModule } from 'primeng/listbox';
         ></p-button>
       </ng-template>
       <p-listbox
-        emptyFilterMessage="Nie znaleziono danych"
-        emptyMessage="Nie znaleziono danych"
         [options]="items()"
         [optionLabel]="optionLabel()"
         [optionValue]="optionValue()"

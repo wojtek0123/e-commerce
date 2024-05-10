@@ -5,8 +5,10 @@ import {
   HostBinding,
   OnInit,
   computed,
+  effect,
   inject,
   signal,
+  viewChild,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
@@ -22,11 +24,12 @@ import {
 } from '@e-commerce/client-web-app/browse/data-access';
 import { FilterSkeletonComponent } from '../components/filter-skeleton/filter-skeleton.component';
 import { ActivatedRoute } from '@angular/router';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { AccordionModule } from 'primeng/accordion';
-import { filter } from 'rxjs';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { Accordion, AccordionModule } from 'primeng/accordion';
+import { filter, tap } from 'rxjs';
 import { FilterAccordionTabComponent } from '../components/filter-accordion/filter-accordion.component';
 import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-config';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'lib-filters',
@@ -37,10 +40,15 @@ import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-
     FilterSkeletonComponent,
     AccordionModule,
     FilterAccordionTabComponent,
+    NgClass,
   ],
   template: `
     <form class="flex flex-column gap-4 sticky top-header-height pb-4">
-      <p-accordion class="flex-column gap-4 filter-container">
+      <p-accordion
+        #accordion
+        [ngClass]="{ 'overflow-y-scroll': !!accordionElement()?.activeIndex }"
+        class="flex-column gap-4 filter-container"
+      >
         <lib-filter-accordion-tab
           filterName="tags"
           header="Tagi"
@@ -86,8 +94,8 @@ import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-
       }
 
       .filter-container {
-        height: 100%;
-        max-height: calc(100svh - var(--header-height) - 10rem);
+        /* height: 100%; */
+        height: calc(100svh - var(--header-height) - 12rem);
       }
 
       .top-header-height {
@@ -113,6 +121,8 @@ export class FiltersComponent implements OnInit {
 
   tags = signal<BookTag[]>([...allBookTags]);
   categories = signal<Category[]>([]);
+
+  accordionElement = viewChild<Accordion>('accordion');
 
   async ngOnInit() {
     this.categories.set(

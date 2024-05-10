@@ -1,3 +1,4 @@
+import { Author } from './author.model';
 import { Category } from './category.model';
 
 export interface Book {
@@ -13,10 +14,8 @@ export interface Book {
   language?: string;
   tag?: BookTag;
   price: number;
-  authors: {
-    id: number;
-    name: string;
-  }[];
+  authors: Author[];
+  category: Category;
 }
 
 export enum BookTag {
