@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { $Enums, Book, Tag } from '@prisma/client';
 import { IsNumber, IsOptional } from 'class-validator';
 import { AuthorEntity } from '../../authors/enities/author.entity';
-import { AuthorDto } from '../../authors/dto/author.dto';
+import { CategoryDto } from '../../categories/dto/category.dto';
 
 export class BookEntity implements Book {
   @ApiProperty({ type: String })
@@ -47,6 +47,9 @@ export class BookEntity implements Book {
   @ApiProperty({ type: Number })
   price: number;
 
-  @ApiProperty({ isArray: true, type: AuthorDto })
+  @ApiProperty({ isArray: true, type: AuthorEntity })
   authors: AuthorEntity[];
+
+  @ApiProperty({ type: CategoryDto })
+  category: CategoryDto;
 }

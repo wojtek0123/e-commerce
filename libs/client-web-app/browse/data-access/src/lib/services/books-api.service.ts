@@ -5,6 +5,7 @@ import {
   BookTag,
   Category,
 } from '@e-commerce/client-web-app/shared/data-access/api-types';
+import { shareReplay } from 'rxjs';
 
 @Injectable()
 export class BooksApiService {
@@ -33,6 +34,8 @@ export class BooksApiService {
   }
 
   getBook$(id: Book['id']) {
-    return this.http.get<Book>(`http://localhost:3000/books/${id}`);
+    return this.http
+      .get<Book>(`http://localhost:3000/books/${id}`)
+      .pipe(shareReplay(1));
   }
 }
