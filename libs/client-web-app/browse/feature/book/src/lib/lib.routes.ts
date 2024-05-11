@@ -5,7 +5,7 @@ import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-
 
 export const bookRoutes: Route[] = [
   {
-    path: appRouterConfig.defaultPath,
+    path: appRouterConfig.emptyPath,
     component: BookComponent,
     providers: [BooksApiService],
   },

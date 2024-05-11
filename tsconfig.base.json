@@ -15,9 +15,6 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@e-commerce/client-web-app/browse/feature/book": [
-        "libs/client-web-app/browse/feature/book/src/index.ts"
-      ],
       "@e-commerce/client-web-app/auth/feature-register": [
         "libs/client-web-app/auth/feature-register/src/index.ts"
       ],
@@ -36,8 +33,14 @@
       "@e-commerce/client-web-app/browse/data-access": [
         "libs/client-web-app/browse/data-access/src/index.ts"
       ],
+      "@e-commerce/client-web-app/browse/feature/book": [
+        "libs/client-web-app/browse/feature/book/src/index.ts"
+      ],
       "@e-commerce/client-web-app/browse/feature/books": [
         "libs/client-web-app/browse/feature/books/src/index.ts"
+      ],
+      "@e-commerce/client-web-app/browse/feature/shell": [
+        "libs/client-web-app/browse/feature/shell/src/index.ts"
       ],
       "@e-commerce/client-web-app/browse/ui/books-view": [
         "libs/client-web-app/browse/ui/books-view/src/index.ts"
@@ -102,12 +105,10 @@
       "@e-commerce/client-web-app/shell/utils": [
         "libs/client-web-app/shell/utils/src/index.ts"
       ],
-      "@e-commerce/shared/data-access": [
-        "libs/shared/data-access/src/index.ts"
+      "@e-commerce/client-web-app/home/feature": [
+        "libs/client-web-app/home/feature/src/index.ts"
       ],
-      "@e-commerce/client-web-app/browse/feature/shell": [
-        "libs/client-web-app/browse/feature/shell/src/index.ts"
-      ]
+      "@e-commerce/shared/data-access": ["libs/shared/data-access/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

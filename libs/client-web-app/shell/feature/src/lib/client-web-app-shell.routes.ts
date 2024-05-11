@@ -5,14 +5,14 @@ import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-
 
 export const clientWebAppShellRoutes: Route[] = [
   {
-    path: appRouterConfig.defaultPath,
+    path: appRouterConfig.emptyPath,
     component: BaseLayoutComponent,
     children: [
       {
-        path: appRouterConfig.defaultPath,
+        path: appRouterConfig.emptyPath,
         loadChildren: () =>
-          import('@e-commerce/client-web-app/products/feature-home').then(
-            (r) => r.featureHomeRoutes
+          import('@e-commerce/client-web-app/home/feature').then(
+            (r) => r.homeRoutes
           ),
       },
       {
@@ -39,16 +39,16 @@ export const clientWebAppShellRoutes: Route[] = [
       },
       {
         path: 'cart',
-        redirectTo: appRouterConfig.defaultPath,
+        redirectTo: appRouterConfig.emptyPath,
       },
       {
         path: '**',
-        redirectTo: appRouterConfig.defaultPath,
+        redirectTo: appRouterConfig.emptyPath,
       },
     ],
   },
   {
     path: '**',
-    redirectTo: appRouterConfig.defaultPath,
+    redirectTo: appRouterConfig.emptyPath,
   },
 ];

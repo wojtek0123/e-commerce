@@ -9,7 +9,7 @@ import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-
 
 export const booksRoutes: Route[] = [
   {
-    path: appRouterConfig.defaultPath,
+    path: appRouterConfig.emptyPath,
     component: FeatureBooksComponent,
     resolve: {
       [appRouterConfig.browse.categoriesData]: categoriesResolver,

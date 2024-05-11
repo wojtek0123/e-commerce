@@ -21,6 +21,7 @@ import {
   authRoutePaths,
   browseRoutePaths,
 } from '@e-commerce/client-web-app/shared/utils/router-config';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'lib-e-commerce-nav',
@@ -36,6 +37,7 @@ import {
     NgClass,
     SidebarModule,
     AccordionModule,
+    TooltipModule,
   ],
   templateUrl: './nav.component.html',
 })
@@ -43,6 +45,7 @@ export class NavComponent {
   private authStore = inject(AuthStore);
   private categoryStore = inject(CategoryStore);
 
+  browseRoutePaths = browseRoutePaths;
   navItems: {
     id: BookTag;
     name: string;
@@ -94,7 +97,7 @@ export class NavComponent {
     !this.categoryStore.categoriesCount()
       ? [
           {
-            label: 'Błąd! Spróbuj ponownie',
+            label: 'Error! Try again.',
             icon: 'pi pi-refresh',
             command: () => {
               this.categoryStore.getCategories();
@@ -122,7 +125,7 @@ export class NavComponent {
     !!this.authTokens()?.accessToken && !!this.authTokens()?.refreshToken
       ? [
           {
-            label: 'Zamówienia',
+            label: 'Orders',
             icon: 'pi pi-book',
             command: () => {
               if (this.sidebarVisible()) {
@@ -131,7 +134,7 @@ export class NavComponent {
             },
           },
           {
-            label: 'Ustawienia',
+            label: 'Settings',
             icon: 'pi pi-cog',
             command: () => {
               if (this.sidebarVisible()) {
@@ -140,7 +143,7 @@ export class NavComponent {
             },
           },
           {
-            label: 'Log out',
+            label: 'Sign out',
             icon: 'pi pi-sign-out',
             command: () => {
               this.authStore.logout();
@@ -152,7 +155,7 @@ export class NavComponent {
         ]
       : [
           {
-            label: 'Zaloguj się',
+            label: 'Sign in',
             icon: 'pi pi-sign-in',
             routerLink: authRoutePaths.login,
             command: () => {
@@ -162,7 +165,7 @@ export class NavComponent {
             },
           },
           {
-            label: 'Zarejestruj się',
+            label: 'Sign up',
             icon: 'pi pi-user-plus',
             routerLink: authRoutePaths.register,
             command: () => {

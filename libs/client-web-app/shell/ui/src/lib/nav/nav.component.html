@@ -7,6 +7,7 @@
     <div class="flex align-items-center gap-4">
       <a
         routerLink="/"
+        [queryParams]="null"
         class="text-xl md:text-2xl xl:text-[2rem] text-white no-underline"
       >
         <span class="font-bold text-primary">Story</span
@@ -49,24 +50,34 @@
     </div>
 
     <div class="flex align-items-center gap-2">
+      <a
+        class="hidden p-button p-button-text flex-column justify-content-center no-underline border-radius md:flex"
+        [routerLink]="browseRoutePaths.default"
+        pTooltip="Search the books"
+        tooltipPosition="bottom"
+      >
+        <i class="pi pi-search" style="font-size: 1.5rem"></i>
+      </a>
       <p-menu #menu [model]="menuItems()" [popup]="true" />
       <p-button
         type="button"
         [text]="true"
         (click)="menu.toggle($event)"
         class="hidden flex-column justify-content-center md:flex"
+        pTooltip="View your account"
+        tooltipPosition="bottom"
       >
         <span class="flex flex-column justify-content-center">
           <i class="pi pi-user" style="font-size: 1.5rem"></i>
-          <span class="text-xs">Twoje konto</span>
         </span>
       </p-button>
       <a
         class="hidden p-button p-button-text flex-column justify-content-center no-underline border-radius md:flex"
-        routerLink="/cart"
+        routerLink=""
+        pTooltip="View your cart"
+        tooltipPosition="bottom"
       >
         <i class="pi pi-shopping-cart" style="font-size: 1.5rem"></i>
-        <span class="text-xs">Koszyk</span>
       </a>
 
       <p-button

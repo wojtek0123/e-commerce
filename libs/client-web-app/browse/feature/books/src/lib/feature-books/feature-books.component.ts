@@ -1,15 +1,26 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostBinding } from '@angular/core';
 import { FiltersComponent } from '@e-commerce/client-web-app/browse/ui/filters';
 import { SearchComponent } from '@e-commerce/client-web-app/browse/ui/search';
 import { BooksViewComponent } from '@e-commerce/client-web-app/browse/ui/books-view';
+import { BreadcrumbModule } from 'primeng/breadcrumb';
+import { MenuItem } from 'primeng/api';
+import { homeRoutePaths } from '@e-commerce/client-web-app/shared/utils/router-config';
 
 @Component({
   selector: 'lib-feature-books',
   standalone: true,
-  imports: [FiltersComponent, SearchComponent, BooksViewComponent],
+  imports: [
+    FiltersComponent,
+    SearchComponent,
+    BooksViewComponent,
+    BreadcrumbModule,
+  ],
   template: `
-    <div class="flex align-items-center gap-4 mb-4">
-      <lib-search />
+    <div
+      class="flex flex-column lg:flex-row lg:align-items-center justify-content-between gap-4"
+    >
+      <p-breadcrumb [model]="breadcrumbItems" />
+      <lib-search class="max-w-30rem w-full" />
     </div>
     <div class="flex w-full xl:gap-5 h-full">
       <lib-filters />
@@ -18,4 +29,12 @@ import { BooksViewComponent } from '@e-commerce/client-web-app/browse/ui/books-v
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FeatureBooksComponent {}
+export class FeatureBooksComponent {
+  @HostBinding('class') class = 'flex flex-column gap-4';
+  breadcrumbItems: MenuItem[] = [
+    { label: 'home', routerLink: homeRoutePaths.default },
+    {
+      label: 'books',
+    },
+  ];
+}

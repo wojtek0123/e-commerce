@@ -5,7 +5,6 @@ import {
   HostBinding,
   OnInit,
   computed,
-  effect,
   inject,
   signal,
   viewChild,
@@ -24,9 +23,9 @@ import {
 } from '@e-commerce/client-web-app/browse/data-access';
 import { FilterSkeletonComponent } from '../components/filter-skeleton/filter-skeleton.component';
 import { ActivatedRoute } from '@angular/router';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Accordion, AccordionModule } from 'primeng/accordion';
-import { filter, tap } from 'rxjs';
+import { filter } from 'rxjs';
 import { FilterAccordionTabComponent } from '../components/filter-accordion/filter-accordion.component';
 import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-config';
 import { NgClass } from '@angular/common';
@@ -43,11 +42,11 @@ import { NgClass } from '@angular/common';
     NgClass,
   ],
   template: `
-    <form class="flex flex-column gap-4 sticky top-header-height pb-4">
+    <div class="card flex flex-column gap-4 pb-4">
       <p-accordion
         #accordion
-        [ngClass]="{ 'overflow-y-scroll': !!accordionElement()?.activeIndex }"
         class="flex-column gap-4 filter-container"
+        [multiple]="false"
       >
         <lib-filter-accordion-tab
           filterName="tags"
@@ -70,16 +69,16 @@ import { NgClass } from '@angular/common';
         } @else if (categoryStatus() === 'loading') {
         <lib-filter-skeleton [numberOfSkeletons]="10" />
         }@else {
-        <div>Błąd</div>
+        <div>Error</div>
         }
       </p-accordion>
       <p-button
         icon="pi pi-trash"
-        label="Wyczyść filtry"
+        label="Clear filters"
         class="w-full mt-2"
         (onClick)="clearFilters()"
       ></p-button>
-    </form>
+    </div>
   `,
   styles: [
     `
@@ -93,13 +92,25 @@ import { NgClass } from '@angular/common';
         }
       }
 
+      .max-h-min {
+        max-height: min-content;
+      }
+
       .filter-container {
         /* height: 100%; */
-        height: calc(100svh - var(--header-height) - 12rem);
+        /* height: calc(100svh - var(--header-height) - 14rem); */
       }
 
       .top-header-height {
         top: calc(var(--header-height) + 1.5rem);
+      }
+
+      .hide-scrollbar {
+        /* scrollbar-width: none; */
+      }
+
+      .hide-scrollbar::-webkit-scrollbar {
+        /* display: none; */
       }
     `,
   ],
