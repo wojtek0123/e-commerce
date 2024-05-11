@@ -3,7 +3,7 @@ import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-
 
 export const loginRoutes: Route[] = [
   {
-    path: appRouterConfig.defaultPath,
+    path: appRouterConfig.emptyPath,
     loadComponent: () =>
       import('./login/login.component').then((c) => c.LoginComponent),
   },

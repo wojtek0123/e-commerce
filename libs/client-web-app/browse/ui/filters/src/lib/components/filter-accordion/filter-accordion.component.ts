@@ -62,7 +62,7 @@ export class FilterAccordionTabComponent<T> {
   header = input.required<string>();
   height = input<{ maxHeight: string; base: string }>({
     maxHeight: 'max-content',
-    base: '100%',
+    base: 'fit-content',
   });
 
   optionLabel = input<string | undefined>(undefined);

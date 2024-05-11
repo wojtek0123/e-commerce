@@ -82,7 +82,7 @@ import { getBrowserRouteDetails } from '@e-commerce/client-web-app/shared/utils/
       }
 
       .scale-animation:hover {
-        transform: scale(1.05);
+        transform: scale(0.95);
       }
     `,
   ],

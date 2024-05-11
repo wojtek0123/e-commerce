@@ -5,7 +5,7 @@ import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-
 
 export const shellRoutes: Route[] = [
   {
-    path: appRouterConfig.defaultPath,
+    path: appRouterConfig.emptyPath,
     component: ShellComponent,
     resolve: [],
     children: [

@@ -1,5 +1,5 @@
 export const appRouterConfig = {
-  defaultPath: '',
+  emptyPath: '',
   browse: {
     basePath: 'browse',
     detailsPath: 'details',

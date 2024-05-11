@@ -27,16 +27,18 @@ import { ButtonModule } from 'primeng/button';
     } @else if (vm.book && !vm.error) {
     <p-breadcrumb [model]="breadcrumbItems" />
     <div class="flex flex-column xl:flex-row gap-4 xl:gap-8 w-full">
-      <img [src]="vm.book.coverImage" [alt]="vm.book.title + ' cover image'" />
+      <img
+        class="xl:mr-6"
+        [src]="vm.book.coverImage"
+        [alt]="vm.book.title + ' cover image'"
+      />
       <div class="w-full flex flex-column justify-content-center">
         <h3 class="text-5xl">{{ vm.book.title }}</h3>
         @for (author of vm.book.authors; track author.id) {
         <div class="text-2xl flex flex-wrap mb-5">{{ author.name }}</div>
         }
-        <div class="flex flex-column my-6 gap-2 lg:gap-6">
-          <span class="text-4xl text-accent-color font-bold"
-            >{{ vm.book.price }}$</span
-          >
+        <div class="price-container flex flex-column my-6 gap-2 lg:gap-6">
+          <span class="text-4xl font-bold">{{ vm.book.price }}$</span>
           <p-button
             class="w-full"
             label="Add to cart"
@@ -48,18 +50,22 @@ import { ButtonModule } from 'primeng/button';
           <span>Category:</span>
           <div class="text-xl">{{ vm.book.category.name }}</div>
         </div>
+        @if (!!vm.book.pages) {
         <div class="flex align-items-center gap-2">
           <span>Pages:</span>
           <div class="text-xl">{{ vm.book.pages }}</div>
         </div>
+        } @else if (!!vm.book.language) {
         <div class="flex align-items-center gap-2">
           <span>Language:</span>
           <div class="text-xl">{{ vm.book.language }}</div>
         </div>
+        } @else if (!!vm.book.publishedDate) {
         <div class="flex align-items-center gap-2">
           <span>Publish date:</span>
           <div class="text-xl">{{ vm.book.publishedDate }}</div>
         </div>
+        }
       </div>
     </div>
     <p-panel header="Description" [toggleable]="true">
@@ -71,6 +77,10 @@ import { ButtonModule } from 'primeng/button';
     `
       .description {
         letter-spacing: 1px;
+      }
+
+      .price-container {
+        max-width: 80%;
       }
     `,
   ],
