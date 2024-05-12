@@ -1,0 +1,72 @@
+.p-password {
+  width: 100%;
+}
+
+button {
+  border-radius: var(--border-radius);
+}
+
+button.p-button-rounded {
+  border-radius: 50%;
+}
+
+a.p-button {
+  border-radius: var(--border-radius);
+}
+
+p-button.w-full .p-button {
+  width: 100% !important;
+}
+
+.p-inputtext:enabled:focus {
+  box-shadow: none !important;
+}
+
+.p-menu-two-columns .p-menu {
+  width: max-content !important;
+  border-radius: var(--border-radius);
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+
+  & ul {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+}
+
+.p-menu .p-menuitem > .p-menuitem-content {
+  border-radius: var(--border-radius);
+}
+
+.p-menu-sidebar .p-menu {
+  border: none;
+  background-color: transparent;
+  width: 100%;
+}
+
+.p-accordion {
+  background: transparent;
+}
+
+.p-accordion-tab {
+  border-radius: var(--border-radius);
+  background: transparent;
+}
+
+.p-menu
+  .p-menuitem:not(.p-highlight):not(.p-disabled).p-focus
+  > .p-menuitem-content {
+  background: transparent;
+  border-radius: var(--border-radius);
+}
+
+.p-menu .p-menuitem .p-menuitem-link:focus {
+  border-radius: var(--border-radius);
+}
+
+.p-breadcrumb {
+  background: transparent;
+  border: none;
+  padding: 0;
+}

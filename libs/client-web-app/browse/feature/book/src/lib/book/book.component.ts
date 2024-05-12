@@ -1,7 +1,7 @@
 import { AsyncPipe, NgStyle } from '@angular/common';
 import { Component, HostBinding, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { BooksApiService } from '@e-commerce/client-web-app/browse/data-access';
+import { BooksApiService } from '@e-commerce/client-web-app/shared/data-access/api-services';
 import { ResponseError } from '@e-commerce/client-web-app/shared/data-access/api-types';
 import {
   appRouterConfig,

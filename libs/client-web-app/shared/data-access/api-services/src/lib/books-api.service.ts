@@ -22,10 +22,12 @@ export class BooksApiService {
     priceTo?: number;
     authorName?: string;
     authorIds?: number[];
+    size?: number;
   }) {
     let body = {};
 
     if (opts.title?.length) body = { ...body, titleLike: opts.title };
+    if (opts.size) body = { ...body, size: opts.size };
     if (opts.tagsIn?.length) body = { ...body, tagsIn: opts.tagsIn };
     if (opts.categoryIds?.length)
       body = { ...body, categoryIdsIn: opts.categoryIds };

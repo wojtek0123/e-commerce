@@ -54,11 +54,11 @@ export class NavComponent {
     state?: { [key: string]: string | boolean };
   }[] = [
     {
-      id: BookTag.NADCHODZACE,
-      name: BookTag.NADCHODZACE.toLowerCase(),
+      id: BookTag.INCOMING,
+      name: BookTag.INCOMING.toLowerCase(),
       url: browseRoutePaths.default,
       queryParams: {
-        [appRouterConfig.browse.tagsQueryParams]: BookTag.NADCHODZACE,
+        [appRouterConfig.browse.tagsQueryParams]: BookTag.INCOMING,
       },
       state: { [appRouterConfig.browse.clearHistoryState]: true },
     },
@@ -72,20 +72,20 @@ export class NavComponent {
       state: { [appRouterConfig.browse.clearHistoryState]: true },
     },
     {
-      id: BookTag.PROMOCJE,
-      name: BookTag.PROMOCJE.toLowerCase(),
+      id: BookTag.DISCOUNT,
+      name: BookTag.DISCOUNT.toLowerCase(),
       url: browseRoutePaths.default,
       queryParams: {
-        [appRouterConfig.browse.tagsQueryParams]: BookTag.PROMOCJE,
+        [appRouterConfig.browse.tagsQueryParams]: BookTag.DISCOUNT,
       },
       state: { [appRouterConfig.browse.clearHistoryState]: true },
     },
     {
-      id: BookTag.NOWE,
-      name: BookTag.NOWE.toLowerCase(),
+      id: BookTag.NEW,
+      name: BookTag.NEW.toLowerCase(),
       url: browseRoutePaths.default,
       queryParams: {
-        [appRouterConfig.browse.tagsQueryParams]: BookTag.NOWE,
+        [appRouterConfig.browse.tagsQueryParams]: BookTag.NEW,
       },
       state: { [appRouterConfig.browse.clearHistoryState]: true },
     },

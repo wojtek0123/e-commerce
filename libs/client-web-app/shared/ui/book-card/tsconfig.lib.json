@@ -1,7 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "../../../../dist/out-tsc",
+    "outDir": "../../../../../dist/out-tsc",
     "declaration": true,
     "declarationMap": true,
     "inlineSources": true,
@@ -13,8 +13,5 @@
     "jest.config.ts",
     "src/**/*.test.ts"
   ],
-  "include": [
-    "src/**/*.ts",
-    "../../shared/data-access/api-services/src/lib/books-api.service.ts"
-  ]
+  "include": ["src/**/*.ts"]
 }
