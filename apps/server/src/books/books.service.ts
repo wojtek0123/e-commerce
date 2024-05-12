@@ -23,6 +23,7 @@ export class BooksService {
     titleLike,
     priceFrom,
     priceTo,
+    size,
   }: GetBooksBodyDto) {
     let where: Prisma.BookScalarWhereInput = {};
 
@@ -46,6 +47,7 @@ export class BooksService {
           },
         },
       },
+      take: size,
     });
 
     return books.map((book) => ({

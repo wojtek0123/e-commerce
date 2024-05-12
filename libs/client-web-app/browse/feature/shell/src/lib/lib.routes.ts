@@ -3,10 +3,10 @@ import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-
 
 export const shellRoutes: Route[] = [
   {
-    path: '',
+    path: appRouterConfig.emptyPath,
     children: [
       {
-        path: '',
+        path: appRouterConfig.emptyPath,
         loadChildren: () =>
           import('@e-commerce/client-web-app/browse/feature/books').then(
             (r) => r.booksRoutes

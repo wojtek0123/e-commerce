@@ -20,14 +20,14 @@ export interface Book {
 
 export enum BookTag {
   BESTSELLER = 'BESTSELLER',
-  NOWE = 'NOWE',
-  NADCHODZACE = 'NADCHODZACE',
-  PROMOCJE = 'PROMOCJE',
+  NEW = 'NEW',
+  INCOMING = 'INCOMING',
+  DISCOUNT = 'DISCOUNT',
 }
 
 export const allBookTags = [
   BookTag.BESTSELLER,
-  BookTag.NOWE,
-  BookTag.NADCHODZACE,
-  BookTag.PROMOCJE,
+  BookTag.NEW,
+  BookTag.INCOMING,
+  BookTag.DISCOUNT,
 ];

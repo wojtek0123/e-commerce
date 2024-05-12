@@ -122,8 +122,8 @@ enum Role {
 }
 
 enum Tag {
-  NOWE
+  NEW
   BESTSELLER
-  NADCHODZACE
-  PROMOCJE
+  INCOMING
+  DISCOUNT
 }

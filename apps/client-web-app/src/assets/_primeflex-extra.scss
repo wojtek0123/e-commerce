@@ -1,0 +1,54 @@
+.translate-y-50 {
+  transform: translateY(50%);
+}
+
+.nav-height {
+  height: var(--header-height);
+}
+
+.min-height-screen {
+  min-height: calc(100vh - var(--header-height));
+}
+
+.image-fit-cover {
+  object-fit: cover;
+}
+
+.image-position-center {
+  object-position: center;
+}
+
+.grid-auto-fit {
+  display: grid;
+  gap: 2rem;
+  width: 100%;
+  grid-template-columns: repeat(auto-fit, minmax(20rem, var(--max-card-width)));
+  place-content: center;
+}
+
+.my-12rem {
+  margin-top: 12rem;
+  margin-bottom: 12rem;
+}
+
+.mt-10rem {
+  margin-top: 10rem;
+}
+
+.max-w-103rem {
+  max-width: 103rem;
+}
+
+@media (min-width: 668px) {
+  .grid-auto-fit {
+    place-content: start;
+  }
+}
+
+.grid-all-columns {
+  grid-column: 1 / -1;
+}
+
+.min-content-height {
+  min-height: calc(100svh - var(--header-height) - 10rem);
+}

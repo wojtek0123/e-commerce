@@ -45,7 +45,11 @@
               },
               {
                 "sourceTag": "type:shared-data-access",
-                "onlyDependOnLibsWithTags": ["type:utils", "type:shared-utils"]
+                "onlyDependOnLibsWithTags": [
+                  "type:utils",
+                  "type:shared-utils",
+                  "type:shared-data-access"
+                ]
               },
               {
                 "sourceTag": "type:ui",
@@ -59,7 +63,12 @@
               },
               {
                 "sourceTag": "type:shared-ui",
-                "onlyDependOnLibsWithTags": ["type:utils", "type:data-access"]
+                "onlyDependOnLibsWithTags": [
+                  "type:utils",
+                  "type:shared-utils",
+                  "type:data-access",
+                  "type:shared-data-access"
+                ]
               },
               {
                 "sourceTag": "type:utils",
