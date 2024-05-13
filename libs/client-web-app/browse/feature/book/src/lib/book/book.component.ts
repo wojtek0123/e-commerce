@@ -13,11 +13,21 @@ import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { MenuItem } from 'primeng/api';
 import { PanelModule } from 'primeng/panel';
 import { ButtonModule } from 'primeng/button';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'lib-book',
   standalone: true,
-  imports: [AsyncPipe, BreadcrumbModule, PanelModule, ButtonModule, NgStyle],
+  imports: [
+    AsyncPipe,
+    BreadcrumbModule,
+    PanelModule,
+    ButtonModule,
+    NgStyle,
+    InputNumberModule,
+    ReactiveFormsModule,
+  ],
   template: `
     @if ({book: book$ | async, error: bookError$ | async}; as vm) { @if
     (!vm.book && !vm.error) {
@@ -25,52 +35,77 @@ import { ButtonModule } from 'primeng/button';
     } @else if (!vm.book && vm.error) {
     <div>{{ vm.error }}</div>
     } @else if (vm.book && !vm.error) {
-    <p-breadcrumb [model]="breadcrumbItems" />
-    <div class="flex flex-column xl:flex-row gap-4 xl:gap-8 w-full">
-      <img
-        class="xl:mr-6"
-        [src]="vm.book.coverImage"
-        [alt]="vm.book.title + ' cover image'"
-      />
-      <div class="w-full flex flex-column justify-content-center">
-        <h3 class="text-5xl">{{ vm.book.title }}</h3>
-        @for (author of vm.book.authors; track author.id) {
-        <div class="text-2xl flex flex-wrap mb-5">{{ author.name }}</div>
-        }
-        <div class="price-container flex flex-column my-6 gap-2 lg:gap-6">
-          <span class="text-4xl font-bold">{{ vm.book.price }}$</span>
-          <p-button
-            class="w-full"
-            label="Add to cart"
-            icon="pi pi-cart-plus"
-            (onClick)="addToCart()"
-          ></p-button>
+    <div
+      class="flex flex-column-reverse gap-3 xl:grid xl:flex-row xl:mb-0 xl:gap-8 height-content"
+    >
+      <div
+        class="border-round overflow-hidden flex align-items-start h-full xl:col-6 xl:justify-content-end"
+      >
+        <img
+          class="sticky top-0 border-round overflow-hidden object-fit-cover object-position-center w-full h-full"
+          [src]="vm.book.coverImage"
+          alt="book store"
+        />
+      </div>
+      <div class="xl:col-6 h-full flex flex-column gap-8">
+        <div class="flex flex-column xl:flex-row gap-4 xl:gap-8 w-full">
+          <div class="w-full flex flex-column justify-content-center">
+            <p-breadcrumb [model]="breadcrumbItems" />
+            <h3 class="text-5xl">{{ vm.book.title }}</h3>
+            @for (author of vm.book.authors; track author.id) {
+            <div class="text-2xl flex flex-wrap mb-5">{{ author.name }}</div>
+            }
+            <div class="price-container flex flex-column my-6 gap-2 lg:gap-6">
+              <span class="text-4xl font-bold">{{ vm.book.price }}$</span>
+              <div class="flex align-items-center gap-4">
+                <p-inputNumber
+                  [showButtons]="true"
+                  [formControl]="amount"
+                  [min]="1"
+                  buttonLayout="horizontal"
+                  spinnerMode="horizontal"
+                  inputId="integeronly"
+                  decrementButtonClass="p-button-secondary"
+                  incrementButtonClass="p-button-secondary"
+                  incrementButtonIcon="pi pi-plus"
+                  decrementButtonIcon="pi pi-minus"
+                />
+                <p-button
+                  class="w-full"
+                  label="Add to cart"
+                  size="large"
+                  icon="pi pi-cart-plus"
+                  (onClick)="addToCart()"
+                ></p-button>
+              </div>
+            </div>
+            <div class="flex align-items-center gap-2">
+              <span>Category:</span>
+              <div class="text-xl">{{ vm.book.category.name }}</div>
+            </div>
+            @if (!!vm.book.pages) {
+            <div class="flex align-items-center gap-2">
+              <span>Pages:</span>
+              <div class="text-xl">{{ vm.book.pages }}</div>
+            </div>
+            } @else if (!!vm.book.language) {
+            <div class="flex align-items-center gap-2">
+              <span>Language:</span>
+              <div class="text-xl">{{ vm.book.language }}</div>
+            </div>
+            } @else if (!!vm.book.publishedDate) {
+            <div class="flex align-items-center gap-2">
+              <span>Publish date:</span>
+              <div class="text-xl">{{ vm.book.publishedDate }}</div>
+            </div>
+            }
+          </div>
         </div>
-        <div class="flex align-items-center gap-2">
-          <span>Category:</span>
-          <div class="text-xl">{{ vm.book.category.name }}</div>
-        </div>
-        @if (!!vm.book.pages) {
-        <div class="flex align-items-center gap-2">
-          <span>Pages:</span>
-          <div class="text-xl">{{ vm.book.pages }}</div>
-        </div>
-        } @else if (!!vm.book.language) {
-        <div class="flex align-items-center gap-2">
-          <span>Language:</span>
-          <div class="text-xl">{{ vm.book.language }}</div>
-        </div>
-        } @else if (!!vm.book.publishedDate) {
-        <div class="flex align-items-center gap-2">
-          <span>Publish date:</span>
-          <div class="text-xl">{{ vm.book.publishedDate }}</div>
-        </div>
-        }
+        <p-panel header="Description" class="max-w-60rem" [toggleable]="true">
+          <p class="line-height-3 description">{{ vm.book.description }}</p>
+        </p-panel>
       </div>
     </div>
-    <p-panel header="Description" [toggleable]="true">
-      <p class="line-height-3 description">{{ vm.book.description }}</p>
-    </p-panel>
     } }
   `,
   styles: [
@@ -80,7 +115,11 @@ import { ButtonModule } from 'primeng/button';
       }
 
       .price-container {
-        max-width: 80%;
+        max-width: 35rem;
+      }
+      :host ::ng-deep #integeronly {
+        text-align: center;
+        width: 4rem;
       }
     `,
   ],
@@ -89,8 +128,10 @@ export class BookComponent {
   private booksApi = inject(BooksApiService);
   private route = inject(ActivatedRoute);
 
-  @HostBinding('class') class = 'mx-auto flex flex-column gap-4 ';
-  @HostBinding('style.maxWidth') maxWidth = '80rem';
+  @HostBinding('class') class = 'mx-auto flex flex-column gap-4 relative';
+  // @HostBinding('style.maxWidth') maxWidth = '80rem';
+  //
+  amount = new FormControl(1, { validators: Validators.min(1) });
 
   book$ = this.booksApi.getBook$(
     this.route.snapshot.params[appRouterConfig.browse.bookId]
@@ -112,6 +153,7 @@ export class BookComponent {
   ];
 
   addToCart() {
+    if (this.amount.invalid) return;
     console.log('Added to cart');
   }
 }

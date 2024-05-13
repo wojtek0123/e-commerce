@@ -8,10 +8,12 @@ import {
 import { BooksStore } from '@e-commerce/client-web-app/browse/data-access';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
-import { SkeletonModule } from 'primeng/skeleton';
-import { SkeletonComponent } from '../components/skeleton/skeleton.component';
 import { RouterLink } from '@angular/router';
 import { getBrowserRouteDetails } from '@e-commerce/client-web-app/shared/utils/router-config';
+import {
+  BookCardSkeletonComponent,
+  BookCardComponent,
+} from '@e-commerce/client-web-app/shared/ui/book-card';
 
 @Component({
   selector: 'lib-books-view',
@@ -19,56 +21,23 @@ import { getBrowserRouteDetails } from '@e-commerce/client-web-app/shared/utils/
   imports: [
     CardModule,
     ButtonModule,
-    SkeletonModule,
-    SkeletonComponent,
     RouterLink,
+    BookCardComponent,
+    BookCardSkeletonComponent,
   ],
   template: `
     <div class="grid-auto-fit">
       @if (status() === 'loading') { @for (_ of skeletons; track $index) {
-      <lib-skeleton />
+      <lib-book-card-skeleton />
       } } @else if (status() === 'ok') {@for (book of books(); track book.id) {
-      <a
-        [routerLink]="getBrowserRouteDetails(book.id)"
-        class="no-underline transition-transform scale-animation"
-      >
-        <p-card
-          [header]="book.title"
-          [style]="{ width: '100%', maxWidth: '24rem' }"
-        >
-          <ng-template pTemplate="header">
-            <img
-              alt="Card"
-              [src]="
-                book.coverImage
-                  ? book.coverImage
-                  : 'https://primefaces.org/cdn/primeng/images/usercard.png'
-              "
-            />
-          </ng-template>
-          @for (author of book.authors; track author.id) {
-          <span>{{ author.name }}</span>
-          }
-          <ng-template pTemplate="footer">
-            <div class="flex align-items-center justify-content-between">
-              <span class="text-xl">{{ book.price }} $</span>
-              <p-button
-                class="flex justify-content-end"
-                label="Dodaj to koszyka"
-                icon="pi pi-cart-plus"
-                (onClick)="addToCart($event)"
-              ></p-button>
-            </div>
-          </ng-template>
-        </p-card>
-      </a>
+      <lib-book-card [book]="book" />
       } @empty {
       <div class="text-center grid-all-columns mt-8">
-        <span class="text-3xl">Nie znaleziono żadnych książek!</span>
+        <span class="text-3xl">No books were found!</span>
       </div>
       }} @else {
       <div class="text-center grid-all-columns mt-8">
-        <span class="text-3xl text-error">Błąd podczas pobierania danych!</span>
+        <span class="text-3xl text-error">Error while fetching the data</span>
       </div>
       }
     </div>

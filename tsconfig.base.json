@@ -54,9 +54,6 @@
       "@e-commerce/client-web-app/browse/ui/search": [
         "libs/client-web-app/browse/ui/search/src/index.ts"
       ],
-      "@e-commerce/client-web-app/browse/ui/skeleton": [
-        "libs/client-web-app/browse/ui/skeleton/src/index.ts"
-      ],
       "@e-commerce/client-web-app/browse/utils/router-config": [
         "libs/client-web-app/browse/utils/router-config/src/index.ts"
       ],

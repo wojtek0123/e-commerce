@@ -39,6 +39,10 @@
   max-width: 103rem;
 }
 
+.max-w-60rem {
+  max-width: 60rem;
+}
+
 @media (min-width: 668px) {
   .grid-auto-fit {
     place-content: start;
