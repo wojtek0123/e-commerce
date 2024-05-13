@@ -9,6 +9,7 @@ import { AuthorsModule } from '../authors/authors.module';
 import { PublishersModule } from '../publishers/publishers.module';
 import { CategoriesModule } from '../categories/categories.module';
 import { ConfigModule } from '@nestjs/config';
+import { CartItemsModule } from '../cart-items/cart-items.module';
 
 @Module({
   controllers: [AppController],
@@ -21,6 +22,7 @@ import { ConfigModule } from '@nestjs/config';
     AuthorsModule,
     PublishersModule,
     CategoriesModule,
+    CartItemsModule,
   ],
 })
 export class AppModule {}

@@ -94,6 +94,10 @@
               {
                 "sourceTag": "scope:client-web-app",
                 "onlyDependOnLibsWithTags": ["scope:client-web-app"]
+              },
+              {
+                "sourceTag": "scope:server",
+                "onlyDependOnLibsWithTags": ["scope:server"]
               }
             ]
           }
