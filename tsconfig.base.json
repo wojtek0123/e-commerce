@@ -15,9 +15,6 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@e-commerce/client-web-app/shared/ui/book-card": [
-        "libs/client-web-app/shared/ui/book-card/src/index.ts"
-      ],
       "@e-commerce/client-web-app/auth/feature-register": [
         "libs/client-web-app/auth/feature-register/src/index.ts"
       ],
@@ -81,6 +78,9 @@
       "@e-commerce/client-web-app/products/feature-products": [
         "libs/client-web-app/products/feature-products/src/index.ts"
       ],
+      "@e-commerce/client-web-app/shared/data-access/api-services": [
+        "libs/client-web-app/shared/data-access/api-services/src/index.ts"
+      ],
       "@e-commerce/client-web-app/shared/data-access/api-types": [
         "libs/client-web-app/shared/data-access/api-types/src/index.ts"
       ],
@@ -90,8 +90,8 @@
       "@e-commerce/client-web-app/shared/data-access/category": [
         "libs/client-web-app/shared/data-access/category/src/index.ts"
       ],
-      "@e-commerce/client-web-app/shared/data-access/api-services": [
-        "libs/client-web-app/shared/data-access/api-services/src/index.ts"
+      "@e-commerce/client-web-app/shared/ui/book-card": [
+        "libs/client-web-app/shared/ui/book-card/src/index.ts"
       ],
       "@e-commerce/client-web-app/shared/utils/guards": [
         "libs/client-web-app/shared/utils/guards/src/index.ts"
