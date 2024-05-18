@@ -185,7 +185,7 @@ export class CartSidebarComponent implements OnChanges {
         this.messageService.add({
           summary: 'Error',
           detail: responseError.error.message || 'Something went wrong!',
-          severity: 'danger',
+          severity: 'error',
         });
       },
     });

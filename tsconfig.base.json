@@ -15,6 +15,9 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@e-commerce/client-web-app/browse/ui/book-details": [
+        "libs/client-web-app/browse/ui/book-details/src/index.ts"
+      ],
       "@e-commerce/client-web-app/auth/feature-register": [
         "libs/client-web-app/auth/feature-register/src/index.ts"
       ],
@@ -42,14 +45,14 @@
       "@e-commerce/client-web-app/browse/feature/shell": [
         "libs/client-web-app/browse/feature/shell/src/index.ts"
       ],
+      "@e-commerce/client-web-app/browse/ui/books-filters": [
+        "libs/client-web-app/browse/ui/books-filters/src/index.ts"
+      ],
+      "@e-commerce/client-web-app/browse/ui/books-search": [
+        "libs/client-web-app/browse/ui/books-search/src/index.ts"
+      ],
       "@e-commerce/client-web-app/browse/ui/books-view": [
         "libs/client-web-app/browse/ui/books-view/src/index.ts"
-      ],
-      "@e-commerce/client-web-app/browse/ui/filters": [
-        "libs/client-web-app/browse/ui/filters/src/index.ts"
-      ],
-      "@e-commerce/client-web-app/browse/ui/search": [
-        "libs/client-web-app/browse/ui/search/src/index.ts"
       ],
       "@e-commerce/client-web-app/browse/utils/router-config": [
         "libs/client-web-app/browse/utils/router-config/src/index.ts"

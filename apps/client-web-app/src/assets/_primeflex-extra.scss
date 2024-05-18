@@ -2,6 +2,10 @@
   transform: translateY(50%);
 }
 
+.-translate-y-50 {
+  transform: translateY(-50%);
+}
+
 .nav-height {
   height: var(--header-height);
 }

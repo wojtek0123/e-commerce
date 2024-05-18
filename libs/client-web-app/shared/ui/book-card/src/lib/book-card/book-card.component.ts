@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  HostBinding,
   input,
   output,
 } from '@angular/core';
@@ -17,7 +18,7 @@ import { RouterLink } from '@angular/router';
   template: `
     <a
       [routerLink]="getBrowserRouteDetails(book().id)"
-      class="no-underline transition-transform scale-animation"
+      class="no-underline transition-transform scale-animation card"
     >
       <p-card
         [header]="book().title"
@@ -34,9 +35,7 @@ import { RouterLink } from '@angular/router';
             "
           />
         </ng-template>
-        @for (author of book().authors; track author.id) {
-        <span>{{ author.name }}</span>
-        }
+        <div>rating</div>
         <ng-template pTemplate="footer">
           <div class="flex align-items-center justify-content-between">
             <span class="text-xl">{{ book().price }} $</span>
@@ -67,6 +66,16 @@ import { RouterLink } from '@angular/router';
         height: 31.875rem;
         object-fit: cover;
       }
+
+      .truncate {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .card {
+        height: 43.24rem;
+      }
     `,
   ],
 })
@@ -76,6 +85,8 @@ export class BookCardComponent {
   onAddToCart = output<Book>();
 
   getBrowserRouteDetails = getBrowserRouteDetails;
+
+  @HostBinding('class') class = 'card';
 
   addToCart(event: Event, book: Book) {
     event.preventDefault();
