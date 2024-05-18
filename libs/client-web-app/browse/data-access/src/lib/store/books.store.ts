@@ -97,14 +97,14 @@ export const BooksStore = signalStore(
           queryParamsHandling: 'merge',
         });
       },
-      updateFilterTitle: (value: string | null) => {
+      updateFilterTitle: (search: string | null) => {
         patchState(store, (state) => ({
-          filters: { ...state.filters, title: value },
+          filters: { ...state.filters, search },
         }));
 
         router.navigate([], {
           relativeTo: route,
-          queryParams: { [appRouterConfig.browse.searchQueryParams]: value },
+          queryParams: { [appRouterConfig.browse.searchQueryParams]: search },
           queryParamsHandling: 'merge',
         });
       },
@@ -132,6 +132,19 @@ export const BooksStore = signalStore(
           relativeTo: route,
           queryParams: { [filter]: null },
           queryParamsHandling: 'merge',
+        });
+      },
+      clearFiltersAndSearch: () => {
+        patchState(store, (state) => ({
+          filters: {
+            ...initialBooksState.filters,
+            title: state.filters.search,
+          },
+        }));
+
+        router.navigate([], {
+          relativeTo: route,
+          queryParams: null,
         });
       },
     })

@@ -25,13 +25,13 @@ import { FilterSkeletonComponent } from '../components/filter-skeleton/filter-sk
 import { ActivatedRoute } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Accordion, AccordionModule } from 'primeng/accordion';
-import { filter } from 'rxjs';
+import { filter, tap } from 'rxjs';
 import { FilterAccordionTabComponent } from '../components/filter-accordion/filter-accordion.component';
 import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-config';
 import { NgClass } from '@angular/common';
 
 @Component({
-  selector: 'lib-filters',
+  selector: 'lib-books-filters',
   standalone: true,
   imports: [
     FormsModule,
@@ -96,27 +96,14 @@ import { NgClass } from '@angular/common';
         max-height: min-content;
       }
 
-      .filter-container {
-        /* height: 100%; */
-        /* height: calc(100svh - var(--header-height) - 14rem); */
-      }
-
       .top-header-height {
         top: calc(var(--header-height) + 1.5rem);
-      }
-
-      .hide-scrollbar {
-        /* scrollbar-width: none; */
-      }
-
-      .hide-scrollbar::-webkit-scrollbar {
-        /* display: none; */
       }
     `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FiltersComponent implements OnInit {
+export class BooksFiltersComponent implements OnInit {
   private categoryStore = inject(CategoryStore);
   private booksStore = inject(BooksStore);
   private route = inject(ActivatedRoute);

@@ -114,7 +114,10 @@ export class NavComponent {
           label: category.name,
           routerLink: browseRoutePaths.default,
           queryParams: {
-            categories: category.name.toLowerCase().split(' ').join('_'),
+            [appRouterConfig.browse.categoriesQueryParams]: category.name
+              .toLowerCase()
+              .split(' ')
+              .join('_'),
           },
           state: { categoryIds: [category.id], clear: true },
           command: () => {
@@ -181,6 +184,18 @@ export class NavComponent {
   );
 
   showSidebar = () => this.sidebarVisible.set(true);
+
+  search = {
+    routerLink: browseRoutePaths.default,
+    queryParams: {
+      [appRouterConfig.browse.categoriesQueryParams]: null,
+      [appRouterConfig.browse.tagsQueryParams]: null,
+      [appRouterConfig.browse.searchQueryParams]: null,
+    },
+    state: {
+      [appRouterConfig.browse.clearHistoryState]: true,
+    },
+  };
 
   @HostBinding('class') class = 'z-1';
 

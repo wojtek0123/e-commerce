@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, HostBinding } from '@angular/core';
-import { FiltersComponent } from '@e-commerce/client-web-app/browse/ui/filters';
-import { SearchComponent } from '@e-commerce/client-web-app/browse/ui/search';
+import { BooksFiltersComponent } from '@e-commerce/client-web-app/browse/ui/books-filters';
+import { BooksSearchComponent } from '@e-commerce/client-web-app/browse/ui/books-search';
 import { BooksViewComponent } from '@e-commerce/client-web-app/browse/ui/books-view';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { MenuItem } from 'primeng/api';
@@ -10,8 +10,8 @@ import { homeRoutePaths } from '@e-commerce/client-web-app/shared/utils/router-c
   selector: 'lib-feature-books',
   standalone: true,
   imports: [
-    FiltersComponent,
-    SearchComponent,
+    BooksFiltersComponent,
+    BooksSearchComponent,
     BooksViewComponent,
     BreadcrumbModule,
   ],
@@ -20,10 +20,10 @@ import { homeRoutePaths } from '@e-commerce/client-web-app/shared/utils/router-c
       class="flex flex-column lg:flex-row lg:align-items-center justify-content-between gap-4"
     >
       <p-breadcrumb [model]="breadcrumbItems" />
-      <lib-search class="max-w-30rem w-full" />
+      <lib-books-search class="max-w-30rem w-full" />
     </div>
     <div class="flex w-full xl:gap-5 h-full">
-      <lib-filters />
+      <lib-books-filters />
       <lib-books-view />
     </div>
   `,

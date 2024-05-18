@@ -5,6 +5,7 @@ import {
   ElementRef,
   HostBinding,
   OnInit,
+  computed,
   inject,
   viewChild,
 } from '@angular/core';
@@ -19,7 +20,7 @@ import { filter } from 'rxjs';
 import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-config';
 
 @Component({
-  selector: 'lib-search',
+  selector: 'lib-books-search',
   standalone: true,
   imports: [ButtonModule, InputTextModule, FormsModule],
   template: `
@@ -27,6 +28,7 @@ import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-
       <i class="pi pi-search"></i>
       <input
         #searchInput
+        [value]="search()"
         type="text"
         pInputText
         class="w-full pr-6"
@@ -35,7 +37,7 @@ import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-
       />
       @if (searchInput.value.length) {
       <p-button
-        class="absolute top-50 right-0 mr-2 translate-y-50"
+        class="absolute top-50 right-0 mr-2 -translate-y-50"
         icon="pi pi-trash"
         [text]="true"
         (onClick)="clearInput()"
@@ -43,19 +45,14 @@ import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-
       }
     </div>
   `,
-  styles: [
-    `
-      .translate-y-50 {
-        transform: translateY(-50%);
-      }
-    `,
-  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SearchComponent implements OnInit {
+export class BooksSearchComponent implements OnInit {
   private booksStore = inject(BooksStore);
   private route = inject(ActivatedRoute);
   private destroyRef = inject(DestroyRef);
+
+  search = computed(() => this.booksStore.filters.search() ?? '');
 
   searchInput = viewChild<ElementRef>('searchInput');
 
@@ -69,9 +66,9 @@ export class SearchComponent implements OnInit {
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe((params) => {
-        const search = params[appRouterConfig.browse.searchQueryParams] as
-          | string
-          | undefined;
+        const search = params[
+          appRouterConfig.browse.searchQueryParams
+        ] as string;
 
         const clear = history.state[appRouterConfig.browse.clearHistoryState];
 
@@ -80,11 +77,8 @@ export class SearchComponent implements OnInit {
           history.replaceState({}, '');
         }
 
-        if (search) {
-          (this.searchInput()?.nativeElement as HTMLInputElement).value =
-            search;
-          this.booksStore.updateFilterTitle(search);
-        }
+        (this.searchInput()?.nativeElement as HTMLInputElement).value = search;
+        this.booksStore.updateFilterTitle(search);
 
         this.booksStore.getFilterBooks();
       });
@@ -95,6 +89,8 @@ export class SearchComponent implements OnInit {
     const value = (event.target as HTMLInputElement).value;
 
     this.booksStore.updateFilterTitle(value || null);
+
+    if (!value) this.booksStore.getFilterBooks();
   }
 
   clearInput() {
