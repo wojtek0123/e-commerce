@@ -22,6 +22,7 @@ import {
   browseRoutePaths,
 } from '@e-commerce/client-web-app/shared/utils/router-config';
 import { TooltipModule } from 'primeng/tooltip';
+import { CartSidebarComponent } from '../components/cart-sidebar/cart-sidebar.component';
 
 @Component({
   selector: 'lib-e-commerce-nav',
@@ -38,6 +39,7 @@ import { TooltipModule } from 'primeng/tooltip';
     SidebarModule,
     AccordionModule,
     TooltipModule,
+    CartSidebarComponent,
   ],
   templateUrl: './nav.component.html',
 })
@@ -45,6 +47,7 @@ export class NavComponent {
   private authStore = inject(AuthStore);
   private categoryStore = inject(CategoryStore);
 
+  cartSidebarVisible = signal(false);
   browseRoutePaths = browseRoutePaths;
   navItems: {
     id: BookTag;
@@ -180,4 +183,8 @@ export class NavComponent {
   showSidebar = () => this.sidebarVisible.set(true);
 
   @HostBinding('class') class = 'z-1';
+
+  openCart() {
+    this.cartSidebarVisible.set(true);
+  }
 }

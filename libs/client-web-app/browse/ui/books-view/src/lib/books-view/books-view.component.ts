@@ -14,6 +14,12 @@ import {
   BookCardSkeletonComponent,
   BookCardComponent,
 } from '@e-commerce/client-web-app/shared/ui/book-card';
+import { CartItemsApiService } from '@e-commerce/client-web-app/shared/data-access/api-services';
+import {
+  Book,
+  ResponseError,
+} from '@e-commerce/client-web-app/shared/data-access/api-types';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'lib-books-view',
@@ -30,7 +36,7 @@ import {
       @if (status() === 'loading') { @for (_ of skeletons; track $index) {
       <lib-book-card-skeleton />
       } } @else if (status() === 'ok') {@for (book of books(); track book.id) {
-      <lib-book-card [book]="book" />
+      <lib-book-card [book]="book" (onAddToCart)="addToCart($event)" />
       } @empty {
       <div class="text-center grid-all-columns mt-8">
         <span class="text-3xl">No books were found!</span>
@@ -58,6 +64,8 @@ import {
 })
 export class BooksViewComponent {
   private booksStore = inject(BooksStore);
+  private cartItemsApi = inject(CartItemsApiService);
+  private messageService = inject(MessageService);
 
   @HostBinding('class') class = 'w-full min-content-height';
 
@@ -67,8 +75,24 @@ export class BooksViewComponent {
 
   getBrowserRouteDetails = getBrowserRouteDetails;
 
-  addToCart(event: Event) {
-    event.preventDefault();
-    event.stopImmediatePropagation();
+  addToCart(book: Book) {
+    this.cartItemsApi
+      .createCartItem({ bookId: book.id, quantity: 1 })
+      .subscribe({
+        next: () => {
+          this.messageService.add({
+            summary: 'Success',
+            detail: `${book.title} has been added to cart successfully`,
+            severity: 'success',
+          });
+        },
+        error: (responseError: ResponseError) => {
+          this.messageService.add({
+            summary: 'Error',
+            detail: responseError.error.message,
+            severity: 'danger',
+          });
+        },
+      });
   }
 }

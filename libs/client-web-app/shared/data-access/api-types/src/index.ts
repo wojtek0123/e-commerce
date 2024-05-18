@@ -6,3 +6,4 @@ export * from './lib/models/role.model';
 export * from './lib/models/user.model';
 export * from './lib/models/session.model';
 export * from './lib/models/book.model';
+export * from './lib/models/cart-item.model';

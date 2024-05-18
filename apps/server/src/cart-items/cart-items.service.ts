@@ -1,15 +1,27 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCartItemDto } from './dto/create-cart-item.dto';
 import { UpdateCartItemDto } from './dto/update-cart-item.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { decode } from 'jsonwebtoken';
+// import {} from '@nestjs/common'
 
 @Injectable()
 export class CartItemsService {
   constructor(private prisma: PrismaService) {}
 
-  create(data: CreateCartItemDto) {
-    return this.prisma.cartItem.create({ data });
+  async create({ bookId, userId, quantity }: CreateCartItemDto) {
+    const existingCartItem = await this.prisma.cartItem.findFirst({
+      where: { userId, bookId },
+    });
+
+    if (existingCartItem) {
+      return this.prisma.cartItem.update({
+        where: { id: existingCartItem.id },
+        data: { quantity: existingCartItem.quantity + quantity },
+      });
+    }
+
+    return this.prisma.cartItem.create({ data: { bookId, userId, quantity } });
   }
 
   findAll() {
@@ -20,14 +32,22 @@ export class CartItemsService {
     return this.prisma.cartItem.findUnique({ where: { id } });
   }
 
-  findUserCartItems(authHeader: string) {
-    console.log(authHeader);
+  async findUserCartItems(authHeader: string) {
     const decodedAccessToken = decode(authHeader.split(' ')[1]);
-    console.log(decodedAccessToken);
 
-    return this.prisma.cartItem.findMany({
+    const cartItems = await this.prisma.cartItem.findMany({
       where: { userId: +decodedAccessToken.sub },
+      include: {
+        book: {
+          include: { authors: { include: { author: true } } },
+        },
+      },
     });
+
+    return cartItems.map((item) => ({
+      ...item,
+      book: { ...item.book, authors: item.book.authors.map((a) => a.author) },
+    }));
   }
 
   update(id: number, data: UpdateCartItemDto) {
@@ -35,6 +55,7 @@ export class CartItemsService {
   }
 
   remove(id: number) {
+    // throw new NotFoundException('not found this book');
     return this.prisma.cartItem.delete({ where: { id } });
   }
 }

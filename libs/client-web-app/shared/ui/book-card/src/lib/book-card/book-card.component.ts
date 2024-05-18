@@ -67,13 +67,14 @@ import { RouterLink } from '@angular/router';
 export class BookCardComponent {
   book = input.required<Book>();
 
-  addToCartEvent = output<Book>();
+  onAddToCart = output<Book>();
 
   getBrowserRouteDetails = getBrowserRouteDetails;
 
   addToCart(event: Event, book: Book) {
     event.preventDefault();
     event.stopImmediatePropagation();
-    this.addToCartEvent.emit(book);
+
+    this.onAddToCart.emit(book);
   }
 }
