@@ -26,6 +26,7 @@ import { RouterLink } from '@angular/router';
         <ng-template pTemplate="header">
           <img
             alt="Card"
+            class="image"
             [src]="
               book().coverImage
                 ? book().coverImage
@@ -60,6 +61,11 @@ import { RouterLink } from '@angular/router';
 
       .scale-animation:hover {
         transform: scale(0.95);
+      }
+
+      .image {
+        height: 31.875rem;
+        object-fit: cover;
       }
     `,
   ],

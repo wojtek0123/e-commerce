@@ -61,12 +61,14 @@ import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
                 <p-inputNumber
                   [showButtons]="true"
                   [formControl]="amount"
+                  [size]="4"
                   [min]="1"
+                  (onBlur)="onBlurInput()"
                   buttonLayout="horizontal"
                   spinnerMode="horizontal"
                   inputId="integeronly"
-                  decrementButtonClass="p-button-secondary"
-                  incrementButtonClass="p-button-secondary"
+                  decrementButtonClass="p-button-text p-button-secondary"
+                  incrementButtonClass="p-button-text p-button-secondary"
                   incrementButtonIcon="pi pi-plus"
                   decrementButtonIcon="pi pi-minus"
                 />
@@ -129,15 +131,23 @@ export class BookComponent {
   private route = inject(ActivatedRoute);
 
   @HostBinding('class') class = 'mx-auto flex flex-column gap-4 relative';
-  // @HostBinding('style.maxWidth') maxWidth = '80rem';
-  //
   amount = new FormControl(1, { validators: Validators.min(1) });
 
   book$ = this.booksApi.getBook$(
     this.route.snapshot.params[appRouterConfig.browse.bookId]
   );
   bookError$ = this.book$.pipe(
-    tap((book) => this.breadcrumbItems.push({ label: book.title })),
+    tap((book) => {
+      this.breadcrumbItems.push({
+        label: book.category.name,
+        routerLink: browseRoutePaths.default,
+        state: { categoryIds: [book.category.id], clear: true },
+        queryParams: {
+          [appRouterConfig.browse.categoriesQueryParams]: book.category.name,
+        },
+      });
+      this.breadcrumbItems.push({ label: book.title });
+    }),
     ignoreElements(),
     catchError((responseError: ResponseError) =>
       of(responseError.error.message)
@@ -155,5 +165,11 @@ export class BookComponent {
   addToCart() {
     if (this.amount.invalid) return;
     console.log('Added to cart');
+  }
+
+  onBlurInput() {
+    if (!this.amount.value) {
+      this.amount.setValue(1);
+    }
   }
 }
