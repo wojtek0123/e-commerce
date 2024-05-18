@@ -92,7 +92,11 @@ import { CartItemSkeletonComponent } from '../cart-item-skeleton/cart-item-skele
           <div class="text-3xl">
             Total: {{ '$' + totalAmount().toFixed(2) }}
           </div>
-          <a routerLink="/summary" class="no-underline p-button">
+          <a
+            routerLink="/summary"
+            (click)="onClose.emit()"
+            class="no-underline p-button"
+          >
             <i class="pi pi-shopping-bag" style="font-size: 1.5rem"></i>
             <span class="w-full block text-center">View summary</span>
           </a>
