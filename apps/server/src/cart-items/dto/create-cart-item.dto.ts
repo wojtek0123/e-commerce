@@ -1,13 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Prisma } from '@prisma/client';
 import { IsNumber } from 'class-validator';
+import { BookEntity } from '../../books/entities/book.entity';
+import { UserDto } from '../../users/dto/user.dto';
 
-export class CreateCartItemDto implements Prisma.CartItemCreateInput {
-  @ApiProperty()
-  user: Prisma.UserCreateNestedOneWithoutCartItemInput;
+export class CreateCartItemDto {
+  @ApiProperty({ type: Number })
+  @IsNumber()
+  userId: UserDto['id'];
 
-  @ApiProperty()
-  book: Prisma.BookCreateNestedOneWithoutCartItemInput;
+  @ApiProperty({ type: Number })
+  @IsNumber()
+  bookId: BookEntity['id'];
 
   @ApiProperty({ type: Number })
   @IsNumber()

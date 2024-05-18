@@ -1,12 +1,15 @@
 import { Route } from '@angular/router';
-import { BaseLayoutComponent } from '@e-commerce/client-web-app/shell/ui';
 import { authRouteGuard } from '@e-commerce/client-web-app/shell/utils';
 import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-config';
+import { CartItemsApiService } from '@e-commerce/client-web-app/shared/data-access/api-services';
+import { ShellComponent } from './shell.component';
+import { MessageService } from 'primeng/api';
 
 export const clientWebAppShellRoutes: Route[] = [
   {
     path: appRouterConfig.emptyPath,
-    component: BaseLayoutComponent,
+    component: ShellComponent,
+    providers: [CartItemsApiService, MessageService],
     children: [
       {
         path: appRouterConfig.emptyPath,

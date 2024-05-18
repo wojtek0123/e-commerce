@@ -71,14 +71,40 @@
           <i class="pi pi-user" style="font-size: 1.5rem"></i>
         </span>
       </p-button>
-      <a
-        class="hidden p-button p-button-text flex-column justify-content-center no-underline border-radius md:flex"
-        routerLink=""
-        pTooltip="View your cart"
+      <!-- <a -->
+      <!--   class="hidden p-button p-button-text flex-column justify-content-center no-underline border-radius md:flex" -->
+      <!--   routerLink="" -->
+      <!--   pTooltip="View your cart" -->
+      <!--   tooltipPosition="bottom" -->
+      <!-- > -->
+      <!--   <i class="pi pi-shopping-cart" style="font-size: 1.5rem"></i> -->
+      <!-- </a> -->
+
+      <!-- <p-button -->
+      <!--   (click)="openCart()" -->
+      <!--   icon="pi pi-shopping-cart" -->
+      <!--   class="hidden xl:flex" -->
+      <!-- ></p-button> -->
+      <p-button
+        #openCartSidebar
+        type="button"
+        [text]="true"
+        (click)="cartSidebarVisible.set(true)"
+        class="hidden flex-column justify-content-center md:flex"
+        pTooltip="View cart"
         tooltipPosition="bottom"
       >
-        <i class="pi pi-shopping-cart" style="font-size: 1.5rem"></i>
-      </a>
+        <span class="flex flex-column justify-content-center">
+          <i class="pi pi-shopping-cart" style="font-size: 1.5rem"></i>
+        </span>
+      </p-button>
+
+      @defer (on interaction(openCartSidebar)) {
+      <lib-cart-sidebar
+        [sidebarVisible]="cartSidebarVisible()"
+        (onClose)="cartSidebarVisible.set(false)"
+      />
+      }
 
       <p-button
         (click)="showSidebar()"

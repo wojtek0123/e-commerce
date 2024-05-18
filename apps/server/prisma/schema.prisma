@@ -127,6 +127,8 @@ model CartItem {
   bookId    Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@map("cart_item")
 }
 
 enum Role {

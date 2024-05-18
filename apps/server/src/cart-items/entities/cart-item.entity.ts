@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { CartItem } from '@prisma/client';
 import { IsNumber, IsString } from 'class-validator';
+import { BookEntity } from '../../books/entities/book.entity';
 
 export class CartItemEntity implements CartItem {
   @ApiProperty({ readOnly: true, type: Number })
@@ -26,4 +27,7 @@ export class CartItemEntity implements CartItem {
   @ApiProperty({ type: String })
   @IsString()
   updatedAt: Date;
+
+  @ApiProperty({ type: BookEntity })
+  book: BookEntity;
 }

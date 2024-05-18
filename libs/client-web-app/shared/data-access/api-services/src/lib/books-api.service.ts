@@ -32,7 +32,9 @@ export class BooksApiService {
     if (opts.categoryIds?.length)
       body = { ...body, categoryIdsIn: opts.categoryIds };
 
-    return this.http.post<Book[]>('http://localhost:3000/books', body);
+    return this.http
+      .post<Book[]>('http://localhost:3000/books', body)
+      .pipe(shareReplay(1));
   }
 
   getBook$(id: Book['id']) {

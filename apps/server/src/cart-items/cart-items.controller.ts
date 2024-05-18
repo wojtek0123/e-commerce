@@ -31,6 +31,7 @@ export class CartItemsController {
   @ApiOperation({ summary: 'Create a cart item' })
   @ApiCreatedResponse({ type: CartItemEntity })
   create(@Body() createCartItemDto: CreateCartItemDto) {
+    console.log(createCartItemDto);
     return this.cartItemsService.create(createCartItemDto);
   }
 
