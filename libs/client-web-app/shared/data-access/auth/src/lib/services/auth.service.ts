@@ -6,6 +6,7 @@ import {
   Tokens,
 } from '@e-commerce/client-web-app/shared/data-access/api-types';
 import { tap } from 'rxjs';
+import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-config';
 
 @Injectable()
 export class AuthService {
@@ -55,26 +56,45 @@ export class AuthService {
   }
 
   setSession({ tokens, user }: Session) {
-    localStorage.setItem('access_token', JSON.stringify(tokens.accessToken));
-    localStorage.setItem('refresh_token', JSON.stringify(tokens.refreshToken));
-    localStorage.setItem('user', JSON.stringify(user));
+    localStorage.setItem(
+      appRouterConfig.localStorage.accessToken,
+      JSON.stringify(tokens.accessToken)
+    );
+    localStorage.setItem(
+      appRouterConfig.localStorage.refreshToken,
+      JSON.stringify(tokens.refreshToken)
+    );
+    localStorage.setItem(
+      appRouterConfig.localStorage.user,
+      JSON.stringify(user)
+    );
   }
 
   removeSession() {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
-    localStorage.removeItem('user');
+    localStorage.removeItem(appRouterConfig.localStorage.accessToken);
+    localStorage.removeItem(appRouterConfig.localStorage.refreshToken);
+    localStorage.removeItem(appRouterConfig.localStorage.user);
   }
 
   updateTokens({ accessToken, refreshToken }: Session['tokens']) {
-    localStorage.setItem('access_token', JSON.stringify(accessToken));
-    localStorage.setItem('refresh_token', JSON.stringify(refreshToken));
+    localStorage.setItem(
+      appRouterConfig.localStorage.accessToken,
+      JSON.stringify(accessToken)
+    );
+    localStorage.setItem(
+      appRouterConfig.localStorage.refreshToken,
+      JSON.stringify(refreshToken)
+    );
   }
 
   getSession(): Session | null {
-    const accessToken = localStorage.getItem('access_token');
-    const refreshToken = localStorage.getItem('refresh_token');
-    const user = localStorage.getItem('user');
+    const accessToken = localStorage.getItem(
+      appRouterConfig.localStorage.accessToken
+    );
+    const refreshToken = localStorage.getItem(
+      appRouterConfig.localStorage.refreshToken
+    );
+    const user = localStorage.getItem(appRouterConfig.localStorage.user);
 
     if (!accessToken || !refreshToken || !user) return null;
 

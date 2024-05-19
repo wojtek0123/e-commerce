@@ -4,6 +4,7 @@ import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-
 import { CartItemsApiService } from '@e-commerce/client-web-app/shared/data-access/api-services';
 import { ShellComponent } from './shell.component';
 import { MessageService } from 'primeng/api';
+import { ThemeSwitherService } from '@e-commerce/client-web-app/shell/data-access/theme-switcher';
 
 export const clientWebAppShellRoutes: Route[] = [
   {
