@@ -15,9 +15,6 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@e-commerce/client-web-app/browse/ui/book-details": [
-        "libs/client-web-app/browse/ui/book-details/src/index.ts"
-      ],
       "@e-commerce/client-web-app/auth/feature-register": [
         "libs/client-web-app/auth/feature-register/src/index.ts"
       ],
@@ -44,6 +41,9 @@
       ],
       "@e-commerce/client-web-app/browse/feature/shell": [
         "libs/client-web-app/browse/feature/shell/src/index.ts"
+      ],
+      "@e-commerce/client-web-app/browse/ui/book-details": [
+        "libs/client-web-app/browse/ui/book-details/src/index.ts"
       ],
       "@e-commerce/client-web-app/browse/ui/books-filters": [
         "libs/client-web-app/browse/ui/books-filters/src/index.ts"
@@ -117,7 +117,12 @@
       "@e-commerce/client-web-app/shell/utils": [
         "libs/client-web-app/shell/utils/src/index.ts"
       ],
-      "@e-commerce/shared/data-access": ["libs/shared/data-access/src/index.ts"]
+      "@e-commerce/shared/data-access": [
+        "libs/shared/data-access/src/index.ts"
+      ],
+      "@e-commerce/client-web-app/shell/data-access/theme-switcher": [
+        "libs/client-web-app/shell/data-access/theme-switcher/src/index.ts"
+      ]
     }
   },
   "exclude": ["node_modules", "tmp"]

@@ -8,10 +8,10 @@
       <a
         routerLink="/"
         [queryParams]="null"
-        class="text-xl md:text-2xl xl:text-[2rem] text-white no-underline"
+        class="text-xl md:text-2xl xl:text-[2rem] no-underline"
       >
         <span class="font-bold text-primary">Story</span
-        ><span class="uppercase">Stash</span>
+        ><span class="uppercase text-color">Stash</span>
       </a>
       <p-divider layout="vertical" />
       <ul
@@ -40,7 +40,7 @@
             routerLinkActive="underline"
             [queryParams]="item.queryParams"
             [state]="item.state"
-            class="text-lg text-white capitalize no-underline py-1 px-3"
+            class="text-lg text-color capitalize no-underline py-1 px-3"
           >
             {{ item.name }}
           </a>
@@ -60,7 +60,22 @@
       >
         <i class="pi pi-search" style="font-size: 1.5rem"></i>
       </a>
-      <p-menu #menu [model]="menuItems()" [popup]="true" />
+      <p-menu #menu [model]="menuItems()" [popup]="true">
+        <ng-template pTemplate="end">
+          <p-divider />
+          <div
+            class="w-full flex align-items-center justify-content-center gap-3"
+          >
+            <!-- <lib-theme-switcher /> -->
+            <span>light</span>
+            <p-inputSwitch
+              [(ngModel)]="theme"
+              (onChange)="onChangeTheme($event)"
+            />
+            <span>dark</span>
+          </div>
+        </ng-template>
+      </p-menu>
       <p-button
         type="button"
         [text]="true"

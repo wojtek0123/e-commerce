@@ -11,8 +11,10 @@ export class CategoriesService {
     return 'This action adds a new category';
   }
 
-  findAll() {
-    return this.prisma.category.findMany();
+  async findAll() {
+    const categories = await this.prisma.category.findMany();
+
+    return categories.sort((a, b) => a.name.localeCompare(b.name));
   }
 
   findOne(id: number) {

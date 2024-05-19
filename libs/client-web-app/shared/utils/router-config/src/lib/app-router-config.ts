@@ -15,4 +15,10 @@ export const appRouterConfig = {
     loginPath: 'login',
     registerPath: 'register',
   },
+  localStorage: {
+    refreshToken: 'refresh_token',
+    accessToken: 'access_token',
+    user: 'user',
+    theme: 'theme',
+  },
 } as const;

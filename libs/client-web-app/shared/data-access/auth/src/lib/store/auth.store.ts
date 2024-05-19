@@ -42,7 +42,7 @@ export const AuthStore = signalStore(
         tap(({ valid }) => {
           if (!valid) {
             patchState(store, {
-              status: { error: 'Formularz jest nieprawidłowo uzupełniony' },
+              status: { error: 'Form is incorrectly filled out' },
             });
           }
         }),
@@ -73,7 +73,7 @@ export const AuthStore = signalStore(
         tap(({ valid }) => {
           if (!valid) {
             patchState(store, {
-              status: { error: 'Formularz jest nieprawidłowo uzupełniony' },
+              status: { error: 'Form is incorrectly filled out' },
             });
           }
         }),
@@ -125,7 +125,6 @@ export const AuthStore = signalStore(
             next: () => {
               patchState(store, { user: null, tokens: null });
               authService.removeSession();
-              console.log('logout');
             },
             error: (responseError: ResponseError) =>
               patchState(store, {

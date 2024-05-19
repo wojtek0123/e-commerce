@@ -23,6 +23,12 @@ import {
 } from '@e-commerce/client-web-app/shared/utils/router-config';
 import { TooltipModule } from 'primeng/tooltip';
 import { CartSidebarComponent } from '../components/cart-sidebar/cart-sidebar.component';
+import { InputSwitchChangeEvent, InputSwitchModule } from 'primeng/inputswitch';
+import {
+  ThemeSwitherService,
+  Theme,
+} from '@e-commerce/client-web-app/shell/data-access/theme-switcher';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'lib-e-commerce-nav',
@@ -40,12 +46,15 @@ import { CartSidebarComponent } from '../components/cart-sidebar/cart-sidebar.co
     AccordionModule,
     TooltipModule,
     CartSidebarComponent,
+    InputSwitchModule,
+    FormsModule,
   ],
   templateUrl: './nav.component.html',
 })
 export class NavComponent {
   private authStore = inject(AuthStore);
   private categoryStore = inject(CategoryStore);
+  private themeSwitcherService = inject(ThemeSwitherService);
 
   cartSidebarVisible = signal(false);
   browseRoutePaths = browseRoutePaths;
@@ -201,5 +210,16 @@ export class NavComponent {
 
   openCart() {
     this.cartSidebarVisible.set(true);
+  }
+
+  theme = computed(() =>
+    this.themeSwitcherService.theme() === 'md-dark-indigo' ? true : false
+  )();
+
+  onChangeTheme(event: InputSwitchChangeEvent) {
+    const theme: Theme = event.checked ? 'md-dark-indigo' : 'md-light-indigo';
+
+    this.themeSwitcherService.switchTheme(theme);
+    // this.theme.setValue(event.checked);
   }
 }
