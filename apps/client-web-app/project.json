@@ -23,13 +23,13 @@
           "node_modules/primeng/resources/primeng.min.css",
           "apps/client-web-app/src/styles.scss",
           {
-            "input": "node_modules/primeng/resources/themes/md-dark-indigo/theme.css",
-            "bundleName": "md-dark-indigo",
+            "input": "apps/client-web-app/src/assets/themes/aura-dark-blue/theme.css",
+            "bundleName": "aura-dark-blue",
             "inject": false
           },
           {
-            "input": "node_modules/primeng/resources/themes/md-light-indigo/theme.css",
-            "bundleName": "md-light-indigo",
+            "input": "apps/client-web-app/src/assets/themes/aura-light-blue/theme.css",
+            "bundleName": "aura-light-blue",
             "inject": false
           }
         ],

@@ -60,7 +60,7 @@ import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
             <h3 class="text-5xl">{{ vm.book.title }}</h3>
             <div class="flex flex-wrap gap-3 mb-5">
               @for (author of vm.book.authors; track author.id) {
-              <div class="text-2xl flex flex-wrap text-gray-300">
+              <div class="text-2xl flex flex-wrap text-color-secondary">
                 {{ author.name }}
               </div>
               }

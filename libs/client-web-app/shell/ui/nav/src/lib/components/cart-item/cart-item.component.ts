@@ -12,7 +12,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 @Component({
   selector: 'lib-cart-item',
   template: `
-    <div class="flex flex-column w-full surface-card p-3 border-round">
+    <div class="flex flex-column w-full surface-ground p-3 border-round">
       <div class="flex align-items-center justify-content-between gap-3">
         <h3 class="text-2xl font-bold m-0">{{ item().book.title }}</h3>
         <h4
@@ -24,7 +24,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
       <div class="flex align-items-center justify-content-between gap-3 mt-4">
         <div clas="flex flex-wrap">
           @for (author of item().book.authors; track author.id) {
-          <div class="text-gray-300">{{ author.name }}</div>
+          <div class="text-color-secondary">{{ author.name }}</div>
           }
         </div>
         <div class="flex align-items-center">

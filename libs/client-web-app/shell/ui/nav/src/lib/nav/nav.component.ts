@@ -213,13 +213,12 @@ export class NavComponent {
   }
 
   theme = computed(() =>
-    this.themeSwitcherService.theme() === 'md-dark-indigo' ? true : false
+    this.themeSwitcherService.theme() === 'aura-dark-blue' ? true : false
   )();
 
   onChangeTheme(event: InputSwitchChangeEvent) {
-    const theme: Theme = event.checked ? 'md-dark-indigo' : 'md-light-indigo';
+    const theme: Theme = event.checked ? 'aura-dark-blue' : 'aura-light-blue';
 
     this.themeSwitcherService.switchTheme(theme);
-    // this.theme.setValue(event.checked);
   }
 }

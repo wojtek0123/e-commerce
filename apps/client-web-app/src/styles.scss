@@ -1,19 +1,17 @@
-@import './assets/primeng-extends';
+@import './assets/prime/primeng-extends';
 @import 'primeicons/primeicons.css';
-@import './assets/_primeflex-extra.scss';
-// @import 'primeng/resources/themes/md-dark-indigo/theme.css';
+@import './assets/prime/primeflex-extra.scss';
 @import 'primeng/resources/primeng.css';
 @import 'primeflex/primeflex.css';
 
 :root {
-  --border-radius: 0.5rem;
   --header-height: 4.8125rem;
-  --accent-color: #f48fb1;
   --max-card-width: 24rem;
 }
 
 html {
   scroll-behavior: smooth;
+  font-size: 0.875rem;
 }
 
 body {
@@ -32,8 +30,4 @@ p {
 
 .height-content {
   height: calc(100svh - var(--header-height) - 3rem);
-}
-
-.text-accent-color {
-  color: var(--accent-color);
 }

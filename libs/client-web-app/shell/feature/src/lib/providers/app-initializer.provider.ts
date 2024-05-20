@@ -30,8 +30,8 @@ const initializeAppFactory =
     const browserTheme: Theme = window.matchMedia(
       '(prefers-color-scheme: dark)'
     ).matches
-      ? 'md-dark-indigo'
-      : 'md-light-indigo';
+      ? 'aura-dark-blue'
+      : 'aura-light-blue';
 
     themeSwitcherService.switchTheme(preferenceTheme ?? browserTheme);
   };

@@ -1,1 +1,1 @@
-export type Theme = 'md-dark-indigo' | 'md-light-indigo';
+export type Theme = 'aura-dark-blue' | 'aura-light-blue';
