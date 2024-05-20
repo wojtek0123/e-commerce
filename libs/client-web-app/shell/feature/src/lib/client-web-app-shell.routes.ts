@@ -27,13 +27,6 @@ export const clientWebAppShellRoutes: Route[] = [
           ),
       },
       {
-        path: 'products',
-        loadChildren: () =>
-          import('@e-commerce/client-web-app/products/feature-products').then(
-            (r) => r.productsRoutes
-          ),
-      },
-      {
         path: appRouterConfig.auth.basePath,
         loadChildren: () =>
           import('@e-commerce/client-web-app/auth/feature/shell').then(

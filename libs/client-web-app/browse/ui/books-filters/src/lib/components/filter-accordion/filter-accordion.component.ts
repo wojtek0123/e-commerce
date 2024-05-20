@@ -15,7 +15,7 @@ import { ListboxChangeEvent, ListboxModule } from 'primeng/listbox';
 @Component({
   selector: 'lib-filter-accordion-tab',
   template: `
-    <p-accordionTab>
+    <p-accordionTab class="shadow-5 surface-card">
       <ng-template pTemplate="header">
         <span class="font-bold white-space-nowrap">{{ header() }}</span>
         <p-badge
@@ -55,6 +55,15 @@ import { ListboxChangeEvent, ListboxModule } from 'primeng/listbox';
     ReactiveFormsModule,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  styles: [
+    `
+      :host ::ng-deep {
+        .p-accordion-header-link {
+          background: var(--surface-ground) !important;
+        }
+      }
+    `,
+  ],
 })
 export class FilterAccordionTabComponent<T> {
   items = input.required<T[]>();
