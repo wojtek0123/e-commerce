@@ -15,6 +15,13 @@ export const appRouterConfig = {
     loginPath: 'login',
     registerPath: 'register',
   },
+  order: {
+    basePath: 'order',
+    cartItemsPath: 'cart-items',
+    deliveryAddressPath: 'delivery-address',
+    paymentPath: 'payment',
+    summaryPath: 'summary',
+  },
   localStorage: {
     refreshToken: 'refresh_token',
     accessToken: 'access_token',

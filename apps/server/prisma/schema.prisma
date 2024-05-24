@@ -90,15 +90,15 @@ model Publisher {
 }
 
 model User {
-  id           Int           @id @default(autoincrement())
-  email        String        @unique
+  id           Int          @id @default(autoincrement())
+  email        String       @unique
   password     String
   refreshToken String?
-  role         Role          @default(USER)
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  userDetails  UserAddress[]
-  CartItem     CartItem[]
+  role         Role         @default(USER)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  userDetails  UserAddress?
+  cartItem     CartItem[]
 
   @@map("user")
 }
@@ -109,11 +109,12 @@ model UserAddress {
   surname     String
   phone       String
   city        String
+  postcode    String
   street      String
   houseNumber String
   homeNumber  String
-  user        User   @relation(fields: [userId], references: [id])
-  userId      Int
+  user        User   @relation(fields: [userId], references: [id], onUpdate: Cascade)
+  userId      Int    @unique
 
   @@map("user_address")
 }

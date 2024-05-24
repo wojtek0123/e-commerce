@@ -10,6 +10,7 @@ import { PublishersModule } from '../publishers/publishers.module';
 import { CategoriesModule } from '../categories/categories.module';
 import { ConfigModule } from '@nestjs/config';
 import { CartItemsModule } from '../cart-items/cart-items.module';
+import { UserAddressesModule } from '../user-addresses/user-addresses.module';
 
 @Module({
   controllers: [AppController],
@@ -23,6 +24,7 @@ import { CartItemsModule } from '../cart-items/cart-items.module';
     PublishersModule,
     CategoriesModule,
     CartItemsModule,
+    UserAddressesModule,
   ],
 })
 export class AppModule {}

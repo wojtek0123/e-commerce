@@ -4,7 +4,6 @@ import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-
 import { CartItemsApiService } from '@e-commerce/client-web-app/shared/data-access/api-services';
 import { ShellComponent } from './shell.component';
 import { MessageService } from 'primeng/api';
-import { ThemeSwitherService } from '@e-commerce/client-web-app/shell/data-access/theme-switcher';
 
 export const clientWebAppShellRoutes: Route[] = [
   {
@@ -33,6 +32,13 @@ export const clientWebAppShellRoutes: Route[] = [
             (r) => r.shellRoutes
           ),
         canActivate: [authRouteGuard],
+      },
+      {
+        path: appRouterConfig.order.basePath,
+        loadChildren: () =>
+          import('@e-commerce/client-web-app/order/feature/shell').then(
+            (r) => r.orderShellRoutes
+          ),
       },
       {
         path: 'cart',

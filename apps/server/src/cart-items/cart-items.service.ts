@@ -1,9 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateCartItemDto } from './dto/create-cart-item.dto';
 import { UpdateCartItemDto } from './dto/update-cart-item.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { decode } from 'jsonwebtoken';
-// import {} from '@nestjs/common'
 
 @Injectable()
 export class CartItemsService {
@@ -55,7 +54,6 @@ export class CartItemsService {
   }
 
   remove(id: number) {
-    // throw new NotFoundException('not found this book');
     return this.prisma.cartItem.delete({ where: { id } });
   }
 }

@@ -1,31 +1,47 @@
-import { Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { UserAddressCreateDto } from './dto/user-address-create.dto';
+import { decode } from 'jsonwebtoken';
+import { UserAddressEntity } from './entities/user-addresses.entity';
+import { UserAddressUpdateDto } from './dto/user-address-update.dto';
 
 @Injectable()
 export class UserAddressesService {
   constructor(private prisma: PrismaService) {}
 
-  create(data: Prisma.UserAddressCreateInput) {
-    return this.prisma.userAddress.create({ data });
+  create(authHeader: string, data: UserAddressCreateDto) {
+    const decodedAccessToken = decode(authHeader.split(' ')[1]);
+
+    if (!decodedAccessToken) {
+      throw new UnauthorizedException('You are not log in');
+    }
+
+    return this.prisma.userAddress.create({
+      data: { ...data, userId: +decodedAccessToken.sub },
+    });
   }
 
-  findAll() {
-    return this.prisma.userAddress.findMany();
+  findAll(authHeader: string) {
+    const decodedAccessToken = decode(authHeader.split(' ')[1]);
+
+    if (!decodedAccessToken) {
+      throw new UnauthorizedException('You are unauthorized to get this data');
+    }
+
+    return this.prisma.userAddress.findMany({
+      where: { userId: +decodedAccessToken.sup },
+    });
   }
 
-  findOne(where: Prisma.UserAddressWhereUniqueInput) {
-    return this.prisma.userAddress.findUnique({ where });
+  findOne(id: number) {
+    return this.prisma.userAddress.findUnique({ where: { id } });
   }
 
-  update(
-    where: Prisma.UserAddressWhereUniqueInput,
-    data: Prisma.UserAddressUpdateInput
-  ) {
-    return this.prisma.userAddress.update({ where, data });
+  update(id: UserAddressEntity['id'], data: UserAddressUpdateDto) {
+    return this.prisma.userAddress.update({ where: { id }, data });
   }
 
-  remove(where: Prisma.UserAddressWhereUniqueInput) {
-    return this.prisma.userAddress.delete({ where });
+  remove(id: number) {
+    return this.prisma.userAddress.delete({ where: { id } });
   }
 }
