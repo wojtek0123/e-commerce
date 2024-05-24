@@ -35,12 +35,12 @@ export class CartItemsController {
     return this.cartItemsService.create(createCartItemDto);
   }
 
-  @Get()
-  @ApiOperation({ summary: 'Find all cart items' })
-  @ApiOkResponse({ type: CartItemEntity, isArray: true })
-  findAll() {
-    return this.cartItemsService.findAll();
-  }
+  // @Get()
+  // @ApiOperation({ summary: 'Find all cart items' })
+  // @ApiOkResponse({ type: CartItemEntity, isArray: true })
+  // findAll() {
+  //   return this.cartItemsService.findAll();
+  // }
 
   // @Get(':id')
   // @ApiOperation({ summary: 'Find unique cart item' })
@@ -60,6 +60,7 @@ export class CartItemsController {
   @Patch(':id')
   @ApiOperation({ summary: 'Update amount of the book' })
   @ApiCreatedResponse({ type: CartItemEntity })
+  @ApiBearerAuth()
   update(
     @Param('id') id: string,
     @Body() updateCartItemDto: UpdateCartItemDto
@@ -71,6 +72,7 @@ export class CartItemsController {
   @UseGuards(AccessTokenGuard)
   @ApiOperation({ summary: 'Delete a cart item' })
   @ApiOkResponse({ type: CartItemEntity })
+  @ApiBearerAuth()
   remove(@Param('id') id: string) {
     return this.cartItemsService.remove(+id);
   }

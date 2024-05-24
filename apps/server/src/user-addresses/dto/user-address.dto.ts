@@ -15,6 +15,9 @@ export class UserAddressDto implements UserAddress {
   city: string;
 
   @ApiProperty()
+  postcode: string;
+
+  @ApiProperty()
   homeNumber: string;
 
   @ApiProperty()

@@ -6,57 +6,73 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
+  Headers,
 } from '@nestjs/common';
 import { UserAddressesService } from './user-addresses.service';
 import {
-  ApiBearerAuth,
   ApiCreatedResponse,
   ApiOkResponse,
   ApiTags,
+  ApiBearerAuth,
+  ApiOperation,
 } from '@nestjs/swagger';
-import { Prisma } from '@prisma/client';
 import { UserAddressDto } from './dto/user-address.dto';
+import { UserAddressCreateDto } from './dto/user-address-create.dto';
+import { UserAddressEntity } from './entities/user-addresses.entity';
+import { AccessTokenGuard } from '../common/guards/access-token.guard';
+import { UserAddressUpdateDto } from './dto/user-address-update.dto';
 
-@ApiTags('user addresses')
+@ApiTags('user-addresses')
 @Controller('user-addresses')
 export class UserAddressesController {
   constructor(private readonly userAddressesService: UserAddressesService) {}
 
   @Post()
+  @UseGuards(AccessTokenGuard)
   @ApiBearerAuth()
-  @ApiCreatedResponse({ type: UserAddressDto })
-  create(@Body() data: Prisma.UserAddressCreateInput) {
-    return this.userAddressesService.create(data);
+  @ApiCreatedResponse({ type: UserAddressEntity })
+  @ApiOperation({ summary: 'create user address' })
+  create(
+    @Body() body: UserAddressCreateDto,
+    @Headers('authorization') authHeader: string
+  ) {
+    return this.userAddressesService.create(authHeader, body);
   }
 
   @Get()
+  @UseGuards(AccessTokenGuard)
   @ApiBearerAuth()
   @ApiOkResponse({ type: UserAddressDto, isArray: true })
-  findAll() {
-    return this.userAddressesService.findAll();
+  @ApiOperation({ summary: 'get user addrress of specific user' })
+  findAll(@Headers('authorization') authHeader: string) {
+    return this.userAddressesService.findAll(authHeader);
   }
 
-  @Get(':id')
-  @ApiBearerAuth()
-  @ApiOkResponse({ type: UserAddressDto })
-  findOne(@Param('id') id: Prisma.UserAddressWhereUniqueInput) {
-    return this.userAddressesService.findOne(id);
-  }
+  // @Get(':id')
+  // @UseGuards(AccessTokenGuard)
+  // @ApiOkResponse({ type: UserAddressDto })
+  // @ApiBearerAuth()
+  // @ApiOperation({ summary: 'get specific user address' })
+  // findOne(@Param('id') id: number) {
+  //   return this.userAddressesService.findOne(id);
+  // }
 
   @Patch(':id')
+  @UseGuards(AccessTokenGuard)
   @ApiBearerAuth()
   @ApiCreatedResponse({ type: UserAddressDto })
-  update(
-    @Param('id') id: Prisma.UserAddressWhereUniqueInput,
-    @Body() data: Prisma.UserAddressUpdateInput
-  ) {
+  @ApiOperation({ summary: 'update user address' })
+  update(@Param('id') id: number, @Body() data: UserAddressUpdateDto) {
     return this.userAddressesService.update(id, data);
   }
 
   @Delete(':id')
+  @UseGuards(AccessTokenGuard)
   @ApiBearerAuth()
   @ApiOkResponse({ type: UserAddressDto })
-  remove(@Param('id') id: Prisma.UserAddressWhereUniqueInput) {
+  @ApiOperation({ summary: 'delete user address' })
+  remove(@Param('id') id: number) {
     return this.userAddressesService.remove(id);
   }
 }

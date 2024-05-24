@@ -15,6 +15,9 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@e-commerce/client-web-app/order/feature/cart-items": [
+        "libs/client-web-app/order/feature/cart-items/src/index.ts"
+      ],
       "@e-commerce/client-web-app/auth/feature-register": [
         "libs/client-web-app/auth/feature-register/src/index.ts"
       ],
@@ -66,6 +69,12 @@
       "@e-commerce/client-web-app/home/ui": [
         "libs/client-web-app/home/ui/src/index.ts"
       ],
+      "@e-commerce/client-web-app/order/data-access": [
+        "libs/client-web-app/order/data-access/src/index.ts"
+      ],
+      "@e-commerce/client-web-app/order/feature/shell": [
+        "libs/client-web-app/order/feature/order-shell/src/index.ts"
+      ],
       "@e-commerce/client-web-app/products/data-access": [
         "libs/client-web-app/products/data-access/src/index.ts"
       ],
@@ -102,6 +111,9 @@
       "@e-commerce/client-web-app/shared/utils/router-config": [
         "libs/client-web-app/shared/utils/router-config/src/index.ts"
       ],
+      "@e-commerce/client-web-app/shell/data-access/theme-switcher": [
+        "libs/client-web-app/shell/data-access/theme-switcher/src/index.ts"
+      ],
       "@e-commerce/client-web-app/shell/feature": [
         "libs/client-web-app/shell/feature/src/index.ts"
       ],
@@ -117,11 +129,17 @@
       "@e-commerce/client-web-app/shell/utils": [
         "libs/client-web-app/shell/utils/src/index.ts"
       ],
+      "@e-commerce/client-web-app/order/feature/delivery-address": [
+        "libs/client-web-app/order/feature/delivery-address/src/index.ts"
+      ],
+      "@e-commerce/client-web-app/order/feature/payment": [
+        "libs/client-web-app/order/feature/payment/src/index.ts"
+      ],
       "@e-commerce/shared/data-access": [
         "libs/shared/data-access/src/index.ts"
       ],
-      "@e-commerce/client-web-app/shell/data-access/theme-switcher": [
-        "libs/client-web-app/shell/data-access/theme-switcher/src/index.ts"
+      "@e-commerce/client-web-app/order/feature/summary": [
+        "libs/client-web-app/order/feature/summary/src/index.ts"
       ]
     }
   },
