@@ -31,6 +31,16 @@ export class CartItemsService {
     return this.prisma.cartItem.findUnique({ where: { id } });
   }
 
+  async getUserCartItemsTotal(authHeader: string) {
+    const decodedAccessToken = decode(authHeader.split(' ')[1]);
+
+    const cartItems = await this.prisma.cartItem.findMany({
+      where: { userId: +decodedAccessToken.sub },
+    });
+
+    return cartItems.length;
+  }
+
   async findUserCartItems(authHeader: string) {
     const decodedAccessToken = decode(authHeader.split(' ')[1]);
 

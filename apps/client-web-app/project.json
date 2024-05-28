@@ -17,7 +17,12 @@
         "tsConfig": "apps/client-web-app/tsconfig.app.json",
         "assets": [
           "apps/client-web-app/src/favicon.ico",
-          "apps/client-web-app/src/assets"
+          "apps/client-web-app/src/assets",
+          {
+            "glob": "**/*",
+            "input": "libs/client-web-app/shared/utils/assets/src/assets",
+            "output": "assets"
+          }
         ],
         "styles": [
           "node_modules/primeng/resources/primeng.min.css",

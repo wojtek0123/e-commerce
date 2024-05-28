@@ -17,10 +17,6 @@ export const appRouterConfig = {
   },
   order: {
     basePath: 'order',
-    cartItemsPath: 'cart-items',
-    deliveryAddressPath: 'delivery-address',
-    paymentPath: 'payment',
-    summaryPath: 'summary',
   },
   localStorage: {
     refreshToken: 'refresh_token',

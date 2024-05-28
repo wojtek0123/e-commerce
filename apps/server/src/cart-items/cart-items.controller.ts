@@ -57,6 +57,14 @@ export class CartItemsController {
     return this.cartItemsService.findUserCartItems(authHeader);
   }
 
+  @Get('user-cart-items-total')
+  @UseGuards(AccessTokenGuard)
+  @ApiOkResponse({ type: Number })
+  @ApiBearerAuth()
+  getUserCartItemsTotal(@Headers('authorization') authHeader: string) {
+    return this.cartItemsService.getUserCartItemsTotal(authHeader);
+  }
+
   @Patch(':id')
   @ApiOperation({ summary: 'Update amount of the book' })
   @ApiCreatedResponse({ type: CartItemEntity })
