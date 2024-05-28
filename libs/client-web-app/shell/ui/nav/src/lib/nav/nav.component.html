@@ -66,7 +66,6 @@
           <div
             class="w-full flex align-items-center justify-content-center gap-3"
           >
-            <!-- <lib-theme-switcher /> -->
             <span>light</span>
             <p-inputSwitch
               [(ngModel)]="theme"
@@ -98,7 +97,13 @@
         tooltipPosition="bottom"
       >
         <span class="flex flex-column justify-content-center">
-          <i class="pi pi-shopping-cart" style="font-size: 1.5rem"></i>
+          <i
+            class="pi pi-shopping-cart"
+            style="font-size: 1.5rem"
+            pBadge
+            [value]="userCartItemsTotal().toString()"
+            severity="danger"
+          ></i>
         </span>
       </p-button>
 

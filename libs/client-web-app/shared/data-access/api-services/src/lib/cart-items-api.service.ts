@@ -7,7 +7,7 @@ import {
 import { shareReplay } from 'rxjs';
 import { AuthStore } from '@e-commerce/client-web-app/shared/data-access/auth';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class CartItemsApiService {
   private http = inject(HttpClient);
   private authStore = inject(AuthStore);
@@ -16,6 +16,12 @@ export class CartItemsApiService {
     return this.http
       .get<CartItem[]>('http://localhost:3000/cart-items/user-cart-items')
       .pipe(shareReplay(1));
+  }
+
+  getUserCartItemsTotal() {
+    return this.http.get<number>(
+      'http://localhost:3000/cart-items/user-cart-items-total'
+    );
   }
 
   createCartItem({

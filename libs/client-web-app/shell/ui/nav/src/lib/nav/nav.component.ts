@@ -1,6 +1,8 @@
 import {
   Component,
+  DestroyRef,
   HostBinding,
+  OnInit,
   computed,
   inject,
   signal,
@@ -29,6 +31,10 @@ import {
   Theme,
 } from '@e-commerce/client-web-app/shell/data-access/theme-switcher';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BadgeModule } from 'primeng/badge';
+import { CartItemsApiService } from '@e-commerce/client-web-app/shared/data-access/api-services';
+import { map, tap } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'lib-e-commerce-nav',
@@ -48,13 +54,29 @@ import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
     CartSidebarComponent,
     InputSwitchModule,
     FormsModule,
+    BadgeModule,
   ],
   templateUrl: './nav.component.html',
 })
-export class NavComponent {
+export class NavComponent implements OnInit {
   private authStore = inject(AuthStore);
   private categoryStore = inject(CategoryStore);
+  private cartItemsApi = inject(CartItemsApiService);
   private themeSwitcherService = inject(ThemeSwitherService);
+  private destroyRef = inject(DestroyRef);
+
+  userCartItemsTotal = signal(0);
+
+  ngOnInit(): void {
+    this.cartItemsApi
+      .getUserCartItemsTotal()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (total) => {
+          this.userCartItemsTotal.set(total);
+        },
+      });
+  }
 
   cartSidebarVisible = signal(false);
   browseRoutePaths = browseRoutePaths;

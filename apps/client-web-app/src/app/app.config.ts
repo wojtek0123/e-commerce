@@ -4,6 +4,7 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import {
   provideRouter,
   withEnabledBlockingInitialNavigation,
+  withViewTransitions,
 } from '@angular/router';
 import { clientWebAppShellRoutes } from '@e-commerce/client-web-app/shell/feature';
 import { provideStore } from '@ngrx/store';
@@ -18,6 +19,7 @@ export const appConfig: ApplicationConfig = {
     provideStore(),
     provideRouter(
       clientWebAppShellRoutes,
+      withViewTransitions(),
       withEnabledBlockingInitialNavigation()
     ),
     provideAnimations(),

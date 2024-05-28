@@ -34,6 +34,7 @@ import { ToastModule } from 'primeng/toast';
 import { CartItemComponent } from '../cart-item/cart-item.component';
 import { MessageService } from 'primeng/api';
 import { CartItemSkeletonComponent } from '../cart-item-skeleton/cart-item-skeleton.component';
+import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-config';
 
 @Component({
   selector: 'lib-cart-sidebar',
@@ -93,12 +94,12 @@ import { CartItemSkeletonComponent } from '../cart-item-skeleton/cart-item-skele
             Total: {{ '$' + totalAmount().toFixed(2) }}
           </div>
           <a
-            routerLink="/summary"
+            [routerLink]="appRouterConfig.order.basePath"
             (click)="onClose.emit()"
             class="no-underline p-button"
           >
             <i class="pi pi-shopping-bag" style="font-size: 1.5rem"></i>
-            <span class="w-full block text-center">View summary</span>
+            <span class="w-full block text-center">Go to order</span>
           </a>
         </div>
       </div>
@@ -124,6 +125,7 @@ export class CartSidebarComponent implements OnChanges {
   totalAmount = signal(0);
   visible = signal(false);
   skeletons = new Array(5);
+  appRouterConfig = appRouterConfig;
 
   sidebarVisible = input.required<boolean>();
   onClose = output<void>();

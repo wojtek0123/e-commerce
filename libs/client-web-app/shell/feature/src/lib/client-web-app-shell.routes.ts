@@ -1,18 +1,25 @@
 import { Route } from '@angular/router';
 import { authRouteGuard } from '@e-commerce/client-web-app/shell/utils';
 import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-config';
-import { CartItemsApiService } from '@e-commerce/client-web-app/shared/data-access/api-services';
 import { ShellComponent } from './shell.component';
 import { MessageService } from 'primeng/api';
 
 export const clientWebAppShellRoutes: Route[] = [
   {
+    path: appRouterConfig.order.basePath,
+    loadChildren: () =>
+      import('@e-commerce/client-web-app/order/feature/order-form').then(
+        (r) => r.orderFormRoutes
+      ),
+  },
+  {
     path: appRouterConfig.emptyPath,
     component: ShellComponent,
-    providers: [CartItemsApiService, MessageService],
+    providers: [MessageService],
     children: [
       {
         path: appRouterConfig.emptyPath,
+        pathMatch: 'full',
         loadChildren: () =>
           import('@e-commerce/client-web-app/home/feature').then(
             (r) => r.homeRoutes
@@ -32,17 +39,6 @@ export const clientWebAppShellRoutes: Route[] = [
             (r) => r.shellRoutes
           ),
         canActivate: [authRouteGuard],
-      },
-      {
-        path: appRouterConfig.order.basePath,
-        loadChildren: () =>
-          import('@e-commerce/client-web-app/order/feature/shell').then(
-            (r) => r.orderShellRoutes
-          ),
-      },
-      {
-        path: 'cart',
-        redirectTo: appRouterConfig.emptyPath,
       },
       {
         path: '**',

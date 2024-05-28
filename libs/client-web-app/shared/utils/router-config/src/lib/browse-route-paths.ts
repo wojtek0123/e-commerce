@@ -1,9 +1,11 @@
 import { appRouterConfig } from './app-router-config';
 
+const { basePath, bookId } = appRouterConfig.browse;
+
 export const browseRoutePaths = {
-  default: `/${appRouterConfig.browse.basePath}`,
-  details: `/${appRouterConfig.browse.basePath}/:${appRouterConfig.browse.bookId}`,
+  default: `/${basePath}`,
+  details: `/${basePath}/:${bookId}`,
 } as const;
 
 export const getBrowserRouteDetails = (bookdId: number) =>
-  `/${appRouterConfig.browse.basePath}/${bookdId}`;
+  `/${basePath}/${bookdId}`;
