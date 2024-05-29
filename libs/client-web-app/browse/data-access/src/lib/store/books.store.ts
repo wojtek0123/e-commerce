@@ -84,6 +84,7 @@ export const BooksStore = signalStore(
             [appRouterConfig.browse.categoriesQueryParams]: queryCats || null,
           },
           queryParamsHandling: 'merge',
+          replaceUrl: true,
         });
       },
       updateFilterTags: (tags: BookTag[] | null) => {
@@ -95,6 +96,7 @@ export const BooksStore = signalStore(
             [appRouterConfig.browse.tagsQueryParams]: tags?.join(',') || null,
           },
           queryParamsHandling: 'merge',
+          replaceUrl: true,
         });
       },
       updateFilterTitle: (search: string | null) => {
@@ -106,6 +108,7 @@ export const BooksStore = signalStore(
           relativeTo: route,
           queryParams: { [appRouterConfig.browse.searchQueryParams]: search },
           queryParamsHandling: 'merge',
+          replaceUrl: true,
         });
       },
       clearFilters: () => {
@@ -121,6 +124,7 @@ export const BooksStore = signalStore(
           queryParams: {
             [appRouterConfig.browse.searchQueryParams]: store.filters.search(),
           },
+          replaceUrl: true,
         });
       },
       clearFilter: (filter: keyof BooksFilters) => {
@@ -132,6 +136,7 @@ export const BooksStore = signalStore(
           relativeTo: route,
           queryParams: { [filter]: null },
           queryParamsHandling: 'merge',
+          replaceUrl: true,
         });
       },
       clearFiltersAndSearch: () => {
@@ -145,6 +150,7 @@ export const BooksStore = signalStore(
         router.navigate([], {
           relativeTo: route,
           queryParams: null,
+          replaceUrl: true,
         });
       },
     })
