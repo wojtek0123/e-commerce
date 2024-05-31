@@ -106,7 +106,7 @@ model User {
 model UserAddress {
   id          Int    @id @default(autoincrement())
   firstName   String
-  surname     String
+  lastName    String
   phone       String
   city        String
   postcode    String
