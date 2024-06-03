@@ -44,4 +44,7 @@ export class CreateBook implements Prisma.BookCreateInput {
 
   @ApiProperty()
   category: Prisma.CategoryCreateNestedOneWithoutBooksInput;
+
+  @ApiProperty()
+  productInventory: Prisma.ProductInventoryCreateNestedOneWithoutBookInput;
 }

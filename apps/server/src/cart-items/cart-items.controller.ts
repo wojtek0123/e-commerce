@@ -31,7 +31,6 @@ export class CartItemsController {
   @ApiOperation({ summary: 'Create a cart item' })
   @ApiCreatedResponse({ type: CartItemEntity })
   create(@Body() createCartItemDto: CreateCartItemDto) {
-    console.log(createCartItemDto);
     return this.cartItemsService.create(createCartItemDto);
   }
 
@@ -49,21 +48,21 @@ export class CartItemsController {
   //   return this.cartItemsService.findOne(+id);
   // }
 
-  @Get('user-cart-items')
-  @UseGuards(AccessTokenGuard)
-  @ApiOkResponse({ type: CartItemEntity, isArray: true })
-  @ApiBearerAuth()
-  findUserCartItems(@Headers('authorization') authHeader: string) {
-    return this.cartItemsService.findUserCartItems(authHeader);
-  }
+  // @Get('user-cart-items')
+  // @UseGuards(AccessTokenGuard)
+  // @ApiOkResponse({ type: CartItemEntity, isArray: true })
+  // @ApiBearerAuth()
+  // findUserCartItems(@Headers('authorization') authHeader: string) {
+  //   return this.cartItemsService.findUserCartItems(authHeader);
+  // }
 
-  @Get('user-cart-items-total')
-  @UseGuards(AccessTokenGuard)
-  @ApiOkResponse({ type: Number })
-  @ApiBearerAuth()
-  getUserCartItemsTotal(@Headers('authorization') authHeader: string) {
-    return this.cartItemsService.getUserCartItemsTotal(authHeader);
-  }
+  // @Get('user-cart-items-total')
+  // @UseGuards(AccessTokenGuard)
+  // @ApiOkResponse({ type: Number })
+  // @ApiBearerAuth()
+  // getUserCartItemsTotal(@Headers('authorization') authHeader: string) {
+  //   return this.cartItemsService.getUserCartItemsTotal(authHeader);
+  // }
 
   @Patch(':id')
   @ApiOperation({ summary: 'Update amount of the book' })

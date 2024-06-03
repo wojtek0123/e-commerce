@@ -4,6 +4,7 @@ import { UserAddressCreateDto } from './dto/user-address-create.dto';
 import { decode } from 'jsonwebtoken';
 import { UserAddressEntity } from './entities/user-addresses.entity';
 import { UserAddressUpdateDto } from './dto/user-address-update.dto';
+import { JwtPayload } from '../auth/types/jwt-payload.type';
 
 @Injectable()
 export class UserAddressesService {
@@ -21,15 +22,15 @@ export class UserAddressesService {
     });
   }
 
-  findAll(authHeader: string) {
-    const decodedAccessToken = decode(authHeader.split(' ')[1]);
+  find(authHeader: string) {
+    const decodedAccessToken = decode(authHeader.split(' ')[1]) as JwtPayload;
 
     if (!decodedAccessToken) {
       throw new UnauthorizedException('You are unauthorized to get this data');
     }
 
-    return this.prisma.userAddress.findMany({
-      where: { userId: +decodedAccessToken.sup },
+    return this.prisma.userAddress.findUnique({
+      where: { userId: +decodedAccessToken.sub },
     });
   }
 
