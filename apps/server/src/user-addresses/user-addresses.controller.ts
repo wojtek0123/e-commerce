@@ -43,10 +43,10 @@ export class UserAddressesController {
   @Get()
   @UseGuards(AccessTokenGuard)
   @ApiBearerAuth()
-  @ApiOkResponse({ type: UserAddressDto, isArray: true })
+  @ApiOkResponse({ type: UserAddressDto })
   @ApiOperation({ summary: 'get user addrress of specific user' })
-  findAll(@Headers('authorization') authHeader: string) {
-    return this.userAddressesService.findAll(authHeader);
+  find(@Headers('authorization') authHeader: string) {
+    return this.userAddressesService.find(authHeader);
   }
 
   // @Get(':id')

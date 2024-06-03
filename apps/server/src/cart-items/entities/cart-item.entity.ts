@@ -30,4 +30,10 @@ export class CartItemEntity implements CartItem {
 
   @ApiProperty({ type: BookEntity })
   book: BookEntity;
+
+  @ApiProperty({ type: Number })
+  shoppingSessionId: number;
+
+  @ApiProperty()
+  shoppingSession: string;
 }

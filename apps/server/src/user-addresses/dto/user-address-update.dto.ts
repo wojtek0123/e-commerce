@@ -9,7 +9,7 @@ export class UserAddressUpdateDto implements Prisma.UserAddressUpdateInput {
 
   @ApiProperty({ required: false, type: String })
   @IsString()
-  surname?: string;
+  lastName?: string;
 
   @ApiProperty({ required: false, type: String })
   @IsString()

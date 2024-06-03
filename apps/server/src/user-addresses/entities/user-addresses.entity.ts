@@ -10,7 +10,7 @@ export class UserAddressEntity implements UserAddress {
   firstName: string;
 
   @ApiProperty({ type: String })
-  surname: string;
+  lastName: string;
 
   @ApiProperty({ type: String })
   phone: string;

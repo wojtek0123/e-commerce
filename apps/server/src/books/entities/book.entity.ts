@@ -52,4 +52,7 @@ export class BookEntity implements Book {
 
   @ApiProperty({ type: CategoryDto })
   category: CategoryDto;
+
+  @ApiProperty({ type: Number })
+  productInventoryId: number;
 }

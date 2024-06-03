@@ -11,6 +11,7 @@ import { CategoriesModule } from '../categories/categories.module';
 import { ConfigModule } from '@nestjs/config';
 import { CartItemsModule } from '../cart-items/cart-items.module';
 import { UserAddressesModule } from '../user-addresses/user-addresses.module';
+import { ShoppingSessionsModule } from '../shopping-sessions/shopping-sessions.module';
 
 @Module({
   controllers: [AppController],
@@ -25,6 +26,7 @@ import { UserAddressesModule } from '../user-addresses/user-addresses.module';
     CategoriesModule,
     CartItemsModule,
     UserAddressesModule,
+    ShoppingSessionsModule,
   ],
 })
 export class AppModule {}

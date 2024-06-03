@@ -9,7 +9,7 @@ export class UserAddressDto implements UserAddress {
   firstName: string;
 
   @ApiProperty()
-  surname: string;
+  lastName: string;
 
   @ApiProperty()
   city: string;
