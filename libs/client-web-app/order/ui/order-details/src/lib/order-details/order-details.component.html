@@ -1,209 +1,209 @@
-<div class="container">
-  <div class="border-round overflow-hidden flex align-items-start w-full">
-    <form [formGroup]="form" class="flex flex-column w-full pt-4 gap-2">
-      <div class="flex flex-column md:flex-row gap-3">
-        <div class="flex flex-column w-full">
-          <div class="flex flex-column gap-1">
-            <label for="firstname">Fist name *</label>
-            <input
-              class="w-full"
-              pInputText
-              id="firstname"
-              [ngClass]="{
-                'ng-invalid ng-dirty':
-                  form.controls.firstName.invalid &&
-                  (form.controls.firstName.dirty || submitted())
-              }"
-              formControlName="firstName"
-              placeholder="Type your first name"
-            />
-          </div>
-          @if (form.controls.firstName.invalid && (form.controls.firstName.dirty
-          || submitted()) ) {
-          <small class="text-red-500 mt-1">This field is required</small>
-          }
-        </div>
-        <div class="flex flex-column w-full">
-          <div class="flex flex-column gap-1">
-            <label for="lastname">Last name *</label>
-            <input
-              class="w-full"
-              pInputText
-              id="lastname"
-              [ngClass]="{
-                'ng-invalid ng-dirty':
-                  form.controls.lastName.invalid &&
-                  (form.controls.lastName.dirty || submitted())
-              }"
-              formControlName="lastName"
-              placeholder="Type your last name"
-            />
-          </div>
-          @if (form.controls.lastName.invalid && (form.controls.lastName.dirty
-          || submitted())) {
-          <small class="text-red-500 mt-1">This field is required</small>
-          }
-        </div>
+<form [formGroup]="form" class="flex flex-column w-full gap-2">
+  <div class="flex flex-column md:flex-row gap-3">
+    <div class="flex flex-column w-full">
+      <div class="flex flex-column gap-1">
+        <label for="firstname">Fist name *</label>
+        <input
+          class="w-full"
+          pInputText
+          id="firstname"
+          [ngClass]="{
+            'ng-invalid ng-dirty':
+              form.controls.firstName.invalid &&
+              (form.controls.firstName.dirty || submitted())
+          }"
+          formControlName="firstName"
+          placeholder="Type your first name"
+        />
       </div>
-      <div class="flex flex-column">
-        <div class="flex flex-column gap-1 w-20rem">
-          <label for="country">Country *</label>
-          <p-dropdown
-            class="w-full"
-            formControlName="country"
-            [options]="countries"
-            [ngClass]="{
-              'ng-invalid ng-dirty':
-                form.controls.country.invalid &&
-                (form.controls.country.dirty || submitted())
-            }"
-            optionLabel="name"
-            [showClear]="true"
-            placeholder="Select a country"
-          />
-        </div>
-        @if (form.controls.country.invalid && (form.controls.country.dirty ||
-        submitted())) {
-        <small class="text-red-500 mt-1">This field is required</small>
-        }
+      @if (form.controls.firstName.invalid && (form.controls.firstName.dirty ||
+      submitted()) ) {
+      <small class="text-red-500 mt-1">This field is required</small>
+      }
+    </div>
+    <div class="flex flex-column w-full">
+      <div class="flex flex-column gap-1">
+        <label for="lastname">Last name *</label>
+        <input
+          class="w-full"
+          pInputText
+          id="lastname"
+          [ngClass]="{
+            'ng-invalid ng-dirty':
+              form.controls.lastName.invalid &&
+              (form.controls.lastName.dirty || submitted())
+          }"
+          formControlName="lastName"
+          placeholder="Type your last name"
+        />
       </div>
-      <div class="flex flex-column">
-        <div class="flex flex-column gap-1">
-          <label for="city">City *</label>
-          <input
-            pInputText
-            id="city"
-            [ngClass]="{
-              'ng-invalid ng-dirty':
-                form.controls.city.invalid &&
-                (form.controls.city.dirty || submitted())
-            }"
-            placeholder="Type your city"
-            formControlName="city"
-          />
-        </div>
-        @if (form.controls.city.invalid && (form.controls.city.dirty ||
-        submitted())) {
-        <small class="text-red-500 mt-1">This field is required</small>
-        }
-      </div>
-      <div class="flex flex-column">
-        <div class="flex flex-column gap-1">
-          <label for="street">Street *</label>
-          <input
-            pInputText
-            id="street"
-            [ngClass]="{
-              'ng-invalid ng-dirty':
-                form.controls.street.invalid &&
-                (form.controls.street.dirty || submitted())
-            }"
-            placeholder="Type your street"
-            formControlName="street"
-          />
-        </div>
-        @if (form.controls.street.invalid && (form.controls.street.dirty ||
-        submitted())) {
-        <small class="text-red-500 mt-1">This field is required</small>
-        }
-      </div>
+      @if (form.controls.lastName.invalid && (form.controls.lastName.dirty ||
+      submitted())) {
+      <small class="text-red-500 mt-1">This field is required</small>
+      }
+    </div>
+  </div>
+  <div class="flex flex-column">
+    <div class="flex flex-column gap-1 w-20rem">
+      <label for="country">Country *</label>
+      <p-dropdown
+        class="w-full"
+        formControlName="country"
+        [options]="countries"
+        [ngClass]="{
+          'ng-invalid ng-dirty':
+            form.controls.country.invalid &&
+            (form.controls.country.dirty || submitted())
+        }"
+        optionLabel="name"
+        [showClear]="true"
+        placeholder="Select a country"
+      />
+    </div>
+    @if (form.controls.country.invalid && (form.controls.country.dirty ||
+    submitted())) {
+    <small class="text-red-500 mt-1">This field is required</small>
+    }
+  </div>
+  <div class="flex flex-column">
+    <div class="flex flex-column gap-1">
+      <label for="city">City *</label>
+      <input
+        pInputText
+        id="city"
+        [ngClass]="{
+          'ng-invalid ng-dirty':
+            form.controls.city.invalid &&
+            (form.controls.city.dirty || submitted())
+        }"
+        placeholder="Type your city"
+        formControlName="city"
+      />
+    </div>
+    @if (form.controls.city.invalid && (form.controls.city.dirty ||
+    submitted())) {
+    <small class="text-red-500 mt-1">This field is required</small>
+    }
+  </div>
+  <div class="flex flex-column">
+    <div class="flex flex-column gap-1">
+      <label for="street">Street *</label>
+      <input
+        pInputText
+        id="street"
+        [ngClass]="{
+          'ng-invalid ng-dirty':
+            form.controls.street.invalid &&
+            (form.controls.street.dirty || submitted())
+        }"
+        placeholder="Type your street"
+        formControlName="street"
+      />
+    </div>
+    @if (form.controls.street.invalid && (form.controls.street.dirty ||
+    submitted())) {
+    <small class="text-red-500 mt-1">This field is required</small>
+    }
+  </div>
 
-      <div class="flex flex-column">
-        <div class="flex flex-column gap-1">
-          <label for="home-number">Home number *</label>
-          <input
-            pInputText
-            id="home-number"
-            class="w-14rem"
-            [ngClass]="{
-              'ng-invalid ng-dirty':
-                form.controls.homeNumber.invalid &&
-                (form.controls.homeNumber.dirty || submitted())
-            }"
-            placeholder="Type your home number"
-            formControlName="homeNumber"
-          />
-        </div>
-        @if (form.controls.homeNumber.invalid && (form.controls.homeNumber.dirty
-        || submitted())) {
-        <small class="text-red-500 mt-1">This field is required</small>
-        }
-      </div>
-      <div class="flex flex-column">
-        <div class="flex flex-column gap-1">
-          <label for="house-number">House number</label>
-          <input
-            pInputText
-            id="house-number"
-            class="w-14rem"
-            [ngClass]="{
-              'ng-invalid ng-dirty':
-                form.controls.houseNumber.invalid &&
-                (form.controls.houseNumber.dirty || submitted())
-            }"
-            placeholder="Type your house number"
-            formControlName="houseNumber"
-          />
-        </div>
-        @if (form.controls.houseNumber.invalid &&
-        (form.controls.houseNumber.dirty || submitted())) {
-        <small class="text-red-500 mt-1">This field is required</small>
-        }
-      </div>
-      <div class="flex flex-column">
-        <div class="flex flex-column gap-1">
-          <label for="postcode">Postcode *</label>
-          <input
-            pInputText
-            id="postcode"
-            class="w-20rem"
-            [ngClass]="{
-              'ng-invalid ng-dirty':
-                form.controls.postcode.invalid &&
-                (form.controls.postcode.dirty || submitted())
-            }"
-            placeholder="postcode"
-            formControlName="postcode"
-          />
-        </div>
-        @if (form.controls.postcode.invalid && (form.controls.postcode.dirty ||
-        submitted())) {
-        <small class="text-red-500 mt-1">This field is required</small>
-        }
-      </div>
-      <div class="flex flex-column">
-        <div class="flex flex-column gap-1">
-          <label for="phone">Phone *</label>
-          <input
-            pInputText
-            id="phone"
-            class="w-20rem"
-            [ngClass]="{
-              'ng-invalid ng-dirty':
-                form.controls.phone.invalid &&
-                (form.controls.phone.dirty || submitted())
-            }"
-            placeholder="Type your phone number"
-            formControlName="phone"
-          />
-        </div>
-        @if (form.controls.phone.invalid && (form.controls.phone.dirty ||
-        submitted())) {
-        <small class="text-red-500 mt-1">This field is required</small>
-        }
-      </div>
-    </form>
+  <div class="flex flex-column">
+    <div class="flex flex-column gap-1">
+      <label for="home-number">Home number *</label>
+      <input
+        pInputText
+        id="home-number"
+        class="w-14rem"
+        [ngClass]="{
+          'ng-invalid ng-dirty':
+            form.controls.homeNumber.invalid &&
+            (form.controls.homeNumber.dirty || submitted())
+        }"
+        placeholder="Type your home number"
+        formControlName="homeNumber"
+      />
+    </div>
+    @if (form.controls.homeNumber.invalid && (form.controls.homeNumber.dirty ||
+    submitted())) {
+    <small class="text-red-500 mt-1">This field is required</small>
+    }
   </div>
-  <p-divider class="hidden xl:block" layout="vertical" />
-  <div class="xl:col-6 h-full flex flex-column gap-8 xl:max-w-full">
-    <div class="w-10rem">CART</div>
+  <div class="flex flex-column">
+    <div class="flex flex-column gap-1">
+      <label for="house-number">House number</label>
+      <input
+        pInputText
+        id="house-number"
+        class="w-14rem"
+        [ngClass]="{
+          'ng-invalid ng-dirty':
+            form.controls.houseNumber.invalid &&
+            (form.controls.houseNumber.dirty || submitted())
+        }"
+        placeholder="Type your house number"
+        formControlName="houseNumber"
+      />
+    </div>
+    @if (form.controls.houseNumber.invalid && (form.controls.houseNumber.dirty
+    || submitted())) {
+    <small class="text-red-500 mt-1">This field is required</small>
+    }
   </div>
-</div>
-<div class="flex justify-content-between align-items-center">
-  <p-button label="Back to shopping"></p-button>
-  <p-button
-    (onClick)="submit()"
-    [loading]="loading()"
-    label="Go to summary"
-  ></p-button>
-</div>
+  <div class="flex flex-column">
+    <div class="flex flex-column gap-1">
+      <label for="postcode">Postcode *</label>
+      <input
+        pInputText
+        id="postcode"
+        class="w-20rem"
+        [ngClass]="{
+          'ng-invalid ng-dirty':
+            form.controls.postcode.invalid &&
+            (form.controls.postcode.dirty || submitted())
+        }"
+        placeholder="postcode"
+        formControlName="postcode"
+      />
+    </div>
+    @if (form.controls.postcode.invalid && (form.controls.postcode.dirty ||
+    submitted())) {
+    <small class="text-red-500 mt-1">This field is required</small>
+    }
+  </div>
+  <div class="flex flex-column">
+    <div class="flex flex-column gap-1">
+      <label for="phone">Phone *</label>
+      <input
+        pInputText
+        id="phone"
+        class="w-20rem"
+        [ngClass]="{
+          'ng-invalid ng-dirty':
+            form.controls.phone.invalid &&
+            (form.controls.phone.dirty || submitted())
+        }"
+        placeholder="Type your phone number"
+        formControlName="phone"
+      />
+    </div>
+    @if (form.controls.phone.invalid && (form.controls.phone.dirty ||
+    submitted())) {
+    <small class="text-red-500 mt-1">This field is required</small>
+    }
+  </div>
+  <div class="flex align-items-center justify-content-between gap-3 mt-6">
+    <a
+      class="p-button p-button-outlined no-underline link flex align-items-center gap-2"
+      routerLink="/"
+    >
+      <i class="pi pi-arrow-left"></i>
+      <span>Back to shopping</span>
+    </a>
+    <a
+      class="p-button no-underline link flex align-items-center gap-2"
+      [routerLink]="['/', 'order', 'shipping']"
+    >
+      <span>Go to shipping</span>
+      <i class="pi pi-arrow-right"></i>
+    </a>
+  </div>
+</form>

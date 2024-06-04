@@ -101,19 +101,16 @@
             class="pi pi-shopping-cart"
             style="font-size: 1.5rem"
             pBadge
-            [value]="userCartItemsTotal().toString()"
+            [value]="cartItemsCount().toString()"
             severity="danger"
           ></i>
         </span>
       </p-button>
 
-      @defer (on interaction(openCartSidebar)) {
       <lib-cart-sidebar
         [sidebarVisible]="cartSidebarVisible()"
         (onClose)="cartSidebarVisible.set(false)"
       />
-      }
-
       <p-button
         (click)="showSidebar()"
         icon="pi pi-align-left"

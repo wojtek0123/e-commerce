@@ -46,7 +46,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
           <p-button
             icon="pi pi-trash"
             [text]="true"
-            (onClick)="onDelete.emit({ id: item().id })"
+            (onClick)="onDelete.emit({ cartId: item().id })"
           ></p-button>
         </div>
       </div>
@@ -70,12 +70,12 @@ export class CartItemComponent {
   item = input.required<CartItem>();
 
   onUpdateQuantity = output<{
-    id: CartItem['id'];
+    cartId: CartItem['id'];
     quantity: CartItem['quantity'];
   }>();
-  onDelete = output<{ id: CartItem['id'] }>();
+  onDelete = output<{ cartId: CartItem['id'] }>();
 
-  updateQuantity(id: CartItem['id'], quantity: CartItem['quantity']) {
-    this.onUpdateQuantity.emit({ id, quantity });
+  updateQuantity(cartId: CartItem['id'], quantity: CartItem['quantity']) {
+    this.onUpdateQuantity.emit({ cartId, quantity });
   }
 }

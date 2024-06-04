@@ -2,20 +2,18 @@ import { Route } from '@angular/router';
 import { authRouteGuard } from '@e-commerce/client-web-app/shell/utils';
 import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-config';
 import { ShellComponent } from './shell.component';
-import { MessageService } from 'primeng/api';
 
 export const clientWebAppShellRoutes: Route[] = [
   {
     path: appRouterConfig.order.basePath,
     loadChildren: () =>
-      import('@e-commerce/client-web-app/order/feature/order-form').then(
-        (r) => r.orderFormRoutes
+      import('@e-commerce/client-web-app/order/feature/shell').then(
+        (r) => r.shellRoutes
       ),
   },
   {
     path: appRouterConfig.emptyPath,
     component: ShellComponent,
-    providers: [MessageService],
     children: [
       {
         path: appRouterConfig.emptyPath,

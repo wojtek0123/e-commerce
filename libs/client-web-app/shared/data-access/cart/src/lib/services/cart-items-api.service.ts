@@ -3,14 +3,13 @@ import { Injectable, inject } from '@angular/core';
 import {
   Book,
   CartItem,
+  ShoppingSession,
 } from '@e-commerce/client-web-app/shared/data-access/api-types';
 import { shareReplay } from 'rxjs';
-import { AuthStore } from '@e-commerce/client-web-app/shared/data-access/auth';
 
 @Injectable({ providedIn: 'root' })
 export class CartItemsApiService {
   private http = inject(HttpClient);
-  private authStore = inject(AuthStore);
 
   getUserCartItems() {
     return this.http
@@ -24,27 +23,15 @@ export class CartItemsApiService {
     );
   }
 
-  createCartItem({
-    bookId,
-    quantity,
-  }: {
+  createCartItem(body: {
     bookId: Book['id'];
-    quantity: number;
+    quantity: CartItem['quantity'];
+    shoppingSessionId: ShoppingSession['id'];
   }) {
-    const body = {
-      quantity,
-      bookId,
-      userId: this.authStore.userId(),
-    };
-
     return this.http.post<CartItem>('http://localhost:3000/cart-items', body);
   }
 
-  updateQuantity(id: CartItem['id'], { quantity }: { quantity: number }) {
-    const body = {
-      quantity,
-    };
-
+  updateQuantity(id: CartItem['id'], body: { quantity: number }) {
     return this.http.patch<CartItem>(
       `http://localhost:3000/cart-items/${id}`,
       body

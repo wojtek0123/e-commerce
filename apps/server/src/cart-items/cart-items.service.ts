@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { CreateCartItemDto } from './dto/create-cart-item.dto';
 import { UpdateCartItemDto } from './dto/update-cart-item.dto';
 import { PrismaService } from '../prisma/prisma.service';
-import { decode } from 'jsonwebtoken';
 import { ShoppingSessionsService } from '../shopping-sessions/shopping-sessions.service';
 
 @Injectable()
@@ -12,35 +11,67 @@ export class CartItemsService {
     private shoppingSessionService: ShoppingSessionsService
   ) {}
 
-  async create({ bookId, userId, quantity }: CreateCartItemDto) {
-    let shoppingSession = await this.prisma.shoppingSession.findUnique({
-      where: { userId },
-    });
-
-    if (!shoppingSession) {
-      shoppingSession = await this.prisma.shoppingSession.create({
-        data: { userId, total: 0 },
-      });
-    }
-
-    const existingCartItem = await this.prisma.cartItem.findFirst({
-      where: { shoppingSessionId: shoppingSession.id, bookId },
+  async create({ bookId, quantity, shoppingSessionId }: CreateCartItemDto) {
+    const existingCartItem = await this.prisma.cartItem.findUnique({
+      where: { shoppingSessionId: shoppingSessionId, bookId },
     });
 
     if (existingCartItem) {
-      return this.prisma.cartItem.update({
-        where: { id: existingCartItem.id },
-        data: { quantity: existingCartItem.quantity + quantity },
-      });
+      const cartItem = await this.prisma.cartItem
+        .update({
+          where: { id: existingCartItem.id },
+          data: { quantity: existingCartItem.quantity + quantity },
+          include: {
+            book: {
+              include: {
+                authors: {
+                  include: {
+                    author: true,
+                  },
+                },
+                category: true,
+              },
+            },
+          },
+        })
+        .then((cartItem) => ({
+          ...cartItem,
+          book: {
+            ...cartItem.book,
+            authors: cartItem.book.authors.map((a) => a.author),
+          },
+        }));
+
+      this.shoppingSessionService.updateTotal(cartItem.shoppingSessionId);
+
+      return cartItem;
     }
 
     const cartItem = await this.prisma.cartItem.create({
-      data: { bookId, shoppingSessionId: shoppingSession.id, quantity },
+      data: { bookId, shoppingSessionId: shoppingSessionId, quantity },
+      include: {
+        book: {
+          include: {
+            authors: {
+              include: {
+                author: true,
+              },
+            },
+            category: true,
+          },
+        },
+      },
     });
 
-    this.shoppingSessionService.updateTotal(shoppingSession.id);
+    this.shoppingSessionService.updateTotal(cartItem.shoppingSessionId);
 
-    return cartItem;
+    return {
+      ...cartItem,
+      book: {
+        ...cartItem.book,
+        authors: cartItem.book.authors.map((a) => a.author),
+      },
+    };
   }
 
   findAll() {
@@ -51,43 +82,58 @@ export class CartItemsService {
     return this.prisma.cartItem.findUnique({ where: { id } });
   }
 
-  async getUserCartItemsTotal(authHeader: string) {
-    // const decodedAccessToken = decode(authHeader.split(' ')[1]);
-    //
-    // const cartItems = await this.prisma.cartItem.findMany({
-    //   where: { userId: +decodedAccessToken.sub },
-    // });
-    //
-    // return cartItems.length;
-  }
-
-  async findUserCartItems(authHeader: string) {
-    // const decodedAccessToken = decode(authHeader.split(' ')[1]);
-    //
-    // const cartItems = await this.prisma.cartItem.findMany({
-    //   where: { userId: +decodedAccessToken.sub },
-    //   include: {
-    //     book: {
-    //       include: { authors: { include: { author: true } } },
-    //     },
-    //   },
-    // });
-    //
-    // return cartItems.map((item) => ({
-    //   ...item,
-    //   book: { ...item.book, authors: item.book.authors.map((a) => a.author) },
-    // }));
-  }
-
   async update(id: number, data: UpdateCartItemDto) {
-    const cartItem = await this.prisma.cartItem.update({ where: { id }, data });
+    const cartItem = await this.prisma.cartItem.update({
+      where: { id },
+      data,
+      include: {
+        book: {
+          include: {
+            authors: {
+              include: {
+                author: true,
+              },
+            },
+          },
+        },
+      },
+    });
 
     this.shoppingSessionService.updateTotal(cartItem.shoppingSessionId);
 
-    return cartItem;
+    return {
+      ...cartItem,
+      book: {
+        ...cartItem.book,
+        authors: cartItem.book.authors.map((a) => a.author),
+      },
+    };
   }
 
-  remove(id: number) {
-    return this.prisma.cartItem.delete({ where: { id } });
+  async remove(id: number) {
+    const cartItem = await this.prisma.cartItem.delete({
+      where: { id },
+      include: {
+        book: {
+          include: {
+            authors: {
+              include: {
+                author: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    this.shoppingSessionService.updateTotal(cartItem.shoppingSessionId);
+
+    return {
+      ...cartItem,
+      book: {
+        ...cartItem.book,
+        authors: cartItem.book.authors.map((a) => a.author),
+      },
+    };
   }
 }

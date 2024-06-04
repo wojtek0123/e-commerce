@@ -1,10 +1,8 @@
 import { AsyncPipe, NgStyle } from '@angular/common';
 import { Component, HostBinding, inject } from '@angular/core';
+import { CartStore } from '@e-commerce/client-web-app/shared/data-access/cart';
 import { ActivatedRoute } from '@angular/router';
-import {
-  BooksApiService,
-  CartItemsApiService,
-} from '@e-commerce/client-web-app/shared/data-access/api-services';
+import { BooksApiService } from '@e-commerce/client-web-app/shared/data-access/api-services';
 import {
   Book,
   ResponseError,
@@ -16,7 +14,7 @@ import {
 } from '@e-commerce/client-web-app/shared/utils/router-config';
 import { catchError, ignoreElements, of, tap } from 'rxjs';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
-import { MenuItem, MessageService } from 'primeng/api';
+import { MenuItem } from 'primeng/api';
 import { PanelModule } from 'primeng/panel';
 import { ButtonModule } from 'primeng/button';
 import { InputNumberModule } from 'primeng/inputnumber';
@@ -139,8 +137,7 @@ import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 export class BookDetailsComponent {
   private booksApi = inject(BooksApiService);
   private route = inject(ActivatedRoute);
-  private cartItemsApi = inject(CartItemsApiService);
-  private messageService = inject(MessageService);
+  private cartStore = inject(CartStore);
 
   @HostBinding('class') class = 'mx-auto flex flex-column gap-4 relative';
 
@@ -175,25 +172,11 @@ export class BookDetailsComponent {
     },
   ];
 
-  addToCart({ id, title }: Book) {
-    this.cartItemsApi
-      .createCartItem({ bookId: id, quantity: this.amount.value ?? 1 })
-      .subscribe({
-        next: () => {
-          this.messageService.add({
-            summary: 'Success',
-            detail: `${title} has been added to cart successfully. Amount is ${this.amount.value}`,
-            severity: 'success',
-          });
-        },
-        error: (responseError: ResponseError) => {
-          this.messageService.add({
-            summary: 'Error',
-            detail: responseError.error.message,
-            severity: 'error',
-          });
-        },
-      });
+  addToCart({ id }: Book) {
+    this.cartStore.addItemToCart({
+      bookId: id,
+      quantity: this.amount.value ?? 1,
+    });
   }
 
   onBlurInput() {

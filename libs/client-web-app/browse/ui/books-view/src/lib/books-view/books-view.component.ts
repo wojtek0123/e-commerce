@@ -19,14 +19,10 @@ import {
   BookCardSkeletonComponent,
   BookCardComponent,
 } from '@e-commerce/client-web-app/shared/ui/book-card';
-import { CartItemsApiService } from '@e-commerce/client-web-app/shared/data-access/api-services';
-import {
-  Book,
-  ResponseError,
-} from '@e-commerce/client-web-app/shared/data-access/api-types';
-import { MessageService } from 'primeng/api';
+import { Book } from '@e-commerce/client-web-app/shared/data-access/api-types';
 import { filter } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { CartStore } from '@e-commerce/client-web-app/shared/data-access/cart';
 
 @Component({
   selector: 'lib-books-view',
@@ -71,8 +67,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 })
 export class BooksViewComponent implements OnInit {
   private booksStore = inject(BooksStore);
-  private cartItemsApi = inject(CartItemsApiService);
-  private messageService = inject(MessageService);
+  private cartStore = inject(CartStore);
   private router = inject(Router);
   private destroyRef = inject(DestroyRef);
 
@@ -99,23 +94,6 @@ export class BooksViewComponent implements OnInit {
   }
 
   addToCart(book: Book) {
-    this.cartItemsApi
-      .createCartItem({ bookId: book.id, quantity: 1 })
-      .subscribe({
-        next: () => {
-          this.messageService.add({
-            summary: 'Success',
-            detail: `${book.title} has been added to cart successfully`,
-            severity: 'success',
-          });
-        },
-        error: (responseError: ResponseError) => {
-          this.messageService.add({
-            summary: 'Error',
-            detail: responseError.error.message,
-            severity: 'error',
-          });
-        },
-      });
+    this.cartStore.addItemToCart({ bookId: book.id, quantity: 1 });
   }
 }
