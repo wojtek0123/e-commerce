@@ -28,8 +28,10 @@ export class CartItemsController {
   constructor(private readonly cartItemsService: CartItemsService) {}
 
   @Post()
+  @UseGuards(AccessTokenGuard)
   @ApiOperation({ summary: 'Create a cart item' })
   @ApiCreatedResponse({ type: CartItemEntity })
+  @ApiBearerAuth()
   create(@Body() createCartItemDto: CreateCartItemDto) {
     return this.cartItemsService.create(createCartItemDto);
   }

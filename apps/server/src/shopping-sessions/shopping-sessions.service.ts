@@ -4,6 +4,9 @@ import { UpdateShoppingSessionDto } from './dto/update-shopping-session.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { decode } from 'jsonwebtoken';
 import { ShoppingSessionEntity } from './entities/shopping-session.entity';
+import { reduce } from 'lodash';
+import { ShoppingSession } from '@prisma/client';
+import { BookEntity } from '../books/entities/book.entity';
 
 @Injectable()
 export class ShoppingSessionsService {
@@ -90,8 +93,22 @@ export class ShoppingSessionsService {
         }));
     }
 
+    // this.prisma.shoppingSession.update({
+    //   where: { userId: shoppingSession.userId },
+    //   data: {
+    //     total: shoppingSession.cartItems.reduce(
+    //       (acc, cur) => acc + cur.book.price * cur.quantity,
+    //       0
+    //     ),
+    //   },
+    // });
+
     return {
       ...shoppingSession,
+      // total: shoppingSession.cartItems.reduce(
+      //   (acc, cur) => acc + cur.book.price * cur.quantity,
+      //   0
+      // ),
       cartItems: shoppingSession?.cartItems.map((ct) => ({
         ...ct,
         book: { ...ct.book, authors: ct.book.authors.map((a) => a.author) },

@@ -15,7 +15,7 @@ import {
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { pipe, switchMap, tap } from 'rxjs';
 import { inject } from '@angular/core';
-import { BooksApiService } from '../../../../../shared/data-access/api-services/src/lib/books-api.service';
+import { BooksApiService } from '@e-commerce/client-web-app/shared/data-access/api-services';
 import { tapResponse } from '@ngrx/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BooksFilters } from '../models/books-filters.model';

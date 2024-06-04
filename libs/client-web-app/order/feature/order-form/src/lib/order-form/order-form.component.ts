@@ -25,14 +25,6 @@ import { RouterLink } from '@angular/router';
             let-index="index"
           >
             <lib-order-details [callback]="nextCallback" />
-            <!-- <div class="flex pt-4 justify-content-end"> -->
-            <!--   <p-button -->
-            <!--     label="Go to summary" -->
-            <!--     icon="pi pi-arrow-right" -->
-            <!--     iconPos="right" -->
-            <!--     (onClick)="nextCallback.emit()" -->
-            <!--   /> -->
-            <!-- </div> -->
           </ng-template>
         </p-stepperPanel>
         <p-stepperPanel header="Summary">
@@ -66,6 +58,11 @@ import { RouterLink } from '@angular/router';
       :host ::ng-deep {
         .p-stepper .p-stepper-nav {
           margin: 1rem;
+        }
+
+        .p-stepper-panels {
+          background: transparent;
+          border-radius: var(--border-radius);
         }
       }
     `,

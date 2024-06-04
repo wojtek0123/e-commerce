@@ -1,8 +1,6 @@
 import {
   Component,
-  DestroyRef,
   HostBinding,
-  OnInit,
   computed,
   inject,
   signal,
@@ -17,7 +15,10 @@ import { MegaMenuModule } from 'primeng/megamenu';
 import { SidebarModule } from 'primeng/sidebar';
 import { CategoryStore } from '@e-commerce/client-web-app/shared/data-access/category';
 import { AccordionModule } from 'primeng/accordion';
-import { BookTag } from '@e-commerce/client-web-app/shared/data-access/api-types';
+import {
+  BookTag,
+  ShoppingSession,
+} from '@e-commerce/client-web-app/shared/data-access/api-types';
 import {
   appRouterConfig,
   authRoutePaths,
@@ -30,11 +31,9 @@ import {
   ThemeSwitherService,
   Theme,
 } from '@e-commerce/client-web-app/shell/data-access/theme-switcher';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { BadgeModule } from 'primeng/badge';
-import { CartItemsApiService } from '@e-commerce/client-web-app/shared/data-access/api-services';
-import { map, tap } from 'rxjs';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { CartStore } from '@e-commerce/client-web-app/shared/data-access/cart';
 
 @Component({
   selector: 'lib-e-commerce-nav',
@@ -58,28 +57,23 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   ],
   templateUrl: './nav.component.html',
 })
-export class NavComponent implements OnInit {
+export class NavComponent {
   private authStore = inject(AuthStore);
+  private cartStore = inject(CartStore);
   private categoryStore = inject(CategoryStore);
-  private cartItemsApi = inject(CartItemsApiService);
   private themeSwitcherService = inject(ThemeSwitherService);
-  private destroyRef = inject(DestroyRef);
 
   userCartItemsTotal = signal(0);
 
-  ngOnInit(): void {
-    this.cartItemsApi
-      .getUserCartItemsTotal()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (total) => {
-          this.userCartItemsTotal.set(total);
-        },
-      });
-  }
+  shoppingSession = signal<ShoppingSession | null>(null);
+  loading = signal(false);
+  error = signal<string | null>(null);
 
   cartSidebarVisible = signal(false);
   browseRoutePaths = browseRoutePaths;
+
+  cartItemsCount = this.cartStore.count;
+
   navItems: {
     id: BookTag;
     name: string;
