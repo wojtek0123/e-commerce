@@ -117,7 +117,7 @@ model CartItem {
   createdAt         DateTime        @default(now())
   updatedAt         DateTime        @updatedAt
   shoppingSession   ShoppingSession @relation(fields: [shoppingSessionId], references: [id], onUpdate: Cascade)
-  shoppingSessionId Int             @unique
+  shoppingSessionId Int
 }
 
 model OrderDetails {

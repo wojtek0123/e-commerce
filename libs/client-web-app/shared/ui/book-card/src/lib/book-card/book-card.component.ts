@@ -43,7 +43,7 @@ import { RouterLink } from '@angular/router';
               class="flex justify-content-end"
               label="Add to cart"
               icon="pi pi-cart-plus"
-              [loading]="loading()"
+              [loading]="loading() && bookIds().includes(book().id)"
               (onClick)="addToCart($event, book())"
             ></p-button>
           </div>
@@ -83,6 +83,7 @@ import { RouterLink } from '@angular/router';
 export class BookCardComponent {
   book = input.required<Book>();
   loading = input<boolean>(false);
+  bookIds = input<Book['id'][]>([]);
 
   onAddToCart = output<Book>();
 
