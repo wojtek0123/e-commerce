@@ -38,6 +38,7 @@ import { CartStore } from '@e-commerce/client-web-app/shared/data-access/cart';
     CartItemComponent,
     CartItemSkeletonComponent,
     TooltipModule,
+    NgClass,
   ],
   template: `
     <p-sidebar
@@ -53,7 +54,12 @@ import { CartStore } from '@e-commerce/client-web-app/shared/data-access/cart';
       </ng-template>
 
       <div class="flex flex-column justify-content-between h-full gap-3">
-        <div class="flex flex-column gap-3 overflow-y-auto">
+        <div
+          class="flex flex-column gap-3 overflow-y-auto"
+          [ngClass]="{
+            'animation-pulse pointer-events-none': loading()
+          }"
+        >
           @for (item of cartItems(); track item.id) {
           <lib-cart-item
             [item]="item"
@@ -61,8 +67,11 @@ import { CartStore } from '@e-commerce/client-web-app/shared/data-access/cart';
             (onDelete)="removeFromCart($event)"
           />
           } @empty {
-          <div class="text-center text-2xl text-gray-300">
-            Add something to cart
+          <div class="text-center flex flex-column gap-3 mt-3">
+            <span class="text-4xl">Your basket is empty!</span>
+            <span class="text-lg text-gray-400 "
+              >You should add something to it.</span
+            >
           </div>
           }
         </div>
@@ -70,18 +79,27 @@ import { CartStore } from '@e-commerce/client-web-app/shared/data-access/cart';
         <div class="flex flex-column gap-3">
           <div class="text-3xl">Total: {{ '$' + total().toFixed(2) }}</div>
           <div
-            [pTooltip]="count() ? '' : 'Cart is empty'"
+            [pTooltip]="
+              count()
+                ? ''
+                : 'First add something to your cart before proceeding to checkout'
+            "
             tooltipPosition="top"
+            tooltipStyleClass="min-w-max"
           >
             <a
               [routerLink]="appRouterConfig.order.basePath"
               (click)="onClose.emit()"
-              class="no-underline p-button p-disabled w-full"
+              class="no-underline p-button w-full"
               [ngClass]="{
-                'p-disabled': !count()
+                'p-disabled': loading() || !count()
               }"
             >
+              @if (loading()) {
+              <i class="pi pi-spin pi-spinner" style="font-size: 1.5rem"></i>
+              } @else {
               <i class="pi pi-shopping-bag" style="font-size: 1.5rem"></i>
+              }
               <span class="w-full block text-center">Checkout</span>
             </a>
           </div>
@@ -89,15 +107,7 @@ import { CartStore } from '@e-commerce/client-web-app/shared/data-access/cart';
       </div>
     </p-sidebar>
   `,
-  styles: [
-    `
-      :host ::ng-deep {
-        .p-sidebar-right {
-          width: 45rem;
-        }
-      }
-    `,
-  ],
+  styleUrl: './cart-sidebar.component.css',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

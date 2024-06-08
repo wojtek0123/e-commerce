@@ -72,5 +72,13 @@ p-button.w-full .p-button {
 }
 
 .p-sidebar-right {
-  width: 40rem;
+  width: 100%;
+  max-width: 40rem;
+}
+
+@media (min-width: 40rem) {
+  .p-sidebar-right {
+    border-top-left-radius: calc(var(--border-radius) * 2);
+    border-bottom-left-radius: calc(var(--border-radius) * 2);
+  }
 }
