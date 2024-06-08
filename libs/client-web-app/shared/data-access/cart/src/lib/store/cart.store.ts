@@ -78,13 +78,13 @@ export const CartStore = signalStore(
       ),
       addItemToCart: rxMethod<{ bookId: Book['id']; quantity: number }>(
         pipe(
+          filter(() => !!store.shoppingSessionId),
           tap(({ bookId }) =>
             patchState(store, (state) => ({
               loading: true,
               bookIds: [...state.bookIds, bookId],
             }))
           ),
-          filter(() => !!store.shoppingSessionId),
           switchMap(({ bookId, quantity }) =>
             cartItemsApi
               .createCartItem({
@@ -155,6 +155,7 @@ export const CartStore = signalStore(
       ),
       removeFromCart: rxMethod<{ cartId: CartItem['id'] }>(
         pipe(
+          filter(() => !!store.shoppingSessionId),
           tap(() => patchState(store, { loading: true })),
           switchMap(({ cartId }) =>
             cartItemsApi.deleteCartItem(cartId).pipe(
