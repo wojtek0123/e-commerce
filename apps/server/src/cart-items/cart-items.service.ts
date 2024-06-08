@@ -12,7 +12,7 @@ export class CartItemsService {
   ) {}
 
   async create({ bookId, quantity, shoppingSessionId }: CreateCartItemDto) {
-    const existingCartItem = await this.prisma.cartItem.findUnique({
+    const existingCartItem = await this.prisma.cartItem.findFirst({
       where: { shoppingSessionId: shoppingSessionId, bookId },
     });
 

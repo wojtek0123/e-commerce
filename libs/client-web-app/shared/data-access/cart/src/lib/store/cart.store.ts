@@ -22,6 +22,7 @@ import { MessageService } from 'primeng/api';
 
 interface CartState {
   shoppingSessionId: ShoppingSession['id'] | null;
+  bookIds: Book['id'][];
   total: ShoppingSession['total'];
   cartItems: ShoppingSession['cartItems'];
   loading: boolean;
@@ -30,6 +31,7 @@ interface CartState {
 
 const initialCartState: CartState = {
   shoppingSessionId: null,
+  bookIds: [],
   total: 0,
   cartItems: [],
   loading: false,
@@ -76,7 +78,12 @@ export const CartStore = signalStore(
       ),
       addItemToCart: rxMethod<{ bookId: Book['id']; quantity: number }>(
         pipe(
-          tap(() => patchState(store, { loading: true })),
+          tap(({ bookId }) =>
+            patchState(store, (state) => ({
+              loading: true,
+              bookIds: [...state.bookIds, bookId],
+            }))
+          ),
           filter(() => !!store.shoppingSessionId),
           switchMap(({ bookId, quantity }) =>
             cartItemsApi
@@ -88,11 +95,12 @@ export const CartStore = signalStore(
               .pipe(
                 tapResponse({
                   next: (cartItem) => {
-                    const existing = store
-                      .cartItems()
-                      .find((item) => item.bookId === cartItem.bookId);
-                    patchState(store, (state) => ({
-                      cartItems: existing
+                    patchState(store, (state) => {
+                      const existing = state.cartItems.find(
+                        (item) => item.bookId === cartItem.bookId
+                      );
+
+                      const cartItems = existing
                         ? state.cartItems.map((item) =>
                             item.id === existing.id
                               ? {
@@ -101,12 +109,28 @@ export const CartStore = signalStore(
                                 }
                               : item
                           )
-                        : [...state.cartItems, cartItem],
-                      total:
-                        state.total + cartItem.book.price * cartItem.quantity,
-                      loading: false,
-                      error: null,
-                    }));
+                        : [...state.cartItems, cartItem];
+
+                      return {
+                        cartItems: existing
+                          ? state.cartItems.map((item) =>
+                              item.id === existing.id
+                                ? {
+                                    ...item,
+                                    quantity: cartItem.quantity,
+                                  }
+                                : item
+                            )
+                          : [...state.cartItems, cartItem],
+                        total: cartItems.reduce(
+                          (acc, cur) => acc + cur.book.price * cur.quantity,
+                          0
+                        ),
+                        loading: false,
+                        bookIds: state.bookIds.filter((id) => id !== bookId),
+                        error: null,
+                      };
+                    });
                     messageService.add({
                       summary: 'Success',
                       detail: `${cartItem.book.title} has been added to cart successfully`,
@@ -114,7 +138,10 @@ export const CartStore = signalStore(
                     });
                   },
                   error: (resError: ResponseError) => {
-                    patchState(store, { loading: false });
+                    patchState(store, (state) => ({
+                      loading: false,
+                      bookIds: state.bookIds.filter((id) => id !== bookId),
+                    }));
                     messageService.add({
                       summary: 'Error',
                       detail: resError.error?.message ?? 'error has occur',
@@ -139,6 +166,7 @@ export const CartStore = signalStore(
                     cartItems: state.cartItems.filter(
                       (item) => item.id !== cartItem.id
                     ),
+                    loading: false,
                   }));
                   messageService.add({
                     summary: 'Success',
@@ -147,6 +175,10 @@ export const CartStore = signalStore(
                   });
                 },
                 error: (resError: ResponseError) => {
+                  patchState(store, {
+                    loading: false,
+                    error: resError.error.message,
+                  });
                   messageService.add({
                     summary: 'Error',
                     detail: resError.error.message,
@@ -181,6 +213,7 @@ export const CartStore = signalStore(
                       (acc, cur) => acc + cur.book.price * cur.quantity,
                       0
                     ),
+                    loading: false,
                   });
                   messageService.add({
                     summary: 'Success',
@@ -191,6 +224,10 @@ export const CartStore = signalStore(
                   });
                 },
                 error: (resError: ResponseError) => {
+                  patchState(store, {
+                    loading: false,
+                    error: resError.error.message,
+                  });
                   messageService.add({
                     summary: 'Error',
                     detail: resError.error.message,

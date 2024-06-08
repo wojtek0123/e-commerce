@@ -39,7 +39,12 @@ import { CartStore } from '@e-commerce/client-web-app/shared/data-access/cart';
       @if (status() === 'loading') { @for (_ of skeletons; track $index) {
       <lib-book-card-skeleton />
       } } @else if (status() === 'ok') {@for (book of books(); track book.id) {
-      <lib-book-card [book]="book" (onAddToCart)="addToCart($event)" />
+      <lib-book-card
+        [bookIds]="bookIds()"
+        [loading]="loading()"
+        [book]="book"
+        (onAddToCart)="addToCart($event)"
+      />
       } @empty {
       <div class="text-center grid-all-columns mt-8">
         <span class="text-3xl">No books were found!</span>
@@ -75,6 +80,8 @@ export class BooksViewComponent implements OnInit {
 
   books = computed(() => this.booksStore.books());
   status = computed(() => this.booksStore.status());
+  loading = this.cartStore.loading;
+  bookIds = this.cartStore.bookIds;
   skeletons = new Array(25);
 
   getBrowserRouteDetails = getBrowserRouteDetails;

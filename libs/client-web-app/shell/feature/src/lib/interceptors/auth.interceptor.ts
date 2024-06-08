@@ -4,7 +4,7 @@ import {
   HttpInterceptorFn,
   HttpRequest,
 } from '@angular/common/http';
-import { Observable, switchMap, take } from 'rxjs';
+import { Observable, switchMap } from 'rxjs';
 import { AuthStore } from '@e-commerce/client-web-app/shared/data-access/auth';
 import { inject } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
@@ -14,7 +14,6 @@ export const authInterceptor: HttpInterceptorFn = (
   next: HttpHandlerFn
 ): Observable<HttpEvent<unknown>> => {
   return toObservable(inject(AuthStore).tokens).pipe(
-    take(1),
     switchMap((tokens) => {
       if (!tokens?.accessToken) return next(request);
 

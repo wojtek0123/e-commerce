@@ -85,6 +85,7 @@ import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
                   label="Add to cart"
                   size="large"
                   icon="pi pi-cart-plus"
+                  [loading]="loading() && bookIds().includes(vm.book.id)"
                   (onClick)="addToCart(vm.book)"
                 ></p-button>
               </div>
@@ -142,6 +143,9 @@ export class BookDetailsComponent {
   @HostBinding('class') class = 'mx-auto flex flex-column gap-4 relative';
 
   amount = new FormControl<number>(1, { validators: Validators.min(1) });
+
+  loading = this.cartStore.loading;
+  bookIds = this.cartStore.bookIds;
 
   book$ = this.booksApi.getBook$(
     this.route.snapshot.params[appRouterConfig.browse.bookId]
