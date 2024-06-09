@@ -1,10 +1,21 @@
 import { AsyncPipe, NgStyle } from '@angular/common';
-import { Component, HostBinding, inject } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  HostBinding,
+  OnInit,
+  inject,
+  signal,
+} from '@angular/core';
 import { CartStore } from '@e-commerce/client-web-app/shared/data-access/cart';
 import { ActivatedRoute } from '@angular/router';
-import { BooksApiService } from '@e-commerce/client-web-app/shared/data-access/api-services';
+import {
+  BooksApiService,
+  ProductInventoryApiService,
+} from '@e-commerce/client-web-app/shared/data-access/api-services';
 import {
   Book,
+  ProductInventory,
   ResponseError,
 } from '@e-commerce/client-web-app/shared/data-access/api-types';
 import {
@@ -12,6 +23,7 @@ import {
   browseRoutePaths,
   homeRoutePaths,
 } from '@e-commerce/client-web-app/shared/utils/router-config';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { catchError, ignoreElements, of, tap } from 'rxjs';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { MenuItem } from 'primeng/api';
@@ -19,6 +31,7 @@ import { PanelModule } from 'primeng/panel';
 import { ButtonModule } from 'primeng/button';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'lib-book-details',
@@ -31,6 +44,7 @@ import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
     NgStyle,
     InputNumberModule,
     ReactiveFormsModule,
+    TooltipModule,
   ],
   template: `
     @if ({book: book$ | async, error: bookError$ | async}; as vm) { @if
@@ -80,15 +94,33 @@ import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
                   incrementButtonIcon="pi pi-plus"
                   decrementButtonIcon="pi pi-minus"
                 />
-                <p-button
-                  class="w-full"
-                  label="Add to cart"
-                  size="large"
-                  icon="pi pi-cart-plus"
-                  [loading]="loading() && bookIds().includes(vm.book.id)"
-                  (onClick)="addToCart(vm.book)"
-                ></p-button>
+                <div
+                  [pTooltip]="
+                    amount.invalid ? 'Make sure that amount is correct' : ''
+                  "
+                  tooltipPosition="top"
+                  tooltipStyleClass="min-w-max"
+                >
+                  <p-button
+                    class="w-full"
+                    label="Add to cart"
+                    size="large"
+                    icon="pi pi-cart-plus"
+                    [disabled]="amount.invalid"
+                    [loading]="loading() && bookIds().includes(vm.book.id)"
+                    (onClick)="addToCart(vm.book)"
+                  />
+                </div>
               </div>
+              <span>
+                {{
+                  productInventory()?.quantity !== 1
+                    ? 'There are ' +
+                      productInventory()?.quantity +
+                      ' pieces left'
+                    : 'Hurry up! Only one piece left'
+                }}
+              </span>
             </div>
             <div class="flex align-items-center gap-2">
               <span>Category:</span>
@@ -135,14 +167,18 @@ import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
     `,
   ],
 })
-export class BookDetailsComponent {
+export class BookDetailsComponent implements OnInit {
   private booksApi = inject(BooksApiService);
+  private productInventoryApi = inject(ProductInventoryApiService);
   private route = inject(ActivatedRoute);
   private cartStore = inject(CartStore);
+  private destroyRef = inject(DestroyRef);
 
   @HostBinding('class') class = 'mx-auto flex flex-column gap-4 relative';
 
-  amount = new FormControl<number>(1, { validators: Validators.min(1) });
+  amount = new FormControl<number>(1, {
+    validators: [Validators.min(1)],
+  });
 
   loading = this.cartStore.loading;
   bookIds = this.cartStore.bookIds;
@@ -167,6 +203,7 @@ export class BookDetailsComponent {
       of(responseError.error.message)
     )
   );
+  productInventory = signal<ProductInventory | null>(null);
 
   breadcrumbItems: MenuItem[] = [
     { label: 'home', routerLink: homeRoutePaths.default },
@@ -175,6 +212,20 @@ export class BookDetailsComponent {
       routerLink: browseRoutePaths.default,
     },
   ];
+
+  ngOnInit(): void {
+    this.productInventoryApi
+      .getProductInventory(
+        this.route.snapshot.params[appRouterConfig.browse.bookId]
+      )
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (productInventory) => {
+          this.productInventory.set(productInventory);
+          this.amount.setValidators(Validators.max(productInventory.quantity));
+        },
+      });
+  }
 
   addToCart({ id }: Book) {
     this.cartStore.addItemToCart({
