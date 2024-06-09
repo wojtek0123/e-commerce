@@ -153,7 +153,7 @@ export const CartStore = signalStore(
           )
         )
       ),
-      removeFromCart: rxMethod<{ cartId: CartItem['id'] }>(
+      removeItemFromCart: rxMethod<{ cartId: CartItem['id'] }>(
         pipe(
           filter(() => !!store.shoppingSessionId),
           tap(() => patchState(store, { loading: true })),

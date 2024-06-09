@@ -64,7 +64,7 @@ import { CartStore } from '@e-commerce/client-web-app/shared/data-access/cart';
           <lib-cart-item
             [item]="item"
             (onUpdateQuantity)="updateQuantity($event)"
-            (onDelete)="removeFromCart($event)"
+            (onDelete)="remove($event)"
           />
           } @empty {
           <div class="text-center flex flex-column gap-3 mt-3">
@@ -107,7 +107,6 @@ import { CartStore } from '@e-commerce/client-web-app/shared/data-access/cart';
       </div>
     </p-sidebar>
   `,
-  styleUrl: './cart-sidebar.component.css',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -140,8 +139,7 @@ export class CartSidebarComponent implements OnChanges {
     this.cartStore.updateQuantity({ cartId, quantity });
   }
 
-  removeFromCart({ cartId }: { cartId: CartItem['id'] }) {
-    console.log(cartId);
-    this.cartStore.removeFromCart({ cartId });
+  remove({ cartId }: { cartId: CartItem['id'] }) {
+    this.cartStore.removeItemFromCart({ cartId });
   }
 }
