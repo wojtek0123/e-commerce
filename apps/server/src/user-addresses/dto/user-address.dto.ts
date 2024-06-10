@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { UserAddress } from '@prisma/client';
+import { Country } from '../../countries/entities/country.entity';
 
 export class UserAddressDto implements UserAddress {
   @ApiProperty()
@@ -31,4 +32,10 @@ export class UserAddressDto implements UserAddress {
 
   @ApiProperty()
   userId: number;
+
+  @ApiProperty()
+  countryId: number;
+
+  @ApiProperty()
+  country: Country;
 }

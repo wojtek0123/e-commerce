@@ -15,9 +15,6 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@e-commerce/client-web-app/shared/data-access/cart": [
-        "libs/client-web-app/shared/data-access/cart/src/index.ts"
-      ],
       "@e-commerce/client-web-app/auth/feature-register": [
         "libs/client-web-app/auth/feature-register/src/index.ts"
       ],
@@ -108,6 +105,9 @@
       "@e-commerce/client-web-app/shared/data-access/auth": [
         "libs/client-web-app/shared/data-access/auth/src/index.ts"
       ],
+      "@e-commerce/client-web-app/shared/data-access/cart": [
+        "libs/client-web-app/shared/data-access/cart/src/index.ts"
+      ],
       "@e-commerce/client-web-app/shared/data-access/category": [
         "libs/client-web-app/shared/data-access/category/src/index.ts"
       ],
@@ -140,6 +140,9 @@
       ],
       "@e-commerce/client-web-app/shell/utils": [
         "libs/client-web-app/shell/utils/src/index.ts"
+      ],
+      "@e-commerce/clien-web-app/order/ui/order-shipping": [
+        "libs/client-web-app/order/ui/order-shipping/src/index.ts"
       ],
       "@e-commerce/shared/data-access": ["libs/shared/data-access/src/index.ts"]
     }

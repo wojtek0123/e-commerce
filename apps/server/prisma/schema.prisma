@@ -94,9 +94,18 @@ model UserAddress {
   street       String
   houseNumber  String
   homeNumber   String
+  country      Country       @relation(fields: [countryId], references: [id], onUpdate: Cascade)
+  countryId    Int           @unique
   user         User          @relation(fields: [userId], references: [id], onUpdate: Cascade)
   userId       Int           @unique
   orderDetails OrderDetails?
+}
+
+model Country {
+  id          Int         @id @default(autoincrement())
+  code        String
+  name        String
+  userAddress UserAddress?
 }
 
 model ShoppingSession {

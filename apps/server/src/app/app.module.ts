@@ -13,6 +13,7 @@ import { CartItemsModule } from '../cart-items/cart-items.module';
 import { UserAddressesModule } from '../user-addresses/user-addresses.module';
 import { ShoppingSessionsModule } from '../shopping-sessions/shopping-sessions.module';
 import { ProductInventoriesModule } from '../product-inventories/product-inventories.module';
+import { CountriesModule } from '../countries/countries.module';
 
 @Module({
   controllers: [AppController],
@@ -29,6 +30,7 @@ import { ProductInventoriesModule } from '../product-inventories/product-invento
     UserAddressesModule,
     ShoppingSessionsModule,
     ProductInventoriesModule,
+    CountriesModule,
   ],
 })
 export class AppModule {}
