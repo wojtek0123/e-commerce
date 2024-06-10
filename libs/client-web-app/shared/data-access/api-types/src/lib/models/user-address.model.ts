@@ -1,3 +1,5 @@
+import { Country } from './country.model';
+
 export interface UserAddress {
   id: number;
   firstName: string;
@@ -8,4 +10,6 @@ export interface UserAddress {
   phone: string;
   homeNumber: string;
   houseNumber: string;
+  country: Country;
+  countryId: Country['id'];
 }

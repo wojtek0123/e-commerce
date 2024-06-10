@@ -13,7 +13,7 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { BooksStore } from '@e-commerce/client-web-app/browse/data-access';
 import { FormsModule } from '@angular/forms';
-import { debounce } from 'lodash';
+import debounce from 'lodash-es/debounce';
 import { ActivatedRoute } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter } from 'rxjs';

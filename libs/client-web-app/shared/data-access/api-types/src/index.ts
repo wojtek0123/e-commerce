@@ -10,3 +10,4 @@ export * from './lib/models/book.model';
 export * from './lib/models/cart-item.model';
 export * from './lib/models/shopping-session.model';
 export * from './lib/models/product-inventory.model';
+export * from './lib/models/country.model';

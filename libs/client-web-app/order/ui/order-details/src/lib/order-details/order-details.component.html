@@ -49,7 +49,7 @@
       <p-dropdown
         class="w-full"
         formControlName="country"
-        [options]="countries"
+        [options]="countries()"
         [ngClass]="{
           'ng-invalid ng-dirty':
             form.controls.country.invalid &&
@@ -198,12 +198,11 @@
       <i class="pi pi-arrow-left"></i>
       <span>Back to shopping</span>
     </a>
-    <a
-      class="p-button no-underline link flex align-items-center gap-2"
-      [routerLink]="['/', 'order', 'shipping']"
-    >
-      <span>Go to shipping</span>
-      <i class="pi pi-arrow-right"></i>
-    </a>
+    <p-button
+      (onClick)="submit()"
+      icon="pi pi-arrow-right"
+      iconPos="right"
+      label="Go to shipping"
+    />
   </div>
 </form>

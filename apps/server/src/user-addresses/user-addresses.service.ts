@@ -17,8 +17,13 @@ export class UserAddressesService {
       throw new UnauthorizedException('You are not log in');
     }
 
+    console.log(data);
+
     return this.prisma.userAddress.create({
-      data: { ...data, userId: +decodedAccessToken.sub },
+      data: {
+        ...data,
+        userId: +decodedAccessToken.sub,
+      },
     });
   }
 
@@ -31,6 +36,9 @@ export class UserAddressesService {
 
     return this.prisma.userAddress.findUnique({
       where: { userId: +decodedAccessToken.sub },
+      include: {
+        country: true,
+      },
     });
   }
 

@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { UserAddress } from '@prisma/client';
 import { UserDto } from '../../users/dto/user.dto';
+import { Country } from '../../countries/entities/country.entity';
 
 export class UserAddressEntity implements UserAddress {
   @ApiProperty({ readOnly: true, type: Number })
@@ -35,4 +36,10 @@ export class UserAddressEntity implements UserAddress {
 
   @ApiProperty({ type: Number })
   userId: number;
+
+  @ApiProperty({ type: Number })
+  countryId: number;
+
+  @ApiProperty({ type: Country })
+  country: { code: string; name: string };
 }

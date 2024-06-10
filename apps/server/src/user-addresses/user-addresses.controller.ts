@@ -63,8 +63,8 @@ export class UserAddressesController {
   @ApiBearerAuth()
   @ApiCreatedResponse({ type: UserAddressDto })
   @ApiOperation({ summary: 'update user address' })
-  update(@Param('id') id: number, @Body() data: UserAddressUpdateDto) {
-    return this.userAddressesService.update(id, data);
+  update(@Param('id') id: string, @Body() data: UserAddressUpdateDto) {
+    return this.userAddressesService.update(+id, data);
   }
 
   @Delete(':id')
