@@ -8,7 +8,7 @@ import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-
 })
 export class ThemeSwitherService {
   private document = inject(DOCUMENT);
-  private _theme = signal<Theme>('aura-light-blue');
+  private _theme = signal<Theme>('mdc-light-indigo');
 
   public theme = this._theme.asReadonly();
 
