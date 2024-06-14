@@ -1,4 +1,50 @@
 <form [formGroup]="form" class="flex flex-column w-full gap-2">
+  @if (initialLoading()) {
+  <div class="flex flex-column gap-3">
+    <div class="flex flex-column md:flex-row gap-3 w-full">
+      <div class="flex flex-column gap-2 w-full">
+        <p-skeleton width="7rem" height="1rem" />
+        <p-skeleton width="100%" height="2.2rem" />
+      </div>
+      <div class="flex flex-column gap-2 w-full">
+        <p-skeleton width="8rem" height="1rem" />
+        <p-skeleton width="100%" height="2.2rem" />
+      </div>
+    </div>
+    <div class="flex flex-column gap-2">
+      <p-skeleton width="5rem" height="1rem" />
+      <p-skeleton width="20rem" height="2.2rem" />
+    </div>
+    <div class="flex flex-column gap-2">
+      <p-skeleton width="7rem" height="1rem" />
+      <p-skeleton width="100%" height="2.2rem" />
+    </div>
+    <div class="flex flex-column gap-2">
+      <p-skeleton width="4rem" height="1rem" />
+      <p-skeleton width="100%" height="2.2rem" />
+    </div>
+    <div class="flex flex-column gap-2">
+      <p-skeleton width="8rem" height="1rem" />
+      <p-skeleton width="14rem" height="2.2rem" />
+    </div>
+    <div class="flex flex-column gap-2">
+      <p-skeleton width="7rem" height="1rem" />
+      <p-skeleton width="14rem" height="2.2rem" />
+    </div>
+    <div class="flex flex-column gap-2">
+      <p-skeleton width="8rem" height="1rem" />
+      <p-skeleton width="20rem" height="2.2rem" />
+    </div>
+    <div class="flex flex-column gap-2">
+      <p-skeleton width="5rem" height="1rem" />
+      <p-skeleton width="20rem" height="2.2rem" />
+    </div>
+    <div class="flex align-items-center justify-content-between gap-3 mt-6">
+      <p-skeleton width="12.5rem" height="2.2rem" />
+      <p-skeleton width="10rem" height="2.2rem" />
+    </div>
+  </div>
+  } @else {
   <div class="flex flex-column md:flex-row gap-3">
     <div class="flex flex-column w-full">
       <div class="flex flex-column gap-1">
@@ -200,9 +246,11 @@
     </a>
     <p-button
       (onClick)="submit()"
+      [loading]="loading()"
       icon="pi pi-arrow-right"
-      iconPos="right"
+      [iconPos]="loading() ? 'left' : 'right'"
       label="Go to shipping"
     />
   </div>
+  }
 </form>
