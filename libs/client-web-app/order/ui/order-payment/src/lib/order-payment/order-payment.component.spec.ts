@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { DataAccessComponent } from './data-access.component';
+import { OrderPaymentComponent } from './order-payment.component';
 
-describe('DataAccessComponent', () => {
-  let component: DataAccessComponent;
-  let fixture: ComponentFixture<DataAccessComponent>;
+describe('OrderPaymentComponent', () => {
+  let component: OrderPaymentComponent;
+  let fixture: ComponentFixture<OrderPaymentComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DataAccessComponent],
+      imports: [OrderPaymentComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(DataAccessComponent);
+    fixture = TestBed.createComponent(OrderPaymentComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
