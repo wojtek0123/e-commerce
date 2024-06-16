@@ -1,8 +1,24 @@
-import { ChangeDetectionStrategy, Component, output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  inject,
+  output,
+  signal,
+} from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { Step } from '@e-commerce/client-web-app/order/data-access';
 import { ButtonModule } from 'primeng/button';
+import { ShippingMethodApiService } from '@e-commerce/client-web-app/shared/data-access/api-services';
+import { AsyncPipe } from '@angular/common';
+import {
+  ResponseError,
+  ShippingMethod,
+} from '@e-commerce/client-web-app/shared/data-access/api-types';
+import { take } from 'rxjs';
+import { SkeletonModule } from 'primeng/skeleton';
+import { CardModule } from 'primeng/card';
 
 @Component({
   selector: 'lib-order-shipping',
@@ -10,19 +26,35 @@ import { ButtonModule } from 'primeng/button';
     <div>Contact</div>
     <div>Email: wojtekpietraszuk&#64;gmail.com</div>
     <div>Address</div>
-
     <h3>Shipping method</h3>
-    <div class="flex flex-wrap gap-3">
-      <div class="flex align-items-center">
+    @if (loading()) {
+    <p-skeleton width="100%" height="3rem" />
+    } @else { @if (!!error()) {
+    <div>{{ error() }}</div>
+    } @else { @for (sm of shippingMethods(); track sm.id) {
+    <div
+      class="flex align-items-center justify-content-between p-3 border-round surface-card"
+      (click)="shippingMethod.setValue(sm.id)"
+    >
+      <div class="flex align-items-center gap-2 w-full">
         <p-radioButton
-          name="shipping-method"
-          value="carrier"
-          [formControl]="shoppingMethod"
-          inputId="carrier"
+          [name]="sm.name"
+          [value]="sm.id"
+          [formControl]="shippingMethod"
+          [inputId]="sm.id.toString()"
         />
-        <label for="carrier" class="ml-2">Carrier</label>
+        <label [for]="sm.id.toString()">
+          {{ sm.name }}
+        </label>
       </div>
+      <div>{{ '$' + sm.price }}</div>
     </div>
+    } @if (shippingMethod.invalid && shippingMethod.dirty) {
+    <small class="text-red-500 block mt-3">
+      If you want to get the order you should let us know about the method
+      shipping
+    </small>
+    } }}
     <div class="flex align-items-center justify-content-between gap-3 mt-6">
       <p-button
         [outlined]="true"
@@ -39,20 +71,55 @@ import { ButtonModule } from 'primeng/button';
     </div>
   `,
   standalone: true,
-  imports: [RadioButtonModule, ReactiveFormsModule, ButtonModule],
+  imports: [
+    RadioButtonModule,
+    ReactiveFormsModule,
+    ButtonModule,
+    AsyncPipe,
+    SkeletonModule,
+    CardModule,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OrderShippingComponent {
-  shoppingMethod = new FormControl('carrier', Validators.required);
+export class OrderShippingComponent implements OnInit {
+  private shippingMethodApi = inject(ShippingMethodApiService);
+
+  shippingMethod = new FormControl<ShippingMethod['id'] | null>(
+    null,
+    Validators.required
+  );
+  shippingMethods = signal<ShippingMethod[]>([]);
+  loading = signal(true);
+  error = signal<string | null>(null);
+  skeletons = new Array(3);
 
   changeStepEvent = output<Step>();
+
+  ngOnInit(): void {
+    this.shippingMethodApi
+      .getShippingMethods()
+      .pipe(take(1))
+      .subscribe({
+        next: (shippingMethods) => {
+          this.shippingMethods.set(shippingMethods);
+          this.loading.set(false);
+        },
+        error: (resError: ResponseError) => {
+          this.error.set(resError.error.message);
+          this.loading.set(false);
+        },
+      });
+  }
 
   submit() {
     // send http request to set a shipping method to order
 
-    if (this.shoppingMethod.invalid) return;
+    if (this.shippingMethod.invalid) {
+      this.shippingMethod.markAsDirty();
+      return;
+    }
 
-    console.log(this.shoppingMethod.value);
+    console.log(this.shippingMethod.value);
     this.changeStepEvent.emit('payment');
   }
 }

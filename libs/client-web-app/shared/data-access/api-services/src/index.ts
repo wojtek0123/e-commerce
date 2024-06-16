@@ -3,3 +3,4 @@ export * from './lib/books-api.service';
 export * from './lib/user-address-api.service';
 export * from './lib/product-inventory-api.service';
 export * from './lib/country-api.service';
+export * from './lib/shipping-method-api.service';
