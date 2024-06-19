@@ -10,4 +10,11 @@ export const shellRoutes: Route[] = [
     canActivate: [authGuard],
     providers: [CountryApiService],
   },
+  {
+    path: 'payment-status',
+    loadComponent: () =>
+      import('@e-commerce/client-web-app/order/ui/payment-status').then(
+        (c) => c.PaymentStatusComponent
+      ),
+  },
 ];
