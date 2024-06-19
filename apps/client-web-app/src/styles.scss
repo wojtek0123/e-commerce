@@ -11,6 +11,7 @@
 
 html {
   scroll-behavior: smooth;
+  font-size: 100%;
 }
 
 body {
@@ -30,4 +31,11 @@ p {
 
 .height-content {
   height: calc(100svh - var(--header-height) - 3rem);
+}
+
+textarea,
+input {
+  font: inherit;
+  letter-spacing: inherit;
+  word-spacing: inherit;
 }
