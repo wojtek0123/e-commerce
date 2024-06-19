@@ -5,6 +5,7 @@ import { Step } from '@e-commerce/client-web-app/order/data-access';
 import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { NgClass } from '@angular/common';
 import { InputMaskModule } from 'primeng/inputmask';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'lib-order-payment',
@@ -15,6 +16,7 @@ import { InputMaskModule } from 'primeng/inputmask';
     InputTextModule,
     InputMaskModule,
     ReactiveFormsModule,
+    RouterLink,
   ],
   template: `
     <form [formGroup]="form" class="flex flex-column gap-2">
@@ -94,12 +96,10 @@ import { InputMaskModule } from 'primeng/inputmask';
         label="Back to shipping"
         (onClick)="changeStepEvent.emit('shipping')"
       />
-      <p-button
-        (onClick)="changeStepEvent.emit('payment')"
-        icon="pi pi-arrow-right"
-        iconPos="right"
-        label="Go to payment"
-      />
+      <a class="p-button" routerLink="payment-status">
+        <i class="pi pi-arrow-right"></i>
+        <span>Pay</span>
+      </a>
     </div>
   `,
   styles: [
