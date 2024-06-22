@@ -76,6 +76,10 @@ p-button.w-full .p-button {
   max-width: 40rem;
 }
 
+.p-dropdown {
+  border-radius: var(--border-radius);
+}
+
 @media (min-width: 40rem) {
   .p-sidebar-right {
     border-top-left-radius: calc(var(--border-radius) * 2);
