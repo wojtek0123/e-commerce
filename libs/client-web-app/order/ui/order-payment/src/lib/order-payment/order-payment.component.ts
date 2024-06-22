@@ -96,9 +96,12 @@ import { RouterLink } from '@angular/router';
         label="Back to shipping"
         (onClick)="changeStepEvent.emit('shipping')"
       />
-      <a class="p-button" routerLink="payment-status">
-        <i class="pi pi-arrow-right"></i>
+      <a
+        class="p-button no-underline flex align-items-center gap-2"
+        routerLink="payment-status"
+      >
         <span>Pay</span>
+        <i class="pi pi-arrow-right"></i>
       </a>
     </div>
   `,
