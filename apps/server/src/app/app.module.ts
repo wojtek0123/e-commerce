@@ -15,6 +15,7 @@ import { ShoppingSessionsModule } from '../shopping-sessions/shopping-sessions.m
 import { ProductInventoriesModule } from '../product-inventories/product-inventories.module';
 import { CountriesModule } from '../countries/countries.module';
 import { ShippingMethodsModule } from '../shipping-methods/shipping-methods.module';
+import { OrderDetailsModule } from '../order-details/order-details.module';
 
 @Module({
   controllers: [AppController],
@@ -33,6 +34,7 @@ import { ShippingMethodsModule } from '../shipping-methods/shipping-methods.modu
     ProductInventoriesModule,
     CountriesModule,
     ShippingMethodsModule,
+    OrderDetailsModule,
   ],
 })
 export class AppModule {}

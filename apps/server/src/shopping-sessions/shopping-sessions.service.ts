@@ -4,9 +4,6 @@ import { UpdateShoppingSessionDto } from './dto/update-shopping-session.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { decode } from 'jsonwebtoken';
 import { ShoppingSessionEntity } from './entities/shopping-session.entity';
-import { reduce } from 'lodash';
-import { ShoppingSession } from '@prisma/client';
-import { BookEntity } from '../books/entities/book.entity';
 
 @Injectable()
 export class ShoppingSessionsService {
