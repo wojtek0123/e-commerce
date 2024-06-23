@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { UserAddressEntity } from '../../user-addresses/entities/user-addresses.entity';
+import { UserAddress } from '../../user-addresses/entities/user-addresses.entity';
 import { ShippingMethod } from '../../shipping-methods/entities/shipping-method.entity';
+import { Payment } from '../../payments/entities/payment.entity';
 
 export class OrderDetail {
   @ApiProperty({ readOnly: true, type: Number })
@@ -15,11 +16,11 @@ export class OrderDetail {
   @ApiProperty({ type: String })
   updatedAt: Date;
 
-  @ApiProperty({ type: Number })
-  paymentDetailId: number;
+  @ApiProperty({ type: Payment })
+  paymentDetails: Payment;
 
-  @ApiProperty({ type: UserAddressEntity })
-  userAddress: UserAddressEntity;
+  @ApiProperty({ type: UserAddress })
+  userAddress: UserAddress;
 
   @ApiProperty({ type: ShippingMethod })
   shippingMethod: ShippingMethod;

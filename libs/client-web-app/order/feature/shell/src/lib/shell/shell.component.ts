@@ -6,7 +6,10 @@ import {
   signal,
 } from '@angular/core';
 import { OrderShippingComponent } from '@e-commerce/clien-web-app/order/ui/order-shipping';
-import { Step } from '@e-commerce/client-web-app/order/data-access';
+import {
+  Step,
+  OrderDetailsInfo,
+} from '@e-commerce/client-web-app/order/data-access';
 import { OrderDetailsComponent } from '@e-commerce/client-web-app/order/ui/order-details';
 import { MenuItem } from 'primeng/api';
 import { StepsModule } from 'primeng/steps';
@@ -38,7 +41,10 @@ import { OrderPaymentComponent } from '@e-commerce/client-web-app/order/ui/order
           } @else if (step() === 'shipping') {
           <lib-order-shipping (changeStepEvent)="changeStep($event)" />
           } @else {
-          <lib-order-payment (changeStepEvent)="changeStep($event)" />
+          <lib-order-payment
+            (changeStepEvent)="changeStep($event)"
+            [orderDetails]="orderDetails()"
+          />
           }
         </div>
         <div class="cart">CART component</div>
@@ -60,8 +66,24 @@ export class ShellComponent {
   activeStepIndex = computed(() =>
     this.steps().findIndex(({ label }) => label?.toLowerCase() === this.step())
   );
+  orderDetails = signal<OrderDetailsInfo>({
+    shippingMethodId: null,
+    userAddressId: null,
+  });
 
-  changeStep(step: Step) {
+  changeStep({
+    step,
+    orderDetails,
+  }: {
+    step: Step;
+    orderDetails?: Partial<OrderDetailsInfo>;
+  }) {
     this.step.set(step);
+
+    if (orderDetails)
+      this.orderDetails.update((prevState) => ({
+        ...prevState,
+        ...orderDetails,
+      }));
   }
 }

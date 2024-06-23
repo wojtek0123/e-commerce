@@ -1,17 +1,5 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  Headers,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Get, Delete, Headers, UseGuards } from '@nestjs/common';
 import { ShoppingSessionsService } from './shopping-sessions.service';
-import { CreateShoppingSessionDto } from './dto/create-shopping-session.dto';
-import { UpdateShoppingSessionDto } from './dto/update-shopping-session.dto';
 import {
   ApiBearerAuth,
   ApiOkResponse,
@@ -31,9 +19,18 @@ export class ShoppingSessionsController {
   @Get()
   @UseGuards(AccessTokenGuard)
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'get user shopping session' })
+  @ApiOperation({ summary: 'Get the shopping session' })
   @ApiOkResponse({ type: ShoppingSessionEntity })
   findOne(@Headers('authorization') authHeader: string) {
     return this.shoppingSessionsService.findOne(authHeader);
+  }
+
+  @Delete()
+  @UseGuards(AccessTokenGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Remove the shopping session' })
+  @ApiOkResponse({ type: ShoppingSessionEntity })
+  delete(@Headers('authorization') authHeader: string) {
+    return this.shoppingSessionsService.remove(authHeader);
   }
 }

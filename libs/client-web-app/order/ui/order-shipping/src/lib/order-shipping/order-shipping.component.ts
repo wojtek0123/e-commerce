@@ -8,7 +8,10 @@ import {
 } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RadioButtonModule } from 'primeng/radiobutton';
-import { Step } from '@e-commerce/client-web-app/order/data-access';
+import {
+  OrderDetailsInfo,
+  Step,
+} from '@e-commerce/client-web-app/order/data-access';
 import { ButtonModule } from 'primeng/button';
 import { ShippingMethodApiService } from '@e-commerce/client-web-app/shared/data-access/api-services';
 import { AsyncPipe } from '@angular/common';
@@ -26,7 +29,7 @@ import { CardModule } from 'primeng/card';
     <div>Contact</div>
     <div>Email: wojtekpietraszuk&#64;gmail.com</div>
     <div>Address</div>
-    <h3>Shipping method</h3>
+    <h3>Shipping method *</h3>
     @if (loading()) {
     <p-skeleton width="100%" height="3rem" />
     } @else { @if (!!error()) {
@@ -34,13 +37,13 @@ import { CardModule } from 'primeng/card';
     } @else { @for (sm of shippingMethods(); track sm.id) {
     <div
       class="flex align-items-center justify-content-between p-3 border-round surface-card"
-      (click)="shippingMethod.setValue(sm.id)"
+      (click)="selectShippingMethodId.setValue(sm.id)"
     >
       <div class="flex align-items-center gap-2 w-full">
         <p-radioButton
           [name]="sm.name"
           [value]="sm.id"
-          [formControl]="shippingMethod"
+          [formControl]="selectShippingMethodId"
           [inputId]="sm.id.toString()"
         />
         <label [for]="sm.id.toString()">
@@ -49,7 +52,7 @@ import { CardModule } from 'primeng/card';
       </div>
       <div>{{ '$' + sm.price }}</div>
     </div>
-    } @if (shippingMethod.invalid && shippingMethod.dirty) {
+    } @if (selectShippingMethodId.invalid && selectShippingMethodId.dirty) {
     <small class="text-red-500 block mt-3">
       If you want to get the order you should let us know about the method
       shipping
@@ -60,7 +63,7 @@ import { CardModule } from 'primeng/card';
         [outlined]="true"
         icon="pi pi-arrow-left"
         label="Back to address"
-        (onClick)="changeStepEvent.emit('address')"
+        (onClick)="changeStepEvent.emit({ step: 'address' })"
       />
       <p-button
         (onClick)="submit()"
@@ -84,7 +87,7 @@ import { CardModule } from 'primeng/card';
 export class OrderShippingComponent implements OnInit {
   private shippingMethodApi = inject(ShippingMethodApiService);
 
-  shippingMethod = new FormControl<ShippingMethod['id'] | null>(
+  selectShippingMethodId = new FormControl<ShippingMethod['id'] | null>(
     null,
     Validators.required
   );
@@ -93,7 +96,10 @@ export class OrderShippingComponent implements OnInit {
   error = signal<string | null>(null);
   skeletons = new Array(3);
 
-  changeStepEvent = output<Step>();
+  changeStepEvent = output<{
+    step: Step;
+    orderDetails?: Partial<OrderDetailsInfo>;
+  }>();
 
   ngOnInit(): void {
     this.shippingMethodApi
@@ -114,12 +120,16 @@ export class OrderShippingComponent implements OnInit {
   submit() {
     // send http request to set a shipping method to order
 
-    if (this.shippingMethod.invalid) {
-      this.shippingMethod.markAsDirty();
+    if (this.selectShippingMethodId.invalid) {
+      this.selectShippingMethodId.markAsDirty();
       return;
     }
 
-    console.log(this.shippingMethod.value);
-    this.changeStepEvent.emit('payment');
+    this.changeStepEvent.emit({
+      step: 'payment',
+      orderDetails: {
+        shippingMethodId: this.selectShippingMethodId.value,
+      },
+    });
   }
 }

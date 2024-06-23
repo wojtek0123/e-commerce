@@ -7,9 +7,50 @@ import { decode } from 'jsonwebtoken';
 export class OrderDetailsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  create(data: CreateOrderDetailDto, authHeader: string) {
+  async create(
+    { userAddressId, shippingMethodId }: CreateOrderDetailDto,
+    authHeader: string
+  ) {
     const userId = +decode(authHeader.split(' ')[1]).sub;
-    return this.prisma.orderDetails.create({ data: { ...data, userId } });
+
+    const shoppingSession = await this.prisma.shoppingSession.findUnique({
+      where: { userId },
+      include: {
+        cartItems: true,
+      },
+    });
+
+    return this.prisma.orderDetails.create({
+      data: {
+        userAddress: {
+          connect: { id: userAddressId },
+        },
+        shippingMethod: {
+          connect: { id: shippingMethodId },
+        },
+        user: {
+          connect: {
+            id: userId,
+          },
+        },
+        total: shoppingSession.total,
+        paymentDetails: {
+          create: {
+            status: 'PROCESSING',
+            provider: 'debit-card',
+            amount: shoppingSession.total,
+          },
+        },
+        orderItems: {
+          createMany: {
+            data: shoppingSession.cartItems.map(({ id, bookId }) => ({
+              id,
+              bookId,
+            })),
+          },
+        },
+      },
+    });
   }
 
   findAll(authHeader: string) {

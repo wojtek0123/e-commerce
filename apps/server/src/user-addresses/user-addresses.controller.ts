@@ -19,7 +19,7 @@ import {
 } from '@nestjs/swagger';
 import { UserAddressDto } from './dto/user-address.dto';
 import { UserAddressCreateDto } from './dto/user-address-create.dto';
-import { UserAddressEntity } from './entities/user-addresses.entity';
+import { UserAddress } from './entities/user-addresses.entity';
 import { AccessTokenGuard } from '../common/guards/access-token.guard';
 import { UserAddressUpdateDto } from './dto/user-address-update.dto';
 
@@ -31,7 +31,7 @@ export class UserAddressesController {
   @Post()
   @UseGuards(AccessTokenGuard)
   @ApiBearerAuth()
-  @ApiCreatedResponse({ type: UserAddressEntity })
+  @ApiCreatedResponse({ type: UserAddress })
   @ApiOperation({ summary: 'create user address' })
   create(
     @Body() body: UserAddressCreateDto,
