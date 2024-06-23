@@ -1,11 +1,21 @@
-import { Component, output } from '@angular/core';
+import { Component, inject, input, output, signal } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import { Step } from '@e-commerce/client-web-app/order/data-access';
+import {
+  OrderDetailsInfo,
+  Step,
+} from '@e-commerce/client-web-app/order/data-access';
 import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { NgClass } from '@angular/common';
 import { InputMaskModule } from 'primeng/inputmask';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import {
+  OrderDetailsApiService,
+  ShoppingSessionApiService,
+} from '@e-commerce/client-web-app/shared/data-access/api-services';
+import { ResponseError } from '@e-commerce/client-web-app/shared/data-access/api-types';
+import { take } from 'rxjs';
+import { CartStore } from '@e-commerce/client-web-app/shared/data-access/cart';
 
 @Component({
   selector: 'lib-order-payment',
@@ -22,7 +32,7 @@ import { RouterLink } from '@angular/router';
     <form [formGroup]="form" class="flex flex-column gap-2">
       <div class="flex flex-column w-full">
         <div class="flex flex-column gap-1">
-          <label for="card-number">Card number</label>
+          <label for="card-number">Card number *</label>
           <p-inputMask
             mask="9999 9999 9999 9999"
             class="w-full"
@@ -45,7 +55,7 @@ import { RouterLink } from '@angular/router';
       <div class="flex align-items-center gap-3">
         <div class="flex flex-column w-full">
           <div class="flex flex-column gap-1 w-full">
-            <label for="expiration-date">Expiration date</label>
+            <label for="expiration-date">Expiration date *</label>
             <p-inputMask
               mask="99/9999"
               class="w-full"
@@ -67,7 +77,7 @@ import { RouterLink } from '@angular/router';
 
         <div class="flex flex-column w-full">
           <div class="flex flex-column gap-1">
-            <label for="expiration-date">Security code</label>
+            <label for="expiration-date">Security code *</label>
             <p-inputMask
               mask="999"
               class="w-full"
@@ -94,15 +104,15 @@ import { RouterLink } from '@angular/router';
         [outlined]="true"
         icon="pi pi-arrow-left"
         label="Back to shipping"
-        (onClick)="changeStepEvent.emit('shipping')"
+        (onClick)="changeStepEvent.emit({ step: 'shipping' })"
       />
-      <a
-        class="p-button no-underline flex align-items-center gap-2"
-        routerLink="payment-status"
-      >
-        <span>Pay</span>
-        <i class="pi pi-arrow-right"></i>
-      </a>
+      <p-button
+        icon="pi pi-arrow-right"
+        iconPos="right"
+        label="Pay"
+        [loading]="loading()"
+        (onClick)="submit()"
+      />
     </div>
   `,
   styles: [
@@ -116,8 +126,16 @@ import { RouterLink } from '@angular/router';
   ],
 })
 export class OrderPaymentComponent {
-  changeStepEvent = output<Step>();
+  private router = inject(Router);
+  private orderDetailsApi = inject(OrderDetailsApiService);
+  private shoppingSessionApi = inject(ShoppingSessionApiService);
+  private cartStore = inject(CartStore);
 
+  changeStepEvent = output<{ step: Step }>();
+
+  orderDetails = input.required<OrderDetailsInfo>();
+
+  loading = signal(false);
   form = new FormGroup({
     cardNumber: new FormControl(),
     expirationDate: new FormControl(),
@@ -130,6 +148,33 @@ export class OrderPaymentComponent {
       return;
     }
 
-    // create order details model
+    const { userAddressId, shippingMethodId } = this.orderDetails();
+
+    if (!userAddressId || !shippingMethodId) return;
+
+    this.loading.set(true);
+
+    this.orderDetailsApi
+      .create({
+        shippingMethodId: shippingMethodId,
+        userAddressId: userAddressId,
+      })
+      .pipe(take(1))
+      .subscribe({
+        next: async () => {
+          this.loading.set(false);
+          this.deleteShoppingSession();
+          this.cartStore.getShoppingSession();
+          await this.router.navigate(['/order/payment-status']);
+        },
+        error: (resError: ResponseError) => {
+          this.loading.set(false);
+          console.error(resError.error.message);
+        },
+      });
+  }
+
+  private deleteShoppingSession() {
+    this.shoppingSessionApi.delete().subscribe();
   }
 }

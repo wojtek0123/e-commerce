@@ -38,7 +38,10 @@ import { take } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SkeletonModule } from 'primeng/skeleton';
 import { MessageService } from 'primeng/api';
-import { Step } from '@e-commerce/client-web-app/order/data-access';
+import {
+  Step,
+  OrderDetailsInfo,
+} from '@e-commerce/client-web-app/order/data-access';
 
 @Component({
   selector: 'lib-order-details',
@@ -66,7 +69,10 @@ export class OrderDetailsComponent implements OnInit {
   private destroyRef = inject(DestroyRef);
   private messageService = inject(MessageService);
 
-  changeStepEvent = output<Step>();
+  changeStepEvent = output<{
+    step: Step;
+    orderDetails?: Partial<OrderDetailsInfo>;
+  }>();
 
   @HostBinding('class') class = 'flex flex-column gap-6';
 
@@ -158,14 +164,17 @@ export class OrderDetailsComponent implements OnInit {
           countryId: country?.id ?? NaN,
         })
         .subscribe({
-          next: async () => {
+          next: async ({ id }) => {
             this.messageService.add({
               summary: 'Success',
               severity: 'success',
               detail: 'Address has been saved',
             });
             this.loading.set(false);
-            this.changeStepEvent.emit('shipping');
+            this.changeStepEvent.emit({
+              step: 'shipping',
+              orderDetails: { userAddressId: id },
+            });
           },
           error: (resError: ResponseError) => {
             this.messageService.add({
@@ -180,7 +189,10 @@ export class OrderDetailsComponent implements OnInit {
     }
     const x = omit(this.userAddress(), ['id', 'userId', 'countryId']);
     if (isEqual(this.form.value, x)) {
-      this.changeStepEvent.emit('shipping');
+      this.changeStepEvent.emit({
+        step: 'shipping',
+        orderDetails: { userAddressId: this.userAddress()?.id },
+      });
       this.loading.set(false);
     } else {
       this.userAddressApi
@@ -197,7 +209,10 @@ export class OrderDetailsComponent implements OnInit {
               detail: 'Address has been updated',
             });
             this.loading.set(false);
-            this.changeStepEvent.emit('shipping');
+            this.changeStepEvent.emit({
+              step: 'shipping',
+              orderDetails: { userAddressId: this.userAddress()?.id },
+            });
           },
           error: (resError: ResponseError) => {
             this.messageService.add({

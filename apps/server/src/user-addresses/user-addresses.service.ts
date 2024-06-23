@@ -2,7 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { UserAddressCreateDto } from './dto/user-address-create.dto';
 import { decode } from 'jsonwebtoken';
-import { UserAddressEntity } from './entities/user-addresses.entity';
+import { UserAddress } from './entities/user-addresses.entity';
 import { UserAddressUpdateDto } from './dto/user-address-update.dto';
 import { JwtPayload } from '../auth/types/jwt-payload.type';
 
@@ -16,8 +16,6 @@ export class UserAddressesService {
     if (!decodedAccessToken) {
       throw new UnauthorizedException('You are not log in');
     }
-
-    console.log(data);
 
     return this.prisma.userAddress.create({
       data: {
@@ -46,7 +44,7 @@ export class UserAddressesService {
     return this.prisma.userAddress.findUnique({ where: { id } });
   }
 
-  update(id: UserAddressEntity['id'], data: UserAddressUpdateDto) {
+  update(id: UserAddress['id'], data: UserAddressUpdateDto) {
     return this.prisma.userAddress.update({ where: { id }, data });
   }
 

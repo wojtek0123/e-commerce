@@ -12,3 +12,4 @@ export * from './lib/models/shopping-session.model';
 export * from './lib/models/product-inventory.model';
 export * from './lib/models/country.model';
 export * from './lib/models/shipping-method.model';
+export * from './lib/order-details.model';
