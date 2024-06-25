@@ -10,6 +10,7 @@ import { clientWebAppShellRoutes } from '@e-commerce/client-web-app/shell/featur
 import { provideStore } from '@ngrx/store';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { shellConfig } from '@e-commerce/client-web-app/shell/feature';
+import { API_URL } from '@e-commerce/client-web-app/shared/utils/providers';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -23,5 +24,9 @@ export const appConfig: ApplicationConfig = {
       withEnabledBlockingInitialNavigation()
     ),
     provideAnimations(),
+    {
+      provide: API_URL,
+      useValue: 'http://localhost:3000',
+    },
   ],
 };

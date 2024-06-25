@@ -6,10 +6,12 @@ import {
   Category,
 } from '@e-commerce/client-web-app/shared/data-access/api-types';
 import { shareReplay } from 'rxjs';
+import { API_URL } from '@e-commerce/client-web-app/shared/utils/providers';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class BooksApiService {
   private http = inject(HttpClient);
+  private apiUrl = inject(API_URL);
 
   getBooks$(opts: {
     title?: string;
@@ -33,13 +35,13 @@ export class BooksApiService {
       body = { ...body, categoryIdsIn: opts.categoryIds };
 
     return this.http
-      .post<Book[]>('http://localhost:3000/books', body)
+      .post<Book[]>(`${this.apiUrl}/books`, body)
       .pipe(shareReplay(1));
   }
 
   getBook$(id: Book['id']) {
     return this.http
-      .get<Book>(`http://localhost:3000/books/${id}`)
+      .get<Book>(`${this.apiUrl}/books/${id}`)
       .pipe(shareReplay(1));
   }
 }
