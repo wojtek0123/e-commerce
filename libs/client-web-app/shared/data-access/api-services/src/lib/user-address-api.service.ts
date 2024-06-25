@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { UserAddress } from '@e-commerce/client-web-app/shared/data-access/api-types';
+import { API_URL } from '@e-commerce/client-web-app/shared/utils/providers';
 
 type CreateUserAddressBody = Omit<UserAddress, 'id' | 'country'>;
 
@@ -19,21 +20,19 @@ interface UpdateUserAddressBody {
 @Injectable({ providedIn: 'root' })
 export class UserAddressApiService {
   private http = inject(HttpClient);
+  private apiUrl = inject(API_URL);
 
   createUserAddress(body: CreateUserAddressBody) {
-    return this.http.post<UserAddress>(
-      'http://localhost:3000/user-addresses',
-      body
-    );
+    return this.http.post<UserAddress>(`${this.apiUrl}/user-addresses`, body);
   }
 
   getUserAddress() {
-    return this.http.get<UserAddress>('http://localhost:3000/user-addresses');
+    return this.http.get<UserAddress>(`${this.apiUrl}/user-addresses`);
   }
 
   update(id: UserAddress['id'], body: UpdateUserAddressBody) {
     return this.http.patch<UserAddress>(
-      `http://localhost:3000/user-addresses/${id}`,
+      `${this.apiUrl}/user-addresses/${id}`,
       body
     );
   }

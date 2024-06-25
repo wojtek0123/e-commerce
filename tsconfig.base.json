@@ -87,6 +87,9 @@
       "@e-commerce/client-web-app/order/ui/order-summary": [
         "libs/client-web-app/order/ui/order-summary/src/index.ts"
       ],
+      "@e-commerce/client-web-app/order/ui/payment-status": [
+        "libs/client-web-app/order/ui/payment-status/src/index.ts"
+      ],
       "@e-commerce/client-web-app/products/data-access": [
         "libs/client-web-app/products/data-access/src/index.ts"
       ],
@@ -147,8 +150,8 @@
       "@e-commerce/client-web-app/shell/utils": [
         "libs/client-web-app/shell/utils/src/index.ts"
       ],
-      "@e-commerce/client-web-app/order/ui/payment-status": [
-        "libs/client-web-app/order/ui/payment-status/src/index.ts"
+      "@e-commerce/client-web-app/shared/utils/providers": [
+        "libs/client-web-app/shared/utils/providers/src/index.ts"
       ],
       "@e-commerce/shared/data-access": ["libs/shared/data-access/src/index.ts"]
     }
