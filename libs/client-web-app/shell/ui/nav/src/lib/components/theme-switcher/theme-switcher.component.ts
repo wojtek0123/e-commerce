@@ -140,14 +140,14 @@ import { Theme } from '@e-commerce/client-web-app/shell/data-access/theme-switch
 export class ThemeSwitcherComponent implements OnInit {
   private document = inject(DOCUMENT);
 
-  theme = signal<Theme>('md-dark-indigo');
+  theme = signal<Theme>('dark');
 
   ngOnInit() {
     const preferenceTheme =
       localStorage.getItem('theme') ??
       window.matchMedia('(prefers-color-scheme: dark)').matches
-        ? 'md-dark-indigo'
-        : 'md-light-indigo';
+        ? 'dark'
+        : 'light';
 
     this.theme.set(preferenceTheme);
   }
@@ -157,8 +157,7 @@ export class ThemeSwitcherComponent implements OnInit {
       'app-theme'
     ) as HTMLLinkElement;
 
-    const theme =
-      this.theme() === 'md-dark-indigo' ? 'md-light-indigo' : 'md-dark-indigo';
+    const theme = this.theme() === 'dark' ? 'light' : 'dark';
 
     if (themeLink) {
       themeLink.href = theme + '.css';

@@ -5,7 +5,12 @@ import {
   OrderDetailsInfo,
   Step,
 } from '@e-commerce/client-web-app/order/data-access';
-import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormGroup,
+  FormControl,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { NgClass } from '@angular/common';
 import { InputMaskModule } from 'primeng/inputmask';
 import { Router, RouterLink } from '@angular/router';
@@ -40,7 +45,7 @@ import { CartStore } from '@e-commerce/client-web-app/shared/data-access/cart';
             [ngClass]="{
               'ng-invalid ng-dirty':
                 form.controls.cardNumber.invalid &&
-                (form.controls.cardNumber.dirty || form.invalid)
+                (form.controls.cardNumber.dirty || form.dirty)
             }"
             formControlName="cardNumber"
             placeholder="Type your card number"
@@ -63,7 +68,7 @@ import { CartStore } from '@e-commerce/client-web-app/shared/data-access/cart';
               [ngClass]="{
                 'ng-invalid ng-dirty':
                   form.controls.expirationDate.invalid &&
-                  (form.controls.expirationDate.dirty || form.invalid)
+                  (form.controls.expirationDate.dirty || form.dirty)
               }"
               formControlName="expirationDate"
               placeholder="Type expiration date"
@@ -85,7 +90,7 @@ import { CartStore } from '@e-commerce/client-web-app/shared/data-access/cart';
               [ngClass]="{
                 'ng-invalid ng-dirty':
                   form.controls.securityCode.invalid &&
-                  (form.controls.securityCode.dirty || form.invalid)
+                  (form.controls.securityCode.dirty || form.dirty)
               }"
               formControlName="securityCode"
               placeholder="Type security code"
@@ -137,9 +142,9 @@ export class OrderPaymentComponent {
 
   loading = signal(false);
   form = new FormGroup({
-    cardNumber: new FormControl(),
-    expirationDate: new FormControl(),
-    securityCode: new FormControl(),
+    cardNumber: new FormControl(null, Validators.required),
+    expirationDate: new FormControl(null, Validators.required),
+    securityCode: new FormControl(null, Validators.required),
   });
 
   submit() {

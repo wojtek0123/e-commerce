@@ -12,9 +12,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 @Component({
   selector: 'lib-cart-item',
   template: `
-    <div
-      class="flex flex-column min-w-max surface-ground p-3 border-round shadow-5 m-3"
-    >
+    <div class="flex flex-column min-w-max surface-ground p-3 border-round">
       <div class="flex align-items-center justify-content-between gap-3">
         <h3 class="text-2xl font-bold m-0">{{ item().book.title }}</h3>
         <h4
