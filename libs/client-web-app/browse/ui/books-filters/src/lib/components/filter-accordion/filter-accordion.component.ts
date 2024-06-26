@@ -15,7 +15,7 @@ import { ListboxChangeEvent, ListboxModule } from 'primeng/listbox';
 @Component({
   selector: 'lib-filter-accordion-tab',
   template: `
-    <p-accordionTab class="shadow-5 surface-card">
+    <p-accordionTab class="surface-card">
       <ng-template pTemplate="header">
         <span class="font-bold white-space-nowrap">{{ header() }}</span>
         <p-badge

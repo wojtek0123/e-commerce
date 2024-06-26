@@ -60,6 +60,16 @@
       >
         <i class="pi pi-search" style="font-size: 1.5rem"></i>
       </a>
+      <!-- <p-button -->
+      <!--   class="hidden md:flex" -->
+      <!--   [text]="true" -->
+      <!--   icon="pi pi-search" -->
+      <!--   [routerLink]="search.routerLink" -->
+      <!--   [queryParams]="search.queryParams" -->
+      <!--   [state]="search.state" -->
+      <!--   pTooltip="Search the books" -->
+      <!--   tooltipPosition="bottom" -->
+      <!-- /> -->
       <p-menu #menu [model]="menuItems()" [popup]="true">
         <ng-template pTemplate="end">
           <p-divider />
@@ -82,10 +92,9 @@
         class="hidden flex-column justify-content-center md:flex"
         pTooltip="View your account"
         tooltipPosition="bottom"
+        icon="pi pi-user"
       >
-        <span class="flex flex-column justify-content-center">
-          <i class="pi pi-user" style="font-size: 1.5rem"></i>
-        </span>
+        <!-- <i class="pi pi-user" style="font-size: 1.5rem"></i> -->
       </p-button>
       <p-button
         #openCartSidebar
@@ -96,15 +105,13 @@
         pTooltip="View cart"
         tooltipPosition="bottom"
       >
-        <span class="flex flex-column justify-content-center">
-          <i
-            class="pi pi-shopping-cart"
-            style="font-size: 1.5rem"
-            pBadge
-            [value]="cartItemsCount().toString()"
-            severity="danger"
-          ></i>
-        </span>
+        <i
+          class="pi pi-shopping-cart"
+          style="font-size: 1.5rem"
+          pBadge
+          [value]="cartItemsCount().toString()"
+          severity="danger"
+        ></i>
       </p-button>
 
       <lib-cart-sidebar

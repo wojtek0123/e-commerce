@@ -36,7 +36,7 @@ import { CardModule } from 'primeng/card';
     <div>{{ error() }}</div>
     } @else { @for (sm of shippingMethods(); track sm.id) {
     <div
-      class="flex align-items-center justify-content-between p-3 border-round surface-card"
+      class="flex align-items-center justify-content-between p-3 border-round surface-ground"
       (click)="selectShippingMethodId.setValue(sm.id)"
     >
       <div class="flex align-items-center gap-2 w-full">

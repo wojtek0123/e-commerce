@@ -1,1 +1,1 @@
-export type Theme = 'mdc-dark-indigo' | 'mdc-light-indigo';
+export type Theme = 'dark' | 'light';

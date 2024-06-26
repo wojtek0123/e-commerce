@@ -56,6 +56,19 @@ import { CartStore } from '@e-commerce/client-web-app/shared/data-access/cart';
     BadgeModule,
   ],
   templateUrl: './nav.component.html',
+  styles: [
+    `
+      :host ::ng-deep {
+        .p-button-icon {
+          font-size: 1.5rem;
+        }
+
+        .p-button {
+          min-width: fit-content !important;
+        }
+      }
+    `,
+  ],
 })
 export class NavComponent {
   private authStore = inject(AuthStore);
@@ -229,11 +242,11 @@ export class NavComponent {
   }
 
   theme = computed(() =>
-    this.themeSwitcherService.theme() === 'mdc-dark-indigo' ? true : false
+    this.themeSwitcherService.theme() === 'dark' ? true : false
   )();
 
   onChangeTheme(event: InputSwitchChangeEvent) {
-    const theme: Theme = event.checked ? 'mdc-dark-indigo' : 'mdc-light-indigo';
+    const theme: Theme = event.checked ? 'dark' : 'light';
 
     this.themeSwitcherService.switchTheme(theme);
   }
