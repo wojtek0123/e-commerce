@@ -15,12 +15,13 @@ import { TooltipModule } from 'primeng/tooltip';
 import { AsyncPipe, NgClass } from '@angular/common';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ToastModule } from 'primeng/toast';
 import { CartItemComponent } from '../cart-item/cart-item.component';
 import { CartItemSkeletonComponent } from '../cart-item-skeleton/cart-item-skeleton.component';
 import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-config';
 import { CartStore } from '@e-commerce/client-web-app/shared/data-access/cart';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'lib-cart-sidebar',
@@ -68,7 +69,7 @@ import { CartStore } from '@e-commerce/client-web-app/shared/data-access/cart';
           />
           } @empty {
           <div class="text-center flex flex-column gap-3 mt-3">
-            <span class="text-4xl">Your basket is empty!</span>
+            <span class="text-4xl">Your cart is empty!</span>
             <span class="text-lg text-gray-400 "
               >You should add something to it.</span
             >
@@ -78,31 +79,13 @@ import { CartStore } from '@e-commerce/client-web-app/shared/data-access/cart';
 
         <div class="flex flex-column gap-3">
           <div class="text-3xl">Total: {{ '$' + total().toFixed(2) }}</div>
-          <div
-            [pTooltip]="
-              count()
-                ? ''
-                : 'First add something to your cart before proceeding to checkout'
-            "
-            tooltipPosition="top"
-            tooltipStyleClass="min-w-max"
-          >
-            <a
-              [routerLink]="appRouterConfig.order.basePath"
-              (click)="onClose.emit()"
-              class="no-underline p-button w-full"
-              [ngClass]="{
-                'p-disabled': loading() || !count()
-              }"
-            >
-              @if (loading()) {
-              <i class="pi pi-spin pi-spinner" style="font-size: 1.5rem"></i>
-              } @else {
-              <i class="pi pi-shopping-bag" style="font-size: 1.5rem"></i>
-              }
-              <span class="w-full block text-center">Checkout</span>
-            </a>
-          </div>
+          <p-button
+            class="w-full"
+            label="Checkout"
+            icon="pi pi-shopping-bag"
+            (onClick)="checkout()"
+            [loading]="loading()"
+          />
         </div>
       </div>
     </p-sidebar>
@@ -112,11 +95,14 @@ import { CartStore } from '@e-commerce/client-web-app/shared/data-access/cart';
 })
 export class CartSidebarComponent implements OnChanges {
   private cartStore = inject(CartStore);
+  private router = inject(Router);
+  private messageService = inject(MessageService);
 
   cartItems = this.cartStore.cartItems;
   count = this.cartStore.count;
   total = this.cartStore.total;
   loading = this.cartStore.loading;
+  error = signal<string | null>(null);
 
   visible = signal(false);
   skeletons = new Array(5);
@@ -141,5 +127,26 @@ export class CartSidebarComponent implements OnChanges {
 
   remove({ cartId }: { cartId: CartItem['id'] }) {
     this.cartStore.removeItemFromCart({ cartId });
+  }
+
+  async checkout() {
+    if (this.count() === 0) {
+      this.error.set(
+        'First add something to your cart before proceeding to checkout'
+      );
+      this.messageService.add({
+        detail:
+          'First add something to your cart before proceeding to checkout',
+        severity: 'info',
+        summary: 'Info',
+      });
+      return;
+    }
+
+    if (this.error) this.error.set(null);
+
+    this.onClose.emit();
+
+    await this.router.navigate([appRouterConfig.order.basePath]);
   }
 }

@@ -17,18 +17,20 @@ import { ListboxChangeEvent, ListboxModule } from 'primeng/listbox';
   template: `
     <p-accordionTab class="surface-card">
       <ng-template pTemplate="header">
-        <span class="font-bold white-space-nowrap">{{ header() }}</span>
-        <p-badge
-          [value]="selectedItems().length.toString()"
-          class="ml-2"
-          styleClass="p-badge-secondary"
-        />
-        <p-button
-          class="ml-3"
-          icon="pi pi-trash"
-          [text]="true"
-          (onClick)="clearFilter($event, filterName())"
-        ></p-button>
+        <div class="flex align-items-center">
+          <span class="font-bold white-space-nowrap">{{ header() }}</span>
+          <p-badge
+            [value]="selectedItems().length.toString()"
+            class="ml-2"
+            styleClass="p-badge-secondary"
+          />
+          <p-button
+            class="ml-3"
+            icon="pi pi-trash"
+            [text]="true"
+            (onClick)="clearFilter($event, filterName())"
+          />
+        </div>
       </ng-template>
       <p-listbox
         [options]="items()"
@@ -60,6 +62,7 @@ import { ListboxChangeEvent, ListboxModule } from 'primeng/listbox';
       :host ::ng-deep {
         .p-accordion-header-link {
           background: var(--surface-ground) !important;
+          border-radius: var(--border-radius) !important;
         }
       }
     `,

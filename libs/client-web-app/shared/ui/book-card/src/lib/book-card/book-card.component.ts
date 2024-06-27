@@ -27,7 +27,7 @@ import { RouterLink } from '@angular/router';
         <ng-template pTemplate="header">
           <img
             alt="Card"
-            class="image"
+            class="image border-round"
             [src]="
               book().coverImage
                 ? book().coverImage
@@ -76,6 +76,12 @@ import { RouterLink } from '@angular/router';
 
       .card {
         height: 43.24rem;
+      }
+
+      :host ::ng-deep {
+        .p-card {
+          border-radius: var(--border-radius);
+        }
       }
     `,
   ],
