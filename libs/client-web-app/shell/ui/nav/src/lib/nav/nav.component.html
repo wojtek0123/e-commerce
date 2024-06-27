@@ -1,5 +1,5 @@
 <div
-  class="shadow-5 surface-card nav-height flex align-items-center justify-content-between w-full z-5"
+  class="shadow-1 surface-card nav-height flex align-items-center justify-content-between z-5"
 >
   <nav
     class="flex nav-height align-items-center justify-content-between md:py-1 mx-4 w-full"
@@ -21,6 +21,7 @@
           <p-button
             (click)="categoriesMenu.toggle($event)"
             iconPos="right"
+            severity="secondary"
             [icon]="
               categoriesMenu.visible ? 'pi pi-angle-up' : 'pi pi-angle-down'
             "
@@ -60,16 +61,6 @@
       >
         <i class="pi pi-search" style="font-size: 1.5rem"></i>
       </a>
-      <!-- <p-button -->
-      <!--   class="hidden md:flex" -->
-      <!--   [text]="true" -->
-      <!--   icon="pi pi-search" -->
-      <!--   [routerLink]="search.routerLink" -->
-      <!--   [queryParams]="search.queryParams" -->
-      <!--   [state]="search.state" -->
-      <!--   pTooltip="Search the books" -->
-      <!--   tooltipPosition="bottom" -->
-      <!-- /> -->
       <p-menu #menu [model]="menuItems()" [popup]="true">
         <ng-template pTemplate="end">
           <p-divider />
@@ -139,10 +130,10 @@
           </div>
         </ng-template>
         <p-accordion [multiple]="false" [activeIndex]="[]">
-          <p-accordionTab header="Kategorie">
+          <p-accordionTab header="Categories">
             <p-menu [model]="categories()" class="p-menu-sidebar"></p-menu>
           </p-accordionTab>
-          <p-accordionTab header="Użytkownik" class="md:hidden">
+          <p-accordionTab header="User" class="md:hidden">
             <p-menu [model]="menuItems()" class="p-menu-sidebar" />
           </p-accordionTab>
         </p-accordion>

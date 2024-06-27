@@ -71,6 +71,10 @@ p-button.w-full .p-button {
   padding: 0;
 }
 
+.p-toast-message {
+  border-radius: var(--border-radius);
+}
+
 .p-sidebar-right {
   width: 100%;
   max-width: 40rem;
