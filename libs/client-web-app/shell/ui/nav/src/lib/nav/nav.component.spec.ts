@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ClientWebAppHomeUiComponent } from './client-web-app-home-ui.component';
+import { NavComponent } from './nav.component';
 
-describe('ClientWebAppHomeUiComponent', () => {
-  let component: ClientWebAppHomeUiComponent;
-  let fixture: ComponentFixture<ClientWebAppHomeUiComponent>;
+describe('NavComponent', () => {
+  let component: NavComponent;
+  let fixture: ComponentFixture<NavComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ClientWebAppHomeUiComponent],
+      imports: [NavComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ClientWebAppHomeUiComponent);
+    fixture = TestBed.createComponent(NavComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

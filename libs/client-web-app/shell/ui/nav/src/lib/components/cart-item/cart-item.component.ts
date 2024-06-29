@@ -5,7 +5,11 @@ import {
   output,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { CartItem } from '@e-commerce/client-web-app/shared/data-access/api-types';
+import {
+  Book,
+  CartItem,
+  CartItemBase,
+} from '@e-commerce/client-web-app/shared/data-access/api-types';
 import { ButtonModule } from 'primeng/button';
 import { InputNumberModule } from 'primeng/inputnumber';
 
@@ -32,7 +36,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
             [size]="2"
             [showButtons]="true"
             [(ngModel)]="item().quantity"
-            (onBlur)="updateQuantity(item().id, item().quantity)"
+            (onBlur)="updateQuantity(item().quantity, item().book)"
             [min]="1"
             [maxlength]="10"
             buttonLayout="horizontal"
@@ -46,7 +50,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
           <p-button
             icon="pi pi-trash"
             [text]="true"
-            (onClick)="onDelete.emit({ cartId: item().id })"
+            (onClick)="onDelete.emit({ book: item().book })"
           ></p-button>
         </div>
       </div>
@@ -67,15 +71,15 @@ import { InputNumberModule } from 'primeng/inputnumber';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CartItemComponent {
-  item = input.required<CartItem>();
+  item = input.required<CartItemBase>();
 
   onUpdateQuantity = output<{
-    cartId: CartItem['id'];
     quantity: CartItem['quantity'];
+    book: Book;
   }>();
-  onDelete = output<{ cartId: CartItem['id'] }>();
+  onDelete = output<{ book: Book }>();
 
-  updateQuantity(cartId: CartItem['id'], quantity: CartItem['quantity']) {
-    this.onUpdateQuantity.emit({ cartId, quantity });
+  updateQuantity(quantity: CartItem['quantity'], book: Book) {
+    this.onUpdateQuantity.emit({ quantity, book });
   }
 }

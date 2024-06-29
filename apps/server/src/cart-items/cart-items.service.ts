@@ -20,7 +20,9 @@ export class CartItemsService {
       const cartItem = await this.prisma.cartItem
         .update({
           where: { id: existingCartItem.id },
-          data: { quantity: existingCartItem.quantity + quantity },
+          data: {
+            quantity: existingCartItem.quantity + quantity,
+          },
           include: {
             book: {
               include: {

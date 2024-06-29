@@ -2,6 +2,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   HostBinding,
+  computed,
+  inject,
   input,
   output,
 } from '@angular/core';
@@ -10,6 +12,8 @@ import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { getBrowserRouteDetails } from '@e-commerce/client-web-app/shared/utils/router-config';
 import { RouterLink } from '@angular/router';
+import { AuthStore } from '@e-commerce/client-web-app/shared/data-access/auth';
+import { CartStore } from '@e-commerce/client-web-app/shared/data-access/cart';
 
 @Component({
   selector: 'lib-book-card',
@@ -87,6 +91,10 @@ import { RouterLink } from '@angular/router';
   ],
 })
 export class BookCardComponent {
+  private cartStore = inject(CartStore);
+  private authStore = inject(AuthStore);
+
+  isAuthenticated = computed(() => !!this.authStore.tokens());
   book = input.required<Book>();
   loading = input<boolean>(false);
   bookIds = input<Book['id'][]>([]);
@@ -102,5 +110,31 @@ export class BookCardComponent {
     event.stopImmediatePropagation();
 
     this.onAddToCart.emit(book);
+
+    // this.cartStore.addItemToCart({ book: book, quantity: 1 });
+
+    // if (this.isAuthenticated()) {
+    // } else {
+    //   const cart = localStorage.getItem('cart');
+    //   if (!cart) return;
+    //   const cartItems = JSON.parse(cart) as CartItemBase[];
+    //
+    //   const isInTheCart = cartItems.find((item) => item.book.id === book.id);
+    //
+    //   if (isInTheCart) {
+    //     const updatedBooks = cartItems.map((item) =>
+    //       item.book.id === book.id
+    //         ? { ...item, quantity: item.quantity + 1 }
+    //         : item
+    //     );
+    //
+    //     localStorage.setItem('cart', JSON.stringify(updatedBooks));
+    //   } else {
+    //     localStorage.setItem(
+    //       'cart',
+    //       JSON.stringify([...cartItems, { book, quantity: 1 }])
+    //     );
+    //   }
+    // }
   }
 }

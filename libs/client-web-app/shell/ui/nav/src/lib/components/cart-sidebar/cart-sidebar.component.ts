@@ -3,13 +3,19 @@ import {
   Component,
   OnChanges,
   SimpleChanges,
+  computed,
+  effect,
   inject,
   input,
   output,
   signal,
 } from '@angular/core';
 import { SidebarModule } from 'primeng/sidebar';
-import { CartItem } from '@e-commerce/client-web-app/shared/data-access/api-types';
+import {
+  Book,
+  CartItem,
+  CartItemBase,
+} from '@e-commerce/client-web-app/shared/data-access/api-types';
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
 import { AsyncPipe, NgClass } from '@angular/common';
@@ -22,6 +28,7 @@ import { CartItemSkeletonComponent } from '../cart-item-skeleton/cart-item-skele
 import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-config';
 import { CartStore } from '@e-commerce/client-web-app/shared/data-access/cart';
 import { MessageService } from 'primeng/api';
+import { AuthStore } from '@e-commerce/client-web-app/shared/data-access/auth';
 
 @Component({
   selector: 'lib-cart-sidebar',
@@ -61,7 +68,7 @@ import { MessageService } from 'primeng/api';
             'animation-pulse pointer-events-none': loading()
           }"
         >
-          @for (item of cartItems(); track item.id) {
+          @for (item of cartItems(); track item.book.id) {
           <lib-cart-item
             [item]="item"
             (onUpdateQuantity)="updateQuantity($event)"
@@ -95,14 +102,22 @@ import { MessageService } from 'primeng/api';
 })
 export class CartSidebarComponent implements OnChanges {
   private cartStore = inject(CartStore);
+  private authStore = inject(AuthStore);
   private router = inject(Router);
   private messageService = inject(MessageService);
 
-  cartItems = this.cartStore.cartItems;
+  constructor() {
+    effect(() => {
+      console.log(this.cartItems());
+    });
+  }
+
+  cartItems = this.cartStore.items;
   count = this.cartStore.count;
   total = this.cartStore.total;
   loading = this.cartStore.loading;
   error = signal<string | null>(null);
+  isAuthenticated = computed(() => !!this.authStore.user());
 
   visible = signal(false);
   skeletons = new Array(5);
@@ -116,17 +131,17 @@ export class CartSidebarComponent implements OnChanges {
   }
 
   updateQuantity({
-    cartId,
+    book,
     quantity,
   }: {
-    cartId: CartItem['id'];
     quantity: CartItem['quantity'];
+    book: Book;
   }) {
-    this.cartStore.updateQuantity({ cartId, quantity });
+    this.cartStore.updateQuantity({ bookId: book.id, quantity });
   }
 
-  remove({ cartId }: { cartId: CartItem['id'] }) {
-    this.cartStore.removeItemFromCart({ cartId });
+  remove({ book }: { book: Book }) {
+    this.cartStore.removeItemFromCart({ book });
   }
 
   async checkout() {

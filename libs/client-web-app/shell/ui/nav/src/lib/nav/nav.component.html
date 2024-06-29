@@ -10,8 +10,8 @@
         [queryParams]="null"
         class="text-xl md:text-2xl xl:text-[2rem] no-underline"
       >
-        <span class="font-bold text-primary">Story</span
-        ><span class="uppercase text-color">Stash</span>
+        <span class="font-bold text-primary">Story</span>
+        <span class="uppercase text-color">Stash</span>
       </a>
       <p-divider layout="vertical" />
       <ul
@@ -84,9 +84,7 @@
         pTooltip="View your account"
         tooltipPosition="bottom"
         icon="pi pi-user"
-      >
-        <!-- <i class="pi pi-user" style="font-size: 1.5rem"></i> -->
-      </p-button>
+      />
       <p-button
         #openCartSidebar
         type="button"
@@ -105,10 +103,13 @@
         ></i>
       </p-button>
 
+      @defer (when cartSidebarVisible()) {
       <lib-cart-sidebar
         [sidebarVisible]="cartSidebarVisible()"
         (onClose)="cartSidebarVisible.set(false)"
       />
+      }
+
       <p-button
         (click)="showSidebar()"
         icon="pi pi-align-left"
