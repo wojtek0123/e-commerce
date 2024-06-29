@@ -4,10 +4,12 @@ import {
   DestroyRef,
   HostBinding,
   OnInit,
+  computed,
   inject,
   signal,
 } from '@angular/core';
 import { CartStore } from '@e-commerce/client-web-app/shared/data-access/cart';
+import { AuthStore } from '@e-commerce/client-web-app/shared/data-access/auth';
 import { ActivatedRoute } from '@angular/router';
 import {
   BooksApiService,
@@ -172,6 +174,7 @@ export class BookDetailsComponent implements OnInit {
   private productInventoryApi = inject(ProductInventoryApiService);
   private route = inject(ActivatedRoute);
   private cartStore = inject(CartStore);
+  private authStore = inject(AuthStore);
   private destroyRef = inject(DestroyRef);
 
   @HostBinding('class') class = 'mx-auto flex flex-column gap-4 relative';
@@ -180,6 +183,7 @@ export class BookDetailsComponent implements OnInit {
     validators: [Validators.min(1)],
   });
 
+  isAuthenticated = computed(() => !!this.authStore.tokens());
   loading = this.cartStore.loading;
   bookIds = this.cartStore.bookIds;
 
@@ -227,11 +231,24 @@ export class BookDetailsComponent implements OnInit {
       });
   }
 
-  addToCart({ id }: Book) {
+  addToCart(book: Book) {
+    // if (this.isAuthenticated()) {
     this.cartStore.addItemToCart({
-      bookId: id,
+      book: book,
       quantity: this.amount.value ?? 1,
     });
+    // } else {
+    //   const cartItems = (JSON.parse(localStorage.getItem('cart') ?? '') ||
+    //     []) as {
+    //     book: Book;
+    //     quantity: number;
+    //   }[];
+    //
+    //   localStorage.setItem(
+    //     'cart',
+    //     JSON.stringify([...cartItems, { book, quantity: this.amount.value }])
+    //   );
+    // }
   }
 
   onBlurInput() {

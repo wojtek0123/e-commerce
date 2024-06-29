@@ -128,6 +128,8 @@ model CartItem {
   updatedAt         DateTime        @updatedAt
   shoppingSession   ShoppingSession @relation(fields: [shoppingSessionId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   shoppingSessionId Int
+
+  @@unique([bookId])
 }
 
 model OrderDetails {

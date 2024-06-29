@@ -101,6 +101,6 @@ export class BooksViewComponent implements OnInit {
   }
 
   addToCart(book: Book) {
-    this.cartStore.addItemToCart({ bookId: book.id, quantity: 1 });
+    this.cartStore.addItemToCart({ book, quantity: 1 });
   }
 }

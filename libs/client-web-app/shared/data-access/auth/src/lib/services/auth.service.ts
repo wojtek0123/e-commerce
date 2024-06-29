@@ -5,7 +5,7 @@ import {
   Session,
   Tokens,
 } from '@e-commerce/client-web-app/shared/data-access/api-types';
-import { tap } from 'rxjs';
+import { shareReplay, take, tap } from 'rxjs';
 import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-config';
 
 @Injectable()
@@ -20,7 +20,10 @@ export class AuthService {
 
     return this.http
       .post<Session>('http://localhost:3000/auth/login', body)
-      .pipe(tap((session) => this.setSession(session)));
+      .pipe(
+        tap((session) => this.setSession(session)),
+        take(1)
+      );
   }
 
   register$(email: string | null, password: string | null) {
