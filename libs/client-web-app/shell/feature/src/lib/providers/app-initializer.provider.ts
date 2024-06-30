@@ -1,15 +1,22 @@
 import { APP_INITIALIZER, Provider } from '@angular/core';
-import { AuthService } from '@e-commerce/client-web-app/shared/data-access/auth';
+import { AuthApiService } from '@e-commerce/client-web-app/shared/data-access/auth';
 import {
   Theme,
   ThemeSwitherService,
 } from '@e-commerce/client-web-app/shell/data-access/theme-switcher';
 import { jwtDecode } from 'jwt-decode';
 import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-config';
+import { CartService } from '@e-commerce/client-web-app/shared/data-access/cart';
 
 const initializeAppFactory =
-  (authService: AuthService, themeSwitcherService: ThemeSwitherService) =>
+  (
+    authApi: AuthApiService,
+    cartService: CartService,
+    themeSwitcherService: ThemeSwitherService
+  ) =>
   () => {
+    cartService.init();
+
     const refreshToken = localStorage.getItem(
       appRouterConfig.localStorage.refreshToken
     );
@@ -19,7 +26,7 @@ const initializeAppFactory =
       const expirationTime = (exp ?? 0) * 1000 - 60000;
 
       if (expirationTime <= Date.now()) {
-        authService.removeSession();
+        authApi.removeSession();
       }
     }
 
@@ -40,5 +47,5 @@ export const AppInitializerProvider: Provider = {
   provide: APP_INITIALIZER,
   useFactory: initializeAppFactory,
   multi: true,
-  deps: [AuthService, ThemeSwitherService],
+  deps: [AuthApiService, CartService, ThemeSwitherService],
 };

@@ -48,10 +48,10 @@ export class HomeComponent {
 
   skeletons = new Array(4);
   books$ = this.booksApi.getBooks$({ tagsIn: [BookTag.BESTSELLER] });
-  booksError$ = this.books$.pipe(
-    ignoreElements(),
-    catchError((responseError: ResponseError) =>
-      of(responseError.error.message)
-    )
-  );
+  // booksError$ = this.books$.pipe(
+  //   ignoreElements(),
+  //   catchError((responseError: ResponseError) =>
+  //     of(responseError.error.message)
+  //   )
+  // );
 }

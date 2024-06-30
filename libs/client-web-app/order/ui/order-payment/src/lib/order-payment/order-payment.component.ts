@@ -20,7 +20,7 @@ import {
 } from '@e-commerce/client-web-app/shared/data-access/api-services';
 import { ResponseError } from '@e-commerce/client-web-app/shared/data-access/api-types';
 import { take } from 'rxjs';
-import { CartStore } from '@e-commerce/client-web-app/shared/data-access/cart';
+import { CartService } from '@e-commerce/client-web-app/shared/data-access/cart';
 
 @Component({
   selector: 'lib-order-payment',
@@ -134,7 +134,7 @@ export class OrderPaymentComponent {
   private router = inject(Router);
   private orderDetailsApi = inject(OrderDetailsApiService);
   private shoppingSessionApi = inject(ShoppingSessionApiService);
-  private cartStore = inject(CartStore);
+  private cart = inject(CartService);
 
   changeStepEvent = output<{ step: Step }>();
 
@@ -169,7 +169,7 @@ export class OrderPaymentComponent {
         next: async () => {
           this.loading.set(false);
           this.deleteShoppingSession();
-          this.cartStore.getShoppingSession();
+          // this.cart.getShoppingSession();
           await this.router.navigate(['/order/payment-status']);
         },
         error: (resError: ResponseError) => {

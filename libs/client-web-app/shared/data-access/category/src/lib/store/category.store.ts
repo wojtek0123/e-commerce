@@ -42,10 +42,11 @@ export const CategoryStore = signalStore(
             tapResponse({
               next: (categories) =>
                 patchState(store, { categories, status: 'ok' }),
-              error: (responseError: ResponseError) =>
-                patchState(store, {
-                  status: { error: responseError.error.message },
-                }),
+              error: (responseError: ResponseError) => {
+                // patchState(store, {
+                // status: { error: responseError.error.message },
+                // }),
+              },
             })
           )
         )
