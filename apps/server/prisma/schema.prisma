@@ -129,7 +129,7 @@ model CartItem {
   shoppingSession   ShoppingSession @relation(fields: [shoppingSessionId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   shoppingSessionId Int
 
-  @@unique([bookId])
+  @@unique([bookId, shoppingSessionId])
 }
 
 model OrderDetails {
