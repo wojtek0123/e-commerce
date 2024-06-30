@@ -1,6 +1,5 @@
 import {
   Controller,
-  Get,
   Post,
   Body,
   Patch,
@@ -32,8 +31,11 @@ export class CartItemsController {
   @ApiOperation({ summary: 'Create a cart item' })
   @ApiCreatedResponse({ type: CartItemEntity })
   @ApiBearerAuth()
-  create(@Body() createCartItemDto: CreateCartItemDto) {
-    return this.cartItemsService.create(createCartItemDto);
+  create(
+    @Headers('authentication') authHeader: string,
+    @Body() createCartItemDto: CreateCartItemDto
+  ) {
+    return this.cartItemsService.create(authHeader, createCartItemDto);
   }
 
   // @Get()
@@ -66,23 +68,38 @@ export class CartItemsController {
   //   return this.cartItemsService.getUserCartItemsTotal(authHeader);
   // }
 
-  @Patch(':id')
+  @Patch(':shoppingSessionId/:bookId')
   @ApiOperation({ summary: 'Update amount of the book' })
-  @ApiCreatedResponse({ type: CartItemEntity })
+  @ApiOkResponse({ type: CartItemEntity })
   @ApiBearerAuth()
   update(
-    @Param('id') id: string,
+    @Headers('authorization') authHeader: string,
+    @Param('bookId') bookId: string,
+    @Param('shoppingSessionId') shoppingSessionId: string,
     @Body() updateCartItemDto: UpdateCartItemDto
   ) {
-    return this.cartItemsService.update(+id, updateCartItemDto);
+    return this.cartItemsService.update(
+      authHeader,
+      +shoppingSessionId,
+      +bookId,
+      updateCartItemDto
+    );
   }
 
-  @Delete(':id')
+  @Delete(':shoppingSessionId/:bookId')
   @UseGuards(AccessTokenGuard)
   @ApiOperation({ summary: 'Delete a cart item' })
   @ApiOkResponse({ type: CartItemEntity })
   @ApiBearerAuth()
-  remove(@Param('id') id: string) {
-    return this.cartItemsService.remove(+id);
+  remove(
+    @Headers('authorization') authHeader: string,
+    @Param('bookId') bookId: string,
+    @Param('shoppingSessionId') shoppingSessionId: string
+  ) {
+    return this.cartItemsService.remove(
+      authHeader,
+      +shoppingSessionId,
+      +bookId
+    );
   }
 }

@@ -22,7 +22,10 @@ export class AuthService {
   ) {}
 
   async login(email: string, password: string) {
-    const user = await this.prisma.user.findUnique({ where: { email } });
+    const user = await this.prisma.user.findUnique({
+      where: { email },
+      include: { shoppingSessions: { select: { id: true, cartItems: true } } },
+    });
 
     if (!user) {
       throw new NotFoundException('Incorrect email or password');
@@ -46,6 +49,7 @@ export class AuthService {
   async register(email: string, password: string) {
     const isUserExists = await this.prisma.user.findUnique({
       where: { email: email },
+      include: { shoppingSessions: { select: { id: true, cartItems: true } } },
     });
 
     if (isUserExists) {

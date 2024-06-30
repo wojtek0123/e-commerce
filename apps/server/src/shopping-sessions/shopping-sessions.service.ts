@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 // import { CreateShoppingSessionDto } from './dto/create-shopping-session.dto';
 // import { UpdateShoppingSessionDto } from './dto/update-shopping-session.dto';
 import { PrismaService } from '../prisma/prisma.service';
@@ -15,6 +19,75 @@ export class ShoppingSessionsService {
 
   findAll() {
     return `This action returns all shoppingSessions`;
+  }
+
+  async createManyCartItems(
+    authHeader: string,
+    shoppingSessionId: number,
+    cartItems: { bookId: number; quantity: number }[]
+  ) {
+    const userId = +decode(authHeader.split(' ')[1]).sub;
+
+    const shoppingSession = await this.prisma.shoppingSession.findUnique({
+      where: { id: shoppingSessionId },
+      select: { id: true, cartItems: true, userId: true },
+    });
+
+    if (!shoppingSession) {
+      throw new NotFoundException('Shopping session does not exist');
+    }
+
+    if (shoppingSession.userId !== userId) {
+      throw new ForbiddenException(
+        'You do not have permission to modify this shopping session'
+      );
+    }
+
+    await this.prisma.shoppingSession.update({
+      where: { id: shoppingSessionId },
+      data: {
+        cartItems: {
+          deleteMany: {},
+        },
+      },
+    });
+
+    return this.prisma.shoppingSession.update({
+      where: { id: shoppingSessionId },
+      data: {
+        cartItems: {
+          createMany: {
+            data: cartItems.map(({ bookId, quantity }) => ({
+              bookId,
+              quantity,
+            })),
+          },
+        },
+      },
+    });
+
+    // this.prisma.shoppingSession.update({
+    //   where: { id: shoppingSessionId },
+    //   data: {
+    //     cartItems: {
+    //       connectOrCreate: [
+    //         {
+    //           where: {
+    //             bookId_shoppingSessionId: {
+    //               bookId,
+    //               shoppingSessionId: shoppingSession.id,
+    //             },
+    //           },
+    //           create: {
+    //             bookId,
+    //             quantity,
+    //           },
+    //           connect: {},
+    //         },
+    //       ],
+    //     },
+    //   },
+    // });
   }
 
   async updateTotal(shoppingSessionId: ShoppingSessionEntity['id']) {
