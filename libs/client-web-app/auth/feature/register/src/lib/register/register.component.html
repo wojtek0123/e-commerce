@@ -16,13 +16,12 @@
           autocomplete="off"
           formControlName="email"
           [ngClass]="{
-            'ng-dirty ng-invalid':
-              !!errorMessage && registerForm.controls.email.invalid
+            'ng-dirty ng-invalid': registerForm.controls.email.invalid
           }"
         />
         <label for="email">Email</label>
       </p-floatLabel>
-      @if (registerForm.controls.email.dirty || !!errorMessage) { @if
+      @if (registerForm.controls.email.dirty) { @if
       (registerForm.controls.email.getError('required')) {
       <small class="text-red-500 mt-1"> To pole jest wymagane </small>
       } @else if (registerForm.controls.email.getError('email')) {
@@ -36,14 +35,13 @@
           [feedback]="false"
           [toggleMask]="true"
           [ngClass]="{
-            'ng-dirty ng-invalid':
-              errorMessage && registerForm.controls.password.invalid
+            'ng-dirty ng-invalid': registerForm.controls.password.invalid
           }"
           formControlName="password"
         ></p-password>
         <label for="password">Hasło</label>
       </p-floatLabel>
-      @if (registerForm.controls.password.dirty || !!errorMessage) { @if
+      @if (registerForm.controls.password.dirty ) { @if
       (registerForm.controls.password.getError('minlength')) {
       <small class="text-red-500 mt-1"
         >Hasło powinno mieć co najmniej 6 znaków</small
@@ -59,28 +57,22 @@
           [feedback]="false"
           [toggleMask]="true"
           [ngClass]="{
-            'ng-dirty ng-invalid':
-              errorMessage && registerForm.controls.confirmPassword.invalid
+            'ng-dirty ng-invalid': registerForm.controls.confirmPassword.invalid
           }"
           formControlName="confirmPassword"
         ></p-password>
         <label for="confirm-password">Potwierdzenie hasła</label>
       </p-floatLabel>
-      @if (registerForm.controls.confirmPassword.dirty || !!errorMessage) { @if
+      @if (registerForm.controls.confirmPassword.dirty) { @if
       (registerForm.controls.confirmPassword.getError('required')) {
       <small class="text-red-500 mt-1"> To pole jest wymagane </small>
       } @else if (registerForm.getError('passwordMismatch')) {
       <small class="text-red-500 mt-1">Hasła są różne </small>
-      } } @if(!!errorMessage) {
-      <div class="mt-4 text-red-500">
-        {{ errorMessage }}
-      </div>
-      }
-
+      } }
       <p-button
         type="submit"
         [label]="'Zarejestruj się'"
-        [loading]="status() === 'loading'"
+        [loading]="loading()"
         loading-icon="pi pi-spin pi-spinner"
         iconPos="right"
         class="w-full mt-4"

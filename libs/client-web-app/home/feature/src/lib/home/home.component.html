@@ -41,28 +41,28 @@
     </div>
   </div>
 </section>
-<div class="flex flex-column w-full mx-auto max-w-103rem">
-  <section class="mt-5 xl:mt-10rem w-full mx-auto">
-    <div class="flex align-items-center justify-content-between gap-4">
-      <h3 class="text-2xl">Best seller</h3>
-      <a
-        [routerLink]="bestSellerSection().url"
-        [queryParams]="bestSellerSection().queryParams"
-        class="text-xl no-underline p-button p-button-text"
-      >
-        {{ bestSellerSection().text }}
-      </a>
-    </div>
-    <div class="grid-auto-fit place-content-center">
-      @if ({books: books$ | async, error: booksError$ | async}; as vm) { @if
-      (vm.books && !vm.error) { @for (book of books$ | async; track $index) {
-      <lib-book-card [book]="book" />
-      } } @else if (!vm.books && !vm.error) { @for (_ of skeletons; track
-      $index) {
-      <lib-book-card-skeleton />
-      } } @else if (!vm.books && vm.error) {
-      <div>Error!</div>
-      } }
-    </div>
-  </section>
-</div>
+<!-- <div class="flex flex-column w-full mx-auto max-w-103rem"> -->
+<!--   <section class="mt-5 xl:mt-10rem w-full mx-auto"> -->
+<!--     <div class="flex align-items-center justify-content-between gap-4"> -->
+<!--       <h3 class="text-2xl">Best seller</h3> -->
+<!--       <a -->
+<!--         [routerLink]="bestSellerSection().url" -->
+<!--         [queryParams]="bestSellerSection().queryParams" -->
+<!--         class="text-xl no-underline p-button p-button-text" -->
+<!--       > -->
+<!--         {{ bestSellerSection().text }} -->
+<!--       </a> -->
+<!--     </div> -->
+<!--     <div class="grid-auto-fit place-content-center"> -->
+<!--       @if ({books: books$ | async, error: booksError$ | async}; as vm) { @if -->
+<!--       (vm.books && !vm.error) { @for (book of books$ | async; track $index) { -->
+<!--       <lib-book-card [book]="book" /> -->
+<!--       } } @else if (!vm.books && !vm.error) { @for (_ of skeletons; track -->
+<!--       $index) { -->
+<!--       <lib-book-card-skeleton /> -->
+<!--       } } @else if (!vm.books && vm.error) { -->
+<!--       <div>Error!</div> -->
+<!--       } } -->
+<!--     </div> -->
+<!--   </section> -->
+<!-- </div> -->

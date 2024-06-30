@@ -3,7 +3,6 @@ import {
   Component,
   OnChanges,
   SimpleChanges,
-  computed,
   effect,
   inject,
   input,
@@ -14,7 +13,6 @@ import { SidebarModule } from 'primeng/sidebar';
 import {
   Book,
   CartItem,
-  CartItemBase,
 } from '@e-commerce/client-web-app/shared/data-access/api-types';
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
@@ -26,9 +24,8 @@ import { ToastModule } from 'primeng/toast';
 import { CartItemComponent } from '../cart-item/cart-item.component';
 import { CartItemSkeletonComponent } from '../cart-item-skeleton/cart-item-skeleton.component';
 import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-config';
-import { CartStore } from '@e-commerce/client-web-app/shared/data-access/cart';
+import { CartService } from '@e-commerce/client-web-app/shared/data-access/cart';
 import { MessageService } from 'primeng/api';
-import { AuthStore } from '@e-commerce/client-web-app/shared/data-access/auth';
 
 @Component({
   selector: 'lib-cart-sidebar',
@@ -101,8 +98,7 @@ import { AuthStore } from '@e-commerce/client-web-app/shared/data-access/auth';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CartSidebarComponent implements OnChanges {
-  private cartStore = inject(CartStore);
-  private authStore = inject(AuthStore);
+  private cart = inject(CartService);
   private router = inject(Router);
   private messageService = inject(MessageService);
 
@@ -112,12 +108,11 @@ export class CartSidebarComponent implements OnChanges {
     });
   }
 
-  cartItems = this.cartStore.items;
-  count = this.cartStore.count;
-  total = this.cartStore.total;
-  loading = this.cartStore.loading;
+  cartItems = this.cart.items;
+  count = this.cart.count;
+  total = this.cart.total;
+  loading = this.cart.loading;
   error = signal<string | null>(null);
-  isAuthenticated = computed(() => !!this.authStore.user());
 
   visible = signal(false);
   skeletons = new Array(5);
@@ -137,11 +132,11 @@ export class CartSidebarComponent implements OnChanges {
     quantity: CartItem['quantity'];
     book: Book;
   }) {
-    this.cartStore.updateQuantity({ bookId: book.id, quantity });
+    this.cart.updateItemQuantity(book, quantity);
   }
 
   remove({ book }: { book: Book }) {
-    this.cartStore.removeItemFromCart({ book });
+    this.cart.removeItem(book);
   }
 
   async checkout() {

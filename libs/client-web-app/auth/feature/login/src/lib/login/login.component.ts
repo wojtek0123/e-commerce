@@ -6,7 +6,7 @@ import {
   inject,
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AuthStore } from '@e-commerce/client-web-app/shared/data-access/auth';
+import { AuthService } from '@e-commerce/client-web-app/shared/data-access/auth';
 import { FormWrapperComponent } from '@e-commerce/client-web-app/auth/ui/form-wrapper';
 import { Store } from '@ngrx/store';
 import { ButtonModule } from 'primeng/button';
@@ -35,21 +35,21 @@ import { Router } from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginComponent {
-  private authStore = inject(AuthStore);
+  private authService = inject(AuthService);
   private fb = inject(FormBuilder);
-  private router = inject(Router);
 
   constructor() {
-    effect(() => {
-      this.errorMessage = getErrorMessage(this.status());
-
-      if (this.status() === 'ok') {
-        this.router.navigate(['/']);
-      }
-    });
+    // effect(() => {
+    //   this.errorMessage = getErrorMessage(this.status());
+    //
+    //   if (this.status() === 'ok') {
+    //     this.router.navigate(['/']);
+    //   }
+    // });
   }
 
-  status = this.authStore.status;
+  // status = this.auth.status;
+  // loading = this.authService.loading
   errorMessage: string | null = null;
 
   loginForm = this.fb.group({
@@ -74,10 +74,6 @@ export class LoginComponent {
     const { email, password } = this.loginForm.value;
     element?.focus();
 
-    this.authStore.login({
-      email: email ?? '',
-      password: password ?? '',
-      valid,
-    });
+    this.authService.login(email ?? '', password ?? '');
   }
 }

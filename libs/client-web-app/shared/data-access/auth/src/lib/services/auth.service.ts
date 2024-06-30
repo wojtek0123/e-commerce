@@ -1,112 +1,121 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { DestroyRef, Injectable, inject, signal } from '@angular/core';
+import { AuthApiService } from './auth-api.service';
 import {
-  User,
-  Session,
+  ResponseError,
   Tokens,
+  User,
 } from '@e-commerce/client-web-app/shared/data-access/api-types';
-import { shareReplay, take, tap } from 'rxjs';
-import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-config';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { MessageService } from 'primeng/api';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class AuthService {
-  private http = inject(HttpClient);
+  private authApi = inject(AuthApiService);
+  private messageService = inject(MessageService);
+  private destroyRef = inject(DestroyRef);
 
-  login$(email: string | null, password: string | null) {
-    const body = {
-      email,
-      password,
-    };
+  private _user = signal<User | null>(null);
+  private _tokens = signal<Tokens | null>(null);
+  private _loading = signal(false);
 
-    return this.http
-      .post<Session>('http://localhost:3000/auth/login', body)
-      .pipe(
-        tap((session) => this.setSession(session)),
-        take(1)
-      );
+  public user = this._user.asReadonly();
+  public tokens = this._tokens.asReadonly();
+  public loading = this._loading.asReadonly();
+
+  init() {
+    const session = this.authApi.getSession();
+    this._user.set(session?.user ?? null);
+    this._tokens.set(session?.tokens ?? null);
   }
 
-  register$(email: string | null, password: string | null) {
-    const body = {
-      email,
-      password,
-    };
+  login(email: string, password: string) {
+    this._loading.set(true);
 
-    return this.http
-      .post<Session>('http://localhost:3000/auth/register', body)
-      .pipe(tap((session) => this.setSession(session)));
+    this.authApi
+      .login$(email, password)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: ({ user, tokens }) => {
+          this._user.set(user);
+          this._tokens.set(tokens);
+          this._loading.set(false);
+          this.messageService.add({
+            severity: 'success',
+            detail: 'You have been logged in',
+            summary: 'Success',
+          });
+        },
+        error: (resError: ResponseError) => {
+          this.messageService.add({
+            severity: 'error',
+            detail: resError.error.message || 'Error occur while logging in',
+            summary: 'Error',
+          });
+        },
+      });
   }
 
-  logout$(id: User['id']) {
-    const body = {
-      id,
-    };
+  register(email: string, password: string) {
+    this._loading.set(true);
 
-    return this.http
-      .post<User>(`http://localhost:3000/auth/logout`, body)
-      .pipe(tap(() => this.removeSession()));
+    this.authApi
+      .register$(email, password)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: ({ user, tokens }) => {
+          this._user.set(user);
+          this._tokens.set(tokens);
+          this._loading.set(false);
+          this.messageService.add({
+            severity: 'success',
+            detail: 'You have been registered',
+            summary: 'Success',
+          });
+        },
+        error: (resError: ResponseError) => {
+          this.messageService.add({
+            severity: 'error',
+            detail: resError.error.message || 'Error occur while signing in',
+            summary: 'Error',
+          });
+        },
+      });
   }
 
-  getRefreshToken$(id: User['id'], refreshToken: string) {
-    const body = {
-      id,
-      refreshToken,
-    };
-
-    return this.http
-      .post<Tokens>('http://localhost:3000/auth/refresh', body)
-      .pipe(tap((tokens) => this.updateTokens(tokens)));
+  refreshToken(userId: User['id'], refreshToken: Tokens['refreshToken']) {
+    this.authApi
+      .getRefreshToken$(userId, refreshToken)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (tokens) => {
+          this._tokens.set(tokens);
+        },
+        error: () => {
+          this.authApi.removeSession();
+        },
+      });
   }
 
-  setSession({ tokens, user }: Session) {
-    localStorage.setItem(
-      appRouterConfig.localStorage.accessToken,
-      JSON.stringify(tokens.accessToken)
-    );
-    localStorage.setItem(
-      appRouterConfig.localStorage.refreshToken,
-      JSON.stringify(tokens.refreshToken)
-    );
-    localStorage.setItem(
-      appRouterConfig.localStorage.user,
-      JSON.stringify(user)
-    );
+  logout(userId?: User['id']) {
+    this._loading.set(true);
+    if (!this._user()) return;
+    this.authApi
+      .logout$(userId ?? this._user()!.id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.authApi.removeSession();
+          // this.cartService.syncLocalstorage();
+          this.messageService.add({
+            severity: 'success',
+            detail: 'You have been logged out',
+            summary: 'Success',
+          });
+        },
+      });
   }
 
-  removeSession() {
-    localStorage.removeItem(appRouterConfig.localStorage.accessToken);
-    localStorage.removeItem(appRouterConfig.localStorage.refreshToken);
-    localStorage.removeItem(appRouterConfig.localStorage.user);
-  }
-
-  updateTokens({ accessToken, refreshToken }: Session['tokens']) {
-    localStorage.setItem(
-      appRouterConfig.localStorage.accessToken,
-      JSON.stringify(accessToken)
-    );
-    localStorage.setItem(
-      appRouterConfig.localStorage.refreshToken,
-      JSON.stringify(refreshToken)
-    );
-  }
-
-  getSession(): Session | null {
-    const accessToken = localStorage.getItem(
-      appRouterConfig.localStorage.accessToken
-    );
-    const refreshToken = localStorage.getItem(
-      appRouterConfig.localStorage.refreshToken
-    );
-    const user = localStorage.getItem(appRouterConfig.localStorage.user);
-
-    if (!accessToken || !refreshToken || !user) return null;
-
-    return {
-      tokens: {
-        accessToken: JSON.parse(accessToken),
-        refreshToken: JSON.parse(refreshToken),
-      },
-      user: JSON.parse(user),
-    };
+  setTokens(tokens: Tokens) {
+    this._tokens.set(tokens);
   }
 }

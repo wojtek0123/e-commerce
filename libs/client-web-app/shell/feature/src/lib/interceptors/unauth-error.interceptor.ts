@@ -8,7 +8,7 @@ import {
 import { Observable, catchError, of, switchMap, throwError } from 'rxjs';
 import {
   AuthService,
-  AuthStore,
+  AuthApiService,
 } from '@e-commerce/client-web-app/shared/data-access/auth';
 import { inject } from '@angular/core';
 
@@ -16,8 +16,8 @@ export const unAuthErrorInterceptor: HttpInterceptorFn = (
   req: HttpRequest<unknown>,
   next: HttpHandlerFn
 ): Observable<HttpEvent<unknown>> => {
-  const authStore = inject(AuthStore);
   const authService = inject(AuthService);
+  const authApi = inject(AuthApiService);
 
   return next(req).pipe(
     catchError((error: HttpResponse<Record<string, string>>) => {
@@ -25,13 +25,13 @@ export const unAuthErrorInterceptor: HttpInterceptorFn = (
         !(req.url.includes('auth/login') || req.url.includes('auth/refresh')) &&
         error.status === 401
       ) {
-        const session = authService.getSession();
+        const session = authApi.getSession();
         if (session?.tokens.refreshToken) {
-          return authService
+          return authApi
             .getRefreshToken$(session.user.id, session.tokens.refreshToken)
             .pipe(
               switchMap((tokens) => {
-                authStore.setTokens(tokens);
+                authService.setTokens(tokens);
 
                 return next(
                   req.clone({
@@ -44,7 +44,7 @@ export const unAuthErrorInterceptor: HttpInterceptorFn = (
               }),
               catchError((error) => {
                 if (error.status === 401 || error.status === 403) {
-                  authService.logout$(session.user.id);
+                  authService.logout(session.user.id);
                 }
                 return of(error);
               })

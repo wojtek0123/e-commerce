@@ -22,7 +22,7 @@ import {
 import { Book } from '@e-commerce/client-web-app/shared/data-access/api-types';
 import { filter } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { CartStore } from '@e-commerce/client-web-app/shared/data-access/cart';
+import { CartService } from '@e-commerce/client-web-app/shared/data-access/cart';
 
 @Component({
   selector: 'lib-books-view',
@@ -72,7 +72,7 @@ import { CartStore } from '@e-commerce/client-web-app/shared/data-access/cart';
 })
 export class BooksViewComponent implements OnInit {
   private booksStore = inject(BooksStore);
-  private cartStore = inject(CartStore);
+  private cartStore = inject(CartService);
   private router = inject(Router);
   private destroyRef = inject(DestroyRef);
 
@@ -81,7 +81,7 @@ export class BooksViewComponent implements OnInit {
   books = computed(() => this.booksStore.books());
   status = computed(() => this.booksStore.status());
   loading = this.cartStore.loading;
-  bookIds = this.cartStore.bookIds;
+  bookIds = this.cartStore.addingBookIds;
   skeletons = new Array(25);
 
   getBrowserRouteDetails = getBrowserRouteDetails;
@@ -101,6 +101,6 @@ export class BooksViewComponent implements OnInit {
   }
 
   addToCart(book: Book) {
-    this.cartStore.addItemToCart({ book, quantity: 1 });
+    this.cartStore.addItem(book, 1);
   }
 }

@@ -13,14 +13,13 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { AuthStore } from '@e-commerce/client-web-app/shared/data-access/auth';
+import { AuthService } from '@e-commerce/client-web-app/shared/data-access/auth';
 import { FormWrapperComponent } from '@e-commerce/client-web-app/auth/ui/form-wrapper';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { getErrorMessage } from '@e-commerce/client-web-app/shared/data-access/api-types';
-import { take } from 'rxjs';
 
 @Component({
   selector: 'e-commerce-register',
@@ -42,20 +41,22 @@ import { take } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RegisterComponent {
-  private authStore = inject(AuthStore);
+  private authService = inject(AuthService);
   private fb = inject(FormBuilder);
   private router = inject(Router);
 
   constructor() {
-    effect(() => {
-      this.errorMessage = getErrorMessage(this.status());
-
-      if (this.status() === 'ok') this.router.navigate(['/']);
-    });
+    // effect(() => {
+    //   this.errorMessage = getErrorMessage(this.status());
+    //
+    //   if (this.status() === 'ok') this.router.navigate(['/']);
+    // });
   }
 
-  status = this.authStore.status;
-  errorMessage = getErrorMessage(this.status());
+  // status = this.authService.status;
+  // errorMessage = getErrorMessage(this.status());
+
+  loading = this.authService.loading;
 
   registerForm = this.fb.group(
     {
@@ -112,10 +113,6 @@ export class RegisterComponent {
     const { email, password } = this.registerForm.value;
     element?.focus();
 
-    this.authStore.register({
-      email: email ?? '',
-      password: password ?? '',
-      valid,
-    });
+    this.authService.register(email ?? '', password ?? '');
   }
 }

@@ -8,8 +8,8 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { CartStore } from '@e-commerce/client-web-app/shared/data-access/cart';
-import { AuthStore } from '@e-commerce/client-web-app/shared/data-access/auth';
+import { CartService } from '@e-commerce/client-web-app/shared/data-access/cart';
+import { AuthService } from '@e-commerce/client-web-app/shared/data-access/auth';
 import { ActivatedRoute } from '@angular/router';
 import {
   BooksApiService,
@@ -173,8 +173,8 @@ export class BookDetailsComponent implements OnInit {
   private booksApi = inject(BooksApiService);
   private productInventoryApi = inject(ProductInventoryApiService);
   private route = inject(ActivatedRoute);
-  private cartStore = inject(CartStore);
-  private authStore = inject(AuthStore);
+  private authService = inject(AuthService);
+  private cartService = inject(CartService);
   private destroyRef = inject(DestroyRef);
 
   @HostBinding('class') class = 'mx-auto flex flex-column gap-4 relative';
@@ -183,9 +183,9 @@ export class BookDetailsComponent implements OnInit {
     validators: [Validators.min(1)],
   });
 
-  isAuthenticated = computed(() => !!this.authStore.tokens());
-  loading = this.cartStore.loading;
-  bookIds = this.cartStore.bookIds;
+  isAuthenticated = computed(() => !!this.authService.tokens());
+  loading = this.cartService.loading;
+  bookIds = this.cartService.addingBookIds;
 
   book$ = this.booksApi.getBook$(
     this.route.snapshot.params[appRouterConfig.browse.bookId]
@@ -232,23 +232,7 @@ export class BookDetailsComponent implements OnInit {
   }
 
   addToCart(book: Book) {
-    // if (this.isAuthenticated()) {
-    this.cartStore.addItemToCart({
-      book: book,
-      quantity: this.amount.value ?? 1,
-    });
-    // } else {
-    //   const cartItems = (JSON.parse(localStorage.getItem('cart') ?? '') ||
-    //     []) as {
-    //     book: Book;
-    //     quantity: number;
-    //   }[];
-    //
-    //   localStorage.setItem(
-    //     'cart',
-    //     JSON.stringify([...cartItems, { book, quantity: this.amount.value }])
-    //   );
-    // }
+    this.cartService.addItem(book, this.amount.value ?? 1);
   }
 
   onBlurInput() {
