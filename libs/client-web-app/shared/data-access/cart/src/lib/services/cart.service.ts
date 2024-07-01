@@ -5,6 +5,7 @@ import {
   inject,
   signal,
 } from '@angular/core';
+import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-config';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   Book,
@@ -14,7 +15,7 @@ import {
 import { CartItemsApiService } from './cart-items-api.service';
 import { MessageService } from 'primeng/api';
 import { ShoppingSessionApiService } from './shopping-session-api.service';
-import { switchMap } from 'rxjs';
+import { switchMap, take } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class CartService {
@@ -35,47 +36,34 @@ export class CartService {
   public loading = this._loading.asReadonly();
   public addingBookIds = this._addingBooks.asReadonly();
 
-  constructor() {
-    this.getShoppingSession();
+  setShoppingSession(id: number | null) {
+    this._shoppingSessionId.set(id);
   }
 
-  init(): void {
-    // this.getShoppingSessino();
-  }
-
-  getShoppingSession() {
+  getCartItems() {
     this._loading.set(true);
+
     this.shoppingSessionApi
       .getShoppingSession()
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(take(1), takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (session) => {
-          console.log(session);
-
-          if (session.id) {
-            this._loading.set(true);
-            this._shoppingSessionId.set(session.id);
-            this._items.set(session.cartItems);
-            this._recalculateTotal();
-          } else {
-            const cart = localStorage.getItem('cart');
-
-            this._items.set(cart ? JSON.parse(cart) : []);
-          }
-
-          // sync localstorage with database
+          this._loading.set(true);
+          this._shoppingSessionId.set(session.id);
+          this._items.set(session.cartItems);
+          localStorage.removeItem(appRouterConfig.localStorage.cart);
+          this._recalculateTotal();
 
           this._loading.set(false);
         },
         error: (resError: ResponseError) => {
+          if (resError.error.statusCode === 401) {
+            const cart = localStorage.getItem(
+              appRouterConfig.localStorage.cart
+            );
+            this._items.set(cart ? JSON.parse(cart) : []);
+          }
           this._loading.set(false);
-          this.messageService.add({
-            summary: 'Error',
-            detail:
-              resError.error?.message ??
-              'Error has occur while getting shopping session',
-            severity: 'error',
-          });
         },
       });
   }
@@ -91,7 +79,7 @@ export class CartService {
           quantity,
           shoppingSessionId: this._shoppingSessionId()!,
         })
-        .pipe(takeUntilDestroyed(this.destroyRef))
+        .pipe(take(1), takeUntilDestroyed(this.destroyRef))
         .subscribe({
           next: ({ book, quantity }) => {
             this._addOrUpdateItem(book, quantity);
@@ -125,7 +113,10 @@ export class CartService {
     } else {
       this._addOrUpdateItem(book, quantity);
 
-      localStorage.setItem('cart', JSON.stringify(this._items()));
+      localStorage.setItem(
+        appRouterConfig.localStorage.cart,
+        JSON.stringify(this._items())
+      );
 
       this._recalculateTotal();
 
@@ -143,7 +134,7 @@ export class CartService {
 
       this.cartItemsApi
         .updateQuantity(this._shoppingSessionId()!, book.id, { quantity })
-        .pipe(takeUntilDestroyed(this.destroyRef))
+        .pipe(take(1), takeUntilDestroyed(this.destroyRef))
         .subscribe({
           next: () => {
             this._items.update((prevState) =>
@@ -175,7 +166,10 @@ export class CartService {
     } else {
       this._addOrUpdateItem(book, quantity);
 
-      localStorage.setItem('cart', JSON.stringify(this._items()));
+      localStorage.setItem(
+        appRouterConfig.localStorage.cart,
+        JSON.stringify(this._items())
+      );
 
       this.messageService.add({
         summary: 'Success',
@@ -192,7 +186,7 @@ export class CartService {
 
       this.cartItemsApi
         .deleteCartItem(this._shoppingSessionId()!, book.id)
-        .pipe(takeUntilDestroyed(this.destroyRef))
+        .pipe(take(1), takeUntilDestroyed(this.destroyRef))
         .subscribe({
           next: () => {
             this._items.update((prevState) =>
@@ -223,7 +217,10 @@ export class CartService {
         prevState.filter(({ book: { id } }) => id !== book.id)
       );
 
-      localStorage.setItem('cart', JSON.stringify(this._items()));
+      localStorage.setItem(
+        appRouterConfig.localStorage.cart,
+        JSON.stringify(this._items())
+      );
 
       this._recalculateTotal();
 
@@ -237,17 +234,23 @@ export class CartService {
 
   syncLocalstorage() {
     this._shoppingSessionId.set(null);
-    localStorage.removeItem('cart');
-    localStorage.setItem('cart', JSON.stringify(this._items()));
+    localStorage.removeItem(appRouterConfig.localStorage.cart);
+    localStorage.setItem(
+      appRouterConfig.localStorage.cart,
+      JSON.stringify(this._items())
+    );
   }
 
   syncDatabase() {
-    // this._shoppingSessionId.set(shoppingSessionId);
-
     const cartItems = this._items().map((item) => ({
       bookId: item.book.id,
       quantity: item.quantity,
     }));
+
+    if (cartItems.length === 0) {
+      this.getCartItems();
+      return;
+    }
 
     this.shoppingSessionApi
       .getShoppingSession()
@@ -255,18 +258,33 @@ export class CartService {
         switchMap((session) =>
           this.shoppingSessionApi.createManyCartItems(session.id, cartItems)
         ),
+        take(1),
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe({
         next: (session) => {
-          console.log(session);
+          this._shoppingSessionId.set(session.id);
 
-          console.log('here');
+          this._items.set(
+            session.cartItems.map(({ book, quantity }) => ({ book, quantity }))
+          );
+
+          this._recalculateTotal();
+
+          localStorage.removeItem(appRouterConfig.localStorage.cart);
         },
         error: (resError: ResponseError) => {
-          console.log(resError);
+          console.error(resError);
         },
       });
+  }
+
+  clear() {
+    this._items.set([]);
+    this._shoppingSessionId.set(null);
+    this._total.set(0);
+    this._loading.set(false);
+    this._addingBooks.set([]);
   }
 
   private _recalculateTotal() {

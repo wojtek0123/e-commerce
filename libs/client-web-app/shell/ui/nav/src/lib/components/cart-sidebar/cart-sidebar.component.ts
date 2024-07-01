@@ -3,7 +3,6 @@ import {
   Component,
   OnChanges,
   SimpleChanges,
-  effect,
   inject,
   input,
   output,
@@ -101,12 +100,6 @@ export class CartSidebarComponent implements OnChanges {
   private cart = inject(CartService);
   private router = inject(Router);
   private messageService = inject(MessageService);
-
-  constructor() {
-    effect(() => {
-      console.log(this.cartItems());
-    });
-  }
 
   cartItems = this.cart.items;
   count = this.cart.count;

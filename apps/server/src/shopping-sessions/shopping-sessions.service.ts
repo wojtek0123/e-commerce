@@ -9,6 +9,11 @@ import { PrismaService } from '../prisma/prisma.service';
 import { decode } from 'jsonwebtoken';
 import { ShoppingSessionEntity } from './entities/shopping-session.entity';
 
+interface CartItem {
+  bookId: number;
+  quantity: number;
+}
+
 @Injectable()
 export class ShoppingSessionsService {
   constructor(private prisma: PrismaService) {}
@@ -24,7 +29,7 @@ export class ShoppingSessionsService {
   async createManyCartItems(
     authHeader: string,
     shoppingSessionId: number,
-    cartItems: { bookId: number; quantity: number }[]
+    cartItems: CartItem[]
   ) {
     const userId = +decode(authHeader.split(' ')[1]).sub;
 
@@ -43,28 +48,51 @@ export class ShoppingSessionsService {
       );
     }
 
-    await this.prisma.shoppingSession.update({
-      where: { id: shoppingSessionId },
-      data: {
-        cartItems: {
-          deleteMany: {},
-        },
-      },
-    });
+    const existingCartItem: CartItem[] = shoppingSession.cartItems.map(
+      ({ bookId, quantity }) => ({ bookId, quantity })
+    );
 
-    return this.prisma.shoppingSession.update({
-      where: { id: shoppingSessionId },
-      data: {
-        cartItems: {
-          createMany: {
-            data: cartItems.map(({ bookId, quantity }) => ({
-              bookId,
-              quantity,
-            })),
+    const uniqueCartItems = new Set([...existingCartItem, ...cartItems]);
+
+    return this.prisma.shoppingSession
+      .update({
+        where: { id: shoppingSessionId },
+        data: {
+          cartItems: {
+            deleteMany: {},
+            createMany: {
+              data: [...uniqueCartItems].map(({ bookId, quantity }) => ({
+                bookId,
+                quantity,
+              })),
+              skipDuplicates: true,
+            },
           },
         },
-      },
-    });
+        include: {
+          cartItems: {
+            include: {
+              book: {
+                include: {
+                  authors: {
+                    include: {
+                      author: true,
+                    },
+                  },
+                  category: true,
+                },
+              },
+            },
+          },
+        },
+      })
+      .then((shoppingSession) => ({
+        ...shoppingSession,
+        cartItems: shoppingSession?.cartItems.map((ct) => ({
+          ...ct,
+          book: { ...ct.book, authors: ct.book.authors.map((a) => a.author) },
+        })),
+      }));
 
     // this.prisma.shoppingSession.update({
     //   where: { id: shoppingSessionId },
