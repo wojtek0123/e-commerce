@@ -34,7 +34,6 @@ import {
 import { FormsModule } from '@angular/forms';
 import { BadgeModule } from 'primeng/badge';
 import { CartService } from '@e-commerce/client-web-app/shared/data-access/cart';
-import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'lib-e-commerce-nav',
@@ -72,7 +71,7 @@ import { MenuItem } from 'primeng/api';
   ],
 })
 export class NavComponent {
-  // private authService = inject(AuthService);
+  private authService = inject(AuthService);
   private cartService = inject(CartService);
   private categoryStore = inject(CategoryStore);
   private themeSwitcherService = inject(ThemeSwitherService);
@@ -134,7 +133,7 @@ export class NavComponent {
   ];
 
   sidebarVisible = signal(false);
-  // authTokens = this.authService.tokens;
+  isAuthenticated = this.authService.isAuthenticated;
   categories = computed(() =>
     !this.categoryStore.categoriesCount()
       ? [
@@ -166,62 +165,61 @@ export class NavComponent {
           },
         }))
   );
-  // menuItems = computed(() =>
-  //   !!this.authTokens()?.accessToken && !!this.authTokens()?.refreshToken
-  //     ? [
-  //         {
-  //           label: 'Orders',
-  //           icon: 'pi pi-book',
-  //           command: () => {
-  //             if (this.sidebarVisible()) {
-  //               this.sidebarVisible.set(false);
-  //             }
-  //           },
-  //         },
-  //         {
-  //           label: 'Settings',
-  //           icon: 'pi pi-cog',
-  //           command: () => {
-  //             if (this.sidebarVisible()) {
-  //               this.sidebarVisible.set(false);
-  //             }
-  //           },
-  //         },
-  //         {
-  //           label: 'Sign out',
-  //           icon: 'pi pi-sign-out',
-  //           command: () => {
-  //             this.authService.logout();
-  //             if (this.sidebarVisible()) {
-  //               this.sidebarVisible.set(false);
-  //             }
-  //           },
-  //         },
-  //       ]
-  //     : [
-  //         {
-  //           label: 'Sign in',
-  //           icon: 'pi pi-sign-in',
-  //           routerLink: authRoutePaths.login,
-  //           command: () => {
-  //             if (this.sidebarVisible()) {
-  //               this.sidebarVisible.set(false);
-  //             }
-  //           },
-  //         },
-  //         {
-  //           label: 'Sign up',
-  //           icon: 'pi pi-user-plus',
-  //           routerLink: authRoutePaths.register,
-  //           command: () => {
-  //             if (this.sidebarVisible()) {
-  //               this.sidebarVisible.set(false);
-  //             }
-  //           },
-  //         },
-  //       ]
-  // );
-  menuItems = signal<MenuItem[]>([]);
+  menuItems = computed(() =>
+    this.isAuthenticated()
+      ? [
+          {
+            label: 'Orders',
+            icon: 'pi pi-book',
+            command: () => {
+              if (this.sidebarVisible()) {
+                this.sidebarVisible.set(false);
+              }
+            },
+          },
+          {
+            label: 'Settings',
+            icon: 'pi pi-cog',
+            command: () => {
+              if (this.sidebarVisible()) {
+                this.sidebarVisible.set(false);
+              }
+            },
+          },
+          {
+            label: 'Sign out',
+            icon: 'pi pi-sign-out',
+            command: () => {
+              this.authService.logout();
+              if (this.sidebarVisible()) {
+                this.sidebarVisible.set(false);
+              }
+            },
+          },
+        ]
+      : [
+          {
+            label: 'Sign in',
+            icon: 'pi pi-sign-in',
+            routerLink: authRoutePaths.login,
+            command: () => {
+              if (this.sidebarVisible()) {
+                this.sidebarVisible.set(false);
+              }
+            },
+          },
+          {
+            label: 'Sign up',
+            icon: 'pi pi-user-plus',
+            routerLink: authRoutePaths.register,
+            command: () => {
+              if (this.sidebarVisible()) {
+                this.sidebarVisible.set(false);
+              }
+            },
+          },
+        ]
+  );
 
   showSidebar = () => this.sidebarVisible.set(true);
 

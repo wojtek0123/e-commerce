@@ -23,5 +23,6 @@ export const appRouterConfig = {
     accessToken: 'access_token',
     user: 'user',
     theme: 'theme',
+    cart: 'cart',
   },
 } as const;

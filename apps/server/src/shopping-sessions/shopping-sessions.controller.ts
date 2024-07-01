@@ -52,7 +52,7 @@ export class ShoppingSessionsController {
   createManyCartItems(
     @Body() body: { cartItems: CreateCartItemDto[] },
     @Headers('authorization') authHeader: string,
-    @Param(':id') shoppingSessionId: string
+    @Param('id') shoppingSessionId: string
   ) {
     return this.shoppingSessionsService.createManyCartItems(
       authHeader,

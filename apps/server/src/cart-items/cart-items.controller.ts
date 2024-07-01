@@ -32,7 +32,7 @@ export class CartItemsController {
   @ApiCreatedResponse({ type: CartItemEntity })
   @ApiBearerAuth()
   create(
-    @Headers('authentication') authHeader: string,
+    @Headers('authorization') authHeader: string,
     @Body() createCartItemDto: CreateCartItemDto
   ) {
     return this.cartItemsService.create(authHeader, createCartItemDto);

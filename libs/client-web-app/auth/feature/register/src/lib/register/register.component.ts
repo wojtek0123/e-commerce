@@ -1,10 +1,5 @@
 import { AsyncPipe, NgClass, NgIf } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  effect,
-  inject,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -12,14 +7,13 @@ import {
   ValidationErrors,
   Validators,
 } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { AuthService } from '@e-commerce/client-web-app/shared/data-access/auth';
 import { FormWrapperComponent } from '@e-commerce/client-web-app/auth/ui/form-wrapper';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { FloatLabelModule } from 'primeng/floatlabel';
-import { getErrorMessage } from '@e-commerce/client-web-app/shared/data-access/api-types';
 
 @Component({
   selector: 'e-commerce-register',
@@ -43,18 +37,6 @@ import { getErrorMessage } from '@e-commerce/client-web-app/shared/data-access/a
 export class RegisterComponent {
   private authService = inject(AuthService);
   private fb = inject(FormBuilder);
-  private router = inject(Router);
-
-  constructor() {
-    // effect(() => {
-    //   this.errorMessage = getErrorMessage(this.status());
-    //
-    //   if (this.status() === 'ok') this.router.navigate(['/']);
-    // });
-  }
-
-  // status = this.authService.status;
-  // errorMessage = getErrorMessage(this.status());
 
   loading = this.authService.loading;
 
@@ -109,7 +91,7 @@ export class RegisterComponent {
       | undefined;
 
     element?.blur();
-    const { valid } = this.registerForm;
+    // const { valid } = this.registerForm;
     const { email, password } = this.registerForm.value;
     element?.focus();
 
