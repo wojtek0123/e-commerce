@@ -6,6 +6,6 @@ import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-
 
 export interface BooksFilters {
   [appRouterConfig.browse.searchQueryParams]: string | null;
-  [appRouterConfig.browse.tagsQueryParams]: BookTag[] | null;
-  [appRouterConfig.browse.categoriesQueryParams]: Category[] | null;
+  [appRouterConfig.browse.tagsQueryParams]: BookTag[];
+  [appRouterConfig.browse.categoriesQueryParams]: Category[];
 }

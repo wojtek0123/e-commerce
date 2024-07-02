@@ -1,28 +1,27 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  DestroyRef,
   HostBinding,
   OnInit,
-  computed,
   inject,
+  signal,
 } from '@angular/core';
-import { BooksStore } from '@e-commerce/client-web-app/browse/data-access';
+import { BooksService } from '@e-commerce/client-web-app/browse/data-access';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
-import { NavigationEnd, Router, RouterLink } from '@angular/router';
-import {
-  appRouterConfig,
-  getBrowserRouteDetails,
-} from '@e-commerce/client-web-app/shared/utils/router-config';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-config';
 import {
   BookCardSkeletonComponent,
   BookCardComponent,
 } from '@e-commerce/client-web-app/shared/ui/book-card';
-import { Book } from '@e-commerce/client-web-app/shared/data-access/api-types';
-import { filter } from 'rxjs';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import {
+  Book,
+  ResponseError,
+} from '@e-commerce/client-web-app/shared/data-access/api-types';
+import { switchMap, tap } from 'rxjs';
 import { CartService } from '@e-commerce/client-web-app/shared/data-access/cart';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'lib-books-view',
@@ -33,15 +32,16 @@ import { CartService } from '@e-commerce/client-web-app/shared/data-access/cart'
     RouterLink,
     BookCardComponent,
     BookCardSkeletonComponent,
+    AsyncPipe,
   ],
   template: `
     <div class="grid-auto-fit">
-      @if (status() === 'loading') { @for (_ of skeletons; track $index) {
+      @if (loading()) { @for (_ of skeletons; track $index) {
       <lib-book-card-skeleton />
-      } } @else if (status() === 'ok') {@for (book of books(); track book.id) {
+      } } @else if (!loading() && books()) { @for (book of books(); track
+      book.id) {
       <lib-book-card
-        [bookIds]="bookIds()"
-        [loading]="loading()"
+        [awaitingBookIdsToAddToCart]="awatingBookIdsToAddToCart()"
         [book]="book"
         (onAddToCart)="addToCart($event)"
       />
@@ -49,9 +49,9 @@ import { CartService } from '@e-commerce/client-web-app/shared/data-access/cart'
       <div class="text-center grid-all-columns mt-8">
         <span class="text-3xl">No books were found!</span>
       </div>
-      }} @else {
+      }} @else if (error()) {
       <div class="text-center grid-all-columns mt-8">
-        <span class="text-3xl text-error">Error while fetching the data</span>
+        <span class="text-3xl text-error">{{ error() }}</span>
       </div>
       }
     </div>
@@ -71,36 +71,43 @@ import { CartService } from '@e-commerce/client-web-app/shared/data-access/cart'
   ],
 })
 export class BooksViewComponent implements OnInit {
-  private booksStore = inject(BooksStore);
-  private cartStore = inject(CartService);
-  private router = inject(Router);
-  private destroyRef = inject(DestroyRef);
+  private booksService = inject(BooksService);
+  private cartService = inject(CartService);
+  private route = inject(ActivatedRoute);
+
+  books = signal<Book[]>([]);
+  loading = signal(true);
+  error = signal<string | null>(null);
+  awatingBookIdsToAddToCart = this.cartService.addingBookIds;
+  skeletons = new Array(12);
 
   @HostBinding('class') class = 'w-full min-content-height';
 
-  books = computed(() => this.booksStore.books());
-  status = computed(() => this.booksStore.status());
-  loading = this.cartStore.loading;
-  bookIds = this.cartStore.addingBookIds;
-  skeletons = new Array(25);
-
-  getBrowserRouteDetails = getBrowserRouteDetails;
-
   ngOnInit(): void {
-    this.router.events
+    this.route.queryParams
       .pipe(
-        filter((events) => events instanceof NavigationEnd),
-        takeUntilDestroyed(this.destroyRef)
+        tap(() => this.loading.set(true)),
+        switchMap((queryParams) =>
+          this.booksService.getBooks$({
+            tags: queryParams[appRouterConfig.browse.tagsQueryParams],
+            search: queryParams[appRouterConfig.browse.searchQueryParams],
+            categoryNames:
+              queryParams[appRouterConfig.browse.categoriesQueryParams],
+          })
+        )
       )
-      .subscribe(() => {
-        if (history.state[appRouterConfig.browse.clearHistoryState]) {
-          this.booksStore.clearFiltersAndSearch();
-          this.booksStore.getFilterBooks();
-        }
+      .subscribe({
+        next: (books) => {
+          this.loading.set(false);
+          this.books.set(books);
+        },
+        error: (resError: ResponseError) => {
+          this.error.set(resError.error.message);
+        },
       });
   }
 
   addToCart(book: Book) {
-    this.cartStore.addItem(book, 1);
+    this.cartService.addItem(book, 1);
   }
 }

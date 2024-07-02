@@ -1,22 +1,18 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  DestroyRef,
   ElementRef,
   HostBinding,
-  OnInit,
-  computed,
   inject,
   viewChild,
 } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import { BooksStore } from '@e-commerce/client-web-app/browse/data-access';
 import { FormsModule } from '@angular/forms';
 import debounce from 'lodash-es/debounce';
-import { ActivatedRoute } from '@angular/router';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { filter } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { map } from 'rxjs';
 import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-config';
 
 @Component({
@@ -32,7 +28,7 @@ import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-
         type="text"
         pInputText
         class="w-full pr-6"
-        placeholder="Wyszukaj po tytule"
+        placeholder="Search by title"
         (input)="debounceSearchValue($event)"
       />
       @if (searchInput.value.length) {
@@ -47,54 +43,48 @@ import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BooksSearchComponent implements OnInit {
-  private booksStore = inject(BooksStore);
+export class BooksSearchComponent {
   private route = inject(ActivatedRoute);
-  private destroyRef = inject(DestroyRef);
+  private router = inject(Router);
 
-  search = computed(() => this.booksStore.filters.search() ?? '');
+  search = toSignal(
+    this.route.queryParams.pipe(
+      map(
+        (queryParams) =>
+          queryParams[appRouterConfig.browse.searchQueryParams] || null
+      )
+    )
+  );
 
   searchInput = viewChild<ElementRef>('searchInput');
 
   @HostBinding('class') class =
     'w-full flex flex-column sm:flex-row sm:align-items-center gap-4';
 
-  ngOnInit(): void {
-    this.route.queryParams
-      .pipe(
-        filter((params) => !!params[appRouterConfig.browse.searchQueryParams]),
-        takeUntilDestroyed(this.destroyRef)
-      )
-      .subscribe((params) => {
-        const search = params[
-          appRouterConfig.browse.searchQueryParams
-        ] as string;
-
-        const clear = history.state[appRouterConfig.browse.clearHistoryState];
-
-        if (clear) {
-          this.clearInput();
-          history.replaceState({}, '');
-        }
-
-        (this.searchInput()?.nativeElement as HTMLInputElement).value = search;
-        this.booksStore.updateFilterTitle(search);
-
-        this.booksStore.getFilterBooks();
-      });
-  }
   debounceSearchValue = debounce((event) => this.setFilterTitle(event), 500);
 
   setFilterTitle(event: Event) {
     const value = (event.target as HTMLInputElement).value;
 
-    this.booksStore.updateFilterTitle(value || null);
-
-    if (!value) this.booksStore.getFilterBooks();
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        [appRouterConfig.browse.searchQueryParams]: value || null,
+      },
+      queryParamsHandling: 'merge',
+      replaceUrl: true,
+    });
   }
 
   clearInput() {
-    this.booksStore.updateFilterTitle(null);
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        [appRouterConfig.browse.searchQueryParams]: null,
+      },
+      queryParamsHandling: 'merge',
+      replaceUrl: true,
+    });
     (this.searchInput()?.nativeElement as HTMLInputElement).value = '';
   }
 }
