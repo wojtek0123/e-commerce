@@ -1,10 +1,8 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  DestroyRef,
   HostBinding,
   OnInit,
-  computed,
   inject,
   signal,
   viewChild,
@@ -18,14 +16,14 @@ import {
 import { ButtonModule } from 'primeng/button';
 import { CategoryStore } from '@e-commerce/client-web-app/shared/data-access/category';
 import {
-  BooksStore,
+  BooksService,
   BooksFilters,
 } from '@e-commerce/client-web-app/browse/data-access';
 import { FilterSkeletonComponent } from '../components/filter-skeleton/filter-skeleton.component';
-import { ActivatedRoute } from '@angular/router';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, Router } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { Accordion, AccordionModule } from 'primeng/accordion';
-import { filter, tap } from 'rxjs';
+import { map } from 'rxjs';
 import { FilterAccordionTabComponent } from '../components/filter-accordion/filter-accordion.component';
 import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-config';
 import { NgClass } from '@angular/common';
@@ -61,7 +59,7 @@ import { NgClass } from '@angular/common';
           filterName="categories"
           header="Kategorie"
           optionLabel="name"
-          [items]="categories()"
+          [items]="categories"
           [selectedItems]="selectedCategories() ?? []"
           (clearEvent)="clearFilter($event)"
           (changeEvent)="updateSelectedCategories($event)"
@@ -105,91 +103,94 @@ import { NgClass } from '@angular/common';
 })
 export class BooksFiltersComponent implements OnInit {
   private categoryStore = inject(CategoryStore);
-  private booksStore = inject(BooksStore);
+  private booksService = inject(BooksService);
   private route = inject(ActivatedRoute);
-  private destroyRef = inject(DestroyRef);
+  private router = inject(Router);
 
   @HostBinding('class') class = 'max-w-24rem w-full hidden xl:block';
 
   categoryStatus = this.categoryStore.status;
   categorySkeletons = new Array(10);
 
-  selectedTags = computed(() => this.booksStore.filters.tags());
-  selectedCategories = computed(() => this.booksStore.filters.categories());
+  selectedTags = toSignal(
+    this.route.queryParams.pipe(
+      map(
+        (queryParams) =>
+          queryParams[appRouterConfig.browse.tagsQueryParams] as
+            | string
+            | undefined
+      ),
+      map((tags) => tags?.split(',') ?? [])
+    )
+  );
+  selectedCategories = toSignal(
+    this.route.queryParams.pipe(
+      map(
+        (queryParams) =>
+          queryParams[appRouterConfig.browse.categoriesQueryParams] as
+            | Category['name']
+            | undefined
+      ),
+      map((categories) => categories?.replaceAll('_', ' ')?.split(',') ?? []),
+      map((categoryNames) =>
+        this.categories?.filter((category) =>
+          categoryNames.find((name) => category.name === name)
+        )
+      )
+    )
+  );
 
   tags = signal<BookTag[]>([...allBookTags]);
-  categories = signal<Category[]>([]);
+  categories = this.route.snapshot.data[
+    appRouterConfig.browse.categoriesData
+  ] as Category[];
 
   accordionElement = viewChild<Accordion>('accordion');
 
-  async ngOnInit() {
-    this.categories.set(
-      this.route.snapshot.data[appRouterConfig.browse.categoriesData]
-    );
-
-    this.route.queryParams
-      .pipe(
-        filter(
-          (params) =>
-            params[appRouterConfig.browse.tagsQueryParams] ||
-            params[appRouterConfig.browse.categoriesQueryParams]
-        ),
-        takeUntilDestroyed(this.destroyRef)
-      )
-      .subscribe((param) => {
-        const tags = (
-          param[appRouterConfig.browse.tagsQueryParams] as BookTag | undefined
-        )?.split(',') as BookTag[] | undefined;
-        const categoryNames = (
-          param[appRouterConfig.browse.categoriesQueryParams] as
-            | Category['name']
-            | undefined
-        )
-          ?.split(',')
-          .map((c) => c.split('_').join(' '));
-
-        const selectedCategories = categoryNames?.length
-          ? categoryNames.map((name) =>
-              this.categories().find((c) => c.name.toLowerCase() === name)
-            )
-          : null;
-
-        if (history.state[appRouterConfig.browse.clearHistoryState]) {
-          this.booksStore.clearFilters();
-          history.replaceState({}, '');
-        }
-
-        if (selectedCategories?.length) {
-          this.booksStore.updateFilterCategories(
-            selectedCategories as Category[] | null
-          );
-        }
-        this.booksStore.updateFilterTags(tags ?? null);
-
-        this.booksStore.getFilterBooks();
-      });
+  ngOnInit(): void {
+    this.booksService.setCategories(this.categories);
   }
 
   clearFilters() {
-    this.booksStore.clearFilters();
-    this.booksStore.getFilterBooks();
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: null,
+      queryParamsHandling: 'merge',
+      replaceUrl: true,
+    });
   }
 
   clearFilter(filter: keyof BooksFilters) {
-    console.log(filter);
-    this.booksStore.clearFilter(filter);
-    this.booksStore.getFilterBooks();
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        [filter]: null,
+      },
+      queryParamsHandling: 'merge',
+      replaceUrl: true,
+    });
   }
 
-  updateSelectedTags(tags: BookTag[]) {
-    this.booksStore.updateFilterTags(tags);
-
-    if (!tags.length) this.booksStore.getFilterBooks();
+  updateSelectedTags(tags: string[]) {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        [appRouterConfig.browse.tagsQueryParams]: tags?.join(',') || null,
+      },
+      queryParamsHandling: 'merge',
+      replaceUrl: true,
+    });
   }
 
   updateSelectedCategories(categories: Category[]) {
-    this.booksStore.updateFilterCategories(categories);
-
-    if (!categories.length) this.booksStore.getFilterBooks();
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        [appRouterConfig.browse.tagsQueryParams]:
+          categories.map(({ name }) => name)?.join(',') || null,
+      },
+      queryParamsHandling: 'merge',
+      replaceUrl: true,
+    });
   }
 }
