@@ -57,7 +57,11 @@ export class GetBooksBodyDto {
   @IsArray()
   authorIn: string[];
 
-  @ApiProperty({ required: false, type: Number })
+  @ApiProperty({ required: false, type: Number, default: 20 })
   @IsOptional()
-  size: number;
+  size = 20;
+
+  @ApiProperty({ required: false, type: Number, default: 1 })
+  @IsOptional()
+  page = 1;
 }

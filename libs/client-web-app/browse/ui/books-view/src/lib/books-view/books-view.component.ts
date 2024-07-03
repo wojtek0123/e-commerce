@@ -22,6 +22,7 @@ import {
 import { switchMap, tap } from 'rxjs';
 import { CartService } from '@e-commerce/client-web-app/shared/data-access/cart';
 import { AsyncPipe } from '@angular/common';
+import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 
 @Component({
   selector: 'lib-books-view',
@@ -33,23 +34,40 @@ import { AsyncPipe } from '@angular/common';
     BookCardComponent,
     BookCardSkeletonComponent,
     AsyncPipe,
+    PaginatorModule,
   ],
   template: `
-    <div class="grid-auto-fit">
-      @if (loading()) { @for (_ of skeletons; track $index) {
-      <lib-book-card-skeleton />
-      } } @else if (!loading() && books()) { @for (book of books(); track
-      book.id) {
-      <lib-book-card
-        [awaitingBookIdsToAddToCart]="awatingBookIdsToAddToCart()"
-        [book]="book"
-        (onAddToCart)="addToCart($event)"
-      />
-      } @empty {
-      <div class="text-center grid-all-columns mt-8">
-        <span class="text-3xl">No books were found!</span>
+    <div class="flex flex-column gap-3">
+      @if (loading()) {
+      <div class="grid-auto-fit">
+        @for (_ of skeletons; track $index) {
+        <lib-book-card-skeleton />
+        }
       </div>
-      }} @else if (error()) {
+      } @else if (!loading() && books()) {
+      <div class="grid-auto-fit">
+        @for (book of books(); track book.id) {
+        <lib-book-card
+          [awaitingBookIdsToAddToCart]="awatingBookIdsToAddToCart()"
+          [book]="book"
+          (onAddToCart)="addToCart($event)"
+        />
+        } @empty {
+        <div class="text-center grid-all-columns mt-8">
+          <span class="text-3xl">No books were found!</span>
+        </div>
+        }
+      </div>
+      <div class="card flex justify-content-center">
+        <p-paginator
+          (onPageChange)="onPageChange($event)"
+          [first]="page()"
+          [rows]="size()"
+          [totalRecords]="total()"
+          [rowsPerPageOptions]="[10, 20, 30]"
+        />
+      </div>
+      } @else if (error()) {
       <div class="text-center grid-all-columns mt-8">
         <span class="text-3xl text-error">{{ error() }}</span>
       </div>
@@ -76,6 +94,10 @@ export class BooksViewComponent implements OnInit {
   private route = inject(ActivatedRoute);
 
   books = signal<Book[]>([]);
+  page = signal(1);
+  size = signal(20);
+  total = signal(0);
+  count = signal(0);
   loading = signal(true);
   error = signal<string | null>(null);
   awatingBookIdsToAddToCart = this.cartService.addingBookIds;
@@ -93,13 +115,17 @@ export class BooksViewComponent implements OnInit {
             search: queryParams[appRouterConfig.browse.searchQueryParams],
             categoryNames:
               queryParams[appRouterConfig.browse.categoriesQueryParams],
+            page: 1,
+            size: 20,
           })
         )
       )
       .subscribe({
-        next: (books) => {
+        next: ({ items, total, count }) => {
           this.loading.set(false);
-          this.books.set(books);
+          this.books.set(items);
+          this.total.set(total);
+          this.count.set(count);
         },
         error: (resError: ResponseError) => {
           this.error.set(resError.error.message);
@@ -109,5 +135,16 @@ export class BooksViewComponent implements OnInit {
 
   addToCart(book: Book) {
     this.cartService.addItem(book, 1);
+  }
+
+  onPageChange(event: PaginatorState) {
+    // this.size.set(event.rows);
+    if (event.page) {
+      this.page.set(event.page);
+    }
+
+    if (event.rows) {
+      this.size.set(event.rows);
+    }
   }
 }

@@ -19,6 +19,7 @@ import {
 import { GetBooksBodyDto } from './dto/get-books.dto';
 import { BookEntity } from './entities/book.entity';
 import { UpdateBookBodyDto } from './dto/update-body.dto';
+import { Books } from './entities/books.entity';
 
 @ApiTags('books')
 @Controller('books')
@@ -35,7 +36,7 @@ export class BooksController {
 
   @Post()
   @ApiOperation({ summary: 'Get books' })
-  @ApiOkResponse({ type: BookEntity, isArray: true })
+  @ApiOkResponse({ type: Books, isArray: true })
   findAll(@Body() data: GetBooksBodyDto) {
     return this.booksService.findMany(data);
   }

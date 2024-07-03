@@ -3,6 +3,7 @@ import { BooksApiService } from '@e-commerce/client-web-app/shared/data-access/a
 import {
   BookTag,
   Category,
+  Pagination,
 } from '@e-commerce/client-web-app/shared/data-access/api-types';
 
 @Injectable()
@@ -15,14 +16,16 @@ export class BooksService {
     this._categories.set(categories);
   }
 
-  getBooks$(filters: {
-    tags?: string;
-    categoryNames?: string;
-    search?: string;
-  }) {
+  getBooks$(
+    body: {
+      tags?: string;
+      categoryNames?: string;
+      search?: string;
+    } & Pagination
+  ) {
     const categoryIds = this._categories()
       .filter((category) =>
-        filters.categoryNames
+        body.categoryNames
           ?.replaceAll('_', ' ')
           .split(',')
           ?.find((name) => name === category.name)
@@ -30,9 +33,11 @@ export class BooksService {
       .map((category) => category.id);
 
     return this.booksApi.getBooks$({
-      tagsIn: filters.tags?.split(',') as BookTag[] | undefined,
-      title: filters.search,
+      tagsIn: body.tags?.split(',') as BookTag[] | undefined,
+      title: body.search,
       categoryIds: categoryIds,
+      page: body?.page,
+      size: body?.size,
     });
   }
 }
