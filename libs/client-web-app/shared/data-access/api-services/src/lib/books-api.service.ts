@@ -4,6 +4,7 @@ import {
   Book,
   BookTag,
   Category,
+  Paginated,
 } from '@e-commerce/client-web-app/shared/data-access/api-types';
 import { shareReplay } from 'rxjs';
 import { API_URL } from '@e-commerce/client-web-app/shared/utils/providers';
@@ -25,17 +26,20 @@ export class BooksApiService {
     authorName?: string;
     authorIds?: number[];
     size?: number;
+    page?: number;
   }) {
     let body = {};
 
+    // TODO: do poprawy
     if (opts.title?.length) body = { ...body, titleLike: opts.title };
     if (opts.size) body = { ...body, size: opts.size };
+    if (opts.page) body = { ...body, page: opts.page };
     if (opts.tagsIn?.length) body = { ...body, tagsIn: opts.tagsIn };
     if (opts.categoryIds?.length)
       body = { ...body, categoryIdsIn: opts.categoryIds };
 
     return this.http
-      .post<Book[]>(`${this.apiUrl}/books`, body)
+      .post<Paginated<Book>>(`${this.apiUrl}/books`, body)
       .pipe(shareReplay(1));
   }
 

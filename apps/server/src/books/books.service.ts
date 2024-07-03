@@ -24,6 +24,7 @@ export class BooksService {
     priceFrom,
     priceTo,
     size,
+    page,
   }: GetBooksBodyDto) {
     let where: Prisma.BookScalarWhereInput = {};
 
@@ -47,13 +48,21 @@ export class BooksService {
           },
         },
       },
+      skip: size * (page - 1),
       take: size,
     });
 
-    return books.map((book) => ({
-      ...book,
-      authors: book.authors.map((a) => a.author),
-    }));
+    const total = (await this.prisma.book.findMany()).length;
+
+    return {
+      items: books.map((book) => ({
+        ...book,
+        authors: book.authors.map((a) => a.author),
+      })),
+      total,
+      count: books.length,
+      page,
+    };
   }
 
   async findOne(where: Prisma.BookWhereUniqueInput) {

@@ -14,3 +14,5 @@ export * from './lib/models/country.model';
 export * from './lib/models/shipping-method.model';
 export * from './lib/order-details.model';
 export * from './lib/models/cart-item.model';
+export * from './lib/models/pagination.model';
+export * from './lib/models/paginated.model';
