@@ -30,8 +30,7 @@ export class LoginComponent {
   private authService = inject(AuthService);
   private fb = inject(FormBuilder);
 
-  // status = this.auth.status;
-  // loading = this.authService.loading
+  loading = this.authService.loading;
   errorMessage: string | null = null;
 
   loginForm = this.fb.group({

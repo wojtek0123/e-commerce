@@ -17,9 +17,11 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MessageService } from 'primeng/api';
 import { CartService } from '@e-commerce/client-web-app/shared/data-access/cart';
 import { take } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+  private router = inject(Router);
   private authApi = inject(AuthApiService);
   private messageService = inject(MessageService);
   private destroyRef = inject(DestroyRef);
@@ -107,6 +109,8 @@ export class AuthService {
           });
           this.setSession({ user, tokens });
           this.cartService.syncDatabase();
+
+          this.router.navigate(['/']);
         },
         error: (resError: ResponseError) => {
           this._loading.set(false);
@@ -135,6 +139,7 @@ export class AuthService {
           });
           this.setSession({ user, tokens });
           this.cartService.syncDatabase();
+          this.router.navigate(['/']);
         },
         error: (resError: ResponseError) => {
           this._loading.set(false);
@@ -166,9 +171,18 @@ export class AuthService {
             detail: 'You have been logged out',
             summary: 'Success',
           });
+
+          // TODO: navigate to home only when user is on protected by auth guard route
+          this.router.navigate(['/']);
         },
-        error: () => {
+        error: (resError: ResponseError) => {
           this._loading.set(false);
+
+          this.messageService.add({
+            severity: 'error',
+            detail: resError.error.message || 'Error occur while logging out',
+            summary: 'Error',
+          });
         },
       });
   }
