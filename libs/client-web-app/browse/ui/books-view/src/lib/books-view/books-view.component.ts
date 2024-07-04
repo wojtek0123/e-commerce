@@ -3,6 +3,7 @@ import {
   Component,
   HostBinding,
   OnInit,
+  computed,
   inject,
   signal,
 } from '@angular/core';
@@ -37,7 +38,7 @@ import { PaginatorModule, PaginatorState } from 'primeng/paginator';
     PaginatorModule,
   ],
   template: `
-    <div class="flex flex-column gap-3">
+    <div class="flex flex-column gap-5">
       @if (loading()) {
       <div class="grid-auto-fit">
         @for (_ of skeletons; track $index) {
@@ -58,6 +59,7 @@ import { PaginatorModule, PaginatorState } from 'primeng/paginator';
         </div>
         }
       </div>
+      @if (books().length > 0) {
       <div class="card flex justify-content-center">
         <p-paginator
           (onPageChange)="onPageChange($event)"
@@ -67,7 +69,7 @@ import { PaginatorModule, PaginatorState } from 'primeng/paginator';
           [rowsPerPageOptions]="[10, 20, 30]"
         />
       </div>
-      } @else if (error()) {
+      } } @else if (error()) {
       <div class="text-center grid-all-columns mt-8">
         <span class="text-3xl text-error">{{ error() }}</span>
       </div>
