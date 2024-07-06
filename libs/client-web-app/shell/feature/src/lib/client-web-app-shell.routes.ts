@@ -39,6 +39,13 @@ export const clientWebAppShellRoutes: Route[] = [
         canActivate: [authRouteGuard],
       },
       {
+        path: 'user',
+        loadChildren: () =>
+          import('@e-commerce/client-web-app/user/feature/shell').then(
+            (r) => r.shellRoutes
+          ),
+      },
+      {
         path: '**',
         redirectTo: appRouterConfig.emptyPath,
       },

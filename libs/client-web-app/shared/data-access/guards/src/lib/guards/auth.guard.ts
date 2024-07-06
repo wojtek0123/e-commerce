@@ -5,24 +5,22 @@ import {
   Router,
   RouterStateSnapshot,
 } from '@angular/router';
+import { AuthService } from '@e-commerce/client-web-app/shared/data-access/auth';
 
 export const authGuard: CanActivateFn = (
   _next: ActivatedRouteSnapshot,
   state: RouterStateSnapshot
 ) => {
   const router = inject(Router);
+  const isAuthenticated = inject(AuthService).isAuthenticated;
 
-  const accessToken = localStorage.getItem('access_token');
-  const refreshToken = localStorage.getItem('refresh_token');
+  if (state.url.includes('auth')) {
+    return isAuthenticated() ? router.createUrlTree(['/']) : true;
+  }
 
-  if (!accessToken || !refreshToken) {
-    router.navigate(['/auth/login']);
+  if (isAuthenticated()) {
     return true;
   }
-  // else if (state.url.includes('auth')) {
-  //   router.navigate(['/']);
-  //   return false;
-  // }
 
-  return true;
+  return router.createUrlTree(['/']);
 };
