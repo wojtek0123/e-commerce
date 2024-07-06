@@ -90,21 +90,6 @@
       "@e-commerce/client-web-app/order/ui/payment-status": [
         "libs/client-web-app/order/ui/payment-status/src/index.ts"
       ],
-      "@e-commerce/client-web-app/products/data-access": [
-        "libs/client-web-app/products/data-access/src/index.ts"
-      ],
-      "@e-commerce/client-web-app/products/feature-add-product": [
-        "libs/client-web-app/products/feature-add-product/src/index.ts"
-      ],
-      "@e-commerce/client-web-app/products/feature-home": [
-        "libs/client-web-app/products/feature-home/src/index.ts"
-      ],
-      "@e-commerce/client-web-app/products/feature-product": [
-        "libs/client-web-app/products/feature-product/src/index.ts"
-      ],
-      "@e-commerce/client-web-app/products/feature-products": [
-        "libs/client-web-app/products/feature-products/src/index.ts"
-      ],
       "@e-commerce/client-web-app/shared/data-access/api-services": [
         "libs/client-web-app/shared/data-access/api-services/src/index.ts"
       ],
@@ -129,6 +114,9 @@
       "@e-commerce/client-web-app/shared/utils/guards": [
         "libs/client-web-app/shared/utils/guards/src/index.ts"
       ],
+      "@e-commerce/client-web-app/shared/utils/providers": [
+        "libs/client-web-app/shared/utils/providers/src/index.ts"
+      ],
       "@e-commerce/client-web-app/shared/utils/router-config": [
         "libs/client-web-app/shared/utils/router-config/src/index.ts"
       ],
@@ -150,8 +138,20 @@
       "@e-commerce/client-web-app/shell/utils": [
         "libs/client-web-app/shell/utils/src/index.ts"
       ],
-      "@e-commerce/client-web-app/shared/utils/providers": [
-        "libs/client-web-app/shared/utils/providers/src/index.ts"
+      "@e-commerce/client-web-app/user/data-access": [
+        "libs/client-web-app/user/data-access/src/index.ts"
+      ],
+      "@e-commerce/client-web-app/user/feature/orders": [
+        "libs/client-web-app/user/feature/orders/src/index.ts"
+      ],
+      "@e-commerce/client-web-app/user/feature/settings": [
+        "libs/client-web-app/user/feature/settings/src/index.ts"
+      ],
+      "@e-commerce/client-web-app/user/feature/shell": [
+        "libs/client-web-app/user/feature/shell/src/index.ts"
+      ],
+      "@e-commerce/client-web-app/shared/data-access/guards": [
+        "libs/client-web-app/shared/data-access/guards/src/index.ts"
       ],
       "@e-commerce/shared/data-access": ["libs/shared/data-access/src/index.ts"]
     }

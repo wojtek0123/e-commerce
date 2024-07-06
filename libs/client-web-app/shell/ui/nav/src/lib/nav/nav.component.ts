@@ -171,6 +171,7 @@ export class NavComponent {
           {
             label: 'Orders',
             icon: 'pi pi-book',
+            routerLink: '/user/orders',
             command: () => {
               if (this.sidebarVisible()) {
                 this.sidebarVisible.set(false);
@@ -180,6 +181,7 @@ export class NavComponent {
           {
             label: 'Settings',
             icon: 'pi pi-cog',
+            routerLink: '/user/settings',
             command: () => {
               if (this.sidebarVisible()) {
                 this.sidebarVisible.set(false);

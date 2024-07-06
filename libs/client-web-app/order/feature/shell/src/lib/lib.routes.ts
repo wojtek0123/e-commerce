@@ -1,6 +1,6 @@
 import { Route } from '@angular/router';
 import { ShellComponent } from './shell/shell.component';
-import { authGuard } from '@e-commerce/client-web-app/shared/utils/guards';
+import { authGuard } from '@e-commerce/client-web-app/shared/data-access/guards';
 
 export const shellRoutes: Route[] = [
   {
