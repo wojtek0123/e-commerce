@@ -1,5 +1,10 @@
 import { AsyncPipe, NgClass, NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  signal,
+} from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -14,6 +19,10 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { FloatLabelModule } from 'primeng/floatlabel';
+import {
+  FormRowComponent,
+  ErrorMessageComponent,
+} from '@e-commerce/client-web-app/shared/ui/form-row';
 
 @Component({
   selector: 'e-commerce-register',
@@ -29,6 +38,8 @@ import { FloatLabelModule } from 'primeng/floatlabel';
     FormWrapperComponent,
     ReactiveFormsModule,
     FloatLabelModule,
+    FormRowComponent,
+    ErrorMessageComponent,
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css',
@@ -39,20 +50,24 @@ export class RegisterComponent {
   private fb = inject(FormBuilder);
 
   loading = this.authService.loading;
+  submitted = signal(false);
 
-  registerForm = this.fb.group(
+  registerForm = this.fb.nonNullable.group(
     {
-      email: this.fb.control('', {
+      email: this.fb.control<string>('', {
         validators: [Validators.required, Validators.email],
         updateOn: 'blur',
+        nonNullable: true,
       }),
-      password: this.fb.control('', {
+      password: this.fb.control<string>('', {
         validators: [Validators.required, Validators.minLength(6)],
         updateOn: 'blur',
+        nonNullable: true,
       }),
-      confirmPassword: this.fb.control('', {
+      confirmPassword: this.fb.control<string>('', {
         validators: [Validators.required],
         updateOn: 'blur',
+        nonNullable: true,
       }),
     },
     { validators: this.matchPassword() }
@@ -85,15 +100,11 @@ export class RegisterComponent {
   }
 
   onSubmit() {
-    const element = document.activeElement as
-      | HTMLInputElement
-      | HTMLButtonElement
-      | undefined;
+    this.submitted.set(true);
 
-    element?.blur();
-    // const { valid } = this.registerForm;
+    if (this.registerForm.invalid) return;
+
     const { email, password } = this.registerForm.value;
-    element?.focus();
 
     this.authService.register(email ?? '', password ?? '');
   }

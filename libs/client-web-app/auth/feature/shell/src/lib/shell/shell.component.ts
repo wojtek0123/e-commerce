@@ -1,12 +1,12 @@
 import { NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
-import { TabMenuModule } from 'primeng/tabmenu';
 
 @Component({
   selector: 'e-commerce-shell',
   standalone: true,
-  imports: [ButtonModule, TabMenuModule, NgIf],
+  imports: [ButtonModule, RouterOutlet, NgIf],
   template: `
     <div
       class="flex flex-column-reverse gap-3 xl:grid xl:flex-row xl:mb-0 xl:gap-0 height-content"

@@ -1,5 +1,4 @@
 import { Route } from '@angular/router';
-import { authRouteGuard } from '@e-commerce/client-web-app/shell/utils';
 import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-config';
 import { ShellComponent } from './shell.component';
 
@@ -36,7 +35,6 @@ export const clientWebAppShellRoutes: Route[] = [
           import('@e-commerce/client-web-app/auth/feature/shell').then(
             (r) => r.shellRoutes
           ),
-        canActivate: [authRouteGuard],
       },
       {
         path: 'user',

@@ -105,6 +105,9 @@
       "@e-commerce/client-web-app/shared/data-access/category": [
         "libs/client-web-app/shared/data-access/category/src/index.ts"
       ],
+      "@e-commerce/client-web-app/shared/data-access/guards": [
+        "libs/client-web-app/shared/data-access/guards/src/index.ts"
+      ],
       "@e-commerce/client-web-app/shared/ui/book-card": [
         "libs/client-web-app/shared/ui/book-card/src/index.ts"
       ],
@@ -150,10 +153,9 @@
       "@e-commerce/client-web-app/user/feature/shell": [
         "libs/client-web-app/user/feature/shell/src/index.ts"
       ],
-      "@e-commerce/client-web-app/shared/data-access/guards": [
-        "libs/client-web-app/shared/data-access/guards/src/index.ts"
-      ],
-      "@e-commerce/shared/data-access": ["libs/shared/data-access/src/index.ts"]
+      "@e-commerce/client-web-app/shared/ui/form-row": [
+        "libs/client-web-app/shared/ui/form-row/src/index.ts"
+      ]
     }
   },
   "exclude": ["node_modules", "tmp"]
