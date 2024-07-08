@@ -21,6 +21,10 @@ import {
 import { ResponseError } from '@e-commerce/client-web-app/shared/data-access/api-types';
 import { take } from 'rxjs';
 import { CartService } from '@e-commerce/client-web-app/shared/data-access/cart';
+import {
+  FormRowComponent,
+  ErrorMessageComponent,
+} from '@e-commerce/client-web-app/shared/ui/form-row';
 
 @Component({
   selector: 'lib-order-payment',
@@ -32,75 +36,68 @@ import { CartService } from '@e-commerce/client-web-app/shared/data-access/cart'
     InputMaskModule,
     ReactiveFormsModule,
     RouterLink,
+    FormRowComponent,
+    ErrorMessageComponent,
   ],
   template: `
     <form [formGroup]="form" class="flex flex-column gap-2">
-      <div class="flex flex-column w-full">
-        <div class="flex flex-column gap-1">
-          <label for="card-number">Card number *</label>
-          <p-inputMask
-            mask="9999 9999 9999 9999"
-            class="w-full"
-            id="card-number"
-            [ngClass]="{
-              'ng-invalid ng-dirty':
-                form.controls.cardNumber.invalid &&
-                (form.controls.cardNumber.dirty || form.dirty)
-            }"
-            formControlName="cardNumber"
-            placeholder="Type your card number"
-          />
-        </div>
+      <lib-form-row label="Card number" [isRequired]="true">
+        <p-inputMask
+          mask="9999 9999 9999 9999"
+          class="w-full"
+          id="card-number"
+          [ngClass]="{
+            'ng-invalid ng-dirty':
+              form.controls.cardNumber.invalid &&
+              (form.controls.cardNumber.dirty || form.dirty)
+          }"
+          formControlName="cardNumber"
+          placeholder="Type your card number"
+        />
         @if (form.controls.cardNumber.invalid && (form.controls.cardNumber.dirty
         || form.dirty)) {
-        <small class="text-red-500 mt-1">This field is required</small>
+        <lib-error-message />
         }
-      </div>
+      </lib-form-row>
 
       <div class="flex align-items-center gap-3">
-        <div class="flex flex-column w-full">
-          <div class="flex flex-column gap-1 w-full">
-            <label for="expiration-date">Expiration date *</label>
-            <p-inputMask
-              mask="99/9999"
-              class="w-full"
-              id="expiration-date"
-              [ngClass]="{
-                'ng-invalid ng-dirty':
-                  form.controls.expirationDate.invalid &&
-                  (form.controls.expirationDate.dirty || form.dirty)
-              }"
-              formControlName="expirationDate"
-              placeholder="Type expiration date"
-            />
-          </div>
+        <lib-form-row label="Expiration date" [isRequired]="true">
+          <p-inputMask
+            mask="99/9999"
+            class="w-full"
+            id="expiration-date"
+            [ngClass]="{
+              'ng-invalid ng-dirty':
+                form.controls.expirationDate.invalid &&
+                (form.controls.expirationDate.dirty || form.dirty)
+            }"
+            formControlName="expirationDate"
+            placeholder="Type expiration date"
+          />
           @if (form.controls.expirationDate.invalid &&
           (form.controls.expirationDate.dirty || form.dirty)) {
-          <small class="text-red-500 mt-1">This field is required</small>
+          <lib-error-message />
           }
-        </div>
+        </lib-form-row>
 
-        <div class="flex flex-column w-full">
-          <div class="flex flex-column gap-1">
-            <label for="expiration-date">Security code *</label>
-            <p-inputMask
-              mask="999"
-              class="w-full"
-              id="security-code"
-              [ngClass]="{
-                'ng-invalid ng-dirty':
-                  form.controls.securityCode.invalid &&
-                  (form.controls.securityCode.dirty || form.dirty)
-              }"
-              formControlName="securityCode"
-              placeholder="Type security code"
-            />
-          </div>
+        <lib-form-row label="Security code" [isRequired]="true">
+          <p-inputMask
+            mask="999"
+            class="w-full"
+            id="security-code"
+            [ngClass]="{
+              'ng-invalid ng-dirty':
+                form.controls.securityCode.invalid &&
+                (form.controls.securityCode.dirty || form.dirty)
+            }"
+            formControlName="securityCode"
+            placeholder="Type security code"
+          />
           @if (form.controls.securityCode.invalid &&
           (form.controls.securityCode.dirty || form.dirty)) {
-          <small class="text-red-500 mt-1">This field is required</small>
+          <lib-error-message />
           }
-        </div>
+        </lib-form-row>
       </div>
     </form>
 

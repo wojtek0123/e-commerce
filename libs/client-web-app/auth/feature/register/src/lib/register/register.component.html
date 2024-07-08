@@ -1,82 +1,86 @@
 <e-commerce-form-wrapper
-  [link]="{ url: '../login', name: 'Zaloguj się!' }"
-  header="Stwórz nowe konto!"
-  subtitle="Masz już konto?"
+  [link]="{ url: '../login', name: 'Log in!' }"
+  header="Create a new account"
+  subtitle="Do you have already an account?"
 >
   <form
     [formGroup]="registerForm"
-    class="flex flex-column gap-3 w-full max-w-30rem xl:align-items-center"
+    class="flex flex-column gap-2 w-full max-w-30rem xl:align-items-center"
     (submit)="onSubmit()"
   >
-    <div class="flex flex-column w-full">
-      <p-floatLabel>
-        <input
-          pInputText
-          id="email"
-          autocomplete="off"
-          formControlName="email"
-          [ngClass]="{
-            'ng-dirty ng-invalid': registerForm.controls.email.invalid
-          }"
+    <lib-form-row label="Email" [isRequired]="true">
+      <input
+        pInputText
+        id="email"
+        autocomplete="off"
+        formControlName="email"
+        [ngClass]="{
+          'ng-dirty ng-invalid':
+            registerForm.controls.email.invalid && submitted()
+        }"
+      />
+      @if (registerForm.controls.email.dirty || submitted()) {
+      <ng-container slot="error-message">
+        @if (registerForm.controls.email.getError('required')) {
+        <lib-error-message message="Field is required" />
+        } @else if (registerForm.controls.email.getError('email')) {
+        <lib-error-message message="Email is invalid" />
+        }
+      </ng-container>
+      }
+    </lib-form-row>
+    <lib-form-row label="Password" [isRequired]="true">
+      <p-password
+        id="password"
+        [feedback]="false"
+        [toggleMask]="true"
+        [ngClass]="{
+          'ng-dirty ng-invalid':
+            registerForm.controls.password.invalid && submitted()
+        }"
+        formControlName="password"
+      />
+      @if (registerForm.controls.password.dirty || submitted()) {
+      <ng-container slot="error-message">
+        @if (registerForm.controls.password.getError('minlength')) {
+        <lib-error-message
+          message="Password should have at least 6 characters"
         />
-        <label for="email">Email</label>
-      </p-floatLabel>
-      @if (registerForm.controls.email.dirty) { @if
-      (registerForm.controls.email.getError('required')) {
-      <small class="text-red-500 mt-1"> To pole jest wymagane </small>
-      } @else if (registerForm.controls.email.getError('email')) {
-      <small class="text-red-500 mt-1"> Niepoprawny email </small>
-      } }
-    </div>
-    <div class="flex flex-column w-full">
-      <p-floatLabel>
-        <p-password
-          id="password"
-          [feedback]="false"
-          [toggleMask]="true"
-          [ngClass]="{
-            'ng-dirty ng-invalid': registerForm.controls.password.invalid
-          }"
-          formControlName="password"
-        ></p-password>
-        <label for="password">Hasło</label>
-      </p-floatLabel>
-      @if (registerForm.controls.password.dirty ) { @if
-      (registerForm.controls.password.getError('minlength')) {
-      <small class="text-red-500 mt-1"
-        >Hasło powinno mieć co najmniej 6 znaków</small
-      >
-      } @else if (registerForm.controls.password.getError('required')) {
-      <small class="text-red-500 mt-1">To pole jest wymagane</small>
-      } }
-    </div>
-    <div class="flex flex-column w-full">
-      <p-floatLabel>
-        <p-password
-          id="confirm-password"
-          [feedback]="false"
-          [toggleMask]="true"
-          [ngClass]="{
-            'ng-dirty ng-invalid': registerForm.controls.confirmPassword.invalid
-          }"
-          formControlName="confirmPassword"
-        ></p-password>
-        <label for="confirm-password">Potwierdzenie hasła</label>
-      </p-floatLabel>
-      @if (registerForm.controls.confirmPassword.dirty) { @if
-      (registerForm.controls.confirmPassword.getError('required')) {
-      <small class="text-red-500 mt-1"> To pole jest wymagane </small>
-      } @else if (registerForm.getError('passwordMismatch')) {
-      <small class="text-red-500 mt-1">Hasła są różne </small>
-      } }
-      <p-button
-        type="submit"
-        [label]="'Zarejestruj się'"
-        [loading]="loading()"
-        loading-icon="pi pi-spin pi-spinner"
-        iconPos="right"
-        class="w-full mt-4"
-      ></p-button>
-    </div>
+        } @else if (registerForm.controls.password.getError('required')) {
+        <lib-error-message />
+        }
+      </ng-container>
+      }
+    </lib-form-row>
+    <lib-form-row label="Confirm password" [isRequired]="true">
+      <p-password
+        id="confirm-password"
+        [feedback]="false"
+        [toggleMask]="true"
+        [ngClass]="{
+          'ng-dirty ng-invalid':
+            registerForm.controls.confirmPassword.invalid && submitted()
+        }"
+        formControlName="confirmPassword"
+      />
+      @if (registerForm.controls.confirmPassword.dirty || submitted()) {
+      <ng-container slot="error-message">
+        @if (registerForm.controls.confirmPassword.getError('required')) {
+        <lib-error-message />
+        } @else if (registerForm.getError('passwordMismatch')) {
+        <lib-error-message message="Passwords are different" />
+        }
+      </ng-container>
+      }
+    </lib-form-row>
+
+    <p-button
+      type="submit"
+      label="Register"
+      [loading]="loading()"
+      loading-icon="pi pi-spin pi-spinner"
+      iconPos="right"
+      class="w-full mt-4"
+    />
   </form>
 </e-commerce-form-wrapper>

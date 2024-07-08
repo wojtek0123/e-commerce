@@ -1,26 +1,33 @@
-import { AsyncPipe, NgClass, NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { NgClass } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  signal,
+} from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '@e-commerce/client-web-app/shared/data-access/auth';
 import { FormWrapperComponent } from '@e-commerce/client-web-app/auth/ui/form-wrapper';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
-import { FloatLabelModule } from 'primeng/floatlabel';
+import {
+  FormRowComponent,
+  ErrorMessageComponent,
+} from '@e-commerce/client-web-app/shared/ui/form-row';
 
 @Component({
   selector: 'e-commerce-login',
   standalone: true,
   imports: [
-    NgIf,
-    AsyncPipe,
     InputTextModule,
     PasswordModule,
     ButtonModule,
     FormWrapperComponent,
     NgClass,
     ReactiveFormsModule,
-    FloatLabelModule,
+    FormRowComponent,
+    ErrorMessageComponent,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
@@ -31,29 +38,28 @@ export class LoginComponent {
   private fb = inject(FormBuilder);
 
   loading = this.authService.loading;
-  errorMessage: string | null = null;
+  submitted = signal(false);
 
-  loginForm = this.fb.group({
-    email: this.fb.control('', {
+  loginForm = this.fb.nonNullable.group({
+    email: this.fb.control<string>('', {
       validators: [Validators.required, Validators.email],
       updateOn: 'blur',
+      nonNullable: true,
     }),
-    password: this.fb.control('', {
+    password: this.fb.control<string>('', {
       validators: [Validators.required, Validators.minLength(6)],
       updateOn: 'blur',
+      nonNullable: true,
     }),
   });
 
   onSubmit() {
-    const element = document.activeElement as
-      | HTMLInputElement
-      | HTMLButtonElement
-      | undefined;
+    this.submitted.set(true);
+    const { invalid } = this.loginForm;
 
-    element?.blur();
-    // const { valid } = this.loginForm;
+    if (invalid) return;
+
     const { email, password } = this.loginForm.value;
-    element?.focus();
 
     this.authService.login(email ?? '', password ?? '');
   }

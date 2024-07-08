@@ -42,6 +42,10 @@ import {
   Step,
   OrderDetailsInfo,
 } from '@e-commerce/client-web-app/order/data-access';
+import {
+  FormRowComponent,
+  ErrorMessageComponent,
+} from '@e-commerce/client-web-app/shared/ui/form-row';
 
 @Component({
   selector: 'lib-order-details',
@@ -59,6 +63,8 @@ import {
     RouterLink,
     TooltipModule,
     SkeletonModule,
+    FormRowComponent,
+    ErrorMessageComponent,
   ],
   templateUrl: './order-details.component.html',
   styleUrl: './order-details.component.css',

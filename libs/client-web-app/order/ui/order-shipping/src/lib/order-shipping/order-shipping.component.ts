@@ -22,6 +22,7 @@ import {
 import { take } from 'rxjs';
 import { SkeletonModule } from 'primeng/skeleton';
 import { CardModule } from 'primeng/card';
+import { ErrorMessageComponent } from '@e-commerce/client-web-app/shared/ui/form-row';
 
 @Component({
   selector: 'lib-order-shipping',
@@ -29,7 +30,7 @@ import { CardModule } from 'primeng/card';
     <div>Contact</div>
     <div>Email: wojtekpietraszuk&#64;gmail.com</div>
     <div>Address</div>
-    <h3>Shipping method *</h3>
+    <h3>Shipping method</h3>
     @if (loading()) {
     <p-skeleton width="100%" height="3rem" />
     } @else { @if (!!error()) {
@@ -53,10 +54,10 @@ import { CardModule } from 'primeng/card';
       <div>{{ '$' + sm.price }}</div>
     </div>
     } @if (selectShippingMethodId.invalid && selectShippingMethodId.dirty) {
-    <small class="text-red-500 block mt-3">
-      If you want to get the order you should let us know about the method
-      shipping
-    </small>
+    <lib-error-message
+      class="mt-3"
+      message="If you want to get the order you should let us know about the method shipping"
+    />
     } }}
     <div class="flex align-items-center justify-content-between gap-3 mt-6">
       <p-button
@@ -81,6 +82,7 @@ import { CardModule } from 'primeng/card';
     AsyncPipe,
     SkeletonModule,
     CardModule,
+    ErrorMessageComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
