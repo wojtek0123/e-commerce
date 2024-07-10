@@ -20,11 +20,10 @@ import {
 } from '@e-commerce/client-web-app/shared/data-access/api-services';
 import { ResponseError } from '@e-commerce/client-web-app/shared/data-access/api-types';
 import { take } from 'rxjs';
-import { CartService } from '@e-commerce/client-web-app/shared/data-access/cart';
 import {
-  FormRowComponent,
+  FormFieldComponent,
   ErrorMessageComponent,
-} from '@e-commerce/client-web-app/shared/ui/form-row';
+} from '@e-commerce/client-web-app/shared/ui/form-field';
 
 @Component({
   selector: 'lib-order-payment',
@@ -36,13 +35,14 @@ import {
     InputMaskModule,
     ReactiveFormsModule,
     RouterLink,
-    FormRowComponent,
+    FormFieldComponent,
     ErrorMessageComponent,
   ],
   template: `
     <form [formGroup]="form" class="flex flex-column gap-2">
-      <lib-form-row label="Card number" [isRequired]="true">
+      <lib-form-field label="Card number" [isRequired]="true">
         <p-inputMask
+          slot="input"
           mask="9999 9999 9999 9999"
           class="w-full"
           id="card-number"
@@ -58,11 +58,12 @@ import {
         || form.dirty)) {
         <lib-error-message />
         }
-      </lib-form-row>
+      </lib-form-field>
 
       <div class="flex align-items-center gap-3">
-        <lib-form-row label="Expiration date" [isRequired]="true">
+        <lib-form-field label="Expiration date" [isRequired]="true">
           <p-inputMask
+            slot="input"
             mask="99/9999"
             class="w-full"
             id="expiration-date"
@@ -78,10 +79,11 @@ import {
           (form.controls.expirationDate.dirty || form.dirty)) {
           <lib-error-message />
           }
-        </lib-form-row>
+        </lib-form-field>
 
-        <lib-form-row label="Security code" [isRequired]="true">
+        <lib-form-field label="Security code" [isRequired]="true">
           <p-inputMask
+            slot="input"
             mask="999"
             class="w-full"
             id="security-code"
@@ -97,7 +99,7 @@ import {
           (form.controls.securityCode.dirty || form.dirty)) {
           <lib-error-message />
           }
-        </lib-form-row>
+        </lib-form-field>
       </div>
     </form>
 
@@ -131,7 +133,6 @@ export class OrderPaymentComponent {
   private router = inject(Router);
   private orderDetailsApi = inject(OrderDetailsApiService);
   private shoppingSessionApi = inject(ShoppingSessionApiService);
-  private cart = inject(CartService);
 
   changeStepEvent = output<{ step: Step }>();
 

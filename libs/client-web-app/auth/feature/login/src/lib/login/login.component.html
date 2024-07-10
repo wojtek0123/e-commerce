@@ -8,8 +8,9 @@
     class="flex flex-column gap-2 w-full max-w-30rem xl:align-items-center"
     (submit)="onSubmit()"
   >
-    <lib-form-row label="Email" [isRequired]="true">
+    <lib-form-field label="Email" [isRequired]="true">
       <input
+        slot="input"
         autofocus
         pInputText
         id="email"
@@ -28,9 +29,10 @@
         }
       </ng-container>
       }
-    </lib-form-row>
-    <lib-form-row label="Password" [isRequired]="true">
+    </lib-form-field>
+    <lib-form-field label="Password" [isRequired]="true">
       <p-password
+        slot="input"
         id="password"
         [feedback]="false"
         [toggleMask]="true"
@@ -51,7 +53,7 @@
         }
       </ng-container>
       }
-    </lib-form-row>
+    </lib-form-field>
 
     <p-button
       type="submit"

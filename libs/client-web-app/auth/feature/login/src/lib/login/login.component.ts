@@ -12,9 +12,9 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import {
-  FormRowComponent,
+  FormFieldComponent,
   ErrorMessageComponent,
-} from '@e-commerce/client-web-app/shared/ui/form-row';
+} from '@e-commerce/client-web-app/shared/ui/form-field';
 
 @Component({
   selector: 'e-commerce-login',
@@ -26,7 +26,7 @@ import {
     FormWrapperComponent,
     NgClass,
     ReactiveFormsModule,
-    FormRowComponent,
+    FormFieldComponent,
     ErrorMessageComponent,
   ],
   templateUrl: './login.component.html',

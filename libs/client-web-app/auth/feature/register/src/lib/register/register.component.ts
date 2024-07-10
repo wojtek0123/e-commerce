@@ -20,9 +20,9 @@ import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import {
-  FormRowComponent,
+  FormFieldComponent,
   ErrorMessageComponent,
-} from '@e-commerce/client-web-app/shared/ui/form-row';
+} from '@e-commerce/client-web-app/shared/ui/form-field';
 
 @Component({
   selector: 'e-commerce-register',
@@ -38,7 +38,7 @@ import {
     FormWrapperComponent,
     ReactiveFormsModule,
     FloatLabelModule,
-    FormRowComponent,
+    FormFieldComponent,
     ErrorMessageComponent,
   ],
   templateUrl: './register.component.html',
