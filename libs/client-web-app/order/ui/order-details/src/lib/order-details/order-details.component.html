@@ -1,11 +1,12 @@
 <form [formGroup]="form" class="flex flex-column w-full gap-2">
   <div class="flex flex-column md:flex-row gap-3">
-    <lib-form-row
+    <lib-form-field
       label="First name"
       [isRequired]="true"
       [isLoading]="initialLoading()"
     >
       <input
+        slot="input"
         class="w-full"
         pInputText
         id="firstname"
@@ -21,13 +22,14 @@
       submitted()) ) {
       <lib-error-message />
       }
-    </lib-form-row>
-    <lib-form-row
+    </lib-form-field>
+    <lib-form-field
       label="Last name"
       [isRequired]="true"
       [isLoading]="initialLoading()"
     >
       <input
+        slot="input"
         class="w-full"
         pInputText
         id="lastname"
@@ -43,9 +45,9 @@
       submitted())) {
       <lib-error-message />
       }
-    </lib-form-row>
+    </lib-form-field>
   </div>
-  <lib-form-row
+  <lib-form-field
     label="Country"
     [isRequired]="true"
     [isLoading]="initialLoading()"
@@ -53,6 +55,7 @@
     inputSkeletonWidth="20rem"
   >
     <p-dropdown
+      slot="input"
       class="w-full"
       formControlName="country"
       [options]="countries()"
@@ -69,14 +72,15 @@
     submitted())) {
     <lib-error-message />
     }
-  </lib-form-row>
-  <lib-form-row
+  </lib-form-field>
+  <lib-form-field
     label="City"
     [isRequired]="true"
     [isLoading]="initialLoading()"
     labelSkeletonWidth="5rem"
   >
     <input
+      slot="input"
       pInputText
       id="city"
       [ngClass]="{
@@ -91,14 +95,15 @@
     submitted())) {
     <lib-error-message />
     }
-  </lib-form-row>
-  <lib-form-row
+  </lib-form-field>
+  <lib-form-field
     label="Street"
     [isRequired]="true"
     [isLoading]="initialLoading()"
     labelSkeletonWidth="7rem"
   >
     <input
+      slot="input"
       pInputText
       id="street"
       [ngClass]="{
@@ -113,14 +118,15 @@
     submitted())) {
     <lib-error-message />
     }
-  </lib-form-row>
-  <lib-form-row
+  </lib-form-field>
+  <lib-form-field
     label="Home number"
     [isRequired]="true"
     [isLoading]="initialLoading()"
     labelSkeletonWidth="4rem"
   >
     <input
+      slot="input"
       pInputText
       id="home-number"
       class="w-14rem"
@@ -136,14 +142,15 @@
     submitted())) {
     <lib-error-message />
     }
-  </lib-form-row>
-  <lib-form-row
+  </lib-form-field>
+  <lib-form-field
     label="House number"
     [isLoading]="initialLoading()"
     labelSkeletonWidth="8rem"
     inputSkeletonWidth="14rem"
   >
     <input
+      slot="input"
       pInputText
       id="house-number"
       class="w-14rem"
@@ -159,8 +166,8 @@
     || submitted())) {
     <lib-error-message />
     }
-  </lib-form-row>
-  <lib-form-row
+  </lib-form-field>
+  <lib-form-field
     label="Post code"
     [isRequired]="true"
     [isLoading]="initialLoading()"
@@ -168,6 +175,7 @@
     inputSkeletonWidth="14rem"
   >
     <input
+      slot="input"
       pInputText
       id="postcode"
       class="w-20rem"
@@ -183,8 +191,8 @@
     submitted())) {
     <lib-error-message />
     }
-  </lib-form-row>
-  <lib-form-row
+  </lib-form-field>
+  <lib-form-field
     label="Phone"
     [isRequired]="true"
     [isLoading]="initialLoading()"
@@ -192,6 +200,7 @@
     inputSkeletonWidth="20rem"
   >
     <input
+      slot="input"
       pInputText
       id="phone"
       class="w-20rem"
@@ -207,7 +216,7 @@
     submitted())) {
     <lib-error-message />
     }
-  </lib-form-row>
+  </lib-form-field>
 
   <div class="flex align-items-center justify-content-between gap-3 mt-6">
     <a

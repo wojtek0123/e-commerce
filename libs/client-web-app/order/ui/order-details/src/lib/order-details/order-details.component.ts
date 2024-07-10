@@ -43,9 +43,9 @@ import {
   OrderDetailsInfo,
 } from '@e-commerce/client-web-app/order/data-access';
 import {
-  FormRowComponent,
+  FormFieldComponent,
   ErrorMessageComponent,
-} from '@e-commerce/client-web-app/shared/ui/form-row';
+} from '@e-commerce/client-web-app/shared/ui/form-field';
 
 @Component({
   selector: 'lib-order-details',
@@ -63,7 +63,7 @@ import {
     RouterLink,
     TooltipModule,
     SkeletonModule,
-    FormRowComponent,
+    FormFieldComponent,
     ErrorMessageComponent,
   ],
   templateUrl: './order-details.component.html',

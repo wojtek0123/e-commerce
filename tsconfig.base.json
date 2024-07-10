@@ -153,8 +153,8 @@
       "@e-commerce/client-web-app/user/feature/shell": [
         "libs/client-web-app/user/feature/shell/src/index.ts"
       ],
-      "@e-commerce/client-web-app/shared/ui/form-row": [
-        "libs/client-web-app/shared/ui/form-row/src/index.ts"
+      "@e-commerce/client-web-app/shared/ui/form-field": [
+        "libs/client-web-app/shared/ui/form-field/src/index.ts"
       ]
     }
   },

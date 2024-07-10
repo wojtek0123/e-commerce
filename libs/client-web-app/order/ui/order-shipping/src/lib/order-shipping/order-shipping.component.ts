@@ -22,7 +22,7 @@ import {
 import { take } from 'rxjs';
 import { SkeletonModule } from 'primeng/skeleton';
 import { CardModule } from 'primeng/card';
-import { ErrorMessageComponent } from '@e-commerce/client-web-app/shared/ui/form-row';
+import { ErrorMessageComponent } from '@e-commerce/client-web-app/shared/ui/form-field';
 
 @Component({
   selector: 'lib-order-shipping',

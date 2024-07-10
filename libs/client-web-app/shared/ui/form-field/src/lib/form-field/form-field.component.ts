@@ -9,7 +9,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { SkeletonModule } from 'primeng/skeleton';
 
 @Component({
-  selector: 'lib-form-row',
+  selector: 'lib-form-field',
   standalone: true,
   imports: [InputTextModule, SkeletonModule, NgClass],
   template: `
@@ -22,7 +22,7 @@ import { SkeletonModule } from 'primeng/skeleton';
     <div class="flex flex-column w-full">
       <label class="flex flex-column gap-1">
         <span>{{ label() }} {{ isRequired() ? '*' : '' }}</span>
-        <ng-content />
+        <ng-content select="[slot='input']" />
       </label>
       <div class="mt-1">
         <ng-content select="[slot='error-message'], lib-error-message" />
@@ -32,7 +32,7 @@ import { SkeletonModule } from 'primeng/skeleton';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FormRowComponent {
+export class FormFieldComponent {
   label = input.required<string>();
   isRequired = input<boolean>(false);
   isLoading = input<boolean>(false);
