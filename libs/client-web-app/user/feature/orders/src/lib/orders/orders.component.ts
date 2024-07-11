@@ -12,18 +12,27 @@ import {
 } from '@e-commerce/client-web-app/user/data-access';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ResponseError } from '@e-commerce/client-web-app/shared/data-access/api-types';
+import { AccordionModule } from 'primeng/accordion';
+import { DatePipe } from '@angular/common';
+import { NgOptimizedImage } from '@angular/common';
+import { OrderItemAccordionComponent } from './accordion.component';
 
 @Component({
   selector: 'lib-orders',
   standalone: true,
-  imports: [],
+  imports: [
+    AccordionModule,
+    DatePipe,
+    NgOptimizedImage,
+    OrderItemAccordionComponent,
+  ],
   template: `
     @if(loading()) {
     <div>Loading...</div>
     } @else {
-    <div>
+    <div class="flex flex-column gap-4">
       @for(order of orders(); track order.id) {
-      <div>{{ order.id }}</div>
+      <lib-order-item-accordion-component [order]="order" />
       }
     </div>
     }

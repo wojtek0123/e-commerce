@@ -135,10 +135,11 @@ model CartItem {
 model OrderDetails {
   id               Int            @id @default(autoincrement())
   total            Float
+  status           OrderStatus    @default(NEW)
   createdAt        DateTime       @default(now())
   updatedAt        DateTime       @updatedAt
   paymentDetails   PaymentDetails @relation(fields: [paymentDetailsId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  paymentDetailsId Int @unique
+  paymentDetailsId Int            @unique
   orderItems       OrderItem[]
   userAddress      UserAddress    @relation(fields: [userAddressId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   userAddressId    Int
@@ -187,6 +188,13 @@ enum Tag {
   BESTSELLER
   INCOMING
   DISCOUNT
+}
+
+enum OrderStatus {
+  NEW
+  PROCESSING
+  SHIPPED
+  COMPLETED
 }
 
 enum PaymentStatus {

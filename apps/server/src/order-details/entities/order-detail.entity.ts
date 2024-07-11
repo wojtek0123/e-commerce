@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { UserAddress } from '../../user-addresses/entities/user-addresses.entity';
 import { ShippingMethod } from '../../shipping-methods/entities/shipping-method.entity';
 import { Payment } from '../../payments/entities/payment.entity';
+import { OrderStatus } from '@prisma/client';
 
 export class OrderDetail {
   @ApiProperty({ readOnly: true, type: Number })
@@ -9,6 +10,9 @@ export class OrderDetail {
 
   @ApiProperty({ type: Number })
   total: number;
+
+  @ApiProperty({ enum: OrderStatus })
+  status: OrderStatus;
 
   @ApiProperty({ type: String })
   createdAt: Date;
