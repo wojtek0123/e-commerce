@@ -15,7 +15,8 @@ import { ResponseError } from '@e-commerce/client-web-app/shared/data-access/api
 import { AccordionModule } from 'primeng/accordion';
 import { DatePipe } from '@angular/common';
 import { NgOptimizedImage } from '@angular/common';
-import { OrderItemAccordionComponent } from './accordion.component';
+import { OrderItemAccordionComponent } from './order-item-accordion/order-item-accordion.component';
+import { SkeletonModule } from 'primeng/skeleton';
 
 @Component({
   selector: 'lib-orders',
@@ -23,21 +24,34 @@ import { OrderItemAccordionComponent } from './accordion.component';
   imports: [
     AccordionModule,
     DatePipe,
+    SkeletonModule,
     NgOptimizedImage,
     OrderItemAccordionComponent,
   ],
   template: `
-    @if(loading()) {
-    <div>Loading...</div>
-    } @else {
     <div class="flex flex-column gap-4">
-      @for(order of orders(); track order.id) {
-      <lib-order-item-accordion-component [order]="order" />
+      @if (loading()) {
+        @for (_ of skeletons; track $index) {
+          <div
+            class="flex align-items-center justify-content-between surface-card border-round w-full p-4"
+          >
+            <div class="flex flex-column gap-5">
+              <p-skeleton width="8rem" height="1.75rem" />
+              <p-skeleton width="5rem" height="1.25rem" />
+            </div>
+            <div class="flex flex-column align-items-end gap-5">
+              <p-skeleton width="11rem" height="1.75rem" />
+              <p-skeleton width="4rem" height="1.25rem" />
+            </div>
+          </div>
+        }
+      } @else {
+        @for (order of orders(); track order.id) {
+          <lib-order-item-accordion-component [order]="order" />
+        }
       }
     </div>
-    }
   `,
-  styleUrl: './orders.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OrdersComponent implements OnInit {
@@ -46,6 +60,7 @@ export class OrdersComponent implements OnInit {
 
   orders = signal<OrderDetails[]>([]);
   loading = signal(false);
+  skeletons = new Array(3);
 
   ngOnInit(): void {
     this.getOrders();

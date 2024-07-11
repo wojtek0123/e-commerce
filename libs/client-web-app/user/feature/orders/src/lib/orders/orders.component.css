@@ -1,6 +1,0 @@
-:host ::ng-deep .p-accordion {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  max-width: 1000px;
-}
