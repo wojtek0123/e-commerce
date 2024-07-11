@@ -5,6 +5,8 @@ export const shellRoutes: Route[] = [
   {
     path: '',
     canActivateChild: [authGuard],
+    loadComponent: () =>
+      import('./shell/shell.component').then((c) => c.ShellComponent),
     children: [
       {
         path: 'orders',
