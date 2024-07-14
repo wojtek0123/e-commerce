@@ -20,7 +20,7 @@ import { ButtonModule } from 'primeng/button';
   selector: 'lib-order-item-accordion-component',
   template: `
     <div
-      class="flex align-items-center surface-card border-round"
+      class="flex align-items-center surface-hover border-round"
       [ngClass]="{ 'border-noround-bottom': isOpen() }"
     >
       <a
@@ -48,22 +48,22 @@ import { ButtonModule } from 'primeng/button';
 
     <div
       [@contentExpansion]="isOpen() ? 'expanded' : 'collapsed'"
-      class="surface-card px-4 border-round-bottom flex flex-column gap-2"
+      class="surface-hover px-4 border-round-bottom flex flex-column gap-2"
     >
       @for (item of order().orderItems; track item.id) {
-      <div class="flex align-items-center content-item gap-4">
-        <img
-          [ngSrc]="item.book.coverImage ?? ''"
-          height="160"
-          width="110"
-          [alt]="item.book.title + ' cover image'"
-          class="border-round"
-        />
-        <div class="flex flex-column">
-          <span class="text-2xl">{{ item.book.title }}</span>
-          <span>{{ item.book.price }}</span>
+        <div class="flex align-items-center content-item gap-4">
+          <img
+            [ngSrc]="item.book.coverImage ?? ''"
+            height="160"
+            width="110"
+            [alt]="item.book.title + ' cover image'"
+            class="border-round"
+          />
+          <div class="flex flex-column">
+            <span class="text-2xl">{{ item.book.title }}</span>
+            <span>{{ item.book.price }}</span>
+          </div>
         </div>
-      </div>
       }
     </div>
   `,
@@ -85,15 +85,15 @@ import { ButtonModule } from 'primeng/button';
     trigger('contentExpansion', [
       state(
         'expanded',
-        style({ height: '*', opacity: 1, visibility: 'visible' })
+        style({ height: '*', opacity: 1, visibility: 'visible' }),
       ),
       state(
         'collapsed',
-        style({ height: '0px', opacity: 0, visibility: 'hidden' })
+        style({ height: '0px', opacity: 0, visibility: 'hidden' }),
       ),
       transition(
         'expanded <=> collapsed',
-        animate('200ms cubic-bezier(.37,1.04,.68,.98)')
+        animate('200ms cubic-bezier(.37,1.04,.68,.98)'),
       ),
     ]),
   ],

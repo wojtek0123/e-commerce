@@ -9,7 +9,7 @@ export interface UserAddress {
   city: string;
   phone: string;
   homeNumber: string;
-  houseNumber: string;
+  houseNumber?: string;
   country: Country;
   countryId: Country['id'];
 }
