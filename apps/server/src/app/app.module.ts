@@ -16,6 +16,7 @@ import { ProductInventoriesModule } from '../product-inventories/product-invento
 import { CountriesModule } from '../countries/countries.module';
 import { ShippingMethodsModule } from '../shipping-methods/shipping-methods.module';
 import { OrderDetailsModule } from '../order-details/order-details.module';
+import { OrderItemsModule } from '../order-items/order-items.module';
 
 @Module({
   controllers: [AppController],
@@ -35,6 +36,7 @@ import { OrderDetailsModule } from '../order-details/order-details.module';
     CountriesModule,
     ShippingMethodsModule,
     OrderDetailsModule,
+    OrderItemsModule,
   ],
 })
 export class AppModule {}
