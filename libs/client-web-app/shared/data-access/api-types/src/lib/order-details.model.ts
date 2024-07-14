@@ -8,5 +8,9 @@ export interface OrderDetails {
   updatedAt: string;
   userAddress: UserAddress;
   shippingMethod: ShippingMethod;
+  paymentDetails: {
+    provider: string;
+    status: string;
+  };
   orderItems: string[];
 }

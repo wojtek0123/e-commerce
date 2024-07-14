@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { API_URL } from '@e-commerce/client-web-app/shared/utils/providers';
 import { OrderDetails } from '../models/order-details.model';
+import { shareReplay } from 'rxjs';
 
 @Injectable()
 export class OrderDetailsApiService {
@@ -13,6 +14,8 @@ export class OrderDetailsApiService {
   }
 
   getOrder(id: number) {
-    return this.http.get<OrderDetails>(`${this.apiUrl}/order-details/${id}`);
+    return this.http
+      .get<OrderDetails>(`${this.apiUrl}/order-details/${id}`)
+      .pipe(shareReplay(1));
   }
 }
