@@ -153,6 +153,7 @@ model OrderItem {
   id             Int          @id @default(autoincrement())
   book           Book         @relation(fields: [bookId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   bookId         Int
+  quantity Int
   orderDetails   OrderDetails @relation(fields: [orderDetailsId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   orderDetailsId Int
   createdAt      DateTime     @default(now())

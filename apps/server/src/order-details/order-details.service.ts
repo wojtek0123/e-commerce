@@ -9,7 +9,7 @@ export class OrderDetailsService {
 
   async create(
     { userAddressId, shippingMethodId }: CreateOrderDetailDto,
-    authHeader: string
+    authHeader: string,
   ) {
     const userId = +decode(authHeader.split(' ')[1]).sub;
 
@@ -43,9 +43,10 @@ export class OrderDetailsService {
         },
         orderItems: {
           createMany: {
-            data: shoppingSession.cartItems.map(({ id, bookId }) => ({
+            data: shoppingSession.cartItems.map(({ id, bookId, quantity }) => ({
               id,
               bookId,
+              quantity,
             })),
           },
         },
@@ -70,6 +71,22 @@ export class OrderDetailsService {
   findOne(authHeader: string, id: number) {
     const userId = +decode(authHeader.split(' ')[1]).sub;
 
-    return this.prisma.orderDetails.findUnique({ where: { id, userId } });
+    return this.prisma.orderDetails.findUnique({
+      where: { id, userId },
+      include: {
+        userAddress: {
+          include: {
+            country: true,
+          },
+        },
+        shippingMethod: true,
+        paymentDetails: true,
+        orderItems: {
+          include: {
+            book: true,
+          },
+        },
+      },
+    });
   }
 }
