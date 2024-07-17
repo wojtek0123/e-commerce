@@ -8,7 +8,6 @@ import {
   Delete,
 } from '@nestjs/common';
 import { BooksService } from './books.service';
-import { Prisma } from '@prisma/client';
 import {
   ApiBody,
   ApiCreatedResponse,
@@ -19,7 +18,7 @@ import {
 import { GetBooksBodyDto } from './dto/get-books.dto';
 import { BookEntity } from './entities/book.entity';
 import { UpdateBookBodyDto } from './dto/update-body.dto';
-import { Books } from './entities/books.entity';
+import { CreateBookDto } from './dto/create-book.dto';
 
 @ApiTags('books')
 @Controller('books')
@@ -30,13 +29,13 @@ export class BooksController {
   @ApiOperation({ summary: 'Create a book' })
   @ApiBody({ type: BookEntity })
   @ApiCreatedResponse({ type: BookEntity })
-  create(@Body() data: Prisma.BookCreateInput) {
+  create(@Body() data: CreateBookDto) {
     return this.booksService.create(data);
   }
 
   @Post()
   @ApiOperation({ summary: 'Get books' })
-  @ApiOkResponse({ type: Books, isArray: true })
+  @ApiOkResponse({ type: BookEntity, isArray: true })
   findAll(@Body() data: GetBooksBodyDto) {
     return this.booksService.findMany(data);
   }
@@ -45,20 +44,20 @@ export class BooksController {
   @ApiOperation({ summary: 'Get a specific book' })
   @ApiOkResponse({ type: BookEntity })
   findOne(@Param('id') id: string) {
-    return this.booksService.findOne({ id: +id });
+    return this.booksService.findOne(+id);
   }
 
   @Patch(':id')
   @ApiOperation({ summary: 'Update a book' })
   @ApiCreatedResponse({ type: BookEntity })
   update(@Param('id') id: string, @Body() data: UpdateBookBodyDto) {
-    return this.booksService.update({ id: +id }, data);
+    return this.booksService.update(+id, data);
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a book' })
   @ApiOkResponse({ type: BookEntity })
   remove(@Param('id') id: string) {
-    return this.booksService.remove({ id: +id });
+    return this.booksService.remove(+id);
   }
 }

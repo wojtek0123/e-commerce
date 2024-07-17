@@ -2,18 +2,32 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { GetBooksBodyDto } from './dto/get-books.dto';
+import { CreateBookDto } from './dto/create-book.dto';
 
 @Injectable()
 export class BooksService {
   constructor(private prisma: PrismaService) {}
 
-  create(data: Prisma.BookCreateInput) {
-    return this.prisma.book.create({ data });
-  }
-
-  findAll(where?: Prisma.BookWhereInput) {
-    return this.prisma.book.findMany({
-      where,
+  create(data: CreateBookDto) {
+    return this.prisma.book.create({
+      data: {
+        title: data.title,
+        description: data.description,
+        language: data.language,
+        pages: data.pages,
+        publishedDate: data.publishedDate,
+        price: data.price,
+        coverImage: data.coverImage,
+        tag: data.tag,
+        authors: {
+          createMany: {
+            data: data.authorsId.map((authorId) => ({ authorId })),
+          },
+        },
+        category: { connect: { id: data.categoryId } },
+        productInventory: { create: { quantity: data.quantity } },
+        publisher: { connect: { id: data.publisherId } },
+      },
     });
   }
 
@@ -65,9 +79,9 @@ export class BooksService {
     };
   }
 
-  async findOne(where: Prisma.BookWhereUniqueInput) {
+  async findOne(id: number) {
     const book = await this.prisma.book.findUnique({
-      where,
+      where: { id },
       include: { authors: { include: { author: true } }, category: true },
     });
 
@@ -78,11 +92,11 @@ export class BooksService {
     return { ...book, authors: book.authors.map((a) => a.author) };
   }
 
-  update(where: Prisma.BookWhereUniqueInput, data: Prisma.BookUpdateInput) {
-    return this.prisma.book.update({ where, data });
+  update(id: number, data: Prisma.BookUpdateInput) {
+    return this.prisma.book.update({ where: { id }, data });
   }
 
-  remove(where: Prisma.BookWhereUniqueInput) {
-    return this.prisma.book.delete({ where });
+  remove(id: number) {
+    return this.prisma.book.delete({ where: { id } });
   }
 }

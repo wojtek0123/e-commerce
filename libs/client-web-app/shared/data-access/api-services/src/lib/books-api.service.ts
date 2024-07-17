@@ -21,8 +21,8 @@ export class BooksApiService {
     publishDateFrom?: string;
     publishedDateTo?: string;
     publisherIds?: number[];
-    priceFrom?: number;
-    priceTo?: number;
+    priceFrom?: number | null;
+    priceTo?: number | null;
     authorName?: string;
     authorIds?: number[];
     size?: number;
@@ -35,17 +35,19 @@ export class BooksApiService {
     if (opts.size) body = { ...body, size: opts.size };
     if (opts.page) body = { ...body, page: opts.page };
     if (opts.tagsIn?.length) body = { ...body, tagsIn: opts.tagsIn };
+    if (opts.priceFrom) body = { ...body, priceFrom: opts.priceFrom };
+    if (opts.priceTo) body = { ...body, priceTo: opts.priceTo };
     if (opts.categoryIds?.length)
       body = { ...body, categoryIdsIn: opts.categoryIds };
 
     return this.http
       .post<Paginated<Book>>(`${this.apiUrl}/books`, body)
-      .pipe(shareReplay(1));
+      .pipe(shareReplay({ bufferSize: 1, refCount: true }));
   }
 
   getBook$(id: Book['id']) {
     return this.http
       .get<Book>(`${this.apiUrl}/books/${id}`)
-      .pipe(shareReplay(1));
+      .pipe(shareReplay({ bufferSize: 1, refCount: true }));
   }
 }

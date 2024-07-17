@@ -57,6 +57,19 @@ p-button.w-full .p-button {
 .p-accordion {
   background: transparent;
   border-radius: var(--border-radius);
+  overflow: hidden;
+}
+
+.p-listbox {
+  border-bottom-left-radius: var(--border-radius);
+  border-bottom-right-radius: var(--border-radius);
+  overflow: hidden;
+}
+
+.p-toggleable-content {
+  border-bottom-left-radius: var(--border-radius);
+  border-bottom-right-radius: var(--border-radius);
+  overflow: hidden;
 }
 
 .p-accordion-tab {

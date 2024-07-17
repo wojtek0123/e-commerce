@@ -1,17 +1,18 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
+  EnvironmentInjector,
   HostBinding,
+  Injector,
   OnInit,
-  computed,
   inject,
   signal,
 } from '@angular/core';
 import { BooksService } from '@e-commerce/client-web-app/browse/data-access';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
-import { ActivatedRoute, RouterLink } from '@angular/router';
-import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-config';
+import { RouterLink } from '@angular/router';
 import {
   BookCardSkeletonComponent,
   BookCardComponent,
@@ -20,10 +21,11 @@ import {
   Book,
   ResponseError,
 } from '@e-commerce/client-web-app/shared/data-access/api-types';
-import { switchMap, tap } from 'rxjs';
+import { from, skip, switchMap, take, takeUntil, tap } from 'rxjs';
 import { CartService } from '@e-commerce/client-web-app/shared/data-access/cart';
 import { AsyncPipe } from '@angular/common';
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'lib-books-view',
@@ -40,39 +42,40 @@ import { PaginatorModule, PaginatorState } from 'primeng/paginator';
   template: `
     <div class="flex flex-column gap-5">
       @if (loading()) {
-      <div class="grid-auto-fit">
-        @for (_ of skeletons; track $index) {
-        <lib-book-card-skeleton />
-        }
-      </div>
-      } @else if (!loading() && books()) {
-      <div class="grid-auto-fit">
-        @for (book of books(); track book.id) {
-        <lib-book-card
-          [awaitingBookIdsToAddToCart]="awatingBookIdsToAddToCart()"
-          [book]="book"
-          (onAddToCart)="addToCart($event)"
-        />
-        } @empty {
-        <div class="text-center grid-all-columns mt-8">
-          <span class="text-3xl">No books were found!</span>
+        <div class="grid-auto-fit">
+          @for (_ of skeletons; track $index) {
+            <lib-book-card-skeleton />
+          }
         </div>
+      } @else if (!loading() && books()) {
+        <div class="grid-auto-fit">
+          @for (book of books(); track book.id) {
+            <lib-book-card
+              [awaitingBookIdsToAddToCart]="awatingBookIdsToAddToCart()"
+              [book]="book"
+              (onAddToCart)="addToCart($event)"
+            />
+          } @empty {
+            <div class="text-center grid-all-columns mt-8">
+              <span class="text-3xl">No books were found!</span>
+            </div>
+          }
+        </div>
+        @if (books().length > 0) {
+          <div class="card flex justify-content-center">
+            <p-paginator
+              (onPageChange)="onPageChange($event)"
+              [first]="page()"
+              [rows]="size()"
+              [totalRecords]="total()"
+              [rowsPerPageOptions]="[10, 20, 30]"
+            />
+          </div>
         }
-      </div>
-      @if (books().length > 0) {
-      <div class="card flex justify-content-center">
-        <p-paginator
-          (onPageChange)="onPageChange($event)"
-          [first]="page()"
-          [rows]="size()"
-          [totalRecords]="total()"
-          [rowsPerPageOptions]="[10, 20, 30]"
-        />
-      </div>
-      } } @else if (error()) {
-      <div class="text-center grid-all-columns mt-8">
-        <span class="text-3xl text-error">{{ error() }}</span>
-      </div>
+      } @else if (error()) {
+        <div class="text-center grid-all-columns mt-8">
+          <span class="text-3xl text-error">{{ error() }}</span>
+        </div>
       }
     </div>
   `,
@@ -93,7 +96,8 @@ import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 export class BooksViewComponent implements OnInit {
   private booksService = inject(BooksService);
   private cartService = inject(CartService);
-  private route = inject(ActivatedRoute);
+  private destroyRef = inject(DestroyRef);
+  private intector = inject(Injector);
 
   books = signal<Book[]>([]);
   page = signal(1);
@@ -108,19 +112,14 @@ export class BooksViewComponent implements OnInit {
   @HostBinding('class') class = 'w-full min-content-height';
 
   ngOnInit(): void {
-    this.route.queryParams
+    this.booksService.filtersHaveChanged$
       .pipe(
         tap(() => this.loading.set(true)),
-        switchMap((queryParams) =>
-          this.booksService.getBooks$({
-            tags: queryParams[appRouterConfig.browse.tagsQueryParams],
-            search: queryParams[appRouterConfig.browse.searchQueryParams],
-            categoryNames:
-              queryParams[appRouterConfig.browse.categoriesQueryParams],
-            page: 1,
-            size: 20,
-          })
-        )
+        switchMap(() => this.booksService.getBooks$(this.page(), this.size())),
+        takeUntil(
+          toObservable(this.page, { injector: this.intector }).pipe(skip(1)),
+        ),
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe({
         next: ({ items, total, count }) => {

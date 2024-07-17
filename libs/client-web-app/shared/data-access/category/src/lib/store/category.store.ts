@@ -19,12 +19,14 @@ import { tapResponse } from '@ngrx/operators';
 
 interface CategoryState {
   categories: Category[];
-  status: ApiStatus;
+  loading: boolean;
+  error: string | null;
 }
 
 const initialCategoryState: CategoryState = {
   categories: [],
-  status: 'idle',
+  loading: false,
+  error: null,
 };
 
 export const CategoryStore = signalStore(
@@ -36,26 +38,27 @@ export const CategoryStore = signalStore(
   withMethods((store, categoryApi = inject(CategoryApiService)) => ({
     getCategories: rxMethod<void>(
       pipe(
-        tap(() => patchState(store, { status: 'loading' })),
+        tap(() => patchState(store, { loading: true })),
         switchMap(() =>
           categoryApi.getCategories$().pipe(
             tapResponse({
               next: (categories) =>
-                patchState(store, { categories, status: 'ok' }),
+                patchState(store, { categories, loading: false }),
               error: (responseError: ResponseError) => {
-                // patchState(store, {
-                // status: { error: responseError.error.message },
-                // }),
+                patchState(store, {
+                  loading: false,
+                  error: responseError.error.message,
+                });
               },
-            })
-          )
-        )
-      )
+            }),
+          ),
+        ),
+      ),
     ),
   })),
   withHooks({
     onInit(store) {
       store.getCategories();
     },
-  })
+  }),
 );
