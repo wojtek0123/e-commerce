@@ -15,7 +15,7 @@ import { ListboxChangeEvent, ListboxModule } from 'primeng/listbox';
 @Component({
   selector: 'lib-filter-accordion-tab',
   template: `
-    <p-accordionTab class="surface-card">
+    <p-accordionTab>
       <ng-template pTemplate="header">
         <div class="flex align-items-center">
           <span class="font-bold white-space-nowrap">{{ header() }}</span>
@@ -32,20 +32,26 @@ import { ListboxChangeEvent, ListboxModule } from 'primeng/listbox';
           />
         </div>
       </ng-template>
-      <p-listbox
-        [options]="items()"
-        [optionLabel]="optionLabel()"
-        [optionValue]="optionValue()"
-        [formControl]="formControl()"
-        [filter]="items().length > 10 ? true : false"
-        [checkbox]="true"
-        [multiple]="true"
-        [listStyle]="{
-          'max-height': height().maxHeight,
-          height: height().base
-        }"
-        (onChange)="onChange($event)"
-      />
+      @if (type() === 'listbox') {
+        <p-listbox
+          [options]="items()"
+          [optionLabel]="optionLabel()"
+          [optionValue]="optionValue()"
+          [formControl]="formControl()"
+          [filter]="items().length > 10 ? true : false"
+          [checkbox]="true"
+          [multiple]="true"
+          [listStyle]="{
+            'max-height': height().maxHeight,
+            height: height().base,
+          }"
+          (onChange)="onChange($event)"
+        />
+      } @else {
+        <div class="container">
+          <ng-content placeholder="There is not custom filter" />
+        </div>
+      }
     </p-accordionTab>
   `,
   standalone: true,
@@ -65,17 +71,22 @@ import { ListboxChangeEvent, ListboxModule } from 'primeng/listbox';
           border-radius: var(--border-radius) !important;
         }
       }
+
+      .container {
+        padding: 1.125rem;
+      }
     `,
   ],
 })
 export class FilterAccordionTabComponent<T> {
-  items = input.required<T[]>();
-  filterName = input.required<keyof BooksFilters>();
+  items = input<T[]>([]);
+  filterName = input<keyof BooksFilters>();
   header = input.required<string>();
   height = input<{ maxHeight: string; base: string }>({
     maxHeight: 'max-content',
     base: 'fit-content',
   });
+  type = input<'listbox' | 'custom'>('listbox');
 
   optionLabel = input<string | undefined>(undefined);
   optionValue = input<string | undefined>(undefined);
@@ -83,16 +94,17 @@ export class FilterAccordionTabComponent<T> {
   clearEvent = output<keyof BooksFilters>();
   changeEvent = output<T[]>();
 
-  selectedItems = input.required<T[]>();
+  selectedItems = input<T[]>([]);
 
   protected formControl = computed(
-    () => new FormControl<T[] | null>(this.selectedItems())
+    () => new FormControl<T[] | null>(this.selectedItems()),
   );
 
-  clearFilter(event: Event, filter: keyof BooksFilters) {
+  clearFilter(event: Event, filter: keyof BooksFilters | undefined) {
     event.preventDefault();
     event.stopImmediatePropagation();
 
+    if (!filter) return;
     this.clearEvent.emit(filter);
   }
 

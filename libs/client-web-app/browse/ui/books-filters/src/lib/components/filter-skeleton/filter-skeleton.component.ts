@@ -9,17 +9,15 @@ import { SkeletonModule } from 'primeng/skeleton';
 @Component({
   selector: 'lib-filter-skeleton',
   template: `
-    <div class="border-round">
+    <div class="border-round surface-hover p-3">
       <p-skeleton
-        class="border-round mb-2 flex align-items-center justify-content-center"
+        class="border-round mb-2 flex align-items-center"
         width="50%"
         height="2rem"
       />
-      <div
-        class="w-full border border-round surface-border surface-card flex flex-column gap-2 py-3"
-      >
+      <div class="w-full border border-round flex flex-column gap-2 py-3">
         @for (_ of skeletons(); track $index) {
-        <p-skeleton class="border-round mx-3" width="100%" height="3rem" />
+          <p-skeleton class="border-round" width="100%" height="1.25rem" />
         }
       </div>
     </div>

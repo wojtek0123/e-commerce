@@ -1,8 +1,15 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { Prisma } from '@prisma/client';
-import { IsDate, IsNumber, IsOptional, IsString } from 'class-validator';
+import { ApiCreatedResponse, ApiProperty } from '@nestjs/swagger';
+import { Tag } from '@prisma/client';
+import {
+  IsArray,
+  IsDate,
+  IsEnum,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
-export class CreateBook implements Prisma.BookCreateInput {
+export class CreateBookDto {
   @ApiProperty({ type: String })
   @IsString()
   title: string;
@@ -36,15 +43,28 @@ export class CreateBook implements Prisma.BookCreateInput {
   @ApiProperty({ type: String, required: false })
   @IsDate()
   @IsOptional()
-  publishingDate: string;
+  publishedDate: string;
 
-  @ApiProperty()
+  @ApiProperty({ type: Number, required: false })
   @IsNumber()
-  publisher?: Prisma.PublisherCreateNestedOneWithoutBooksInput;
+  @IsOptional()
+  publisherId?: number;
 
-  @ApiProperty()
-  category: Prisma.CategoryCreateNestedOneWithoutBooksInput;
+  @ApiProperty({ type: Number })
+  @IsNumber()
+  categoryId: number;
 
-  @ApiProperty()
-  productInventory: Prisma.ProductInventoryCreateNestedOneWithoutBookInput;
+  @ApiProperty({ type: Number, required: false })
+  @IsOptional()
+  @IsNumber()
+  quantity: number;
+
+  @ApiProperty({ enum: Tag, required: false })
+  @IsOptional()
+  @IsEnum(Tag)
+  tag: Tag;
+
+  @ApiProperty({ type: Number, isArray: true })
+  @IsArray()
+  authorsId: number[];
 }

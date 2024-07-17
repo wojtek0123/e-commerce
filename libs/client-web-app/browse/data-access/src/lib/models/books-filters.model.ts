@@ -8,4 +8,5 @@ export interface BooksFilters {
   [appRouterConfig.browse.searchQueryParams]: string | null;
   [appRouterConfig.browse.tagsQueryParams]: BookTag[];
   [appRouterConfig.browse.categoriesQueryParams]: Category[];
+  price: string | null;
 }

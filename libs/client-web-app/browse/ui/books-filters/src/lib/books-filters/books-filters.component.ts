@@ -2,31 +2,19 @@ import {
   ChangeDetectionStrategy,
   Component,
   HostBinding,
-  OnInit,
   inject,
-  signal,
-  viewChild,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import {
-  BookTag,
-  Category,
-  allBookTags,
-} from '@e-commerce/client-web-app/shared/data-access/api-types';
 import { ButtonModule } from 'primeng/button';
-import { CategoryStore } from '@e-commerce/client-web-app/shared/data-access/category';
-import {
-  BooksService,
-  BooksFilters,
-} from '@e-commerce/client-web-app/browse/data-access';
+import { BooksFilters } from '@e-commerce/client-web-app/browse/data-access';
 import { FilterSkeletonComponent } from '../components/filter-skeleton/filter-skeleton.component';
 import { ActivatedRoute, Router } from '@angular/router';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { Accordion, AccordionModule } from 'primeng/accordion';
-import { map } from 'rxjs';
+import { AccordionModule } from 'primeng/accordion';
 import { FilterAccordionTabComponent } from '../components/filter-accordion/filter-accordion.component';
-import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-config';
 import { NgClass } from '@angular/common';
+import { CategoriesFilterComponent } from '../components/categories-filter/categories-filter.component';
+import { TagsFilterComponent } from '../components/tags-filter/tags-filter.component';
+import { PriceFilterComponent } from '../components/price-filter/price-filter.component';
 
 @Component({
   selector: 'lib-books-filters',
@@ -38,44 +26,23 @@ import { NgClass } from '@angular/common';
     AccordionModule,
     FilterAccordionTabComponent,
     NgClass,
+    CategoriesFilterComponent,
+    TagsFilterComponent,
+    PriceFilterComponent,
   ],
   template: `
     <div class="card flex flex-column gap-4 pb-4">
-      <p-accordion
-        #accordion
-        class="flex-column gap-4 filter-container"
-        [multiple]="false"
-      >
-        <lib-filter-accordion-tab
-          filterName="tags"
-          header="Tagi"
-          [items]="tags()"
-          [selectedItems]="selectedTags() ?? []"
-          (clearEvent)="clearFilter($event)"
-          (changeEvent)="updateSelectedTags($event)"
-        />
-        @if (categoryStatus() === 'ok') {
-        <lib-filter-accordion-tab
-          filterName="categories"
-          header="Kategorie"
-          optionLabel="name"
-          [items]="categories"
-          [selectedItems]="selectedCategories() ?? []"
-          (clearEvent)="clearFilter($event)"
-          (changeEvent)="updateSelectedCategories($event)"
-        />
-        } @else if (categoryStatus() === 'loading') {
-        <lib-filter-skeleton [numberOfSkeletons]="10" />
-        }@else {
-        <div>Error</div>
-        }
+      <p-accordion class="flex-column gap-4 filter-container">
+        <lib-tags-filter (clearFilterEvent)="clearFilter($event)" />
+        <lib-categories-filter (clearFilterEvent)="clearFilter($event)" />
+        <lib-price-filter (clearFilterEvent)="clearFilter($event)" />
       </p-accordion>
       <p-button
         icon="pi pi-trash"
         label="Clear filters"
         class="w-full mt-2"
         (onClick)="clearFilters()"
-      ></p-button>
+      />
     </div>
   `,
   styles: [
@@ -101,61 +68,16 @@ import { NgClass } from '@angular/common';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BooksFiltersComponent implements OnInit {
-  private categoryStore = inject(CategoryStore);
-  private booksService = inject(BooksService);
+export class BooksFiltersComponent {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
 
   @HostBinding('class') class = 'max-w-24rem w-full hidden xl:block';
 
-  categoryStatus = this.categoryStore.status;
-  categorySkeletons = new Array(10);
-
-  selectedTags = toSignal(
-    this.route.queryParams.pipe(
-      map(
-        (queryParams) =>
-          queryParams[appRouterConfig.browse.tagsQueryParams] as
-            | string
-            | undefined
-      ),
-      map((tags) => tags?.split(',') ?? [])
-    )
-  );
-  selectedCategories = toSignal(
-    this.route.queryParams.pipe(
-      map(
-        (queryParams) =>
-          queryParams[appRouterConfig.browse.categoriesQueryParams] as
-            | Category['name']
-            | undefined
-      ),
-      map((categories) => categories?.replaceAll('_', ' ')?.split(',') ?? []),
-      map((categoryNames) =>
-        this.categories?.filter((category) =>
-          categoryNames.find((name) => category.name === name)
-        )
-      )
-    )
-  );
-
-  tags = signal<BookTag[]>([...allBookTags]);
-  categories = this.route.snapshot.data[
-    appRouterConfig.browse.categoriesData
-  ] as Category[];
-
-  accordionElement = viewChild<Accordion>('accordion');
-
-  ngOnInit(): void {
-    this.booksService.setCategories(this.categories);
-  }
-
   clearFilters() {
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: null,
-      queryParamsHandling: 'merge',
       replaceUrl: true,
     });
   }
@@ -165,29 +87,6 @@ export class BooksFiltersComponent implements OnInit {
       relativeTo: this.route,
       queryParams: {
         [filter]: null,
-      },
-      queryParamsHandling: 'merge',
-      replaceUrl: true,
-    });
-  }
-
-  updateSelectedTags(tags: string[]) {
-    this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: {
-        [appRouterConfig.browse.tagsQueryParams]: tags?.join(',') || null,
-      },
-      queryParamsHandling: 'merge',
-      replaceUrl: true,
-    });
-  }
-
-  updateSelectedCategories(categories: Category[]) {
-    this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: {
-        [appRouterConfig.browse.tagsQueryParams]:
-          categories.map(({ name }) => name)?.join(',') || null,
       },
       queryParamsHandling: 'merge',
       replaceUrl: true,
