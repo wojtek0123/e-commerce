@@ -26,7 +26,12 @@ export class BooksService {
         },
         category: { connect: { id: data.categoryId } },
         productInventory: { create: { quantity: data.quantity } },
-        publisher: { connect: { id: data.publisherId } },
+        publisher: {
+          connectOrCreate: {
+            create: { name: data.publisherName },
+            where: { id: data.publisherId },
+          },
+        },
       },
     });
   }
@@ -39,22 +44,42 @@ export class BooksService {
     priceTo,
     size,
     page,
+    authorNamesIn,
   }: GetBooksBodyDto) {
-    let where: Prisma.BookScalarWhereInput = {};
+    // let where: Prisma.BookScalarWhereInput = {};
 
-    if (categoryIdsIn || tagsIn || titleLike || priceFrom || priceTo) {
-      where = {
+    if (
+      categoryIdsIn ||
+      tagsIn ||
+      titleLike ||
+      priceFrom ||
+      priceTo ||
+      authorNamesIn
+    ) {
+      //   where = {
+      //     AND: [
+      //       { tag: { in: tagsIn } },
+      //       { categoryId: { in: categoryIdsIn } },
+      //       { title: { contains: titleLike, mode: 'insensitive' } },
+      //       { price: { gte: priceFrom, lte: priceTo } },
+      //     ],
+      //   };
+    }
+
+    const authorsId = await this.prisma.author
+      .findMany({ where: { name: { in: authorNamesIn } } })
+      .then((authors) => authors.map(({ id }) => id));
+
+    const books = await this.prisma.book.findMany({
+      where: {
         AND: [
           { tag: { in: tagsIn } },
           { categoryId: { in: categoryIdsIn } },
           { title: { contains: titleLike, mode: 'insensitive' } },
           { price: { gte: priceFrom, lte: priceTo } },
+          { authors: { some: { authorId: { in: authorsId } } } },
         ],
-      };
-    }
-
-    const books = await this.prisma.book.findMany({
-      where,
+      },
       include: {
         authors: {
           include: {

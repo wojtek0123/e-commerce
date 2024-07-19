@@ -34,6 +34,7 @@ import {
 import { FormsModule } from '@angular/forms';
 import { BadgeModule } from 'primeng/badge';
 import { CartService } from '@e-commerce/client-web-app/shared/data-access/cart';
+import { CategoriesComponent } from '../components/categories/categories.component';
 
 @Component({
   selector: 'lib-e-commerce-nav',
@@ -54,6 +55,7 @@ import { CartService } from '@e-commerce/client-web-app/shared/data-access/cart'
     InputSwitchModule,
     FormsModule,
     BadgeModule,
+    CategoriesComponent,
   ],
   templateUrl: './nav.component.html',
   styles: [
@@ -73,7 +75,6 @@ import { CartService } from '@e-commerce/client-web-app/shared/data-access/cart'
 export class NavComponent {
   private authService = inject(AuthService);
   private cartService = inject(CartService);
-  private categoryStore = inject(CategoryStore);
   private themeSwitcherService = inject(ThemeSwitherService);
 
   userCartItemsTotal = signal(0);
@@ -134,37 +135,6 @@ export class NavComponent {
 
   sidebarVisible = signal(false);
   isAuthenticated = this.authService.isAuthenticated;
-  categories = computed(() =>
-    !this.categoryStore.categoriesCount()
-      ? [
-          {
-            label: 'Error! Try again.',
-            icon: 'pi pi-refresh',
-            command: () => {
-              this.categoryStore.getCategories();
-              if (this.sidebarVisible()) {
-                this.sidebarVisible.set(false);
-              }
-            },
-          },
-        ]
-      : this.categoryStore.categories().map((category) => ({
-          label: category.name,
-          routerLink: browseRoutePaths.default,
-          queryParams: {
-            [appRouterConfig.browse.categoriesQueryParams]: category.name
-              .toLowerCase()
-              .split(' ')
-              .join('_'),
-          },
-          state: { categoryIds: [category.id], clear: true },
-          command: () => {
-            if (this.sidebarVisible()) {
-              this.sidebarVisible.set(false);
-            }
-          },
-        }))
-  );
   menuItems = computed(() =>
     this.isAuthenticated()
       ? [
@@ -220,7 +190,7 @@ export class NavComponent {
               }
             },
           },
-        ]
+        ],
   );
 
   showSidebar = () => this.sidebarVisible.set(true);
@@ -244,7 +214,7 @@ export class NavComponent {
   }
 
   theme = computed(() =>
-    this.themeSwitcherService.theme() === 'dark' ? true : false
+    this.themeSwitcherService.theme() === 'dark' ? true : false,
   )();
 
   onChangeTheme(event: InputSwitchChangeEvent) {

@@ -22,7 +22,7 @@ import {
   BooksFilters,
   BooksService,
 } from '@e-commerce/client-web-app/browse/data-access';
-import { filter, map, tap } from 'rxjs';
+import { filter, map } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
@@ -31,10 +31,9 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   template: `
     <lib-filter-accordion-tab
       header="Price"
-      [type]="'custom'"
       (clearEvent)="clearFilterEvent.emit($event)"
       filterName="price"
-      [selectedItems]="(nonNullControls$ | async) ?? []"
+      [selectedItemsCount]="(nonNullControls$ | async)?.length ?? 0"
     >
       <form [formGroup]="priceForm" class="flex align-items-center gap-2">
         <lib-form-field label="Min">
@@ -116,7 +115,6 @@ export class PriceFilterComponent implements OnInit {
     this.route.queryParams
       .pipe(
         map((queryParams) => queryParams['price']),
-        tap((price) => console.log(price)),
         filter((price) => this.initial() || !price),
         takeUntilDestroyed(this.destroyRef),
       )

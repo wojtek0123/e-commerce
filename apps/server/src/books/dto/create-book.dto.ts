@@ -67,4 +67,9 @@ export class CreateBookDto {
   @ApiProperty({ type: Number, isArray: true })
   @IsArray()
   authorsId: number[];
+
+  @ApiProperty({ type: String, required: false })
+  @IsNumber()
+  @IsOptional()
+  publisherName: string;
 }

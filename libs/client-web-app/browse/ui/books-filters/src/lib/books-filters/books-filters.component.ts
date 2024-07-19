@@ -15,6 +15,7 @@ import { NgClass } from '@angular/common';
 import { CategoriesFilterComponent } from '../components/categories-filter/categories-filter.component';
 import { TagsFilterComponent } from '../components/tags-filter/tags-filter.component';
 import { PriceFilterComponent } from '../components/price-filter/price-filter.component';
+import { AuthorsFilterComponent } from '../components/authors-filter/authors-filter.component';
 
 @Component({
   selector: 'lib-books-filters',
@@ -29,12 +30,14 @@ import { PriceFilterComponent } from '../components/price-filter/price-filter.co
     CategoriesFilterComponent,
     TagsFilterComponent,
     PriceFilterComponent,
+    AuthorsFilterComponent,
   ],
   template: `
     <div class="card flex flex-column gap-4 pb-4">
       <p-accordion class="flex-column gap-4 filter-container">
         <lib-tags-filter (clearFilterEvent)="clearFilter($event)" />
         <lib-categories-filter (clearFilterEvent)="clearFilter($event)" />
+        <lib-authors-filter />
         <lib-price-filter (clearFilterEvent)="clearFilter($event)" />
       </p-accordion>
       <p-button

@@ -18,34 +18,20 @@
         class="align-items-center justify-content-center gap-4 list-none m-0 p-0 hidden xl:flex"
       >
         <li>
-          <p-button
-            (click)="categoriesMenu.toggle($event)"
-            iconPos="right"
-            severity="secondary"
-            [icon]="
-              categoriesMenu.visible ? 'pi pi-angle-up' : 'pi pi-angle-down'
-            "
-            label="Categories"
-          ></p-button>
-          <p-menu
-            #categoriesMenu
-            class="p-menu-two-columns"
-            [popup]="true"
-            [model]="categories()"
-          />
+          <lib-categories />
         </li>
         @for (item of navItems; track item.id) {
-        <li>
-          <a
-            [routerLink]="item.url"
-            routerLinkActive="underline"
-            [queryParams]="item.queryParams"
-            [state]="item.state"
-            class="text-lg text-color capitalize no-underline py-1 px-3"
-          >
-            {{ item.name }}
-          </a>
-        </li>
+          <li>
+            <a
+              [routerLink]="item.url"
+              routerLinkActive="underline"
+              [queryParams]="item.queryParams"
+              [state]="item.state"
+              class="text-lg text-color capitalize no-underline py-1 px-3"
+            >
+              {{ item.name }}
+            </a>
+          </li>
         }
       </ul>
     </div>
@@ -104,10 +90,10 @@
       </p-button>
 
       @defer (when cartSidebarVisible()) {
-      <lib-cart-sidebar
-        [sidebarVisible]="cartSidebarVisible()"
-        (onClose)="cartSidebarVisible.set(false)"
-      />
+        <lib-cart-sidebar
+          [sidebarVisible]="cartSidebarVisible()"
+          (onClose)="cartSidebarVisible.set(false)"
+        />
       }
 
       <p-button
@@ -132,7 +118,7 @@
         </ng-template>
         <p-accordion [multiple]="false" [activeIndex]="[]">
           <p-accordionTab header="Categories">
-            <p-menu [model]="categories()" class="p-menu-sidebar"></p-menu>
+            <!-- <p-menu [model]="categories()" class="p-menu-sidebar" /> -->
           </p-accordionTab>
           <p-accordionTab header="User" class="md:hidden">
             <p-menu [model]="menuItems()" class="p-menu-sidebar" />

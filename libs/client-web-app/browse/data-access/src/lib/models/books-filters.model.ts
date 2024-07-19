@@ -1,4 +1,5 @@
 import {
+  Author,
   BookTag,
   Category,
 } from '@e-commerce/client-web-app/shared/data-access/api-types';
@@ -9,4 +10,5 @@ export interface BooksFilters {
   [appRouterConfig.browse.tagsQueryParams]: BookTag[];
   [appRouterConfig.browse.categoriesQueryParams]: Category[];
   price: string | null;
+  authors: Author[];
 }

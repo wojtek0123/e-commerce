@@ -27,7 +27,7 @@ export class BooksController {
 
   @Post('create')
   @ApiOperation({ summary: 'Create a book' })
-  @ApiBody({ type: BookEntity })
+  @ApiBody({ type: CreateBookDto })
   @ApiCreatedResponse({ type: BookEntity })
   create(@Body() data: CreateBookDto) {
     return this.booksService.create(data);

@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { AuthorsService } from './authors.service';
 import { Prisma, Author } from '@prisma/client';
@@ -14,6 +15,7 @@ import {
   ApiCreatedResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
 import { AuthorDto } from './dto/author.dto';
@@ -34,8 +36,15 @@ export class AuthorsController {
   @Get()
   @ApiOperation({ summary: 'Get all authors' })
   @ApiOkResponse({ type: AuthorDto, isArray: true })
-  findAll() {
-    return this.authorsService.findAll();
+  @ApiQuery({ name: 'page', required: false, type: Number })
+  @ApiQuery({ name: 'size', required: false, type: Number })
+  @ApiQuery({ name: 'nameLike', required: false, type: String })
+  findAll(
+    @Query('page') page?: number,
+    @Query('size') size?: number,
+    @Query('nameLike') nameLike?: string,
+  ) {
+    return this.authorsService.findAll({ page: +page, size: +size, nameLike });
   }
 
   @Get(':id')

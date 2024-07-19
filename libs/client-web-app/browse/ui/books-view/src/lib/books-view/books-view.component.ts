@@ -26,6 +26,7 @@ import { CartService } from '@e-commerce/client-web-app/shared/data-access/cart'
 import { AsyncPipe } from '@angular/common';
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { ActiveFiltersComponent } from './components/active-filters.component';
 
 @Component({
   selector: 'lib-books-view',
@@ -38,8 +39,10 @@ import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
     BookCardSkeletonComponent,
     AsyncPipe,
     PaginatorModule,
+    ActiveFiltersComponent,
   ],
   template: `
+    <lib-active-filters />
     <div class="flex flex-column gap-5">
       @if (loading()) {
         <div class="grid-auto-fit">
@@ -109,7 +112,8 @@ export class BooksViewComponent implements OnInit {
   awatingBookIdsToAddToCart = this.cartService.addingBookIds;
   skeletons = new Array(12);
 
-  @HostBinding('class') class = 'w-full min-content-height';
+  @HostBinding('class') class =
+    'w-full min-content-height flex flex-column gap-3';
 
   ngOnInit(): void {
     this.booksService.filtersHaveChanged$

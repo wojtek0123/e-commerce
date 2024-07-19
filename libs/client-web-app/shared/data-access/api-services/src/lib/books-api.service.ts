@@ -16,7 +16,7 @@ export class BooksApiService {
 
   getBooks$(opts: {
     title?: string;
-    categoryIds?: Category['id'][];
+    categoryNames?: Category['name'][];
     tagsIn?: BookTag[];
     publishDateFrom?: string;
     publishedDateTo?: string;
@@ -24,7 +24,7 @@ export class BooksApiService {
     priceFrom?: number | null;
     priceTo?: number | null;
     authorName?: string;
-    authorIds?: number[];
+    authorNamesIn?: string[];
     size?: number;
     page?: number;
   }) {
@@ -37,8 +37,10 @@ export class BooksApiService {
     if (opts.tagsIn?.length) body = { ...body, tagsIn: opts.tagsIn };
     if (opts.priceFrom) body = { ...body, priceFrom: opts.priceFrom };
     if (opts.priceTo) body = { ...body, priceTo: opts.priceTo };
-    if (opts.categoryIds?.length)
-      body = { ...body, categoryIdsIn: opts.categoryIds };
+    if (opts.categoryNames?.length)
+      body = { ...body, categoryNamesIn: opts.categoryNames };
+    if (opts.authorNamesIn?.length)
+      body = { ...body, authorNamesIn: opts.authorNamesIn };
 
     return this.http
       .post<Paginated<Book>>(`${this.apiUrl}/books`, body)
