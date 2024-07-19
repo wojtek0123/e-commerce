@@ -1,6 +1,7 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { BooksApiService } from '@e-commerce/client-web-app/shared/data-access/api-services';
 import {
+  Author,
   BookTag,
   Category,
 } from '@e-commerce/client-web-app/shared/data-access/api-types';
@@ -10,7 +11,8 @@ import { Subject } from 'rxjs';
 export class BooksService {
   private booksApi = inject(BooksApiService);
 
-  private _categoriesId = signal<Category['id'][]>([]);
+  private _categoryNames = signal<Category['name'][]>([]);
+  private _authorNames = signal<Author['name'][]>([]);
   private _tags = signal<BookTag[]>([]);
   private _search = signal<string | null>(null);
   private _minPrice = signal<number | null>(null);
@@ -21,8 +23,13 @@ export class BooksService {
     return this._filtersHaveChanged$.asObservable();
   }
 
-  setCategoriesId(ids: Category['id'][]) {
-    this._categoriesId.set(ids);
+  setCategoryNames(names: Category['name'][]) {
+    this._categoryNames.set(names);
+    this._filtersHaveChanged$.next();
+  }
+
+  setAuthorNames(names: Author['name'][]) {
+    this._authorNames.set(names);
     this._filtersHaveChanged$.next();
   }
 
@@ -50,9 +57,10 @@ export class BooksService {
     return this.booksApi.getBooks$({
       tagsIn: this._tags(),
       title: this._search() ?? undefined,
-      categoryIds: this._categoriesId(),
+      categoryNames: this._categoryNames(),
       priceFrom: this._minPrice(),
       priceTo: this._maxPrice(),
+      authorNamesIn: this._authorNames(),
       page,
       size,
     });

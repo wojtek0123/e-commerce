@@ -1,16 +1,14 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  computed,
   input,
   output,
 } from '@angular/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { BooksFilters } from '@e-commerce/client-web-app/browse/data-access';
 import { AccordionModule } from 'primeng/accordion';
 import { BadgeModule } from 'primeng/badge';
 import { ButtonModule } from 'primeng/button';
-import { ListboxChangeEvent, ListboxModule } from 'primeng/listbox';
+import { ListboxModule } from 'primeng/listbox';
 
 @Component({
   selector: 'lib-filter-accordion-tab',
@@ -20,7 +18,7 @@ import { ListboxChangeEvent, ListboxModule } from 'primeng/listbox';
         <div class="flex align-items-center">
           <span class="font-bold white-space-nowrap">{{ header() }}</span>
           <p-badge
-            [value]="selectedItems().length.toString()"
+            [value]="selectedItemsCount()"
             class="ml-2"
             styleClass="p-badge-secondary"
           />
@@ -32,36 +30,13 @@ import { ListboxChangeEvent, ListboxModule } from 'primeng/listbox';
           />
         </div>
       </ng-template>
-      @if (type() === 'listbox') {
-        <p-listbox
-          [options]="items()"
-          [optionLabel]="optionLabel()"
-          [optionValue]="optionValue()"
-          [formControl]="formControl()"
-          [filter]="items().length > 10 ? true : false"
-          [checkbox]="true"
-          [multiple]="true"
-          [listStyle]="{
-            'max-height': height().maxHeight,
-            height: height().base,
-          }"
-          (onChange)="onChange($event)"
-        />
-      } @else {
-        <div class="container">
-          <ng-content placeholder="There is not custom filter" />
-        </div>
-      }
+      <div class="container">
+        <ng-content />
+      </div>
     </p-accordionTab>
   `,
   standalone: true,
-  imports: [
-    AccordionModule,
-    ListboxModule,
-    ButtonModule,
-    BadgeModule,
-    ReactiveFormsModule,
-  ],
+  imports: [AccordionModule, ListboxModule, ButtonModule, BadgeModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: [
     `
@@ -78,37 +53,21 @@ import { ListboxChangeEvent, ListboxModule } from 'primeng/listbox';
     `,
   ],
 })
-export class FilterAccordionTabComponent<T> {
-  items = input<T[]>([]);
-  filterName = input<keyof BooksFilters>();
+export class FilterAccordionTabComponent {
+  filterName = input.required<keyof BooksFilters>();
   header = input.required<string>();
+  selectedItemsCount = input.required<number>();
   height = input<{ maxHeight: string; base: string }>({
     maxHeight: 'max-content',
     base: 'fit-content',
   });
-  type = input<'listbox' | 'custom'>('listbox');
-
-  optionLabel = input<string | undefined>(undefined);
-  optionValue = input<string | undefined>(undefined);
 
   clearEvent = output<keyof BooksFilters>();
-  changeEvent = output<T[]>();
 
-  selectedItems = input<T[]>([]);
-
-  protected formControl = computed(
-    () => new FormControl<T[] | null>(this.selectedItems()),
-  );
-
-  clearFilter(event: Event, filter: keyof BooksFilters | undefined) {
+  clearFilter(event: Event, filter: keyof BooksFilters) {
     event.preventDefault();
     event.stopImmediatePropagation();
 
-    if (!filter) return;
     this.clearEvent.emit(filter);
-  }
-
-  onChange(event: ListboxChangeEvent) {
-    this.changeEvent.emit(event.value);
   }
 }

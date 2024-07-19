@@ -10,8 +10,12 @@ export class AuthorsService {
     return this.prisma.author.create({ data });
   }
 
-  findAll() {
-    return this.prisma.author.findMany();
+  findAll(opts: { page?: number; size?: number; nameLike?: string }) {
+    return this.prisma.author.findMany({
+      where: { name: { contains: opts.nameLike ?? '', mode: 'insensitive' } },
+      take: opts.size ?? 20,
+      skip: (opts.size ?? 20) * ((opts.page ?? 1) - 1),
+    });
   }
 
   findOne(where: Prisma.AuthorWhereUniqueInput) {

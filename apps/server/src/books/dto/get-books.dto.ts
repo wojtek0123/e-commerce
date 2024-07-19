@@ -55,7 +55,7 @@ export class GetBooksBodyDto {
   @ApiProperty({ required: false, isArray: true, type: String })
   @IsOptional()
   @IsArray()
-  authorIn: string[];
+  authorNamesIn: string[];
 
   @ApiProperty({ required: false, type: Number, default: 20 })
   @IsOptional()
