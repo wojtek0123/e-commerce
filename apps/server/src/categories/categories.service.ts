@@ -11,10 +11,16 @@ export class CategoriesService {
     return 'This action adds a new category';
   }
 
-  async findAll() {
-    const categories = await this.prisma.category.findMany();
-
-    return categories.sort((a, b) => a.name.localeCompare(b.name));
+  async findAll(opts: { nameLike?: string; page?: number; size?: number }) {
+    return this.prisma.category
+      .findMany({
+        where: { name: { contains: opts.nameLike ?? '', mode: 'insensitive' } },
+        skip: (opts.size || 20) * ((opts.page || 1) - 1),
+        take: opts.size || 20,
+      })
+      .then((categories) =>
+        categories.sort((a, b) => a.name.localeCompare(b.name)),
+      );
   }
 
   findOne(id: number) {

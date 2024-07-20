@@ -1,6 +1,5 @@
 import { computed, inject } from '@angular/core';
 import {
-  ApiStatus,
   Category,
   ResponseError,
 } from '@e-commerce/client-web-app/shared/data-access/api-types';
@@ -40,7 +39,7 @@ export const CategoryStore = signalStore(
       pipe(
         tap(() => patchState(store, { loading: true })),
         switchMap(() =>
-          categoryApi.getCategories$().pipe(
+          categoryApi.getCategories$({}).pipe(
             tapResponse({
               next: (categories) =>
                 patchState(store, { categories, loading: false }),

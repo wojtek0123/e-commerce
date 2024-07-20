@@ -1,32 +1,29 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  DestroyRef,
-  EnvironmentInjector,
   HostBinding,
-  Injector,
-  OnInit,
   inject,
   signal,
 } from '@angular/core';
-import { BooksService } from '@e-commerce/client-web-app/browse/data-access';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import {
   BookCardSkeletonComponent,
   BookCardComponent,
 } from '@e-commerce/client-web-app/shared/ui/book-card';
 import {
   Book,
+  BookTag,
   ResponseError,
 } from '@e-commerce/client-web-app/shared/data-access/api-types';
-import { from, skip, switchMap, take, takeUntil, tap } from 'rxjs';
+import { catchError, ignoreElements, shareReplay, switchMap } from 'rxjs';
 import { CartService } from '@e-commerce/client-web-app/shared/data-access/cart';
 import { AsyncPipe } from '@angular/common';
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { ActiveFiltersComponent } from './components/active-filters.component';
+import { BooksApiService } from '@e-commerce/client-web-app/shared/data-access/api-services';
+import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-config';
 
 @Component({
   selector: 'lib-books-view',
@@ -44,41 +41,43 @@ import { ActiveFiltersComponent } from './components/active-filters.component';
   template: `
     <lib-active-filters />
     <div class="flex flex-column gap-5">
-      @if (loading()) {
-        <div class="grid-auto-fit">
-          @for (_ of skeletons; track $index) {
-            <lib-book-card-skeleton />
-          }
-        </div>
-      } @else if (!loading() && books()) {
-        <div class="grid-auto-fit">
-          @for (book of books(); track book.id) {
-            <lib-book-card
-              [awaitingBookIdsToAddToCart]="awatingBookIdsToAddToCart()"
-              [book]="book"
-              (onAddToCart)="addToCart($event)"
-            />
-          } @empty {
-            <div class="text-center grid-all-columns mt-8">
-              <span class="text-3xl">No books were found!</span>
+      @if ({ books: books$ | async, booksError: booksError$ | async }; as vm) {
+        @if (!vm.books && !vm.books) {
+          <div class="grid-auto-fit">
+            @for (_ of skeletons; track $index) {
+              <lib-book-card-skeleton />
+            }
+          </div>
+        } @else if (!vm.books && vm.booksError) {
+          <div class="text-center grid-all-columns mt-8">
+            <span class="text-3xl text-error">{{ vm.booksError }}</span>
+          </div>
+        } @else if (vm.books && !vm.booksError) {
+          <div class="grid-auto-fit">
+            @for (book of vm.books.items; track book.id) {
+              <lib-book-card
+                [awaitingBookIdsToAddToCart]="awatingBookIdsToAddToCart()"
+                [book]="book"
+                (onAddToCart)="addToCart($event)"
+              />
+            } @empty {
+              <div class="text-center grid-all-columns mt-8">
+                <span class="text-3xl">No books were found!</span>
+              </div>
+            }
+          </div>
+          @if (vm.books.count > 0) {
+            <div class="card flex justify-content-center">
+              <p-paginator
+                (onPageChange)="onPageChange($event)"
+                [first]="vm.books.page"
+                [rows]="size()"
+                [totalRecords]="vm.books.count"
+                [rowsPerPageOptions]="[10, 20, 30]"
+              />
             </div>
           }
-        </div>
-        @if (books().length > 0) {
-          <div class="card flex justify-content-center">
-            <p-paginator
-              (onPageChange)="onPageChange($event)"
-              [first]="page()"
-              [rows]="size()"
-              [totalRecords]="total()"
-              [rowsPerPageOptions]="[10, 20, 30]"
-            />
-          </div>
         }
-      } @else if (error()) {
-        <div class="text-center grid-all-columns mt-8">
-          <span class="text-3xl text-error">{{ error() }}</span>
-        </div>
       }
     </div>
   `,
@@ -96,60 +95,75 @@ import { ActiveFiltersComponent } from './components/active-filters.component';
     `,
   ],
 })
-export class BooksViewComponent implements OnInit {
-  private booksService = inject(BooksService);
+export class BooksViewComponent {
+  private booksApi = inject(BooksApiService);
   private cartService = inject(CartService);
-  private destroyRef = inject(DestroyRef);
-  private intector = inject(Injector);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
 
-  books = signal<Book[]>([]);
-  page = signal(1);
-  size = signal(20);
-  total = signal(0);
-  count = signal(0);
-  loading = signal(true);
-  error = signal<string | null>(null);
   awatingBookIdsToAddToCart = this.cartService.addingBookIds;
   skeletons = new Array(12);
 
+  size = signal(20);
+
+  books$ = this.route.queryParams
+    .pipe(
+      switchMap((queryParams) =>
+        this.booksApi.getBooks$({
+          size: this.size(),
+          page: queryParams['page'] ?? 1,
+          authorNamesIn: (
+            queryParams[appRouterConfig.queryParams.authors] as
+              | string
+              | undefined
+          )
+            ?.replaceAll('_', ' ')
+            .split(','),
+          categoryNames: (
+            queryParams[appRouterConfig.queryParams.categories] as
+              | string
+              | undefined
+          )
+            ?.replaceAll('_', ' ')
+            .split(','),
+          tagsIn: (
+            queryParams[appRouterConfig.queryParams.tags] as string | undefined
+          )
+            ?.replaceAll('_', ' ')
+            .toUpperCase()
+            .split(',') as BookTag[],
+          priceFrom:
+            +queryParams[appRouterConfig.queryParams.minPrice] || undefined,
+          priceTo:
+            +queryParams[appRouterConfig.queryParams.maxPrice] || undefined,
+        }),
+      ),
+    )
+    .pipe(shareReplay(1));
+  booksError$ = this.books$.pipe(
+    ignoreElements(),
+    catchError((resError: ResponseError) => resError.error.message),
+  );
+
   @HostBinding('class') class =
     'w-full min-content-height flex flex-column gap-3';
-
-  ngOnInit(): void {
-    this.booksService.filtersHaveChanged$
-      .pipe(
-        tap(() => this.loading.set(true)),
-        switchMap(() => this.booksService.getBooks$(this.page(), this.size())),
-        takeUntil(
-          toObservable(this.page, { injector: this.intector }).pipe(skip(1)),
-        ),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe({
-        next: ({ items, total, count }) => {
-          this.loading.set(false);
-          this.books.set(items);
-          this.total.set(total);
-          this.count.set(count);
-        },
-        error: (resError: ResponseError) => {
-          this.error.set(resError.error.message);
-        },
-      });
-  }
 
   addToCart(book: Book) {
     this.cartService.addItem(book, 1);
   }
 
   onPageChange(event: PaginatorState) {
-    // this.size.set(event.rows);
     if (event.page) {
-      this.page.set(event.page);
+      this.router.navigate([], {
+        relativeTo: this.route,
+        queryParams: { page: event.page },
+        queryParamsHandling: 'merge',
+        replaceUrl: true,
+      });
     }
 
-    if (event.rows) {
-      this.size.set(event.rows);
-    }
+    // if (event.rows) {
+    //   this.size.set(event.rows);
+    // }
   }
 }

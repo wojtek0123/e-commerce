@@ -21,17 +21,17 @@ export class GetBooksBodyDto {
   @ApiProperty({ required: false, type: String })
   @IsOptional()
   @IsString()
-  titleLike: string;
+  titleLike?: string;
 
   @ApiProperty({ required: false, type: String })
   @IsOptional()
   @IsDate()
-  publishDateFrom: Date;
+  publishDateFrom?: Date;
 
   @ApiProperty({ required: false, type: String })
   @IsOptional()
   @IsDate()
-  publishDateTo: Date;
+  publishDateTo?: Date;
 
   @ApiProperty({ required: false, isArray: true, type: Number })
   @IsOptional()
@@ -40,22 +40,22 @@ export class GetBooksBodyDto {
   @ApiProperty({ required: false, type: Number })
   @IsOptional()
   @IsNumber()
-  priceFrom: number;
+  priceFrom?: number;
 
   @ApiProperty({ required: false, type: Number })
   @IsOptional()
   @IsNumber()
-  priceTo: number;
+  priceTo?: number;
 
   @ApiProperty({ required: false, type: String })
   @IsOptional()
   @IsString()
-  authorLike: string;
+  authorLike?: string;
 
   @ApiProperty({ required: false, isArray: true, type: String })
   @IsOptional()
   @IsArray()
-  authorNamesIn: string[];
+  authorNamesIn?: string[];
 
   @ApiProperty({ required: false, type: Number, default: 20 })
   @IsOptional()

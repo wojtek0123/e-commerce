@@ -6,7 +6,6 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
-import { BooksFilters } from '@e-commerce/client-web-app/browse/data-access';
 import { FilterSkeletonComponent } from '../components/filter-skeleton/filter-skeleton.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AccordionModule } from 'primeng/accordion';
@@ -35,10 +34,10 @@ import { AuthorsFilterComponent } from '../components/authors-filter/authors-fil
   template: `
     <div class="card flex flex-column gap-4 pb-4">
       <p-accordion class="flex-column gap-4 filter-container">
-        <lib-tags-filter (clearFilterEvent)="clearFilter($event)" />
-        <lib-categories-filter (clearFilterEvent)="clearFilter($event)" />
+        <lib-tags-filter />
+        <lib-categories-filter />
         <lib-authors-filter />
-        <lib-price-filter (clearFilterEvent)="clearFilter($event)" />
+        <lib-price-filter />
       </p-accordion>
       <p-button
         icon="pi pi-trash"
@@ -81,17 +80,6 @@ export class BooksFiltersComponent {
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: null,
-      replaceUrl: true,
-    });
-  }
-
-  clearFilter(filter: keyof BooksFilters) {
-    this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: {
-        [filter]: null,
-      },
-      queryParamsHandling: 'merge',
       replaceUrl: true,
     });
   }

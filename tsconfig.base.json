@@ -111,6 +111,9 @@
       "@e-commerce/client-web-app/shared/ui/book-card": [
         "libs/client-web-app/shared/ui/book-card/src/index.ts"
       ],
+      "@e-commerce/client-web-app/shared/ui/form-field": [
+        "libs/client-web-app/shared/ui/form-field/src/index.ts"
+      ],
       "@e-commerce/client-web-app/shared/utils/assets": [
         "libs/client-web-app/shared/utils/assets/src/index.ts"
       ],
@@ -153,8 +156,8 @@
       "@e-commerce/client-web-app/user/feature/shell": [
         "libs/client-web-app/user/feature/shell/src/index.ts"
       ],
-      "@e-commerce/client-web-app/shared/ui/form-field": [
-        "libs/client-web-app/shared/ui/form-field/src/index.ts"
+      "@e-commerce/client-web-app/browse/utils": [
+        "libs/client-web-app/browse/utils/src/index.ts"
       ]
     }
   },
