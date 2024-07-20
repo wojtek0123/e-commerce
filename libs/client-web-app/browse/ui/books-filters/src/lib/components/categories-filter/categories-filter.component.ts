@@ -1,43 +1,37 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  DestroyRef,
-  OnInit,
-  computed,
+  WritableSignal,
   inject,
-  output,
   signal,
 } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { CategoryStore } from '@e-commerce/client-web-app/shared/data-access/category';
 import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-config';
-import { map } from 'rxjs';
 import { FilterSkeletonComponent } from '../filter-skeleton/filter-skeleton.component';
 import { FilterAccordionTabComponent } from '../filter-accordion/filter-accordion.component';
-import {
-  BooksFilters,
-  BooksService,
-} from '@e-commerce/client-web-app/browse/data-access';
+import { AbstractBookFilterComponent } from '@e-commerce/client-web-app/browse/data-access';
 import { AsyncPipe } from '@angular/common';
 import { CheckboxModule } from 'primeng/checkbox';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
+import { CategoryApiService } from '@e-commerce/client-web-app/shared/data-access/api-services';
+import { toObservable } from '@angular/core/rxjs-interop';
+import { catchError, ignoreElements, map, shareReplay, switchMap } from 'rxjs';
+import { ResponseError } from '@e-commerce/client-web-app/shared/data-access/api-types';
 
 @Component({
   selector: 'lib-categories-filter',
   template: `
-    @if (loading()) {
-      <lib-filter-skeleton [numberOfSkeletons]="3" />
-    } @else {
-      @if (error()) {
-        <div>{{ error() }}</div>
-      } @else {
+    @if ({ categoryNames: names$ | async, error: error$ | async }; as vm) {
+      @if (!vm.categoryNames && !vm.error) {
+        <lib-filter-skeleton [numberOfSkeletons]="3" />
+      } @else if (!vm.categoryNames && vm.error) {
+        <div>{{ vm.error }}</div>
+      } @else if (vm.categoryNames && !vm.error) {
         <lib-filter-accordion-tab
           filterName="categories"
           header="Categories"
-          [selectedItemsCount]="selectedItemsControl.value.length"
-          (clearEvent)="clearFilterEvent.emit($event)"
+          [selectedItemsCount]="selectedNames.length"
+          (clearEvent)="clearChecked()"
         >
           <div class="flex flex-column gap-2">
             <input
@@ -47,11 +41,12 @@ import { InputTextModule } from 'primeng/inputtext';
               class="w-full"
             />
             <div class="flex flex-column gap-2">
-              @for (name of categoryNames(); track name) {
+              @for (name of vm.categoryNames; track name) {
                 <p-checkbox
-                  [formControl]="selectedItemsControl"
+                  [(ngModel)]="selectedNames"
                   [label]="name"
                   [value]="name"
+                  (onChange)="onChange($event)"
                 />
               } @empty {
                 <div>Not found more categories</div>
@@ -74,54 +69,25 @@ import { InputTextModule } from 'primeng/inputtext';
     InputTextModule,
   ],
 })
-export class CategoriesFilterComponent implements OnInit {
-  private categoryStore = inject(CategoryStore);
-  private booksService = inject(BooksService);
-  private route = inject(ActivatedRoute);
-  private router = inject(Router);
-  private destroyRef = inject(DestroyRef);
+export class CategoriesFilterComponent extends AbstractBookFilterComponent {
+  private categoryApi = inject(CategoryApiService);
 
-  categoryNames = computed(() =>
-    this.categoryStore.categories().map(({ name }) => name),
+  override searchText: WritableSignal<string | null> = signal(null);
+  override selectedNames: WritableSignal<string[]> = signal([]);
+  override queryParamKey: string = appRouterConfig.queryParams.categories;
+  override names$ = toObservable(this.searchText).pipe(
+    switchMap((searchText) =>
+      this.categoryApi.getCategories$({
+        nameLike: searchText ?? '',
+        page: 1,
+        size: 20,
+      }),
+    ),
+    map((categories) => categories.map(({ name }) => name)),
+    shareReplay(1),
   );
-  loading = this.categoryStore.loading;
-  error = this.categoryStore.error;
-  searchText = signal<string | null>(null);
-  selectedItemsControl = new FormControl<string[]>([], { nonNullable: true });
-
-  clearFilterEvent = output<keyof BooksFilters>();
-
-  ngOnInit(): void {
-    this.route.queryParams
-      .pipe(
-        map(
-          (queryParams) =>
-            queryParams[appRouterConfig.browse.categoriesQueryParams] as
-              | string
-              | undefined,
-        ),
-        map((filter) => filter?.replaceAll('_', ' ').split(',') ?? []),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe((categories) => {
-        this.selectedItemsControl.setValue(categories);
-        this.booksService.setCategoryNames(categories);
-      });
-
-    this.selectedItemsControl.valueChanges
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((categoryNames) => {
-        this.router.navigate([], {
-          relativeTo: this.route,
-          queryParams: {
-            [appRouterConfig.browse.categoriesQueryParams]:
-              categoryNames
-                ?.map((name) => name.replaceAll(' ', '_'))
-                ?.join(',') || null,
-          },
-          queryParamsHandling: 'merge',
-          replaceUrl: true,
-        });
-      });
-  }
+  override error$ = this.names$.pipe(
+    ignoreElements(),
+    catchError((resError: ResponseError) => resError.error.message),
+  );
 }

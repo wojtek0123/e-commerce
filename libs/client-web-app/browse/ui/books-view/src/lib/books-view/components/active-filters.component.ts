@@ -7,9 +7,9 @@ import {
   inject,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { filter, firstValueFrom, map, tap } from 'rxjs';
+import { firstValueFrom, map } from 'rxjs';
 import { ChipModule } from 'primeng/chip';
-import { Button, ButtonModule } from 'primeng/button';
+import { ButtonModule } from 'primeng/button';
 
 @Pipe({
   standalone: true,
@@ -17,7 +17,6 @@ import { Button, ButtonModule } from 'primeng/button';
 })
 export class KeyValuePipe implements PipeTransform {
   transform(filters: { [key: string]: string }[] | null) {
-    console.log(filters);
     if (!filters) return [];
     const x = filters.flatMap((filter) =>
       Object.entries(filter).flatMap(([key, value]) => ({ key, value })),

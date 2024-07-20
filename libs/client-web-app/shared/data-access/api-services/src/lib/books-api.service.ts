@@ -21,8 +21,8 @@ export class BooksApiService {
     publishDateFrom?: string;
     publishedDateTo?: string;
     publisherIds?: number[];
-    priceFrom?: number | null;
-    priceTo?: number | null;
+    priceFrom?: number;
+    priceTo?: number;
     authorName?: string;
     authorNamesIn?: string[];
     size?: number;
@@ -34,7 +34,8 @@ export class BooksApiService {
     if (opts.title?.length) body = { ...body, titleLike: opts.title };
     if (opts.size) body = { ...body, size: opts.size };
     if (opts.page) body = { ...body, page: opts.page };
-    if (opts.tagsIn?.length) body = { ...body, tagsIn: opts.tagsIn };
+    if (opts.tagsIn?.length)
+      body = { ...body, tagsIn: opts.tagsIn.map((t) => t.toUpperCase()) };
     if (opts.priceFrom) body = { ...body, priceFrom: opts.priceFrom };
     if (opts.priceTo) body = { ...body, priceTo: opts.priceTo };
     if (opts.categoryNames?.length)

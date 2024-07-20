@@ -70,13 +70,14 @@ export class BooksService {
       .findMany({ where: { name: { in: authorNamesIn } } })
       .then((authors) => authors.map(({ id }) => id));
 
+    // TODO: DO POPRAWY!
     const books = await this.prisma.book.findMany({
       where: {
         AND: [
           { tag: { in: tagsIn } },
           { categoryId: { in: categoryIdsIn } },
           { title: { contains: titleLike, mode: 'insensitive' } },
-          { price: { gte: priceFrom, lte: priceTo } },
+          { price: { gte: +priceFrom || 0, lte: +priceTo || 100000000 } },
           { authors: { some: { authorId: { in: authorsId } } } },
         ],
       },

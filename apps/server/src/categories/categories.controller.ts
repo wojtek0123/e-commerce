@@ -6,11 +6,17 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
-import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiOkResponse,
+  ApiOperation,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
 import { CategoryDto } from './dto/category.dto';
 
 @ApiTags('categories')
@@ -26,8 +32,19 @@ export class CategoriesController {
   @Get()
   @ApiOperation({ summary: 'Get categories' })
   @ApiOkResponse({ type: CategoryDto })
-  findAll() {
-    return this.categoriesService.findAll();
+  @ApiQuery({ name: 'nameLike', required: false, type: String })
+  @ApiQuery({ name: 'page', required: false, type: Number })
+  @ApiQuery({ name: 'size', required: false, type: Number })
+  findAll(
+    @Query('page') page?: number,
+    @Query('size') size?: number,
+    @Query('nameLike') nameLike?: string,
+  ) {
+    return this.categoriesService.findAll({
+      nameLike,
+      page: +page,
+      size: +size,
+    });
   }
 
   @Get(':id')
@@ -38,7 +55,7 @@ export class CategoriesController {
   @Patch(':id')
   update(
     @Param('id') id: string,
-    @Body() updateCategoryDto: UpdateCategoryDto
+    @Body() updateCategoryDto: UpdateCategoryDto,
   ) {
     return this.categoriesService.update(+id, updateCategoryDto);
   }

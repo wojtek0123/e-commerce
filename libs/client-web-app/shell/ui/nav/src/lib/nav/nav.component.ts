@@ -13,7 +13,6 @@ import { AsyncPipe, NgClass } from '@angular/common';
 import { MenuModule } from 'primeng/menu';
 import { MegaMenuModule } from 'primeng/megamenu';
 import { SidebarModule } from 'primeng/sidebar';
-import { CategoryStore } from '@e-commerce/client-web-app/shared/data-access/category';
 import { AccordionModule } from 'primeng/accordion';
 import {
   BookTag,
@@ -100,36 +99,35 @@ export class NavComponent {
       name: BookTag.INCOMING.toLowerCase(),
       url: browseRoutePaths.default,
       queryParams: {
-        [appRouterConfig.browse.tagsQueryParams]: BookTag.INCOMING,
+        [appRouterConfig.browse.tagsQueryParams]:
+          BookTag.INCOMING.toLowerCase(),
       },
-      state: { [appRouterConfig.browse.clearHistoryState]: true },
     },
     {
       id: BookTag.BESTSELLER,
       name: BookTag.BESTSELLER.toLowerCase(),
       url: browseRoutePaths.default,
       queryParams: {
-        [appRouterConfig.browse.tagsQueryParams]: BookTag.BESTSELLER,
+        [appRouterConfig.browse.tagsQueryParams]:
+          BookTag.BESTSELLER.toLowerCase(),
       },
-      state: { [appRouterConfig.browse.clearHistoryState]: true },
     },
     {
       id: BookTag.DISCOUNT,
       name: BookTag.DISCOUNT.toLowerCase(),
       url: browseRoutePaths.default,
       queryParams: {
-        [appRouterConfig.browse.tagsQueryParams]: BookTag.DISCOUNT,
+        [appRouterConfig.browse.tagsQueryParams]:
+          BookTag.DISCOUNT.toLowerCase(),
       },
-      state: { [appRouterConfig.browse.clearHistoryState]: true },
     },
     {
       id: BookTag.NEW,
       name: BookTag.NEW.toLowerCase(),
       url: browseRoutePaths.default,
       queryParams: {
-        [appRouterConfig.browse.tagsQueryParams]: BookTag.NEW,
+        [appRouterConfig.browse.tagsQueryParams]: BookTag.NEW.toLowerCase(),
       },
-      state: { [appRouterConfig.browse.clearHistoryState]: true },
     },
   ];
 
