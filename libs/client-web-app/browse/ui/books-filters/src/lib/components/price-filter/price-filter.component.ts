@@ -3,21 +3,17 @@ import {
   Component,
   DestroyRef,
   OnInit,
+  computed,
   inject,
   signal,
 } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DividerModule } from 'primeng/divider';
 import { FilterAccordionTabComponent } from '../filter-accordion/filter-accordion.component';
 import { FormFieldComponent } from '@e-commerce/client-web-app/shared/ui/form-field';
 import { ActivatedRoute, Router } from '@angular/router';
-import { distinct, filter, map } from 'rxjs';
+import { filter, map } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-config';
@@ -31,13 +27,14 @@ import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-
       filterName="price"
       [selectedItemsCount]="choosenPriceLimitsCount()"
     >
-      <form [formGroup]="priceForm" class="flex align-items-center gap-2">
+      <div class="flex align-items-center gap-2">
         <lib-form-field label="Min">
           <p-inputNumber
             slot="input"
             [min]="0"
             [maxFractionDigits]="2"
-            formControlName="min"
+            [(ngModel)]="minPrice"
+            (onBlur)="onBlur(minPrice(), 'minPrice')"
             mode="decimal"
             class="w-full"
             currency="USD"
@@ -48,14 +45,15 @@ import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-
           <p-inputNumber
             slot="input"
             [min]="0"
-            formControlName="max"
+            [(ngModel)]="maxPrice"
+            (onBlur)="onBlur(maxPrice(), 'maxPrice')"
             [maxFractionDigits]="2"
             mode="decimal"
             class="w-full"
             currency="USD"
           />
         </lib-form-field>
-      </form>
+      </div>
     </lib-filter-accordion-tab>
   `,
   styles: [
@@ -72,10 +70,10 @@ import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-
   imports: [
     InputNumberModule,
     DividerModule,
-    ReactiveFormsModule,
     FilterAccordionTabComponent,
     FormFieldComponent,
     AsyncPipe,
+    FormsModule,
   ],
 })
 export class PriceFilterComponent implements OnInit {
@@ -83,18 +81,12 @@ export class PriceFilterComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private destroyRef = inject(DestroyRef);
 
-  priceForm = new FormGroup({
-    min: new FormControl<number | null>(null, {
-      validators: [Validators.min(0)],
-      updateOn: 'blur',
-    }),
-    max: new FormControl<number | null>(null, {
-      validators: [Validators.min(0)],
-      updateOn: 'blur',
-    }),
-  });
+  minPrice = signal<number | null>(null);
+  maxPrice = signal<number | null>(null);
 
-  choosenPriceLimitsCount = signal(0);
+  choosenPriceLimitsCount = computed(
+    () => [this.minPrice(), this.maxPrice()].filter((v) => v).length,
+  );
 
   ngOnInit(): void {
     this.route.queryParams
@@ -105,40 +97,27 @@ export class PriceFilterComponent implements OnInit {
           max:
             Number(queryParams[appRouterConfig.queryParams.maxPrice]) || null,
         })),
-        filter(({ min, max }) => {
-          const { min: formMin, max: formMax } = this.priceForm.value;
-
-          return !(formMax === max && min === formMin);
-        }),
+        filter(
+          ({ min, max }) =>
+            !(this.maxPrice() === max && min === this.minPrice()),
+        ),
         takeUntilDestroyed(this.destroyRef),
       )
       .subscribe(({ min, max }) => {
-        this._setFilterCount(min, max);
-
-        this.priceForm.setValue({
-          min,
-          max,
-        });
+        this.minPrice.set(min);
+        this.maxPrice.set(max);
       });
+  }
 
-    this.priceForm.valueChanges
-      .pipe(
-        distinct(({ min, max }) => min && max),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe(({ min, max }) => {
-        this._setFilterCount(min, max);
-
-        this.router.navigate([], {
-          relativeTo: this.route,
-          queryParams: {
-            [appRouterConfig.queryParams.minPrice]: min ?? null,
-            [appRouterConfig.queryParams.maxPrice]: max ?? null,
-          },
-          queryParamsHandling: 'merge',
-          replaceUrl: true,
-        });
-      });
+  onBlur(value: number | null, key: 'minPrice' | 'maxPrice') {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        [appRouterConfig.queryParams[key]]: value,
+      },
+      queryParamsHandling: 'merge',
+      replaceUrl: true,
+    });
   }
 
   clearChecked() {
@@ -151,11 +130,5 @@ export class PriceFilterComponent implements OnInit {
       queryParamsHandling: 'merge',
       replaceUrl: true,
     });
-  }
-
-  private _setFilterCount(min?: number | null, max?: number | null) {
-    this.choosenPriceLimitsCount.set(
-      [min, max].filter((value) => value).length,
-    );
   }
 }
