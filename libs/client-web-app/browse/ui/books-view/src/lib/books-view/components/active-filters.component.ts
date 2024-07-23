@@ -18,8 +18,12 @@ import { ButtonModule } from 'primeng/button';
 export class KeyValuePipe implements PipeTransform {
   transform(filters: { [key: string]: string }[] | null) {
     if (!filters) return [];
+
     const x = filters.flatMap((filter) =>
-      Object.entries(filter).flatMap(([key, value]) => ({ key, value })),
+      Object.entries(filter).flatMap(([key, value]) => ({
+        key: key.replaceAll('_', ' '),
+        value,
+      })),
     );
 
     return x;
@@ -37,7 +41,12 @@ export class KeyValuePipe implements PipeTransform {
             icon="pi pi-times"
             size="small"
             [text]="true"
-            (click)="onRemove({ key: keyvalue.key, value: keyvalue.value })"
+            (click)="
+              onRemove({
+                key: keyvalue.key.replaceAll(' ', '_'),
+                value: keyvalue.value,
+              })
+            "
           />
         </div>
       }
@@ -53,12 +62,14 @@ export class ActiveFiltersComponent {
 
   activeFilters$ = this.route.queryParams.pipe(
     map((queryParams) =>
-      Object.entries(queryParams).flatMap(([key, value]) =>
-        (value as string)
-          ?.replaceAll('_', ' ')
-          .split(',')
-          .map((value) => ({ [key]: value })),
-      ),
+      Object.entries(queryParams)
+        .filter(([key]) => !['page', 'size'].includes(key))
+        .flatMap(([key, value]) =>
+          (value as string)
+            ?.replaceAll('_', ' ')
+            .split(',')
+            .map((value) => ({ [key]: value })),
+        ),
     ),
   );
 
@@ -73,9 +84,8 @@ export class ActiveFiltersComponent {
       ),
     );
 
-    console.log(x);
-
     const f = this.groupBy(x);
+    console.log(f);
 
     this.router.navigate([], {
       relativeTo: this.route,
@@ -88,6 +98,7 @@ export class ActiveFiltersComponent {
       (result, currentPair) => {
         const key = Object.keys(currentPair)[0];
         const value = currentPair[key];
+
         if (!result[key]) {
           result[key] = '';
         }

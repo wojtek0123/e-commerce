@@ -1,7 +1,6 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  WritableSignal,
   computed,
   signal,
 } from '@angular/core';
@@ -14,7 +13,6 @@ import { InputTextModule } from 'primeng/inputtext';
 import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-config';
 import { AbstractBookFilterComponent } from '@e-commerce/client-web-app/browse/data-access';
 import { Observable, of } from 'rxjs';
-import { toObservable } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'lib-tags-filter',
@@ -22,7 +20,7 @@ import { toObservable } from '@angular/core/rxjs-interop';
     <lib-filter-accordion-tab
       filterName="tags"
       header="Tags"
-      [selectedItemsCount]="selectedNames.length"
+      [selectedItemsCount]="selectedNames().length"
       (clearEvent)="clearChecked()"
     >
       <div class="flex flex-column gap-2">
@@ -68,8 +66,6 @@ export class TagsFilterComponent extends AbstractBookFilterComponent {
   );
   override names$: Observable<string[]> = of([]);
   override error$: Observable<string | null> = of(null);
-  override searchText: WritableSignal<string | null> = signal(null);
-  override selectedNames: WritableSignal<string[]> = signal([]);
 
   override queryParamKey: string = appRouterConfig.queryParams.tags;
 }
