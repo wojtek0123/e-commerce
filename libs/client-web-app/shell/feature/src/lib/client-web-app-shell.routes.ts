@@ -7,7 +7,7 @@ export const clientWebAppShellRoutes: Route[] = [
     path: appRouterConfig.order.basePath,
     loadChildren: () =>
       import('@e-commerce/client-web-app/order/feature/shell').then(
-        (r) => r.shellRoutes
+        (r) => r.shellRoutes,
       ),
   },
   {
@@ -19,28 +19,28 @@ export const clientWebAppShellRoutes: Route[] = [
         pathMatch: 'full',
         loadChildren: () =>
           import('@e-commerce/client-web-app/home/feature').then(
-            (r) => r.homeRoutes
+            (r) => r.homeRoutes,
           ),
       },
       {
         path: appRouterConfig.browse.basePath,
         loadChildren: () =>
           import('@e-commerce/client-web-app/browse/feature/shell').then(
-            (r) => r.shellRoutes
+            (r) => r.shellRoutes,
           ),
       },
       {
         path: appRouterConfig.auth.basePath,
         loadChildren: () =>
           import('@e-commerce/client-web-app/auth/feature/shell').then(
-            (r) => r.shellRoutes
+            (r) => r.shellRoutes,
           ),
       },
       {
         path: 'user',
         loadChildren: () =>
           import('@e-commerce/client-web-app/user/feature/shell').then(
-            (r) => r.shellRoutes
+            (r) => r.shellRoutes,
           ),
       },
       {

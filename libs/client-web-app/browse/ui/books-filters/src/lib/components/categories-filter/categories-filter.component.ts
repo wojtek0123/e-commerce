@@ -30,7 +30,7 @@ import { ResponseError } from '@e-commerce/client-web-app/shared/data-access/api
         <lib-filter-accordion-tab
           filterName="categories"
           header="Categories"
-          [selectedItemsCount]="selectedNames.length"
+          [selectedItemsCount]="selectedNames().length"
           (clearEvent)="clearChecked()"
         >
           <div class="flex flex-column gap-2">

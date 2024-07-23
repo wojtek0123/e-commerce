@@ -1,15 +1,9 @@
-import {
-  Component,
-  DestroyRef,
-  OnInit,
-  WritableSignal,
-  inject,
-} from '@angular/core';
+import { Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CheckboxChangeEvent } from 'primeng/checkbox';
 import {
   buildQueryParam,
-  parseQueryParamToSelectedItems,
+  parseQueryParamToSelectedItemsOperator,
 } from '@e-commerce/client-web-app/browse/utils';
 import { isEqual } from 'lodash-es';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -21,16 +15,16 @@ export abstract class AbstractBookFilterComponent implements OnInit {
   protected router = inject(Router);
   protected destroyRef = inject(DestroyRef);
 
-  abstract searchText: WritableSignal<string | null>;
+  searchText = signal<string | null>(null);
   abstract names$: Observable<string[]>;
   abstract error$: Observable<string | null>;
-  abstract selectedNames: WritableSignal<string[]>;
+  selectedNames = signal<string[]>([]);
   abstract queryParamKey: string;
 
   ngOnInit(): void {
     this.route.queryParams
       .pipe(
-        parseQueryParamToSelectedItems(this.queryParamKey),
+        parseQueryParamToSelectedItemsOperator(this.queryParamKey),
         filter((items) => !isEqual(items, this.selectedNames)),
         takeUntilDestroyed(this.destroyRef),
       )

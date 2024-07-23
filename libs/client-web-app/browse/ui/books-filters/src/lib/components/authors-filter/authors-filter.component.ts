@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   WritableSignal,
+  effect,
   inject,
   signal,
 } from '@angular/core';
@@ -38,7 +39,7 @@ import { toObservable } from '@angular/core/rxjs-interop';
         <lib-filter-accordion-tab
           header="Authors"
           filterName="authors"
-          [selectedItemsCount]="selectedNames.length"
+          [selectedItemsCount]="selectedNames().length"
           (clearEvent)="clearChecked()"
         >
           <div class="flex flex-column gap-2">
@@ -85,8 +86,6 @@ import { toObservable } from '@angular/core/rxjs-interop';
 export class AuthorsFilterComponent extends AbstractBookFilterComponent {
   private authorsApi = inject(AuthorApiService);
 
-  override searchText: WritableSignal<string | null> = signal(null);
-  override selectedNames: WritableSignal<string[]> = signal([]);
   override queryParamKey: string = appRouterConfig.queryParams.authors;
   override names$: Observable<string[]> = toObservable(this.searchText).pipe(
     debounce((text) => (text ? timer(350) : of({}))),

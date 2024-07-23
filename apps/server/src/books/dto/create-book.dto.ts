@@ -7,6 +7,7 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  IsStrongPassword,
 } from 'class-validator';
 
 export class CreateBookDto {
@@ -69,7 +70,7 @@ export class CreateBookDto {
   authorsId: number[];
 
   @ApiProperty({ type: String, required: false })
-  @IsNumber()
+  @IsString()
   @IsOptional()
   publisherName: string;
 }

@@ -21,7 +21,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(
       clientWebAppShellRoutes,
       withViewTransitions(),
-      withEnabledBlockingInitialNavigation()
+      withEnabledBlockingInitialNavigation(),
     ),
     provideAnimations(),
     {
