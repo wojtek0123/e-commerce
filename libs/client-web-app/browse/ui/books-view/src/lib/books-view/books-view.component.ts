@@ -1,11 +1,13 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   HostBinding,
   OnInit,
   effect,
   inject,
   signal,
+  viewChild,
 } from '@angular/core';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
@@ -23,7 +25,7 @@ import { catchError, ignoreElements, shareReplay, switchMap, tap } from 'rxjs';
 import { CartService } from '@e-commerce/client-web-app/shared/data-access/cart';
 import { AsyncPipe, NgClass, ViewportScroller } from '@angular/common';
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
-import { ActiveFiltersComponent } from './components/active-filters.component';
+import { BooksActiveFiltersComponent } from './components/active-filters.component';
 import { BooksApiService } from '@e-commerce/client-web-app/shared/data-access/api-services';
 import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-config';
 import {
@@ -42,11 +44,10 @@ import {
     BookCardSkeletonComponent,
     AsyncPipe,
     PaginatorModule,
-    ActiveFiltersComponent,
+    BooksActiveFiltersComponent,
     NgClass,
   ],
   template: `
-    <lib-active-filters />
     <div class="flex flex-column gap-5">
       @if ({ books: books$ | async, booksError: booksError$ | async }; as vm) {
         @if (!vm.books && !vm.books) {
@@ -82,7 +83,6 @@ import {
             <div class="card flex justify-content-center">
               <p-paginator
                 (onPageChange)="onPageChange($event)"
-                [first]="vm.books.page"
                 [rows]="size()"
                 [totalRecords]="vm.books.total"
                 [rowsPerPageOptions]="availableSizes()"
@@ -104,6 +104,10 @@ import {
       .scale-animation:hover {
         transform: scale(0.95);
       }
+
+      .height {
+        height: calc(100svh - var(--header-height) - 16rem);
+      }
     `,
   ],
 })
@@ -114,8 +118,7 @@ export class BooksViewComponent implements OnInit {
   private router = inject(Router);
   private viewport = inject(ViewportScroller);
 
-  @HostBinding('class') class =
-    'w-full min-content-height flex flex-column gap-3';
+  @HostBinding('class') class = 'w-full';
 
   awatingBookIdsToAddToCart = this.cartService.addingBookIds;
   skeletons = new Array(12);
@@ -155,8 +158,6 @@ export class BooksViewComponent implements OnInit {
     )
     .pipe(
       tap(({ count }) => {
-        this.viewport.scrollToPosition([0, 0]);
-
         if (count === 0) this.page.set(1);
       }),
       shareReplay(1),
@@ -174,6 +175,7 @@ export class BooksViewComponent implements OnInit {
         queryParamsHandling: 'merge',
         replaceUrl: true,
       });
+      console.log(this.page());
     });
   }
 
@@ -190,12 +192,12 @@ export class BooksViewComponent implements OnInit {
   }
 
   onPageChange(event: PaginatorState) {
-    if (event.page !== this.page() - 1) {
-      this.page.set((event.page || 0) + 1);
-    }
+    this.page.set((event.page || 0) + 1);
 
     if (event.rows) {
       this.size.set(event.rows);
     }
+
+    this.viewport.scrollToPosition([0, 0]);
   }
 }

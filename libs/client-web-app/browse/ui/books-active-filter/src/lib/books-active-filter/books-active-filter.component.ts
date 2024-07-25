@@ -2,6 +2,7 @@ import { AsyncPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  HostBinding,
   Pipe,
   PipeTransform,
   inject,
@@ -33,9 +34,12 @@ export class KeyValuePipe implements PipeTransform {
 @Component({
   selector: 'lib-books-active-filters',
   template: `
-    <div class="flex flex-wrap gap-1">
+    <div class="flex gap-1 overflow-x-auto scroller pb-1">
+      <p-button size="small" label="Clear filters" (click)="clearFilters()" />
       @for (keyvalue of activeFilters$ | async | keyValue; track $index) {
-        <div class="surface-hover border-round flex align-items-center pl-3">
+        <div
+          class="surface-hover border-round flex align-items-center pl-3 min-w-max"
+        >
           <span>{{ keyvalue.key + ': ' + keyvalue.value }}</span>
           <p-button
             icon="pi pi-times"
@@ -52,6 +56,14 @@ export class KeyValuePipe implements PipeTransform {
       }
     </div>
   `,
+  styles: [
+    `
+      .scroller {
+        scrollbar-width: thin;
+        scrollbar-color: var(--text-color-secondary) var(--surface-hover);
+      }
+    `,
+  ],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [AsyncPipe, ChipModule, KeyValuePipe, ButtonModule],
@@ -59,6 +71,8 @@ export class KeyValuePipe implements PipeTransform {
 export class BooksActiveFiltersComponent {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+
+  @HostBinding('class') class = 'h-3rem';
 
   activeFilters$ = this.route.queryParams.pipe(
     map((queryParams) =>
@@ -111,5 +125,13 @@ export class BooksActiveFiltersComponent {
       },
       {} as { [key: string]: string },
     );
+  }
+
+  clearFilters() {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: null,
+      replaceUrl: true,
+    });
   }
 }
