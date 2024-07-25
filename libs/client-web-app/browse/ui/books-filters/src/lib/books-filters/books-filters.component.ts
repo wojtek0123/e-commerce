@@ -32,19 +32,15 @@ import { AuthorsFilterComponent } from '../components/authors-filter/authors-fil
     AuthorsFilterComponent,
   ],
   template: `
-    <div class="card flex flex-column gap-4 pb-4">
-      <p-accordion class="flex-column gap-4 filter-container">
+    <div class="card flex flex-column gap-4 pb-4 h-full">
+      <p-accordion
+        class="flex-column gap-4 filter-container sticky top-header-height height overflow-y-auto"
+      >
         <lib-tags-filter />
         <lib-categories-filter />
         <lib-authors-filter />
         <lib-price-filter />
       </p-accordion>
-      <p-button
-        icon="pi pi-trash"
-        label="Clear filters"
-        class="w-full mt-2"
-        (onClick)="clearFilters()"
-      />
     </div>
   `,
   styles: [
@@ -59,8 +55,8 @@ import { AuthorsFilterComponent } from '../components/authors-filter/authors-fil
         }
       }
 
-      .max-h-min {
-        max-height: min-content;
+      .height {
+        height: calc(100svh - var(--header-height) - 10rem);
       }
 
       .top-header-height {
@@ -75,12 +71,4 @@ export class BooksFiltersComponent {
   private router = inject(Router);
 
   @HostBinding('class') class = 'max-w-24rem w-full hidden xl:block';
-
-  clearFilters() {
-    this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: null,
-      replaceUrl: true,
-    });
-  }
 }

@@ -18,11 +18,11 @@ import { RouterLink } from '@angular/router';
   template: `
     <a
       [routerLink]="getBrowserRouteDetails(book().id)"
-      class="no-underline transition-transform scale-animation card"
+      class="no-underline transition-transform scale-animation"
     >
       <p-card
         [header]="book().title"
-        [style]="{ width: '100%', maxWidth: '24rem' }"
+        [style]="{ width: '100%', maxWidth: 'maxContent' }"
       >
         <ng-template pTemplate="header">
           <img
@@ -64,7 +64,8 @@ import { RouterLink } from '@angular/router';
       }
 
       .image {
-        height: 31.875rem;
+        /* height: 31.875rem; */
+        height: 20rem;
         object-fit: cover;
       }
 
@@ -74,13 +75,12 @@ import { RouterLink } from '@angular/router';
         white-space: nowrap;
       }
 
-      .card {
-        height: 43.24rem;
-      }
-
       :host ::ng-deep {
         .p-card {
+          /* width: var(--max-card-width); */
+          /* max-width: var(--max-card-width); */
           border-radius: var(--border-radius);
+          /* max-width: 32rem; */
         }
       }
     `,
