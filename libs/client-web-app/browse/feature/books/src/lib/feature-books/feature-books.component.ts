@@ -18,16 +18,16 @@ import { BooksActiveFiltersComponent } from '@e-commerce/client-web-app/browse/u
     BooksActiveFiltersComponent,
   ],
   template: `
-    <div class="flex flex-column gap-3">
-      <div
-        class="flex flex-column lg:flex-row lg:align-items-center justify-content-between gap-4"
-      >
-        <p-breadcrumb [model]="breadcrumbItems" />
-        <lib-books-search class="max-w-30rem w-full" />
-      </div>
-      <lib-books-active-filters />
-      <div class="flex w-full xl:gap-5">
-        <lib-books-filters />
+    <div class="flex gap-3">
+      <lib-books-filters />
+      <div class="flex flex-column w-full gap-3">
+        <div
+          class="flex flex-column w-full lg:flex-row lg:align-items-center justify-content-between gap-4"
+        >
+          <p-breadcrumb [model]="breadcrumbItems" />
+          <lib-books-search class="max-w-30rem w-full" />
+        </div>
+        <lib-books-active-filters />
         <lib-books-view />
       </div>
     </div>

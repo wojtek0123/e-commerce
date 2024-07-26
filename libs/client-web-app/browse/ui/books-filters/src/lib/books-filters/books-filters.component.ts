@@ -1,13 +1,7 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  HostBinding,
-  inject,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostBinding } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { FilterSkeletonComponent } from '../components/filter-skeleton/filter-skeleton.component';
-import { ActivatedRoute, Router } from '@angular/router';
 import { AccordionModule } from 'primeng/accordion';
 import { FilterAccordionTabComponent } from '../components/filter-accordion/filter-accordion.component';
 import { NgClass } from '@angular/common';
@@ -32,10 +26,10 @@ import { AuthorsFilterComponent } from '../components/authors-filter/authors-fil
     AuthorsFilterComponent,
   ],
   template: `
-    <div class="card flex flex-column gap-4 pb-4 h-full">
-      <p-accordion
-        class="flex-column gap-4 filter-container sticky top-header-height height overflow-y-auto"
-      >
+    <div
+      class="sticky top-header-height height scroller overflow-y-auto w-24rem"
+    >
+      <p-accordion>
         <lib-tags-filter />
         <lib-categories-filter />
         <lib-authors-filter />
@@ -56,7 +50,7 @@ import { AuthorsFilterComponent } from '../components/authors-filter/authors-fil
       }
 
       .height {
-        height: calc(100svh - var(--header-height) - 10rem);
+        max-height: calc(100svh - var(--header-height) - 3rem);
       }
 
       .top-header-height {
@@ -66,9 +60,4 @@ import { AuthorsFilterComponent } from '../components/authors-filter/authors-fil
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BooksFiltersComponent {
-  private route = inject(ActivatedRoute);
-  private router = inject(Router);
-
-  @HostBinding('class') class = 'max-w-24rem w-full hidden xl:block';
-}
+export class BooksFiltersComponent {}

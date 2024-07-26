@@ -6,17 +6,10 @@ import { ToastModule } from 'primeng/toast';
 @Component({
   selector: 'lib-shell',
   imports: [RouterOutlet, NavComponent, ToastModule],
-  styles: [
-    `
-      .container {
-        min-height: calc(100svh - var(--header-height));
-      }
-    `,
-  ],
   template: `
     <lib-e-commerce-nav class="sticky top-0" />
     <p-toast />
-    <div class="p-4 container mx-auto">
+    <div class="p-4 min-height-screen mx-auto">
       <router-outlet />
     </div>
   `,
