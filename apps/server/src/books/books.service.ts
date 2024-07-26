@@ -37,7 +37,7 @@ export class BooksService {
   }
 
   async findMany({
-    categoryIdsIn,
+    categoryNamesIn,
     tagsIn,
     titleLike,
     priceFrom,
@@ -46,36 +46,15 @@ export class BooksService {
     page,
     authorNamesIn,
   }: GetBooksBodyDto) {
-    // let where: Prisma.BookScalarWhereInput = {};
-
-    if (
-      categoryIdsIn ||
-      tagsIn ||
-      titleLike ||
-      priceFrom ||
-      priceTo ||
-      authorNamesIn
-    ) {
-      //   where = {
-      //     AND: [
-      //       { tag: { in: tagsIn } },
-      //       { categoryId: { in: categoryIdsIn } },
-      //       { title: { contains: titleLike, mode: 'insensitive' } },
-      //       { price: { gte: priceFrom, lte: priceTo } },
-      //     ],
-      //   };
-    }
-
     const authorsId = await this.prisma.author
       .findMany({ where: { name: { in: authorNamesIn } } })
       .then((authors) => authors.map(({ id }) => id));
 
-    // TODO: DO POPRAWY!
     const books = await this.prisma.book.findMany({
       where: {
         AND: [
           { tag: { in: tagsIn } },
-          { categoryId: { in: categoryIdsIn } },
+          { category: { name: { in: categoryNamesIn } } },
           { title: { contains: titleLike, mode: 'insensitive' } },
           { price: { gte: +priceFrom || 0, lte: +priceTo || 100000000 } },
           { authors: { some: { authorId: { in: authorsId } } } },
@@ -88,11 +67,24 @@ export class BooksService {
           },
         },
       },
-      skip: size * (page - 1),
+      skip: (page - 1) * size,
       take: size,
+      orderBy: { title: 'asc' },
     });
 
-    const total = (await this.prisma.book.findMany()).length;
+    const total = (
+      await this.prisma.book.findMany({
+        where: {
+          AND: [
+            { tag: { in: tagsIn } },
+            { category: { name: { in: categoryNamesIn } } },
+            { title: { contains: titleLike, mode: 'insensitive' } },
+            { price: { gte: +priceFrom || 0, lte: +priceTo || 100000000 } },
+            { authors: { some: { authorId: { in: authorsId } } } },
+          ],
+        },
+      })
+    ).length;
 
     return {
       items: books.map((book) => ({

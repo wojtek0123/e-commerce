@@ -13,10 +13,10 @@ export class GetBooksBodyDto {
   @IsOptional()
   tagsIn: Tag[];
 
-  @ApiProperty({ required: false, isArray: true, type: Number })
+  @ApiProperty({ required: false, isArray: true, type: String })
   @IsOptional()
   @IsArray()
-  categoryIdsIn: number[];
+  categoryNamesIn: string[];
 
   @ApiProperty({ required: false, type: String })
   @IsOptional()

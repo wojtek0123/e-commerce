@@ -1,13 +1,11 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  ElementRef,
   HostBinding,
   OnInit,
   effect,
   inject,
   signal,
-  viewChild,
 } from '@angular/core';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
@@ -25,7 +23,6 @@ import { catchError, ignoreElements, shareReplay, switchMap, tap } from 'rxjs';
 import { CartService } from '@e-commerce/client-web-app/shared/data-access/cart';
 import { AsyncPipe, NgClass, ViewportScroller } from '@angular/common';
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
-import { BooksActiveFiltersComponent } from './components/active-filters.component';
 import { BooksApiService } from '@e-commerce/client-web-app/shared/data-access/api-services';
 import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-config';
 import {
@@ -44,7 +41,6 @@ import {
     BookCardSkeletonComponent,
     AsyncPipe,
     PaginatorModule,
-    BooksActiveFiltersComponent,
     NgClass,
   ],
   template: `
@@ -82,7 +78,9 @@ import {
           @if (vm.books.count > 0) {
             <div class="card flex justify-content-center">
               <p-paginator
+                #paginator
                 (onPageChange)="onPageChange($event)"
+                [first]="first()"
                 [rows]="size()"
                 [totalRecords]="vm.books.total"
                 [rowsPerPageOptions]="availableSizes()"
@@ -125,6 +123,7 @@ export class BooksViewComponent implements OnInit {
 
   size = signal(2);
   page = signal(1);
+  first = signal(0);
   availableSizes = signal([2, 10, 20, 40]).asReadonly();
 
   books$ = this.route.queryParams
@@ -175,16 +174,18 @@ export class BooksViewComponent implements OnInit {
         queryParamsHandling: 'merge',
         replaceUrl: true,
       });
-      console.log(this.page());
     });
   }
 
   ngOnInit(): void {
-    const page = +this.route.snapshot.queryParams['page'];
-    this.page.set(page > 1 ? page : 1);
+    const { page, size } = this.route.snapshot.queryParams;
 
-    const size = +this.route.snapshot.queryParams['size'];
-    this.size.set(this.availableSizes().includes(size) ? size : 20);
+    const validatedPage = +page > 1 ? +page : 1;
+    const validatedSize = this.availableSizes().includes(+size) ? +size : 20;
+
+    this.page.set(validatedPage);
+    this.size.set(validatedSize);
+    this.first.set((validatedPage - 1) * validatedSize);
   }
 
   addToCart(book: Book) {
