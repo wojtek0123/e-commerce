@@ -102,10 +102,6 @@ import {
       .scale-animation:hover {
         transform: scale(0.95);
       }
-
-      .height {
-        height: calc(100svh - var(--header-height) - 16rem);
-      }
     `,
   ],
 })
@@ -136,7 +132,7 @@ export class BooksViewComponent implements OnInit {
             queryParams,
             appRouterConfig.queryParams.authors,
           ),
-          categoryNames: parseQueryParamToSelectedItems(
+          categoryNamesIn: parseQueryParamToSelectedItems(
             queryParams,
             appRouterConfig.queryParams.categories,
           ),

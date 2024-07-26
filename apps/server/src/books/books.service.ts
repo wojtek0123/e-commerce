@@ -1,7 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { Prisma, Tag } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
-import { GetBooksBodyDto } from './dto/get-books.dto';
 import { CreateBookDto } from './dto/create-book.dto';
 
 @Injectable()
@@ -36,6 +35,12 @@ export class BooksService {
     });
   }
 
+  private _parseQueryParams(queryParam?: string) {
+    if (typeof queryParam === 'string') {
+      return queryParam?.replaceAll('_', ' ').split(',') ?? undefined;
+    }
+  }
+
   async findMany({
     categoryNamesIn,
     tagsIn,
@@ -45,17 +50,42 @@ export class BooksService {
     size,
     page,
     authorNamesIn,
-  }: GetBooksBodyDto) {
+  }: {
+    categoryNamesIn?: string;
+    tagsIn?: string;
+    titleLike?: string;
+    priceFrom?: string;
+    priceTo?: string;
+    size?: string;
+    page?: string;
+    authorNamesIn?: string;
+  }) {
+    const pageNumber = +page || 1;
+    const sizeNumber = +size || 20;
+
     const authorsId = await this.prisma.author
-      .findMany({ where: { name: { in: authorNamesIn } } })
+      .findMany({
+        where: { name: { in: this._parseQueryParams(authorNamesIn) } },
+      })
       .then((authors) => authors.map(({ id }) => id));
+
+    console.log(
+      this._parseQueryParams(tagsIn),
+      this._parseQueryParams(categoryNamesIn),
+      titleLike ?? '',
+      priceFrom || 0,
+      priceTo || 10000000,
+      this._parseQueryParams(authorNamesIn),
+    );
 
     const books = await this.prisma.book.findMany({
       where: {
         AND: [
-          { tag: { in: tagsIn } },
-          { category: { name: { in: categoryNamesIn } } },
-          { title: { contains: titleLike, mode: 'insensitive' } },
+          { tag: { in: this._parseQueryParams(tagsIn) as Tag[] } },
+          {
+            category: { name: { in: this._parseQueryParams(categoryNamesIn) } },
+          },
+          { title: { contains: titleLike ?? '', mode: 'insensitive' } },
           { price: { gte: +priceFrom || 0, lte: +priceTo || 100000000 } },
           { authors: { some: { authorId: { in: authorsId } } } },
         ],
@@ -67,8 +97,8 @@ export class BooksService {
           },
         },
       },
-      skip: (page - 1) * size,
-      take: size,
+      skip: (pageNumber - 1) * sizeNumber,
+      take: sizeNumber,
       orderBy: { title: 'asc' },
     });
 
@@ -76,9 +106,13 @@ export class BooksService {
       await this.prisma.book.findMany({
         where: {
           AND: [
-            { tag: { in: tagsIn } },
-            { category: { name: { in: categoryNamesIn } } },
-            { title: { contains: titleLike, mode: 'insensitive' } },
+            { tag: { in: this._parseQueryParams(tagsIn) as Tag[] } },
+            {
+              category: {
+                name: { in: this._parseQueryParams(categoryNamesIn) },
+              },
+            },
+            { title: { contains: titleLike ?? '', mode: 'insensitive' } },
             { price: { gte: +priceFrom || 0, lte: +priceTo || 100000000 } },
             { authors: { some: { authorId: { in: authorsId } } } },
           ],
@@ -93,7 +127,7 @@ export class BooksService {
       })),
       total,
       count: books.length,
-      page,
+      page: pageNumber,
     };
   }
 

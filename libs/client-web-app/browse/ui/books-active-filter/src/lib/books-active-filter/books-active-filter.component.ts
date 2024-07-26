@@ -2,7 +2,6 @@ import { AsyncPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  HostBinding,
   Pipe,
   PipeTransform,
   inject,
@@ -20,34 +19,38 @@ export class KeyValuePipe implements PipeTransform {
   transform(filters: { [key: string]: string }[] | null) {
     if (!filters) return [];
 
-    const x = filters.flatMap((filter) =>
+    return filters.flatMap((filter) =>
       Object.entries(filter).flatMap(([key, value]) => ({
-        key: key.replaceAll('_', ' '),
+        label: key.replaceAll('_', ' '),
+        key,
         value,
       })),
     );
-
-    return x;
   }
 }
 
 @Component({
   selector: 'lib-books-active-filters',
   template: `
-    <div class="flex gap-1 overflow-x-auto scroller pb-1">
-      <p-button size="small" label="Clear filters" (click)="clearFilters()" />
+    <div class="flex gap-1 overflow-x-auto scroller pb-1 max-width">
+      <p-button
+        size="small"
+        class="min-w-max"
+        label="Clear filters"
+        (click)="clearFilters()"
+      />
       @for (keyvalue of activeFilters$ | async | keyValue; track $index) {
         <div
           class="surface-hover border-round flex align-items-center pl-3 min-w-max"
         >
-          <span>{{ keyvalue.key + ': ' + keyvalue.value }}</span>
+          <span>{{ keyvalue.label + ': ' + keyvalue.value }}</span>
           <p-button
             icon="pi pi-times"
             size="small"
             [text]="true"
             (click)="
               onRemove({
-                key: keyvalue.key.replaceAll(' ', '_'),
+                key: keyvalue.key,
                 value: keyvalue.value,
               })
             "
@@ -62,6 +65,10 @@ export class KeyValuePipe implements PipeTransform {
         scrollbar-width: thin;
         scrollbar-color: var(--text-color-secondary) var(--surface-hover);
       }
+
+      .max-width {
+        max-width: calc(100vw - 24rem - 5rem);
+      }
     `,
   ],
   standalone: true,
@@ -71,8 +78,6 @@ export class KeyValuePipe implements PipeTransform {
 export class BooksActiveFiltersComponent {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
-
-  @HostBinding('class') class = 'h-3rem';
 
   activeFilters$ = this.route.queryParams.pipe(
     map((queryParams) =>
@@ -92,23 +97,20 @@ export class BooksActiveFiltersComponent {
       [key: string]: string;
     }[];
 
-    const x = activeFilters.filter((activeFilter) =>
+    const filterOutActiveFilters = activeFilters.filter((activeFilter) =>
       Object.entries(activeFilter).every(
         ([key, value]) => key !== filter.key || value !== filter.value,
       ),
     );
 
-    const f = this.groupBy(x);
-    console.log(f);
-
     this.router.navigate([], {
       relativeTo: this.route,
-      queryParams: f,
+      queryParams: this.groupByActiveFiltersByKey(filterOutActiveFilters),
     });
   }
 
-  groupBy(array: { [key: string]: string }[]) {
-    return array.reduce(
+  groupByActiveFiltersByKey(activeFilters: { [key: string]: string }[]) {
+    return activeFilters.reduce(
       (result, currentPair) => {
         const key = Object.keys(currentPair)[0];
         const value = currentPair[key];
@@ -116,11 +118,12 @@ export class BooksActiveFiltersComponent {
         if (!result[key]) {
           result[key] = '';
         }
-        // result[key].push(value.trim().replaceAll(' ', '_'));
+
         result[key] =
           result[key].length > 0
             ? result[key] + ',' + value.trim().replaceAll(' ', '_')
             : value.trim().replaceAll(' ', '_');
+
         return result;
       },
       {} as { [key: string]: string },

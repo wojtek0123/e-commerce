@@ -11,12 +11,12 @@ import { Tag } from '@prisma/client';
 export class GetBooksBodyDto {
   @ApiProperty({ required: false, isArray: true, enum: Tag })
   @IsOptional()
-  tagsIn: Tag[];
+  tagsIn?: string;
 
   @ApiProperty({ required: false, isArray: true, type: String })
   @IsOptional()
   @IsArray()
-  categoryNamesIn: string[];
+  categoryNamesIn?: string;
 
   @ApiProperty({ required: false, type: String })
   @IsOptional()
@@ -35,7 +35,7 @@ export class GetBooksBodyDto {
 
   @ApiProperty({ required: false, isArray: true, type: Number })
   @IsOptional()
-  publisherIdsIn: number[];
+  publisherIdsIn?: number;
 
   @ApiProperty({ required: false, type: Number })
   @IsOptional()
@@ -55,7 +55,7 @@ export class GetBooksBodyDto {
   @ApiProperty({ required: false, isArray: true, type: String })
   @IsOptional()
   @IsArray()
-  authorNamesIn?: string[];
+  authorNamesIn?: string;
 
   @ApiProperty({ required: false, type: Number, default: 20 })
   @IsOptional()
