@@ -7,6 +7,7 @@
       <span>{{ subtitle }}</span>
       <a
         [routerLink]="[link.url]"
+        [queryParams]="queryParams()"
         class="font-medium no-underline ml-2 text-primary cursor-pointer hover:underline"
         >{{ link.name }}</a
       >

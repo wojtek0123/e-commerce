@@ -12,7 +12,7 @@ import {
   ValidationErrors,
   Validators,
 } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { AuthService } from '@e-commerce/client-web-app/shared/data-access/auth';
 import { FormWrapperComponent } from '@e-commerce/client-web-app/auth/ui/form-wrapper';
 import { ButtonModule } from 'primeng/button';
@@ -48,6 +48,7 @@ import {
 export class RegisterComponent {
   private authService = inject(AuthService);
   private fb = inject(FormBuilder);
+  protected readonly route = inject(ActivatedRoute);
 
   loading = this.authService.loading;
   submitted = signal(false);
@@ -70,7 +71,7 @@ export class RegisterComponent {
         nonNullable: true,
       }),
     },
-    { validators: this.matchPassword() }
+    { validators: this.matchPassword() },
   );
 
   matchPassword() {

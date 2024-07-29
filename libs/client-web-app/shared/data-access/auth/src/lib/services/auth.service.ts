@@ -17,7 +17,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MessageService } from 'primeng/api';
 import { CartService } from '@e-commerce/client-web-app/shared/data-access/cart';
 import { take } from 'rxjs';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -26,40 +26,41 @@ export class AuthService {
   private messageService = inject(MessageService);
   private destroyRef = inject(DestroyRef);
   private cartService = inject(CartService);
+  private route = inject(ActivatedRoute);
 
-  private _user = signal<User | null>(null);
+  private _userId = signal<User['id'] | null>(null);
   private _tokens = signal<Tokens | null>(null);
   private _loading = signal(false);
 
-  public user = this._user.asReadonly();
+  public userId = this._userId.asReadonly();
   public tokens = this._tokens.asReadonly();
   public loading = this._loading.asReadonly();
-  public isAuthenticated = computed(() => !!this.user() && !!this.tokens());
+  public isAuthenticated = computed(() => !!this.userId() && !!this.tokens());
 
   setSession({ tokens, user }: Session) {
     localStorage.setItem(
       appRouterConfig.localStorage.accessToken,
-      tokens.accessToken
+      tokens.accessToken,
     );
     localStorage.setItem(
       appRouterConfig.localStorage.refreshToken,
-      tokens.refreshToken
+      tokens.refreshToken,
     );
     localStorage.setItem(
-      appRouterConfig.localStorage.user,
-      JSON.stringify(user)
+      appRouterConfig.localStorage.userId,
+      user.id.toString(),
     );
 
-    this._user.set(user);
+    this._userId.set(user.id);
     this._tokens.set(tokens);
   }
 
   removeSession() {
     localStorage.removeItem(appRouterConfig.localStorage.accessToken);
     localStorage.removeItem(appRouterConfig.localStorage.refreshToken);
-    localStorage.removeItem(appRouterConfig.localStorage.user);
+    localStorage.removeItem(appRouterConfig.localStorage.userId);
 
-    this._user.set(null);
+    this._userId.set(null);
     this._tokens.set(null);
   }
 
@@ -67,7 +68,7 @@ export class AuthService {
     localStorage.setItem(appRouterConfig.localStorage.accessToken, accessToken);
     localStorage.setItem(
       appRouterConfig.localStorage.refreshToken,
-      refreshToken
+      refreshToken,
     );
 
     this._tokens.set({ accessToken, refreshToken });
@@ -75,22 +76,21 @@ export class AuthService {
 
   getSession() {
     const accessToken = localStorage.getItem(
-      appRouterConfig.localStorage.accessToken
+      appRouterConfig.localStorage.accessToken,
     );
     const refreshToken = localStorage.getItem(
-      appRouterConfig.localStorage.refreshToken
+      appRouterConfig.localStorage.refreshToken,
     );
-    const user = localStorage.getItem(appRouterConfig.localStorage.user);
+    const userId = localStorage.getItem(appRouterConfig.localStorage.userId);
 
-    if (accessToken && refreshToken && user) {
-      this._user.set(JSON.parse(user));
+    if (accessToken && refreshToken && userId) {
+      this._userId.set(Number(userId));
       this._tokens.set({
         accessToken,
         refreshToken,
       });
-
-      this.cartService.getCartItems();
     }
+    this.cartService.getCartItems();
   }
 
   login(email: string, password: string) {
@@ -110,7 +110,7 @@ export class AuthService {
           this.setSession({ user, tokens });
           this.cartService.syncDatabase();
 
-          this.router.navigate(['/']);
+          this.router.navigate([this._returnUrl() ?? '/']);
         },
         error: (resError: ResponseError) => {
           this._loading.set(false);
@@ -139,7 +139,7 @@ export class AuthService {
           });
           this.setSession({ user, tokens });
           this.cartService.syncDatabase();
-          this.router.navigate(['/']);
+          this.router.navigate([this._returnUrl() ?? '/']);
         },
         error: (resError: ResponseError) => {
           this._loading.set(false);
@@ -153,12 +153,12 @@ export class AuthService {
   }
 
   logout(userId?: User['id']) {
-    if (!this._user()) return;
+    if (!this._userId()) return;
 
     this._loading.set(true);
 
     this.authApi
-      .logout$(userId ?? this._user()!.id)
+      .logout$(userId ?? this._userId()!)
       .pipe(take(1), takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
@@ -190,11 +190,11 @@ export class AuthService {
   setTokens(tokens: Tokens) {
     localStorage.setItem(
       appRouterConfig.localStorage.refreshToken,
-      tokens.refreshToken
+      tokens.refreshToken,
     );
     localStorage.setItem(
       appRouterConfig.localStorage.accessToken,
-      tokens.accessToken
+      tokens.accessToken,
     );
 
     this._tokens.set(tokens);
@@ -202,5 +202,16 @@ export class AuthService {
 
   refreshToken$(userId: User['id'], refreshToken: Tokens['refreshToken']) {
     return this.authApi.getRefreshToken$(userId, refreshToken);
+  }
+
+  private _returnUrl() {
+    const isReturnToOrderProcessActive =
+      this.route.snapshot.queryParams['returnToOrderProcess'] ?? false;
+
+    if (isReturnToOrderProcessActive) {
+      return '/order';
+    }
+
+    return null;
   }
 }

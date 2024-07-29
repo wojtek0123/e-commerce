@@ -57,9 +57,10 @@ export class CartService {
           this._loading.set(false);
         },
         error: (resError: ResponseError) => {
+          console.log('here');
           if (resError.error.statusCode === 401) {
             const cart = localStorage.getItem(
-              appRouterConfig.localStorage.cart
+              appRouterConfig.localStorage.cart,
             );
             this._items.set(cart ? JSON.parse(cart) : []);
           }
@@ -90,7 +91,7 @@ export class CartService {
 
             // TODO: sprawdzić czy da się dodać więcej niż jedną książke do koszyka na raz
             this._addingBooks.update((prevState) =>
-              prevState.filter((id) => id !== book.id)
+              prevState.filter((id) => id !== book.id),
             );
 
             this.messageService.add({
@@ -115,7 +116,7 @@ export class CartService {
 
       localStorage.setItem(
         appRouterConfig.localStorage.cart,
-        JSON.stringify(this._items())
+        JSON.stringify(this._items()),
       );
 
       this._recalculateTotal();
@@ -139,8 +140,8 @@ export class CartService {
           next: () => {
             this._items.update((prevState) =>
               prevState.map((item) =>
-                item.book.id === book.id ? { ...item, quantity } : { ...item }
-              )
+                item.book.id === book.id ? { ...item, quantity } : { ...item },
+              ),
             );
 
             this._recalculateTotal();
@@ -168,7 +169,7 @@ export class CartService {
 
       localStorage.setItem(
         appRouterConfig.localStorage.cart,
-        JSON.stringify(this._items())
+        JSON.stringify(this._items()),
       );
 
       this.messageService.add({
@@ -190,7 +191,7 @@ export class CartService {
         .subscribe({
           next: () => {
             this._items.update((prevState) =>
-              prevState.filter((item) => item.book.id !== book.id)
+              prevState.filter((item) => item.book.id !== book.id),
             );
 
             this._loading.set(false);
@@ -214,12 +215,12 @@ export class CartService {
         });
     } else {
       this._items.update((prevState) =>
-        prevState.filter(({ book: { id } }) => id !== book.id)
+        prevState.filter(({ book: { id } }) => id !== book.id),
       );
 
       localStorage.setItem(
         appRouterConfig.localStorage.cart,
-        JSON.stringify(this._items())
+        JSON.stringify(this._items()),
       );
 
       this._recalculateTotal();
@@ -237,7 +238,7 @@ export class CartService {
     localStorage.removeItem(appRouterConfig.localStorage.cart);
     localStorage.setItem(
       appRouterConfig.localStorage.cart,
-      JSON.stringify(this._items())
+      JSON.stringify(this._items()),
     );
   }
 
@@ -256,17 +257,17 @@ export class CartService {
       .getShoppingSession()
       .pipe(
         switchMap((session) =>
-          this.shoppingSessionApi.createManyCartItems(session.id, cartItems)
+          this.shoppingSessionApi.createManyCartItems(session.id, cartItems),
         ),
         take(1),
-        takeUntilDestroyed(this.destroyRef)
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe({
         next: (session) => {
           this._shoppingSessionId.set(session.id);
 
           this._items.set(
-            session.cartItems.map(({ book, quantity }) => ({ book, quantity }))
+            session.cartItems.map(({ book, quantity }) => ({ book, quantity })),
           );
 
           this._recalculateTotal();
@@ -290,7 +291,7 @@ export class CartService {
   private _recalculateTotal() {
     const total = this._items().reduce(
       (acc, item) => acc + item.book.price * item.quantity,
-      0
+      0,
     );
 
     this._total.set(total);
@@ -301,7 +302,7 @@ export class CartService {
 
     const items = isItemInCart
       ? this._items().map((item) =>
-          item.book.id === book.id ? { ...item, quantity } : { ...item }
+          item.book.id === book.id ? { ...item, quantity } : { ...item },
         )
       : [...this._items(), { book, quantity }];
 

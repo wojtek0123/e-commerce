@@ -11,7 +11,7 @@ import { inject } from '@angular/core';
 
 export const unAuthErrorInterceptor: HttpInterceptorFn = (
   req: HttpRequest<unknown>,
-  next: HttpHandlerFn
+  next: HttpHandlerFn,
 ): Observable<HttpEvent<unknown>> => {
   const authService = inject(AuthService);
 
@@ -22,7 +22,7 @@ export const unAuthErrorInterceptor: HttpInterceptorFn = (
         error.status === 401
       ) {
         const refreshToken = authService.tokens()?.refreshToken;
-        const userId = authService.user()?.id;
+        const userId = authService.userId();
 
         if (refreshToken && userId) {
           return authService.refreshToken$(userId, refreshToken).pipe(
@@ -33,9 +33,9 @@ export const unAuthErrorInterceptor: HttpInterceptorFn = (
                 req.clone({
                   headers: req.headers.set(
                     'Authorization',
-                    `Bearer ${tokens.accessToken}`
+                    `Bearer ${tokens.accessToken}`,
                   ),
-                })
+                }),
               );
             }),
             catchError((error) => {
@@ -43,11 +43,11 @@ export const unAuthErrorInterceptor: HttpInterceptorFn = (
                 authService.removeSession();
               }
               return of(error);
-            })
+            }),
           );
         }
       }
       return throwError(() => error);
-    })
+    }),
   );
 };

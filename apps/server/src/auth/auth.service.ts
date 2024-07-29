@@ -18,7 +18,7 @@ export class AuthService {
   constructor(
     private prisma: PrismaService,
     private jwtService: JwtService,
-    private configService: ConfigService
+    private configService: ConfigService,
   ) {}
 
   async login(email: string, password: string) {
@@ -97,7 +97,7 @@ export class AuthService {
         {
           secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
           expiresIn: '2m',
-        }
+        },
       ),
       this.jwtService.signAsync(
         {
@@ -107,7 +107,7 @@ export class AuthService {
         {
           secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
           expiresIn: '7d',
-        }
+        },
       ),
     ]);
 
