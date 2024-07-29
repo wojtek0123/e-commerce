@@ -4,10 +4,11 @@ import {
   EventEmitter,
   Input,
   Output,
+  input,
 } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { NgIf } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Params, RouterLink } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
@@ -28,6 +29,8 @@ export class FormWrapperComponent {
   @Input({ required: true }) header!: string;
   @Input({ required: true }) subtitle!: string;
   @Input({ required: true }) link!: { url: string; name: string };
+  queryParams = input<Params | null>(null);
+
   @Output() submitEvent = new EventEmitter<void>();
 
   onSubmit(event: Event) {

@@ -1,5 +1,6 @@
 <e-commerce-form-wrapper
   [link]="{ url: '../register', name: 'Create an account!' }"
+  [queryParams]="route.snapshot.queryParams"
   header="Welcome back!"
   subtitle="Are you new here?"
 >
@@ -16,18 +17,19 @@
         id="email"
         autocomplete="off"
         [ngClass]="{
-          'ng-dirty ng-invalid': loginForm.controls.email.invalid && submitted()
+          'ng-dirty ng-invalid':
+            loginForm.controls.email.invalid && submitted(),
         }"
         formControlName="email"
       />
       @if (loginForm.controls.email.dirty || submitted()) {
-      <ng-container slot="error-message">
-        @if (loginForm.controls.email.getError('required')) {
-        <lib-error-message />
-        } @else if (loginForm.controls.email.getError('email')) {
-        <lib-error-message message="Email is invalid" />
-        }
-      </ng-container>
+        <ng-container slot="error-message">
+          @if (loginForm.controls.email.getError('required')) {
+            <lib-error-message />
+          } @else if (loginForm.controls.email.getError('email')) {
+            <lib-error-message message="Email is invalid" />
+          }
+        </ng-container>
       }
     </lib-form-field>
     <lib-form-field label="Password" [isRequired]="true">
@@ -38,20 +40,21 @@
         [toggleMask]="true"
         [ngClass]="{
           'ng-dirty ng-invalid':
-            loginForm.controls.password.invalid && submitted()
+            loginForm.controls.password.invalid && submitted(),
         }"
         formControlName="password"
       />
-      @if(loginForm.controls.password.dirty || submitted()) {
-      <ng-container slot="error-message">
-        @if (loginForm.controls.password.getError('minlength')) {
-        <lib-error-message
-          message="Password should have at least 6 characters"
-        />
-        } @if (loginForm.controls.password.getError('required')) {
-        <lib-error-message />
-        }
-      </ng-container>
+      @if (loginForm.controls.password.dirty || submitted()) {
+        <ng-container slot="error-message">
+          @if (loginForm.controls.password.getError('minlength')) {
+            <lib-error-message
+              message="Password should have at least 6 characters"
+            />
+          }
+          @if (loginForm.controls.password.getError('required')) {
+            <lib-error-message />
+          }
+        </ng-container>
       }
     </lib-form-field>
 

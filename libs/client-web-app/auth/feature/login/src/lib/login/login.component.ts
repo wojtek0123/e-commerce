@@ -15,6 +15,7 @@ import {
   FormFieldComponent,
   ErrorMessageComponent,
 } from '@e-commerce/client-web-app/shared/ui/form-field';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'e-commerce-login',
@@ -36,6 +37,7 @@ import {
 export class LoginComponent {
   private authService = inject(AuthService);
   private fb = inject(FormBuilder);
+  protected readonly route = inject(ActivatedRoute);
 
   loading = this.authService.loading;
   submitted = signal(false);

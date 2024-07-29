@@ -1,5 +1,6 @@
 <e-commerce-form-wrapper
   [link]="{ url: '../login', name: 'Log in!' }"
+  [queryParams]="route.snapshot.queryParams"
   header="Create a new account"
   subtitle="Do you have already an account?"
 >
@@ -17,17 +18,17 @@
         formControlName="email"
         [ngClass]="{
           'ng-dirty ng-invalid':
-            registerForm.controls.email.invalid && submitted()
+            registerForm.controls.email.invalid && submitted(),
         }"
       />
       @if (registerForm.controls.email.dirty || submitted()) {
-      <ng-container slot="error-message">
-        @if (registerForm.controls.email.getError('required')) {
-        <lib-error-message message="Field is required" />
-        } @else if (registerForm.controls.email.getError('email')) {
-        <lib-error-message message="Email is invalid" />
-        }
-      </ng-container>
+        <ng-container slot="error-message">
+          @if (registerForm.controls.email.getError('required')) {
+            <lib-error-message message="Field is required" />
+          } @else if (registerForm.controls.email.getError('email')) {
+            <lib-error-message message="Email is invalid" />
+          }
+        </ng-container>
       }
     </lib-form-field>
     <lib-form-field label="Password" [isRequired]="true">
@@ -38,20 +39,20 @@
         [toggleMask]="true"
         [ngClass]="{
           'ng-dirty ng-invalid':
-            registerForm.controls.password.invalid && submitted()
+            registerForm.controls.password.invalid && submitted(),
         }"
         formControlName="password"
       />
       @if (registerForm.controls.password.dirty || submitted()) {
-      <ng-container slot="error-message">
-        @if (registerForm.controls.password.getError('minlength')) {
-        <lib-error-message
-          message="Password should have at least 6 characters"
-        />
-        } @else if (registerForm.controls.password.getError('required')) {
-        <lib-error-message />
-        }
-      </ng-container>
+        <ng-container slot="error-message">
+          @if (registerForm.controls.password.getError('minlength')) {
+            <lib-error-message
+              message="Password should have at least 6 characters"
+            />
+          } @else if (registerForm.controls.password.getError('required')) {
+            <lib-error-message />
+          }
+        </ng-container>
       }
     </lib-form-field>
     <lib-form-field label="Confirm password" [isRequired]="true">
@@ -62,18 +63,18 @@
         [toggleMask]="true"
         [ngClass]="{
           'ng-dirty ng-invalid':
-            registerForm.controls.confirmPassword.invalid && submitted()
+            registerForm.controls.confirmPassword.invalid && submitted(),
         }"
         formControlName="confirmPassword"
       />
       @if (registerForm.controls.confirmPassword.dirty || submitted()) {
-      <ng-container slot="error-message">
-        @if (registerForm.controls.confirmPassword.getError('required')) {
-        <lib-error-message />
-        } @else if (registerForm.getError('passwordMismatch')) {
-        <lib-error-message message="Passwords are different" />
-        }
-      </ng-container>
+        <ng-container slot="error-message">
+          @if (registerForm.controls.confirmPassword.getError('required')) {
+            <lib-error-message />
+          } @else if (registerForm.getError('passwordMismatch')) {
+            <lib-error-message message="Passwords are different" />
+          }
+        </ng-container>
       }
     </lib-form-field>
 

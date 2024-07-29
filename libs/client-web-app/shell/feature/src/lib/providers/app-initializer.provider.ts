@@ -11,7 +11,7 @@ const initializeAppFactory =
   (authService: AuthService, themeSwitcherService: ThemeSwitherService) =>
   () => {
     const refreshToken = localStorage.getItem(
-      appRouterConfig.localStorage.refreshToken
+      appRouterConfig.localStorage.refreshToken,
     );
 
     if (refreshToken) {
@@ -24,11 +24,11 @@ const initializeAppFactory =
     }
 
     const preferenceTheme = localStorage.getItem(
-      appRouterConfig.localStorage.theme
+      appRouterConfig.localStorage.theme,
     ) as Theme | null;
 
     const browserTheme: Theme = window.matchMedia(
-      '(prefers-color-scheme: dark)'
+      '(prefers-color-scheme: dark)',
     ).matches
       ? 'dark'
       : 'light';

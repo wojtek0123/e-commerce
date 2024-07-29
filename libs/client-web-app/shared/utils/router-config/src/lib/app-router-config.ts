@@ -23,7 +23,7 @@ export const appRouterConfig = {
   localStorage: {
     refreshToken: 'refresh_token',
     accessToken: 'access_token',
-    user: 'user',
+    userId: 'userId',
     theme: 'theme',
     cart: 'cart',
   } as const,
