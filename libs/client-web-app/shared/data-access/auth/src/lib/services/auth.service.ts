@@ -15,9 +15,19 @@ import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-
 import { AuthApiService } from './auth-api.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MessageService } from 'primeng/api';
-import { CartService } from '@e-commerce/client-web-app/shared/data-access/cart';
-import { take } from 'rxjs';
+import { BehaviorSubject, take } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
+
+type AuthEvent =
+  | 'init'
+  | 'initSession'
+  | 'loginSuccessfully'
+  | 'loginError'
+  | 'registerSuccessfully'
+  | 'registerError'
+  | 'refreshToken'
+  | 'logoutSuccessfully'
+  | 'logoutError';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -25,17 +35,22 @@ export class AuthService {
   private authApi = inject(AuthApiService);
   private messageService = inject(MessageService);
   private destroyRef = inject(DestroyRef);
-  private cartService = inject(CartService);
   private route = inject(ActivatedRoute);
 
   private _userId = signal<User['id'] | null>(null);
   private _tokens = signal<Tokens | null>(null);
   private _loading = signal(false);
 
-  public userId = this._userId.asReadonly();
-  public tokens = this._tokens.asReadonly();
-  public loading = this._loading.asReadonly();
-  public isAuthenticated = computed(() => !!this.userId() && !!this.tokens());
+  private _events$ = new BehaviorSubject<AuthEvent | null>(null);
+
+  public readonly userId = this._userId.asReadonly();
+  public readonly tokens = this._tokens.asReadonly();
+  public readonly loading = this._loading.asReadonly();
+  public readonly isAuthenticated = computed(
+    () => !!this.userId() && !!this.tokens(),
+  );
+
+  public readonly events$ = this._events$.asObservable();
 
   setSession({ tokens, user }: Session) {
     localStorage.setItem(
@@ -89,8 +104,11 @@ export class AuthService {
         accessToken,
         refreshToken,
       });
+      this._events$.next('initSession');
+      return;
     }
-    this.cartService.getCartItems();
+    this._events$.next('init');
+    // this.cartService.getCartItems();
   }
 
   login(email: string, password: string) {
@@ -108,12 +126,14 @@ export class AuthService {
             summary: 'Success',
           });
           this.setSession({ user, tokens });
-          this.cartService.syncDatabase();
+          this._events$.next('loginSuccessfully');
+          // this.cartService.syncDatabase();
 
-          this.router.navigate([this._returnUrl() ?? '/']);
+          this.router.navigate([this._returnUrl()]);
         },
         error: (resError: ResponseError) => {
           this._loading.set(false);
+          this._events$.next('loginError');
           this.messageService.add({
             severity: 'error',
             detail: resError.error.message || 'Error occur while logging in',
@@ -138,11 +158,13 @@ export class AuthService {
             summary: 'Success',
           });
           this.setSession({ user, tokens });
-          this.cartService.syncDatabase();
-          this.router.navigate([this._returnUrl() ?? '/']);
+          // this.cartService.syncDatabase();
+          this._events$.next('registerSuccessfully');
+          this.router.navigate([this._returnUrl()]);
         },
         error: (resError: ResponseError) => {
           this._loading.set(false);
+          this._events$.next('registerError');
           this.messageService.add({
             severity: 'error',
             detail: resError.error.message || 'Error occur while signing in',
@@ -164,7 +186,7 @@ export class AuthService {
         next: () => {
           this.removeSession();
           this._loading.set(false);
-          this.cartService.clear();
+          // this.cartService.clear();
 
           this.messageService.add({
             severity: 'success',
@@ -173,11 +195,12 @@ export class AuthService {
           });
 
           // TODO: navigate to home only when user is on protected by auth guard route
+          this._events$.next('logoutSuccessfully');
           this.router.navigate(['/']);
         },
         error: (resError: ResponseError) => {
           this._loading.set(false);
-
+          this._events$.next('logoutError');
           this.messageService.add({
             severity: 'error',
             detail: resError.error.message || 'Error occur while logging out',
@@ -201,6 +224,7 @@ export class AuthService {
   }
 
   refreshToken$(userId: User['id'], refreshToken: Tokens['refreshToken']) {
+    this._events$.next('refreshToken');
     return this.authApi.getRefreshToken$(userId, refreshToken);
   }
 
@@ -212,6 +236,6 @@ export class AuthService {
       return '/order';
     }
 
-    return null;
+    return '/';
   }
 }
