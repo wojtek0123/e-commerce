@@ -17,6 +17,8 @@ import { DatePipe } from '@angular/common';
 import { NgOptimizedImage } from '@angular/common';
 import { OrderItemAccordionComponent } from './order-item-accordion/order-item-accordion.component';
 import { SkeletonModule } from 'primeng/skeleton';
+import { BreadcrumbModule } from 'primeng/breadcrumb';
+import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'lib-orders',
@@ -27,6 +29,7 @@ import { SkeletonModule } from 'primeng/skeleton';
     SkeletonModule,
     NgOptimizedImage,
     OrderItemAccordionComponent,
+    BreadcrumbModule,
   ],
   template: `
     <div class="flex flex-column gap-4">
@@ -46,6 +49,7 @@ import { SkeletonModule } from 'primeng/skeleton';
           </div>
         }
       } @else {
+        <p-breadcrumb [model]="breadcrumbs()" />
         @for (order of orders(); track order.id) {
           <lib-order-item-accordion-component [order]="order" />
         }
@@ -57,6 +61,11 @@ import { SkeletonModule } from 'primeng/skeleton';
 export class OrdersComponent implements OnInit {
   private orderDetailsApi = inject(OrderDetailsApiService);
   private destroyRef = inject(DestroyRef);
+
+  breadcrumbs = signal<MenuItem[]>([
+    { label: 'Home', routerLink: '/' },
+    { label: 'Orders' },
+  ]);
 
   orders = signal<OrderDetails[]>([]);
   loading = signal(false);

@@ -1,4 +1,8 @@
-.p-menuitem-link-active {
+.p-steps .p-steps-item .p-menuitem-link {
+  background: transparent;
+}
+
+.p-menuitem-content > .p-menuitem-link-active {
   background-color: var(--surface-hover);
   border-radius: var(--border-radius);
 }

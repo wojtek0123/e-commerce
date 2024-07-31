@@ -5,7 +5,12 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
-import { DatePipe, NgClass, NgOptimizedImage } from '@angular/common';
+import {
+  CurrencyPipe,
+  DatePipe,
+  NgClass,
+  NgOptimizedImage,
+} from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -53,7 +58,7 @@ import { ButtonModule } from 'primeng/button';
       @for (item of order().orderItems; track item.id) {
         <div class="flex align-items-center content-item gap-4">
           <img
-            [ngSrc]="item.book.coverImage ?? ''"
+            [src]="item.book.coverImage ?? ''"
             height="160"
             width="110"
             [alt]="item.book.title + ' cover image'"
@@ -61,7 +66,7 @@ import { ButtonModule } from 'primeng/button';
           />
           <div class="flex flex-column">
             <span class="text-2xl">{{ item.book.title }}</span>
-            <span>{{ item.book.price }}</span>
+            <span>{{ item.book.price | currency: 'USD' }}</span>
           </div>
         </div>
       }
@@ -69,7 +74,14 @@ import { ButtonModule } from 'primeng/button';
   `,
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [DatePipe, NgOptimizedImage, NgClass, ButtonModule, RouterLink],
+  imports: [
+    DatePipe,
+    NgOptimizedImage,
+    NgClass,
+    ButtonModule,
+    RouterLink,
+    CurrencyPipe,
+  ],
   styles: [
     `
       .content-item:first-child {
