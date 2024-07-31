@@ -41,6 +41,11 @@ export class CartService {
   }
 
   getCartItems() {
+    const cart = localStorage.getItem(appRouterConfig.localStorage.cart);
+    this._items.set(cart ? JSON.parse(cart) : []);
+  }
+
+  getCartItemsFromShoppingSession() {
     this._loading.set(true);
 
     this.shoppingSessionApi
@@ -57,12 +62,8 @@ export class CartService {
           this._loading.set(false);
         },
         error: (resError: ResponseError) => {
-          console.log('here');
           if (resError.error.statusCode === 401) {
-            const cart = localStorage.getItem(
-              appRouterConfig.localStorage.cart,
-            );
-            this._items.set(cart ? JSON.parse(cart) : []);
+            this.getCartItems();
           }
           this._loading.set(false);
         },
