@@ -10,46 +10,47 @@ import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { getBrowserRouteDetails } from '@e-commerce/client-web-app/shared/utils/router-config';
 import { RouterLink } from '@angular/router';
+import { CurrencyPipe } from '@angular/common';
 
 @Component({
   selector: 'lib-book-card',
   standalone: true,
-  imports: [ButtonModule, RouterLink, CardModule],
+  imports: [ButtonModule, RouterLink, CardModule, CurrencyPipe],
   template: `
-    <a
+    <div
       [routerLink]="getBrowserRouteDetails(book().id)"
-      class="no-underline transition-transform scale-animation"
+      class="surface-hover cursor-pointer no-underline text-color border-round flex flex-column"
     >
-      <p-card
-        [header]="book().title"
-        [style]="{ width: '100%', maxWidth: 'maxContent' }"
-      >
-        <ng-template pTemplate="header">
-          <img
-            alt="Card"
-            class="image border-round"
-            [src]="
-              book().coverImage
-                ? book().coverImage
-                : 'https://primefaces.org/cdn/primeng/images/usercard.png'
-            "
-          />
-        </ng-template>
-        <div>rating</div>
-        <ng-template pTemplate="footer">
-          <div class="flex align-items-center justify-content-between">
-            <span class="text-xl">{{ book().price }} $</span>
-            <p-button
-              class="flex justify-content-end"
-              label="Add to cart"
-              icon="pi pi-cart-plus"
-              [loading]="awaitingBookIdsToAddToCart().includes(book().id)"
-              (onClick)="addToCart($event, book())"
-            ></p-button>
-          </div>
-        </ng-template>
-      </p-card>
-    </a>
+      <img
+        alt="Card"
+        class="w-full image border-round"
+        [src]="
+          book().coverImage
+            ? book().coverImage
+            : 'https://primefaces.org/cdn/primeng/images/usercard.png'
+        "
+      />
+      <div class="flex flex-column gap-3 p-3">
+        <div class="flex flex-column gap-1">
+          <h3 class="text-xl font-bold">{{ book().title }}</h3>
+          @for (author of book().authors; track author.id) {
+            <div class="text-color-secondary">{{ author.name }}</div>
+          }
+        </div>
+        <div class="flex align-items-center justify-content-between">
+          <span class="text-xl font-semibold">{{
+            book().price | currency: 'USD'
+          }}</span>
+          <p-button
+            class="flex justify-content-end"
+            label="Add to cart"
+            icon="pi pi-cart-plus"
+            [loading]="awaitingBookIdsToAddToCart().includes(book().id)"
+            (onClick)="addToCart($event, book())"
+          ></p-button>
+        </div>
+      </div>
+    </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: [
@@ -64,24 +65,14 @@ import { RouterLink } from '@angular/router';
       }
 
       .image {
-        /* height: 31.875rem; */
-        height: 20rem;
-        object-fit: cover;
+        /* object-fit: cover; */
+        aspect-ratio: 3 / 4;
       }
 
       .truncate {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-      }
-
-      :host ::ng-deep {
-        .p-card {
-          /* width: var(--max-card-width); */
-          /* max-width: var(--max-card-width); */
-          border-radius: var(--border-radius);
-          /* max-width: 32rem; */
-        }
       }
     `,
   ],
