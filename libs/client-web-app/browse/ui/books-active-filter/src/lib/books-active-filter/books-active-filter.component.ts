@@ -37,7 +37,7 @@ export class KeyValuePipe implements PipeTransform {
         size="small"
         class="min-w-max"
         label="Clear filters"
-        severity="secondary"
+        severity="contrast"
         (click)="clearFilters()"
       />
       @for (keyvalue of activeFilters$ | async | keyValue; track $index) {
