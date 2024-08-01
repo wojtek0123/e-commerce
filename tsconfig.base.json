@@ -15,11 +15,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@e-commerce/client-web-app/browse/ui/books-active-filter": [
-        "libs/client-web-app/browse/ui/books-active-filter/src/index.ts"
-      ],
-      "@e-commerce/clien-web-app/order/ui/order-shipping": [
-        "libs/client-web-app/order/ui/order-shipping/src/index.ts"
+      "@e-commerce/client-web-app/order/feature/address-information": [
+        "libs/client-web-app/order/feature/address-information/src/index.ts"
       ],
       "@e-commerce/client-web-app/auth/feature-register": [
         "libs/client-web-app/auth/feature-register/src/index.ts"
@@ -51,6 +48,9 @@
       "@e-commerce/client-web-app/browse/ui/book-details": [
         "libs/client-web-app/browse/ui/book-details/src/index.ts"
       ],
+      "@e-commerce/client-web-app/browse/ui/books-active-filter": [
+        "libs/client-web-app/browse/ui/books-active-filter/src/index.ts"
+      ],
       "@e-commerce/client-web-app/browse/ui/books-filters": [
         "libs/client-web-app/browse/ui/books-filters/src/index.ts"
       ],
@@ -78,17 +78,20 @@
       "@e-commerce/client-web-app/order/data-access": [
         "libs/client-web-app/order/data-access/src/index.ts"
       ],
-      "@e-commerce/client-web-app/order/feature/order-form": [
-        "libs/client-web-app/order/feature/order-form/src/index.ts"
-      ],
       "@e-commerce/client-web-app/order/feature/shell": [
         "libs/client-web-app/order/feature/shell/src/index.ts"
+      ],
+      "@e-commerce/client-web-app/order/ui/cart-item": [
+        "libs/client-web-app/order/ui/cart-item/src/index.ts"
       ],
       "@e-commerce/client-web-app/order/ui/order-details": [
         "libs/client-web-app/order/ui/order-details/src/index.ts"
       ],
       "@e-commerce/client-web-app/order/ui/order-payment": [
         "libs/client-web-app/order/ui/order-payment/src/index.ts"
+      ],
+      "@e-commerce/client-web-app/order/ui/order-shipping": [
+        "libs/client-web-app/order/ui/order-shipping/src/index.ts"
       ],
       "@e-commerce/client-web-app/order/ui/order-summary": [
         "libs/client-web-app/order/ui/order-summary/src/index.ts"
@@ -161,6 +164,12 @@
       ],
       "@e-commerce/client-web-app/user/feature/shell": [
         "libs/client-web-app/user/feature/shell/src/index.ts"
+      ],
+      "@e-commerce/client-web-app/order/feature/payment": [
+        "libs/client-web-app/order/feature/payment/src/index.ts"
+      ],
+      "@e-commerce/client-web-app/order/feature/shipping-method": [
+        "libs/client-web-app/order/feature/shipping-method/src/index.ts"
       ]
     }
   },

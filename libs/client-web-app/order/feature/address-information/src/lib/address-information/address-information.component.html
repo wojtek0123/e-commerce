@@ -1,0 +1,253 @@
+<form [formGroup]="form" class="flex flex-column w-full gap-2">
+  <div class="flex flex-column md:flex-row gap-3">
+    <lib-form-field
+      label="First name"
+      [isRequired]="true"
+      [isLoading]="initialLoading()"
+    >
+      <input
+        slot="input"
+        class="w-full"
+        pInputText
+        id="firstname"
+        [ngClass]="{
+          'ng-invalid ng-dirty':
+            form.controls.firstName.invalid &&
+            (form.controls.firstName.dirty || submitted()),
+        }"
+        formControlName="firstName"
+        placeholder="Type your first name"
+      />
+      @if (
+        form.controls.firstName.invalid &&
+        (form.controls.firstName.dirty || submitted())
+      ) {
+        <lib-error-message />
+      }
+    </lib-form-field>
+    <lib-form-field
+      label="Last name"
+      [isRequired]="true"
+      [isLoading]="initialLoading()"
+    >
+      <input
+        slot="input"
+        class="w-full"
+        pInputText
+        id="lastname"
+        [ngClass]="{
+          'ng-invalid ng-dirty':
+            form.controls.lastName.invalid &&
+            (form.controls.lastName.dirty || submitted()),
+        }"
+        formControlName="lastName"
+        placeholder="Type your last name"
+      />
+      @if (
+        form.controls.lastName.invalid &&
+        (form.controls.lastName.dirty || submitted())
+      ) {
+        <lib-error-message />
+      }
+    </lib-form-field>
+  </div>
+  <lib-form-field
+    label="Country"
+    [isRequired]="true"
+    [isLoading]="initialLoading()"
+    labelSkeletonWidth="5rem"
+    inputSkeletonWidth="20rem"
+  >
+    <p-dropdown
+      slot="input"
+      class="w-full"
+      formControlName="country"
+      [options]="(countries$ | async) ?? []"
+      [ngClass]="{
+        'ng-invalid ng-dirty':
+          form.controls.country.invalid &&
+          (form.controls.country.dirty || submitted()),
+      }"
+      optionLabel="name"
+      [showClear]="true"
+      placeholder="Select a country"
+    />
+    @if (
+      form.controls.country.invalid &&
+      (form.controls.country.dirty || submitted())
+    ) {
+      <lib-error-message />
+    }
+  </lib-form-field>
+  <lib-form-field
+    label="City"
+    [isRequired]="true"
+    [isLoading]="initialLoading()"
+    labelSkeletonWidth="5rem"
+  >
+    <input
+      slot="input"
+      pInputText
+      id="city"
+      [ngClass]="{
+        'ng-invalid ng-dirty':
+          form.controls.city.invalid &&
+          (form.controls.city.dirty || submitted()),
+      }"
+      placeholder="Type your city"
+      formControlName="city"
+    />
+    @if (
+      form.controls.city.invalid && (form.controls.city.dirty || submitted())
+    ) {
+      <lib-error-message />
+    }
+  </lib-form-field>
+  <lib-form-field
+    label="Street"
+    [isRequired]="true"
+    [isLoading]="initialLoading()"
+    labelSkeletonWidth="7rem"
+  >
+    <input
+      slot="input"
+      pInputText
+      id="street"
+      [ngClass]="{
+        'ng-invalid ng-dirty':
+          form.controls.street.invalid &&
+          (form.controls.street.dirty || submitted()),
+      }"
+      placeholder="Type your street"
+      formControlName="street"
+    />
+    @if (
+      form.controls.street.invalid &&
+      (form.controls.street.dirty || submitted())
+    ) {
+      <lib-error-message />
+    }
+  </lib-form-field>
+  <lib-form-field
+    label="Home number"
+    [isRequired]="true"
+    [isLoading]="initialLoading()"
+    labelSkeletonWidth="4rem"
+  >
+    <input
+      slot="input"
+      pInputText
+      id="home-number"
+      class="w-14rem"
+      [ngClass]="{
+        'ng-invalid ng-dirty':
+          form.controls.homeNumber.invalid &&
+          (form.controls.homeNumber.dirty || submitted()),
+      }"
+      placeholder="Type your home number"
+      formControlName="homeNumber"
+    />
+    @if (
+      form.controls.homeNumber.invalid &&
+      (form.controls.homeNumber.dirty || submitted())
+    ) {
+      <lib-error-message />
+    }
+  </lib-form-field>
+  <lib-form-field
+    label="House number"
+    [isLoading]="initialLoading()"
+    labelSkeletonWidth="8rem"
+    inputSkeletonWidth="14rem"
+  >
+    <input
+      slot="input"
+      pInputText
+      id="house-number"
+      class="w-14rem"
+      [ngClass]="{
+        'ng-invalid ng-dirty':
+          form.controls.houseNumber.invalid &&
+          (form.controls.houseNumber.dirty || submitted()),
+      }"
+      placeholder="Type your house number"
+      formControlName="houseNumber"
+    />
+    @if (
+      form.controls.houseNumber.invalid &&
+      (form.controls.houseNumber.dirty || submitted())
+    ) {
+      <lib-error-message />
+    }
+  </lib-form-field>
+  <lib-form-field
+    label="Post code"
+    [isRequired]="true"
+    [isLoading]="initialLoading()"
+    labelSkeletonWidth="7rem"
+    inputSkeletonWidth="14rem"
+  >
+    <input
+      slot="input"
+      pInputText
+      id="postcode"
+      class="w-20rem"
+      [ngClass]="{
+        'ng-invalid ng-dirty':
+          form.controls.postcode.invalid &&
+          (form.controls.postcode.dirty || submitted()),
+      }"
+      placeholder="postcode"
+      formControlName="postcode"
+    />
+    @if (
+      form.controls.postcode.invalid &&
+      (form.controls.postcode.dirty || submitted())
+    ) {
+      <lib-error-message />
+    }
+  </lib-form-field>
+  <lib-form-field
+    label="Phone"
+    [isRequired]="true"
+    [isLoading]="initialLoading()"
+    labelSkeletonWidth="8rem"
+    inputSkeletonWidth="20rem"
+  >
+    <input
+      slot="input"
+      pInputText
+      id="phone"
+      class="w-20rem"
+      [ngClass]="{
+        'ng-invalid ng-dirty':
+          form.controls.phone.invalid &&
+          (form.controls.phone.dirty || submitted()),
+      }"
+      placeholder="Type your phone number"
+      formControlName="phone"
+    />
+    @if (
+      form.controls.phone.invalid && (form.controls.phone.dirty || submitted())
+    ) {
+      <lib-error-message />
+    }
+  </lib-form-field>
+
+  <div class="flex align-items-center justify-content-between gap-3 mt-6">
+    <a
+      class="p-button p-button-outlined no-underline link flex align-items-center gap-2"
+      routerLink="/"
+    >
+      <i class="pi pi-arrow-left"></i>
+      <span>Back to shopping</span>
+    </a>
+    <p-button
+      (onClick)="submit()"
+      [loading]="loading()"
+      icon="pi pi-arrow-right"
+      [iconPos]="loading() ? 'left' : 'right'"
+      label="Go to shipping"
+    />
+  </div>
+</form>

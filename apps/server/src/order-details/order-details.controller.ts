@@ -31,7 +31,7 @@ export class OrderDetailsController {
   @ApiOperation({ summary: 'Create an order details' })
   create(
     @Body() data: CreateOrderDetailDto,
-    @Headers('authorization') authHeader: string
+    @Headers('authorization') authHeader: string,
   ) {
     return this.orderDetailsService.create(data, authHeader);
   }
@@ -48,7 +48,7 @@ export class OrderDetailsController {
   @ApiOkResponse({ type: OrderDetail })
   findOne(
     @Headers('authorization') authHeader: string,
-    @Param('id') id: string
+    @Param('id') id: string,
   ) {
     return this.orderDetailsService.findOne(authHeader, +id);
   }
