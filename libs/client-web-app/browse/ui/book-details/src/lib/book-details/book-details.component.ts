@@ -1,8 +1,7 @@
-import { AsyncPipe, NgStyle } from '@angular/common';
+import { AsyncPipe, CurrencyPipe, DatePipe, NgStyle } from '@angular/common';
 import {
   Component,
   DestroyRef,
-  HostBinding,
   OnInit,
   computed,
   inject,
@@ -26,7 +25,7 @@ import {
   homeRoutePaths,
 } from '@e-commerce/client-web-app/shared/utils/router-config';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { catchError, ignoreElements, of, tap } from 'rxjs';
+import { Observable, catchError, ignoreElements, map, of } from 'rxjs';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { MenuItem } from 'primeng/api';
 import { PanelModule } from 'primeng/panel';
@@ -34,6 +33,8 @@ import { ButtonModule } from 'primeng/button';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TooltipModule } from 'primeng/tooltip';
+import { ChipModule } from 'primeng/chip';
+import { DetailRowComponent } from './components/detail-row.component';
 
 @Component({
   selector: 'lib-book-details',
@@ -47,127 +48,139 @@ import { TooltipModule } from 'primeng/tooltip';
     InputNumberModule,
     ReactiveFormsModule,
     TooltipModule,
+    CurrencyPipe,
+    ChipModule,
+    DetailRowComponent,
+    DatePipe,
   ],
   template: `
-    @if ({book: book$ | async, error: bookError$ | async}; as vm) { @if
-    (!vm.book && !vm.error) {
-    <div>Loading...</div>
-    } @else if (!vm.book && vm.error) {
-    <div>{{ vm.error }}</div>
-    } @else if (vm.book && !vm.error) {
-    <div
-      class="flex flex-column-reverse gap-3 xl:grid xl:flex-row xl:mb-0 xl:gap-8 height-content"
-    >
-      <div
-        class="border-round overflow-hidden flex align-items-start h-full xl:col-6 xl:justify-content-end"
-      >
-        <img
-          class="sticky top-0 border-round overflow-hidden object-fit-cover object-position-center w-full h-full"
-          [src]="vm.book.coverImage"
-          alt="book store"
-        />
-      </div>
-      <div class="xl:col-6 h-full flex flex-column gap-8">
-        <div class="flex flex-column xl:flex-row gap-4 xl:gap-8 w-full">
-          <div class="w-full flex flex-column justify-content-center">
-            <p-breadcrumb [model]="breadcrumbItems" />
-            <h3 class="text-5xl">{{ vm.book.title }}</h3>
-            <div class="flex flex-wrap gap-3 mb-5">
-              @for (author of vm.book.authors; track author.id) {
-              <div class="text-2xl flex flex-wrap text-color-secondary">
-                {{ author.name }}
-              </div>
-              }
-            </div>
-            <div class="price-container flex flex-column my-6 gap-2 lg:gap-6">
-              <span class="text-4xl font-bold">{{ vm.book.price }}$</span>
-              <div class="flex align-items-center gap-4">
-                <p-inputNumber
-                  [showButtons]="true"
-                  [formControl]="amount"
-                  [size]="4"
-                  [min]="1"
-                  (onBlur)="onBlurInput()"
-                  buttonLayout="horizontal"
-                  spinnerMode="horizontal"
-                  inputId="integeronly"
-                  decrementButtonClass="p-button-text p-button-secondary"
-                  incrementButtonClass="p-button-text p-button-secondary"
-                  incrementButtonIcon="pi pi-plus"
-                  decrementButtonIcon="pi pi-minus"
+    @if ({ book: book$ | async, error: bookError$ | async }; as vm) {
+      @if (!vm.book && !vm.error) {
+        <div>Loading...</div>
+      } @else if (!vm.book && vm.error) {
+        <div>{{ vm.error }}</div>
+      } @else if (vm.book && !vm.error) {
+        <div class="container">
+          <div
+            class="image surface-hover border-round w-full max-height top-header-height flex align-items-center justify-content-center"
+          >
+            <img
+              class="border-round h-full"
+              [src]="vm.book.coverImage"
+              [alt]="vm.book.title + ' cover image'"
+            />
+          </div>
+          <div class="flex flex-column gap-8">
+            <div class="flex flex-column xl:flex-row gap-4 xl:gap-8 w-full">
+              <div class="w-full flex flex-column justify-content-center">
+                <p-breadcrumb
+                  class="overflow-hidden"
+                  [model]="(breadcrumbItems$ | async) ?? []"
                 />
-                <div
-                  [pTooltip]="
-                    amount.invalid ? 'Make sure that amount is correct' : ''
-                  "
-                  tooltipPosition="top"
-                  tooltipStyleClass="min-w-max"
-                >
-                  <p-button
-                    class="w-full"
-                    label="Add to cart"
-                    size="large"
-                    icon="pi pi-cart-plus"
-                    [disabled]="amount.invalid"
-                    [loading]="loading() && bookIds().includes(vm.book.id)"
-                    (onClick)="addToCart(vm.book)"
+                <h3 class="text-5xl md:text-6xl lg:text-7xl xl:text-8xl">
+                  {{ vm.book.title }}
+                </h3>
+                <div class="flex flex-wrap gap-3 mb-5">
+                  @for (author of vm.book.authors; track author.id) {
+                    <div class="text-2xl flex flex-wrap text-color-secondary">
+                      {{ author.name }}
+                    </div>
+                  }
+                </div>
+                @if (vm.book.tag) {
+                  <p-chip [label]="vm.book.tag" />
+                }
+                <div class="flex flex-column my-6 gap-2">
+                  <span class="text-4xl font-bold">
+                    {{ vm.book.price | currency: 'USD' }}
+                  </span>
+                  <div
+                    class="flex justify-content-between sm:justify-content-start align-items-center gap-4"
+                  >
+                    <p-inputNumber
+                      [showButtons]="true"
+                      [formControl]="amount"
+                      [size]="6"
+                      [min]="1"
+                      (onBlur)="onBlurInput()"
+                      buttonLayout="horizontal"
+                      spinnerMode="horizontal"
+                      inputId="integeronly"
+                      decrementButtonClass="p-button-text p-button-secondary"
+                      incrementButtonClass="p-button-text p-button-secondary"
+                      incrementButtonIcon="pi pi-plus"
+                      decrementButtonIcon="pi pi-minus"
+                    />
+                    <div
+                      [pTooltip]="
+                        amount.invalid ? 'Make sure that amount is correct' : ''
+                      "
+                      tooltipPosition="top"
+                      tooltipStyleClass="min-w-max"
+                    >
+                      <p-button
+                        class="w-full xl:hidden"
+                        label="Add to cart"
+                        icon="pi pi-cart-plus"
+                        [disabled]="amount.invalid"
+                        [loading]="loading() && bookIds().includes(vm.book.id)"
+                        (onClick)="addToCart(vm.book)"
+                      />
+                      <p-button
+                        class="w-full hidden xl:block"
+                        label="Add to cart"
+                        icon="pi pi-cart-plus"
+                        size="large"
+                        [disabled]="amount.invalid"
+                        [loading]="loading() && bookIds().includes(vm.book.id)"
+                        (onClick)="addToCart(vm.book)"
+                      />
+                    </div>
+                  </div>
+                  <span class="text-xs font-semibold">
+                    {{
+                      productInventory()?.quantity !== 1
+                        ? 'There are ' +
+                          productInventory()?.quantity +
+                          ' pieces left'
+                        : 'Hurry up! Only one piece left'
+                    }}
+                  </span>
+                </div>
+                <div class="flex flex-column gap-2">
+                  <lib-detail-row
+                    label="Category"
+                    [value]="vm.book.category.name"
                   />
+                  @if (vm.book.pages) {
+                    <lib-detail-row label="Pages" [value]="vm.book.pages" />
+                  }
+                  @if (vm.book.language) {
+                    <lib-detail-row
+                      label="Language"
+                      [value]="vm.book.language"
+                    />
+                  }
+                  @if (vm.book.publishedDate) {
+                    <lib-detail-row
+                      label="Publish date"
+                      [value]="vm.book.publishedDate | date"
+                    />
+                  }
                 </div>
               </div>
-              <span>
-                {{
-                  productInventory()?.quantity !== 1
-                    ? 'There are ' +
-                      productInventory()?.quantity +
-                      ' pieces left'
-                    : 'Hurry up! Only one piece left'
-                }}
-              </span>
             </div>
-            <div class="flex align-items-center gap-2">
-              <span>Category:</span>
-              <div class="text-xl">{{ vm.book.category.name }}</div>
-            </div>
-            @if (!!vm.book.pages) {
-            <div class="flex align-items-center gap-2">
-              <span>Pages:</span>
-              <div class="text-xl">{{ vm.book.pages }}</div>
-            </div>
-            } @else if (!!vm.book.language) {
-            <div class="flex align-items-center gap-2">
-              <span>Language:</span>
-              <div class="text-xl">{{ vm.book.language }}</div>
-            </div>
-            } @else if (!!vm.book.publishedDate) {
-            <div class="flex align-items-center gap-2">
-              <span>Publish date:</span>
-              <div class="text-xl">{{ vm.book.publishedDate }}</div>
-            </div>
-            }
+            <p-panel header="Description" [toggleable]="true">
+              <p class="line-height-3 description">
+                {{ vm.book.description }}
+              </p>
+            </p-panel>
           </div>
         </div>
-        <p-panel header="Description" class="max-w-60rem" [toggleable]="true">
-          <p class="line-height-3 description">{{ vm.book.description }}</p>
-        </p-panel>
-      </div>
-    </div>
-    } }
+      }
+    }
   `,
-  styles: [
-    `
-      .description {
-        letter-spacing: 1px;
-      }
-
-      .price-container {
-        max-width: 35rem;
-      }
-      :host ::ng-deep #integeronly {
-        text-align: center;
-        width: 4rem;
-      }
-    `,
-  ],
+  styleUrl: './book-details.component.css',
 })
 export class BookDetailsComponent implements OnInit {
   private booksApi = inject(BooksApiService);
@@ -176,8 +189,6 @@ export class BookDetailsComponent implements OnInit {
   private authService = inject(AuthService);
   private cartService = inject(CartService);
   private destroyRef = inject(DestroyRef);
-
-  @HostBinding('class') class = 'mx-auto flex flex-column gap-4 relative';
 
   amount = new FormControl<number>(1, {
     validators: [Validators.min(1)],
@@ -188,39 +199,39 @@ export class BookDetailsComponent implements OnInit {
   bookIds = this.cartService.addingBookIds;
 
   book$ = this.booksApi.getBook$(
-    this.route.snapshot.params[appRouterConfig.browse.bookId]
+    this.route.snapshot.params[appRouterConfig.browse.bookId],
   );
   bookError$ = this.book$.pipe(
-    tap((book) => {
-      this.breadcrumbItems.push({
+    ignoreElements(),
+    catchError((responseError: ResponseError) =>
+      of(responseError.error.message),
+    ),
+  );
+  productInventory = signal<ProductInventory | null>(null);
+
+  breadcrumbItems$: Observable<MenuItem[]> = this.book$.pipe(
+    map((book) => [
+      { label: 'home', routerLink: homeRoutePaths.default },
+      {
+        label: 'books',
+        routerLink: browseRoutePaths.default,
+      },
+      {
         label: book.category.name,
         routerLink: browseRoutePaths.default,
         state: { categoryIds: [book.category.id], clear: true },
         queryParams: {
           [appRouterConfig.browse.categoriesQueryParams]: book.category.name,
         },
-      });
-      this.breadcrumbItems.push({ label: book.title });
-    }),
-    ignoreElements(),
-    catchError((responseError: ResponseError) =>
-      of(responseError.error.message)
-    )
+      },
+      { label: book.title },
+    ]),
   );
-  productInventory = signal<ProductInventory | null>(null);
-
-  breadcrumbItems: MenuItem[] = [
-    { label: 'home', routerLink: homeRoutePaths.default },
-    {
-      label: 'books',
-      routerLink: browseRoutePaths.default,
-    },
-  ];
 
   ngOnInit(): void {
     this.productInventoryApi
       .getProductInventory(
-        this.route.snapshot.params[appRouterConfig.browse.bookId]
+        this.route.snapshot.params[appRouterConfig.browse.bookId],
       )
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
