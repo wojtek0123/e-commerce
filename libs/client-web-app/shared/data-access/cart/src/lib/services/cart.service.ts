@@ -52,10 +52,10 @@ export class CartService {
       .getShoppingSession()
       .pipe(take(1), takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (session) => {
+        next: ({ id, cartItems }) => {
           this._loading.set(true);
-          this._shoppingSessionId.set(session.id);
-          this._items.set(session.cartItems);
+          this._shoppingSessionId.set(id);
+          this._items.set(cartItems);
           localStorage.removeItem(appRouterConfig.localStorage.cart);
           this._recalculateTotal();
 

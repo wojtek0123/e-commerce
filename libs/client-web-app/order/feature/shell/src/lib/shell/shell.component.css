@@ -1,8 +1,4 @@
 :host ::ng-deep {
-  .p-menuitem-link {
-    background: transparent;
-  }
-
   .p-steps ul {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
