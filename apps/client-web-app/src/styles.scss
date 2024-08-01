@@ -13,6 +13,8 @@
 html {
   scroll-behavior: smooth;
   font-size: 100%;
+  scrollbar-width: thin;
+  scrollbar-color: var(--text-color-secondary) var(--surface-hover);
 }
 
 h1,
