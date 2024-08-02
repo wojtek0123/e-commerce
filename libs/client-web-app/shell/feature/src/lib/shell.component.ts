@@ -1,14 +1,5 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  DestroyRef,
-  OnInit,
-  inject,
-} from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { AuthService } from '@e-commerce/client-web-app/shared/data-access/auth';
-import { CartService } from '@e-commerce/client-web-app/shared/data-access/cart';
 import { NavComponent } from '@e-commerce/client-web-app/shell/ui/nav';
 import { ToastModule } from 'primeng/toast';
 
@@ -25,27 +16,4 @@ import { ToastModule } from 'primeng/toast';
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ShellComponent implements OnInit {
-  private authService = inject(AuthService);
-  private cartService = inject(CartService);
-  private destroyRef = inject(DestroyRef);
-
-  ngOnInit(): void {
-    this.authService.events$
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((event) => {
-        if (event === 'init') {
-          this.cartService.getCartItems();
-        }
-        if (event === 'initSession') {
-          this.cartService.getCartItemsFromShoppingSession();
-        }
-        if (event === 'logoutSuccessfully') {
-          this.cartService.clear();
-        }
-        if (event === 'loginSuccessfully' || event === 'registerSuccessfully') {
-          this.cartService.syncDatabase();
-        }
-      });
-  }
-}
+export class ShellComponent {}

@@ -61,22 +61,22 @@ import { MessageService } from 'primeng/api';
         <div
           class="flex flex-column gap-3 overflow-y-auto"
           [ngClass]="{
-            'animation-pulse pointer-events-none': loading()
+            'animation-pulse pointer-events-none': loading(),
           }"
         >
           @for (item of cartItems(); track item.book.id) {
-          <lib-cart-item
-            [item]="item"
-            (onUpdateQuantity)="updateQuantity($event)"
-            (onDelete)="remove($event)"
-          />
+            <lib-cart-item
+              [item]="item"
+              (onUpdateQuantity)="updateQuantity($event)"
+              (onDelete)="remove($event)"
+            />
           } @empty {
-          <div class="text-center flex flex-column gap-3 mt-3">
-            <span class="text-4xl">Your cart is empty!</span>
-            <span class="text-lg text-gray-400 "
-              >You should add something to it.</span
-            >
-          </div>
+            <div class="text-center flex flex-column gap-3 mt-3">
+              <span class="text-4xl">Your cart is empty!</span>
+              <span class="text-lg text-gray-400 "
+                >You should add something to it.</span
+              >
+            </div>
           }
         </div>
 
@@ -135,7 +135,7 @@ export class CartSidebarComponent implements OnChanges {
   async checkout() {
     if (this.count() === 0) {
       this.error.set(
-        'First add something to your cart before proceeding to checkout'
+        'First add something to your cart before proceeding to checkout',
       );
       this.messageService.add({
         detail:
@@ -147,8 +147,6 @@ export class CartSidebarComponent implements OnChanges {
     }
 
     if (this.error) this.error.set(null);
-
-    this.onClose.emit();
 
     await this.router.navigate([appRouterConfig.order.basePath]);
   }

@@ -1,0 +1,128 @@
+.cart-item {
+  container-name: cart-item;
+  container-type: inline-size;
+  min-height: 6rem;
+
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  background-color: var(--surface-hover);
+  padding: 1rem;
+  border-radius: var(--border-radius);
+}
+
+.cart-details {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between;
+
+  &__quantity {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+}
+
+.book-details {
+  display: flex;
+  width: 100%;
+  gap: 1rem;
+
+  container-name: book-details;
+  container-type: inline-size;
+
+  &__image {
+    aspect-ratio: 3 / 4;
+    width: 5rem;
+    display: none;
+  }
+
+  &__header {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    &-title {
+      font-size: 1rem;
+    }
+
+    &-authors {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+
+      &-item {
+        color: var(--text-color-secondary);
+        font-size: 0.75rem;
+      }
+    }
+  }
+}
+
+@container cart-item (min-width: 28.75rem) {
+  .book-details {
+    &__header {
+      &-title {
+        font-weight: bold;
+      }
+    }
+  }
+
+  .cart-details {
+    &__price {
+      font-weight: bold;
+    }
+  }
+}
+
+@container cart-item (min-width: 40rem) {
+  .book-details__image {
+    display: block;
+  }
+
+  .book-details {
+    &__image {
+      display: block;
+    }
+
+    &__header {
+      justify-content: center;
+      &-title {
+        font-size: 1.5rem;
+      }
+    }
+  }
+
+  .cart-details {
+    &__price {
+      font-size: 1.25rem;
+    }
+  }
+}
+
+@container cart-item (min-width: 53.75rem) {
+  .cart-details {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .book-details__image {
+    width: 8rem;
+  }
+
+  .book-details__header-authors-item {
+    font-size: 1rem;
+  }
+}
+
+@container book-details (min-width: 60rem) {
+  .book-details__header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+  }
+}
