@@ -9,6 +9,7 @@ import {
 interface OrderInformation {
   userAddressId: UserAddress['id'] | null;
   shippingMethodId: ShippingMethod['id'] | null;
+  shippingMethodPrice: ShippingMethod['price'];
 }
 
 @Injectable()
@@ -52,6 +53,7 @@ export class StepService {
   private _orderInformation = signal<OrderInformation>({
     userAddressId: null,
     shippingMethodId: null,
+    shippingMethodPrice: 0,
   });
   public orderInformation = this._orderInformation.asReadonly();
   public waitingForOrderInformation = computed(() =>

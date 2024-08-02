@@ -89,7 +89,7 @@
         ></i>
       </p-button>
 
-      @defer (when cartSidebarVisible()) {
+      @defer (on interaction(openCartSidebar)) {
         <lib-cart-sidebar
           [sidebarVisible]="cartSidebarVisible()"
           (onClose)="cartSidebarVisible.set(false)"

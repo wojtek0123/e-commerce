@@ -39,13 +39,13 @@ import { Router, RouterLink } from '@angular/router';
         @for (sm of shippingMethods$ | async; track sm.id) {
           <div
             class="flex align-items-center justify-content-between p-3 border-round surface-ground"
-            (click)="selectShippingMethodId.setValue(sm.id)"
+            (click)="select(sm)"
           >
             <div class="flex align-items-center gap-2 w-full">
               <p-radioButton
                 [name]="sm.name"
-                [value]="sm.id"
-                [formControl]="selectShippingMethodId"
+                [value]="sm"
+                [formControl]="selectShippingMethod"
                 [inputId]="sm.id.toString()"
               />
               <label [for]="sm.id.toString()">
@@ -55,7 +55,7 @@ import { Router, RouterLink } from '@angular/router';
             <div>{{ '$' + sm.price }}</div>
           </div>
         }
-        @if (selectShippingMethodId.invalid && selectShippingMethodId.dirty) {
+        @if (selectShippingMethod.invalid && selectShippingMethod.dirty) {
           <lib-error-message
             class="mt-3"
             message="If you want to get the order you should let us know about the method shipping"
@@ -100,7 +100,7 @@ export class ShippingMethodComponent implements OnInit {
   private stepService = inject(StepService);
   private router = inject(Router);
 
-  selectShippingMethodId = new FormControl<ShippingMethod['id'] | null>(
+  selectShippingMethod = new FormControl<ShippingMethod | null>(
     null,
     Validators.required,
   );
@@ -117,15 +117,22 @@ export class ShippingMethodComponent implements OnInit {
   }
 
   submit() {
-    if (this.selectShippingMethodId.invalid) {
-      this.selectShippingMethodId.markAsDirty();
+    if (this.selectShippingMethod.invalid) {
+      this.selectShippingMethod.markAsDirty();
       return;
     }
 
     this.stepService.setOrderInformation({
-      shippingMethodId: this.selectShippingMethodId.value,
+      shippingMethodId: this.selectShippingMethod.value?.id,
     });
 
     this.router.navigateByUrl('/order/payment');
+  }
+
+  select(sm: ShippingMethod) {
+    this.selectShippingMethod.setValue(sm);
+    this.stepService.setOrderInformation({
+      shippingMethodPrice: sm.price,
+    });
   }
 }
