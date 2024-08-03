@@ -160,14 +160,14 @@ export class AddressInformationComponent implements OnInit {
           countryId: country?.id ?? NaN,
         })
         .subscribe({
-          next: async ({ id }) => {
+          next: async (userAddress) => {
             this.messageService.add({
               summary: 'Success',
               severity: 'success',
               detail: 'Address has been saved',
             });
             this.loading.set(false);
-            this.stepService.setOrderInformation({ userAddressId: id });
+            this.stepService.setOrderInformation({ userAddress });
             await this.router.navigateByUrl('/order/shipping-method');
           },
           error: (resError: ResponseError) => {
@@ -184,7 +184,7 @@ export class AddressInformationComponent implements OnInit {
     const x = omit(this.userAddress(), ['id', 'userId', 'countryId']);
     if (isEqual(this.form.value, x)) {
       this.stepService.setOrderInformation({
-        userAddressId: this.userAddress()?.id,
+        userAddress: this.userAddress(),
       });
       await this.router.navigateByUrl('/order/shipping-method');
       this.loading.set(false);
@@ -204,7 +204,7 @@ export class AddressInformationComponent implements OnInit {
             });
             this.loading.set(false);
             this.stepService.setOrderInformation({
-              userAddressId: this.userAddress()?.id,
+              userAddress: this.userAddress(),
             });
             await this.router.navigateByUrl('/order/shipping-method');
           },

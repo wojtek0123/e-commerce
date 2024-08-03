@@ -7,9 +7,9 @@ import {
 } from '@e-commerce/client-web-app/shared/data-access/api-types';
 
 interface OrderInformation {
-  userAddressId: UserAddress['id'] | null;
-  shippingMethodId: ShippingMethod['id'] | null;
-  shippingMethodPrice: ShippingMethod['price'];
+  userAddress: UserAddress | null;
+  shippingMethod: ShippingMethod | null;
+  paymentMethod: string | null;
 }
 
 @Injectable()
@@ -34,14 +34,22 @@ export class StepService {
         {
           previous: 'address-information',
           current: 'shipping-method',
-          next: 'payment',
+          next: 'payment-method',
         },
       ],
       [
-        'payment',
+        'payment-method',
         {
           previous: 'shipping-method',
-          current: 'payment',
+          current: 'payment-method',
+          next: 'summary',
+        },
+      ],
+      [
+        'summary',
+        {
+          previous: 'shipping-method',
+          current: 'summary',
           next: 'payment-status',
         },
       ],
@@ -51,9 +59,9 @@ export class StepService {
   public step = this._step.asReadonly();
 
   private _orderInformation = signal<OrderInformation>({
-    userAddressId: null,
-    shippingMethodId: null,
-    shippingMethodPrice: 0,
+    userAddress: null,
+    shippingMethod: null,
+    paymentMethod: '',
   });
   public orderInformation = this._orderInformation.asReadonly();
   public waitingForOrderInformation = computed(() =>

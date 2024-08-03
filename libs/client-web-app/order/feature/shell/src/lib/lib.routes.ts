@@ -27,10 +27,17 @@ export const shellRoutes: Route[] = [
           ).then((r) => r.shippingMethodRoutes),
       },
       {
-        path: 'payment',
+        path: 'payment-method',
         loadChildren: () =>
           import('@e-commerce/client-web-app/order/feature/payment').then(
             (r) => r.paymentRoutes,
+          ),
+      },
+      {
+        path: 'summary',
+        loadChildren: () =>
+          import('@e-commerce/client-web-app/order/feature/summary').then(
+            (r) => r.summaryRoutes,
           ),
       },
       {
@@ -38,7 +45,7 @@ export const shellRoutes: Route[] = [
         redirectTo: 'address-information',
       },
     ],
-    canActivate: [authGuard, isCartEmptyGuard],
+    canActivate: [authGuard],
     canActivateChild: [stepGuard],
     providers: [StepService],
   },

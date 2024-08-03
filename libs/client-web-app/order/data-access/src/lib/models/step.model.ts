@@ -5,4 +5,5 @@ export type Step =
   | typeof appRouterConfig.order.addressInformation
   | typeof appRouterConfig.order.shippingMethod
   | typeof appRouterConfig.order.paymentMethod
-  | typeof appRouterConfig.order.paymentStatus;
+  | typeof appRouterConfig.order.paymentStatus
+  | typeof appRouterConfig.order.summary;

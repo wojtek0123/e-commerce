@@ -21,8 +21,9 @@ export const appRouterConfig = {
     basePath: 'order',
     addressInformation: 'address-information',
     shippingMethod: 'shipping-method',
-    paymentMethod: 'payment',
+    paymentMethod: 'payment-method',
     paymentStatus: 'payment-status',
+    summary: 'summary',
   } as const,
   localStorage: {
     refreshToken: 'refresh_token',

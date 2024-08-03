@@ -12,12 +12,6 @@ import { NgClass } from '@angular/common';
 import { InputMaskModule } from 'primeng/inputmask';
 import { Router, RouterLink } from '@angular/router';
 import {
-  OrderDetailsApiService,
-  ShoppingSessionApiService,
-} from '@e-commerce/client-web-app/shared/data-access/api-services';
-import { ResponseError } from '@e-commerce/client-web-app/shared/data-access/api-types';
-import { take } from 'rxjs';
-import {
   FormFieldComponent,
   ErrorMessageComponent,
 } from '@e-commerce/client-web-app/shared/ui/form-field';
@@ -47,15 +41,14 @@ import { TooltipModule } from 'primeng/tooltip';
           id="card-number"
           [ngClass]="{
             'ng-invalid ng-dirty':
-              form.controls.cardNumber.invalid &&
-              (form.controls.cardNumber.dirty || form.dirty),
+              form.controls.cardNumber.invalid && submitted(),
           }"
           formControlName="cardNumber"
           placeholder="Type your card number"
         />
         @if (
-          form.controls.cardNumber.invalid &&
-          (form.controls.cardNumber.dirty || form.dirty)
+          (form.controls.cardNumber.dirty || submitted()) &&
+          form.controls.cardNumber.invalid
         ) {
           <lib-error-message />
         }
@@ -70,15 +63,14 @@ import { TooltipModule } from 'primeng/tooltip';
             id="expiration-date"
             [ngClass]="{
               'ng-invalid ng-dirty':
-                form.controls.expirationDate.invalid &&
-                (form.controls.expirationDate.dirty || form.dirty),
+                form.controls.expirationDate.invalid && submitted(),
             }"
             formControlName="expirationDate"
             placeholder="Type expiration date"
           />
           @if (
             form.controls.expirationDate.invalid &&
-            (form.controls.expirationDate.dirty || form.dirty)
+            (submitted() || form.controls.expirationDate.dirty)
           ) {
             <lib-error-message />
           }
@@ -92,15 +84,14 @@ import { TooltipModule } from 'primeng/tooltip';
             id="security-code"
             [ngClass]="{
               'ng-invalid ng-dirty':
-                form.controls.securityCode.invalid &&
-                (form.controls.securityCode.dirty || form.dirty),
+                form.controls.securityCode.invalid && submitted(),
             }"
             formControlName="securityCode"
             placeholder="Type security code"
           />
           @if (
             form.controls.securityCode.invalid &&
-            (form.controls.securityCode.dirty || form.dirty)
+            (submitted() || form.controls.securityCode.dirty)
           ) {
             <lib-error-message />
           }
@@ -118,7 +109,7 @@ import { TooltipModule } from 'primeng/tooltip';
       <p-button
         icon="pi pi-arrow-right"
         iconPos="right"
-        label="Pay"
+        label="Summary"
         [loading]="loading()"
         (onClick)="submit()"
       />
@@ -135,16 +126,14 @@ import { TooltipModule } from 'primeng/tooltip';
   ],
 })
 export class PaymentComponent implements OnInit {
-  private orderDetailsApi = inject(OrderDetailsApiService);
-  private shoppingSessionApi = inject(ShoppingSessionApiService);
   private stepService = inject(StepService);
   private router = inject(Router);
 
-  private orderInformation = this.stepService.orderInformation;
   protected waitingForOrderInformation =
     this.stepService.waitingForOrderInformation;
 
   loading = signal(false);
+  submitted = signal(false);
   form = new FormGroup({
     cardNumber: new FormControl(null, Validators.required),
     expirationDate: new FormControl(null, Validators.required),
@@ -152,42 +141,18 @@ export class PaymentComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    this.stepService.changeStep('payment');
+    this.stepService.changeStep('payment-method');
   }
 
-  submit() {
-    if (this.form.invalid) {
-      this.form.markAsDirty();
-      return;
-    }
+  async submit() {
+    this.submitted.set(true);
+    if (this.form.invalid) return;
 
-    const { userAddressId, shippingMethodId } = this.orderInformation();
+    // this.loading.set(true);
 
-    if (!userAddressId || !shippingMethodId) return;
-
-    this.loading.set(true);
-
-    this.orderDetailsApi
-      .create({
-        shippingMethodId: shippingMethodId,
-        userAddressId: userAddressId,
-      })
-      .pipe(take(1))
-      .subscribe({
-        next: async () => {
-          this.loading.set(false);
-          this.deleteShoppingSession();
-          // this.cart.getShoppingSession();
-          await this.router.navigate(['/order/payment-status']);
-        },
-        error: (resError: ResponseError) => {
-          this.loading.set(false);
-          console.error(resError.error.message);
-        },
-      });
-  }
-
-  private deleteShoppingSession() {
-    this.shoppingSessionApi.delete().subscribe();
+    this.stepService.setOrderInformation({
+      paymentMethod: this.form.value.cardNumber,
+    });
+    await this.router.navigate(['/order/summary']);
   }
 }

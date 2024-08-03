@@ -19,13 +19,19 @@ export const stepGuard: CanActivateChildFn = (
   const path = state.url.split('/').at(-1);
 
   if (step?.next === 'shipping-method') {
-    if (!orderInformation.userAddressId) {
+    if (!orderInformation.userAddress) {
       return router.createUrlTree(['/']);
     }
   }
 
-  if (step?.next === 'payment') {
-    if (!orderInformation.shippingMethodId) {
+  if (step?.next === 'payment-method') {
+    if (!orderInformation.shippingMethod) {
+      return router.createUrlTree(['/']);
+    }
+  }
+
+  if (step?.next === 'summary') {
+    if (!orderInformation.paymentMethod) {
       return router.createUrlTree(['/']);
     }
   }
