@@ -17,3 +17,4 @@ export * from './lib/models/cart-item.model';
 export * from './lib/models/pagination.model';
 export * from './lib/models/paginated.model';
 export * from './lib/models/author.model';
+export * from './lib/credit-card.model';
