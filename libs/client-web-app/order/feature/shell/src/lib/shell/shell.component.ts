@@ -6,7 +6,6 @@ import {
   OnInit,
   Signal,
   computed,
-  effect,
   inject,
 } from '@angular/core';
 import { NavigationStart, Router, RouterOutlet } from '@angular/router';
@@ -47,12 +46,6 @@ import { CurrencyPipe, NgClass } from '@angular/common';
     <div class="w-full flex flex-column gap-6 p-3">
       <p-steps class="mx-auto w-full" [model]="stepLabels()" />
       <div class="grid">
-        <div class="w-full content flex flex-column gap-3 xl:gap-6">
-          <h2 class="xl:text-5xl">Checkout form</h2>
-          <div class="w-full">
-            <router-outlet />
-          </div>
-        </div>
         <div class="cart flex flex-column gap-3 xl:gap-6">
           <h2 class="xl:text-5xl">Cart items</h2>
           <div
@@ -73,6 +66,12 @@ import { CurrencyPipe, NgClass } from '@angular/common';
                 />
               }
             }
+          </div>
+        </div>
+        <div class="w-full content flex flex-column gap-3 xl:gap-6">
+          <h2 class="xl:text-5xl">Checkout form</h2>
+          <div class="w-full">
+            <router-outlet />
           </div>
         </div>
       </div>
@@ -96,18 +95,9 @@ export class ShellComponent implements OnInit {
     })),
   );
 
-  constructor() {
-    effect(() => {
-      console.log(this.cartItems());
-    });
-  }
-
   cartItems = this.cartService.items;
   cartItemsLoading = this.cartService.loading;
   total = this.cartService.total;
-  shippingMethodPrice = computed(
-    () => this.stepService.orderInformation().shippingMethodPrice,
-  );
 
   ngOnInit(): void {
     this.router.events

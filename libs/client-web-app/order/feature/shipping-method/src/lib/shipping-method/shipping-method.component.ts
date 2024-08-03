@@ -38,7 +38,7 @@ import { Router, RouterLink } from '@angular/router';
       } @else if (vm.shippingMethods && !vm.error) {
         @for (sm of shippingMethods$ | async; track sm.id) {
           <div
-            class="flex align-items-center justify-content-between p-3 border-round surface-ground"
+            class="flex align-items-center justify-content-between p-3 border-round surface-hover"
             (click)="select(sm)"
           >
             <div class="flex align-items-center gap-2 w-full">
@@ -123,16 +123,13 @@ export class ShippingMethodComponent implements OnInit {
     }
 
     this.stepService.setOrderInformation({
-      shippingMethodId: this.selectShippingMethod.value?.id,
+      shippingMethod: this.selectShippingMethod.value,
     });
 
-    this.router.navigateByUrl('/order/payment');
+    this.router.navigateByUrl('/order/payment-method');
   }
 
   select(sm: ShippingMethod) {
     this.selectShippingMethod.setValue(sm);
-    this.stepService.setOrderInformation({
-      shippingMethodPrice: sm.price,
-    });
   }
 }
