@@ -7,8 +7,10 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterOutlet } from '@angular/router';
-import { AuthService } from '@e-commerce/client-web-app/shared/data-access/auth';
-import { CartService } from '@e-commerce/client-web-app/shared/data-access/cart';
+import {
+  AuthService,
+  CartService,
+} from '@e-commerce/client-web-app/shared/data-access/stores';
 import { PrimeNGConfig } from 'primeng/api';
 
 @Component({

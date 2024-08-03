@@ -8,7 +8,6 @@ import {
 import { Params, RouterLink } from '@angular/router';
 import { DividerModule } from 'primeng/divider';
 import { ButtonModule } from 'primeng/button';
-import { AuthService } from '@e-commerce/client-web-app/shared/data-access/auth';
 import { AsyncPipe, NgClass } from '@angular/common';
 import { MenuModule } from 'primeng/menu';
 import { MegaMenuModule } from 'primeng/megamenu';
@@ -32,7 +31,10 @@ import {
 } from '@e-commerce/client-web-app/shell/data-access/theme-switcher';
 import { FormsModule } from '@angular/forms';
 import { BadgeModule } from 'primeng/badge';
-import { CartService } from '@e-commerce/client-web-app/shared/data-access/cart';
+import {
+  CartService,
+  AuthService,
+} from '@e-commerce/client-web-app/shared/data-access/stores';
 import { CategoriesComponent } from '../components/categories/categories.component';
 
 @Component({

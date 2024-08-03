@@ -25,7 +25,7 @@ import {
   CartItemSkeletonComponent,
 } from '@e-commerce/client-web-app/shared/ui/cart-item';
 import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-config';
-import { CartService } from '@e-commerce/client-web-app/shared/data-access/cart';
+import { CartService } from '@e-commerce/client-web-app/shared/data-access/stores';
 import { MessageService } from 'primeng/api';
 
 @Component({

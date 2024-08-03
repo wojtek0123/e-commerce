@@ -5,7 +5,7 @@ import {
   HttpRequest,
 } from '@angular/common/http';
 import { Observable, switchMap } from 'rxjs';
-import { AuthService } from '@e-commerce/client-web-app/shared/data-access/auth';
+import { AuthService } from '@e-commerce/client-web-app/shared/data-access/stores';
 import { inject } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 

@@ -12,7 +12,7 @@ import {
   User,
 } from '@e-commerce/client-web-app/shared/data-access/api-types';
 import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-config';
-import { AuthApiService } from './auth-api.service';
+import { AuthApiService } from '@e-commerce/client-web-app/shared/data-access/api-services';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MessageService } from 'primeng/api';
 import { BehaviorSubject, take } from 'rxjs';

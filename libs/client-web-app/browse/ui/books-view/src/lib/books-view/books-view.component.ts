@@ -20,7 +20,7 @@ import {
   ResponseError,
 } from '@e-commerce/client-web-app/shared/data-access/api-types';
 import { catchError, ignoreElements, shareReplay, switchMap, tap } from 'rxjs';
-import { CartService } from '@e-commerce/client-web-app/shared/data-access/cart';
+import { CartService } from '@e-commerce/client-web-app/shared/data-access/stores';
 import { AsyncPipe, NgClass, ViewportScroller } from '@angular/common';
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 import { BooksApiService } from '@e-commerce/client-web-app/shared/data-access/api-services';
