@@ -9,3 +9,4 @@ export * from './lib/shopping-session-api.service';
 export * from './lib/author-api.service';
 export * from './lib/cart-items-api.service';
 export * from './lib/auth-api.service';
+export * from './lib/credit-card-api.service';
