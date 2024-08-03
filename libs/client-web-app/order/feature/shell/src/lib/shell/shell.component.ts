@@ -19,7 +19,10 @@ import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-
 import { filter } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CartService } from '@e-commerce/client-web-app/shared/data-access/cart';
-import { CartItemComponent } from '@e-commerce/client-web-app/order/ui/cart-item';
+import {
+  CartItemComponent,
+  CartItemSkeletonComponent,
+} from '@e-commerce/client-web-app/shared/ui/cart-item';
 import {
   Book,
   CartItem,
@@ -37,6 +40,7 @@ import { CurrencyPipe, NgClass } from '@angular/common';
     CartItemComponent,
     NgClass,
     CurrencyPipe,
+    CartItemSkeletonComponent,
   ],
   template: `
     <p-toast />
@@ -54,15 +58,20 @@ import { CurrencyPipe, NgClass } from '@angular/common';
           <div
             class="flex flex-column gap-3"
             [ngClass]="{
-              'animation-pulse pointer-events-none': cartItemsLoading(),
+              'animation-pulse pointer-events-none':
+                cartItemsLoading() && cartItems().length > 0,
             }"
           >
-            @for (cartItem of cartItems(); track cartItem.book.id) {
-              <lib-cart-item
-                [item]="cartItem"
-                (onDelete)="remove($event)"
-                (onUpdateQuantity)="updateQuantity($event)"
-              />
+            @if (cartItemsLoading() && cartItems().length === 0) {
+              <lib-cart-item-sekeleton />
+            } @else {
+              @for (cartItem of cartItems(); track cartItem.book.id) {
+                <lib-cart-item
+                  [item]="cartItem"
+                  (onDelete)="remove($event)"
+                  (onUpdateQuantity)="updateQuantity($event)"
+                />
+              }
             }
           </div>
         </div>

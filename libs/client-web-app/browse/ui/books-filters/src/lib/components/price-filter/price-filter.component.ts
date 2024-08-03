@@ -113,7 +113,7 @@ export class PriceFilterComponent implements OnInit {
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: {
-        [appRouterConfig.queryParams[key]]: value,
+        [appRouterConfig.queryParams[key]]: value || null,
       },
       queryParamsHandling: 'merge',
       replaceUrl: true,

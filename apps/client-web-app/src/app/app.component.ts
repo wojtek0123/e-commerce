@@ -31,25 +31,16 @@ export class AppComponent implements OnInit {
       menu: 1000,
       tooltip: 1100,
     };
+    this.cartService.getCartItemsFromShoppingSession();
 
     this.authService.events$
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((event) => {
-        console.log(event);
-        if (event === 'init') {
-          this.cartService.getCartItems();
-        }
-        if (event === 'initSession') {
-          this.cartService.getCartItemsFromShoppingSession();
-        }
-        if (event === 'logoutSuccessfully') {
+        if (event === 'loggedOut') {
           this.cartService.clear();
         }
-        if (event === 'loginSuccessfully' || event === 'registerSuccessfully') {
+        if (event === 'loggedIn' || event === 'signedUp') {
           this.cartService.syncDatabase();
-        }
-        if (event === 'refreshToken') {
-          // this.cartService.getCartItemsFromShoppingSession();
         }
       });
   }

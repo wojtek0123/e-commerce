@@ -11,7 +11,7 @@ import { toObservable } from '@angular/core/rxjs-interop';
 
 export const authInterceptor: HttpInterceptorFn = (
   request: HttpRequest<unknown>,
-  next: HttpHandlerFn
+  next: HttpHandlerFn,
 ): Observable<HttpEvent<unknown>> => {
   return toObservable(inject(AuthService).tokens).pipe(
     switchMap((tokens) => {
@@ -24,10 +24,10 @@ export const authInterceptor: HttpInterceptorFn = (
             request.url.includes('auth/refresh')
               ? tokens.refreshToken
               : tokens.accessToken
-          }`
+          }`,
         ),
       });
       return next(clonedRequest);
-    })
+    }),
   );
 };

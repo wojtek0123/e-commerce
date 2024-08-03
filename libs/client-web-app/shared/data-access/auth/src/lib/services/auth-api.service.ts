@@ -6,6 +6,7 @@ import {
   Tokens,
 } from '@e-commerce/client-web-app/shared/data-access/api-types';
 import { API_URL } from '@e-commerce/client-web-app/shared/utils/providers';
+import { shareReplay } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthApiService {
@@ -44,6 +45,8 @@ export class AuthApiService {
       refreshToken,
     };
 
-    return this.http.post<Tokens>(`${this.apiUrl}/auth/refresh`, body);
+    return this.http
+      .post<Tokens>(`${this.apiUrl}/auth/refresh`, body)
+      .pipe(shareReplay({ refCount: true, bufferSize: 1 }));
   }
 }

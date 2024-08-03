@@ -81,8 +81,8 @@
       "@e-commerce/client-web-app/order/feature/shell": [
         "libs/client-web-app/order/feature/shell/src/index.ts"
       ],
-      "@e-commerce/client-web-app/order/ui/cart-item": [
-        "libs/client-web-app/order/ui/cart-item/src/index.ts"
+      "@e-commerce/client-web-app/shared/ui/cart-item": [
+        "libs/client-web-app/shared/ui/cart-item/src/index.ts"
       ],
       "@e-commerce/client-web-app/order/ui/order-details": [
         "libs/client-web-app/order/ui/order-details/src/index.ts"

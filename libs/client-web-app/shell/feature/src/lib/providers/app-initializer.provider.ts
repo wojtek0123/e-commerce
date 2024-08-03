@@ -10,8 +10,6 @@ import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-
 const initializeAppFactory =
   (authService: AuthService, themeSwitcherService: ThemeSwitherService) =>
   () => {
-    authService.getSession();
-
     const refreshToken = localStorage.getItem(
       appRouterConfig.localStorage.refreshToken,
     );
@@ -35,6 +33,7 @@ const initializeAppFactory =
       ? 'dark'
       : 'light';
 
+    authService.getSession();
     themeSwitcherService.switchTheme(preferenceTheme ?? browserTheme);
   };
 
