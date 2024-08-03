@@ -13,9 +13,11 @@ import {
   CartItemBase,
   ResponseError,
 } from '@e-commerce/client-web-app/shared/data-access/api-types';
-import { CartItemsApiService } from './cart-items-api.service';
+import {
+  CartItemsApiService,
+  ShoppingSessionApiService,
+} from '@e-commerce/client-web-app/shared/data-access/api-services';
 import { MessageService } from 'primeng/api';
-import { ShoppingSessionApiService } from './shopping-session-api.service';
 import { switchMap, take } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })

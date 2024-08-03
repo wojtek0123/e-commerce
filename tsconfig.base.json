@@ -15,9 +15,6 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@e-commerce/client-web-app/order/feature/address-information": [
-        "libs/client-web-app/order/feature/address-information/src/index.ts"
-      ],
       "@e-commerce/client-web-app/auth/feature-register": [
         "libs/client-web-app/auth/feature-register/src/index.ts"
       ],
@@ -78,11 +75,17 @@
       "@e-commerce/client-web-app/order/data-access": [
         "libs/client-web-app/order/data-access/src/index.ts"
       ],
+      "@e-commerce/client-web-app/order/feature/address-information": [
+        "libs/client-web-app/order/feature/address-information/src/index.ts"
+      ],
+      "@e-commerce/client-web-app/order/feature/payment": [
+        "libs/client-web-app/order/feature/payment/src/index.ts"
+      ],
       "@e-commerce/client-web-app/order/feature/shell": [
         "libs/client-web-app/order/feature/shell/src/index.ts"
       ],
-      "@e-commerce/client-web-app/shared/ui/cart-item": [
-        "libs/client-web-app/shared/ui/cart-item/src/index.ts"
+      "@e-commerce/client-web-app/order/feature/shipping-method": [
+        "libs/client-web-app/order/feature/shipping-method/src/index.ts"
       ],
       "@e-commerce/client-web-app/order/ui/order-details": [
         "libs/client-web-app/order/ui/order-details/src/index.ts"
@@ -105,12 +108,6 @@
       "@e-commerce/client-web-app/shared/data-access/api-types": [
         "libs/client-web-app/shared/data-access/api-types/src/index.ts"
       ],
-      "@e-commerce/client-web-app/shared/data-access/auth": [
-        "libs/client-web-app/shared/data-access/auth/src/index.ts"
-      ],
-      "@e-commerce/client-web-app/shared/data-access/cart": [
-        "libs/client-web-app/shared/data-access/cart/src/index.ts"
-      ],
       "@e-commerce/client-web-app/shared/data-access/category": [
         "libs/client-web-app/shared/data-access/category/src/index.ts"
       ],
@@ -119,6 +116,9 @@
       ],
       "@e-commerce/client-web-app/shared/ui/book-card": [
         "libs/client-web-app/shared/ui/book-card/src/index.ts"
+      ],
+      "@e-commerce/client-web-app/shared/ui/cart-item": [
+        "libs/client-web-app/shared/ui/cart-item/src/index.ts"
       ],
       "@e-commerce/client-web-app/shared/ui/form-field": [
         "libs/client-web-app/shared/ui/form-field/src/index.ts"
@@ -165,11 +165,8 @@
       "@e-commerce/client-web-app/user/feature/shell": [
         "libs/client-web-app/user/feature/shell/src/index.ts"
       ],
-      "@e-commerce/client-web-app/order/feature/payment": [
-        "libs/client-web-app/order/feature/payment/src/index.ts"
-      ],
-      "@e-commerce/client-web-app/order/feature/shipping-method": [
-        "libs/client-web-app/order/feature/shipping-method/src/index.ts"
+      "@e-commerce/client-web-app/shared/data-access/stores": [
+        "libs/client-web-app/shared/data-access/stores/src/index.ts"
       ]
     }
   },

@@ -5,7 +5,7 @@ import {
   Router,
   RouterStateSnapshot,
 } from '@angular/router';
-import { AuthService } from '@e-commerce/client-web-app/shared/data-access/auth';
+import { AuthService } from '@e-commerce/client-web-app/shared/data-access/stores';
 
 export const authGuard: CanActivateFn = (
   _next: ActivatedRouteSnapshot,

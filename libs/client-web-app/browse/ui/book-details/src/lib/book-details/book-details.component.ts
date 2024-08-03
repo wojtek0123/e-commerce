@@ -7,8 +7,10 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { CartService } from '@e-commerce/client-web-app/shared/data-access/cart';
-import { AuthService } from '@e-commerce/client-web-app/shared/data-access/auth';
+import {
+  CartService,
+  AuthService,
+} from '@e-commerce/client-web-app/shared/data-access/stores';
 import { ActivatedRoute } from '@angular/router';
 import {
   BooksApiService,

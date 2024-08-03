@@ -6,7 +6,7 @@ import {
   HttpResponse,
 } from '@angular/common/http';
 import { Observable, catchError, of, switchMap, throwError } from 'rxjs';
-import { AuthService } from '@e-commerce/client-web-app/shared/data-access/auth';
+import { AuthService } from '@e-commerce/client-web-app/shared/data-access/stores';
 import { inject } from '@angular/core';
 
 export const unAuthErrorInterceptor: HttpInterceptorFn = (

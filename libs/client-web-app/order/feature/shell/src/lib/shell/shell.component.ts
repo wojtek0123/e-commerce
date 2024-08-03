@@ -18,7 +18,7 @@ import { ButtonModule } from 'primeng/button';
 import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-config';
 import { filter } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { CartService } from '@e-commerce/client-web-app/shared/data-access/cart';
+import { CartService } from '@e-commerce/client-web-app/shared/data-access/stores';
 import {
   CartItemComponent,
   CartItemSkeletonComponent,
