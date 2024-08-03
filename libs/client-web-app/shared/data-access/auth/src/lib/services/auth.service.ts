@@ -18,16 +18,7 @@ import { MessageService } from 'primeng/api';
 import { BehaviorSubject, take } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 
-type AuthEvent =
-  | 'init'
-  | 'initSession'
-  | 'loginSuccessfully'
-  | 'loginError'
-  | 'registerSuccessfully'
-  | 'registerError'
-  | 'refreshToken'
-  | 'logoutSuccessfully'
-  | 'logoutError';
+type AuthEvent = 'loggedIn' | 'signedUp' | 'loggedOut';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -104,11 +95,10 @@ export class AuthService {
         accessToken,
         refreshToken,
       });
-      this._events$.next('initSession');
-      return;
+      // this._events$.next('initSession');
+      // return;
     }
-    this._events$.next('init');
-    // this.cartService.getCartItems();
+    // this._events$.next('init');
   }
 
   login(email: string, password: string) {
@@ -126,14 +116,12 @@ export class AuthService {
             summary: 'Success',
           });
           this.setSession({ user, tokens });
-          this._events$.next('loginSuccessfully');
-          // this.cartService.syncDatabase();
+          this._events$.next('loggedIn');
 
           this.router.navigate([this._returnUrl()]);
         },
         error: (resError: ResponseError) => {
           this._loading.set(false);
-          this._events$.next('loginError');
           this.messageService.add({
             severity: 'error',
             detail: resError.error.message || 'Error occur while logging in',
@@ -158,13 +146,11 @@ export class AuthService {
             summary: 'Success',
           });
           this.setSession({ user, tokens });
-          // this.cartService.syncDatabase();
-          this._events$.next('registerSuccessfully');
+          this._events$.next('signedUp');
           this.router.navigate([this._returnUrl()]);
         },
         error: (resError: ResponseError) => {
           this._loading.set(false);
-          this._events$.next('registerError');
           this.messageService.add({
             severity: 'error',
             detail: resError.error.message || 'Error occur while signing in',
@@ -186,7 +172,6 @@ export class AuthService {
         next: () => {
           this.removeSession();
           this._loading.set(false);
-          // this.cartService.clear();
 
           this.messageService.add({
             severity: 'success',
@@ -195,12 +180,11 @@ export class AuthService {
           });
 
           // TODO: navigate to home only when user is on protected by auth guard route
-          this._events$.next('logoutSuccessfully');
+          this._events$.next('loggedOut');
           this.router.navigate(['/']);
         },
         error: (resError: ResponseError) => {
           this._loading.set(false);
-          this._events$.next('logoutError');
           this.messageService.add({
             severity: 'error',
             detail: resError.error.message || 'Error occur while logging out',
@@ -224,7 +208,6 @@ export class AuthService {
   }
 
   refreshToken$(userId: User['id'], refreshToken: Tokens['refreshToken']) {
-    this._events$.next('refreshToken');
     return this.authApi.getRefreshToken$(userId, refreshToken);
   }
 

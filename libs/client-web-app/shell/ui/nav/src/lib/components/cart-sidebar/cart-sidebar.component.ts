@@ -20,8 +20,10 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { ToastModule } from 'primeng/toast';
-import { CartItemComponent } from '../cart-item/cart-item.component';
-import { CartItemSkeletonComponent } from '../cart-item-skeleton/cart-item-skeleton.component';
+import {
+  CartItemComponent,
+  CartItemSkeletonComponent,
+} from '@e-commerce/client-web-app/shared/ui/cart-item';
 import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-config';
 import { CartService } from '@e-commerce/client-web-app/shared/data-access/cart';
 import { MessageService } from 'primeng/api';
@@ -148,6 +150,7 @@ export class CartSidebarComponent implements OnChanges {
 
     if (this.error) this.error.set(null);
 
+    this.onClose.emit();
     await this.router.navigate([appRouterConfig.order.basePath]);
   }
 }

@@ -37,6 +37,12 @@ export class CartService {
   public loading = this._loading.asReadonly();
   public addingBookIds = this._addingBooks.asReadonly();
 
+  constructor() {
+    effect(() => {
+      console.log(this.items());
+    });
+  }
+
   setShoppingSession(id: number | null) {
     this._shoppingSessionId.set(id);
   }
