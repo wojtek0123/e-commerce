@@ -11,8 +11,8 @@ export class CreditCardApiService {
   private url = inject(API_URL);
   private http = inject(HttpClient);
 
-  get() {
-    return this.http.get<CreditCardBase>(`${this.url}/credit-cards`);
+  get(id: CreditCardBase['id']) {
+    return this.http.get<CreditCardBase>(`${this.url}/credit-cards/${id}`);
   }
 
   create(body: {
@@ -23,7 +23,7 @@ export class CreditCardApiService {
     return this.http.post<CreditCardBase>(`${this.url}/credit-cards`, body);
   }
 
-  update(id: CreditCardBase['id'], body: CreditCard) {
+  update(id: CreditCardBase['id'], body: Partial<CreditCard>) {
     return this.http.patch<CreditCardBase>(
       `${this.url}/credit-cards/${id}`,
       body,

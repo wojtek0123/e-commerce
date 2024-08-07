@@ -7,55 +7,200 @@
           <span class="text-color-secondary font-semibold">Email</span>
           <span class="text-xl"></span>
         </div>
-        <div class="flex align-items-center gap-3">
-          <span class="text-color-secondary font-semibold">Phone</span>
-          <span class="text-xl">{{ addressInformation()?.phone }}</span>
-        </div>
-        <div class="flex align-items-center gap-3">
-          <span class="text-color-secondary font-semibold">Name</span>
-          <span class="text-xl">
-            {{ addressInformation()?.firstName }}
-            {{ addressInformation()?.lastName }}
-          </span>
-        </div>
-        <div class="flex align-items-center gap-3">
-          <span class="text-color-secondary font-semibold">Address</span>
-          <div class="flex flex-column">
-            <span class="text-xl">
-              {{ addressInformation()?.street }}
-              {{ addressInformation()?.homeNumber }}
-              {{
-                addressInformation()?.houseNumber
-                  ? '/' + addressInformation()?.houseNumber
-                  : ''
-              }}, {{ addressInformation()?.postcode }},
-              {{ addressInformation()?.city }},
-              {{ addressInformation()?.country?.name }}
-            </span>
-          </div>
-        </div>
-        <div class="flex flex-column gap-3">
-          <h3 class="text-3xl">Shipping</h3>
-          <div
-            class="flex align-items-center justify-content-between p-3 border-round surface-hover"
-          >
+        @if (
+          {
+            addressInformation: addressInformation$ | async,
+            addressInformationError: addressInformationError$ | async,
+          };
+          as vm
+        ) {
+          @if (!vm.addressInformation && !vm.addressInformationError) {
+          } @else if (!vm.addressInformation && vm.addressInformationError) {
+            <div>{{ vm.addressInformationError }}</div>
+          } @else if (vm.addressInformation && !vm.addressInformationError) {
             <div class="flex align-items-center gap-3">
-              <span class="pi pi-truck"></span>
-              <span>{{ shippingMethod()?.name }}</span>
+              <span class="text-color-secondary font-semibold">Phone</span>
+              <span class="text-xl">{{ vm.addressInformation.phone }}</span>
             </div>
-            <span>{{ shippingMethod()?.price | currency: 'USD' }}</span>
-          </div>
-        </div>
+            <div class="flex align-items-center gap-3">
+              <span class="text-color-secondary font-semibold">Name</span>
+              <span class="text-xl">
+                {{ vm.addressInformation.firstName }}
+                {{ vm.addressInformation.lastName }}
+              </span>
+            </div>
+            <div class="flex align-items-center gap-3">
+              <span class="text-color-secondary font-semibold">Address</span>
+              <div class="flex flex-column">
+                <span class="text-xl">
+                  {{ vm.addressInformation.street }}
+                  {{ vm.addressInformation.homeNumber }}
+                  {{
+                    vm.addressInformation.houseNumber
+                      ? '/' + vm.addressInformation.houseNumber
+                      : ''
+                  }}, {{ vm.addressInformation.postcode }},
+                  {{ vm.addressInformation.city }},
+                  {{ vm.addressInformation.country.name }}
+                </span>
+              </div>
+            </div>
+          }
+        }
+
+        @if (
+          {
+            shippingMethods: shippingMethods$ | async,
+            shippingMethodsError: shippingMethodsError$ | async,
+          };
+          as vm
+        ) {
+          @if (!vm.shippingMethods && !vm.shippingMethodsError) {
+          } @else if (!vm.shippingMethods && vm.shippingMethodsError) {
+          } @else if (vm.shippingMethods && !vm.shippingMethodsError) {
+            <div class="flex flex-column gap-3">
+              <h3 class="text-3xl">Shipping</h3>
+              @for (sm of shippingMethods$ | async; track sm.id) {
+                <div
+                  class="flex align-items-center justify-content-between p-3 border-round surface-hover"
+                >
+                  <div class="flex align-items-center gap-2 w-full">
+                    <p-radioButton
+                      name="shipping-method"
+                      [value]="sm"
+                      [formControl]="selectedShippingMethod"
+                      [inputId]="sm.id.toString()"
+                    />
+                    <label [for]="sm.id.toString()">
+                      {{ sm.name }}
+                    </label>
+                  </div>
+                  <div>{{ '$' + sm.price }}</div>
+                </div>
+              }
+              <!-- <div -->
+              <!--   class="flex align-items-center justify-content-between p-3 border-round surface-hover" -->
+              <!-- > -->
+              <!--   <div class="flex align-items-center gap-3"> -->
+              <!--     <span class="pi pi-truck"></span> -->
+              <!--     <span>{{ shippingMethod()?.name }}</span> -->
+              <!--   </div> -->
+              <!--   <span>{{ shippingMethod()?.price | currency: 'USD' }}</span> -->
+              <!-- </div> -->
+            </div>
+          }
+        }
 
         <div class="flex flex-column gap-3">
           <h3 class="text-3xl">Payment method</h3>
           <div
             class="flex align-items-center justify-content-between p-3 border-round surface-hover"
           >
-            <div class="flex align-items-center gap-3">
-              <span class="pi pi-credit-card"></span>
-              <span>Credit card</span>
+            <div class="flex align-items-center gap-2 w-full">
+              <p-radioButton
+                name="payment-method"
+                [value]="'credit-card'"
+                [formControl]="selectedPaymentMethod"
+                [inputId]="'credit-card'"
+              />
+              <label
+                [for]="'credit-card'"
+                class="flex align-items-center gap-3"
+              >
+                <span class="pi pi-credit-card"></span>
+                <span>Credit card</span>
+              </label>
             </div>
+            <div>free</div>
+          </div>
+          @if (selectedPaymentMethod.value === 'credit-card') {
+            <form [formGroup]="form" class="flex flex-column gap-2">
+              <lib-form-field label="Card number" [isRequired]="true">
+                <p-inputMask
+                  slot="input"
+                  mask="9999 9999 9999 9999"
+                  class="w-full"
+                  id="card-number"
+                  [ngClass]="{
+                    'ng-invalid ng-dirty':
+                      form.controls.cardNumber.invalid && submitted(),
+                  }"
+                  formControlName="cardNumber"
+                  placeholder="Type your card number"
+                />
+                @if (
+                  (form.controls.cardNumber.dirty || submitted()) &&
+                  form.controls.cardNumber.invalid
+                ) {
+                  <lib-error-message />
+                }
+              </lib-form-field>
+
+              <div class="flex align-items-center gap-3">
+                <lib-form-field label="Expiration date" [isRequired]="true">
+                  <p-inputMask
+                    slot="input"
+                    mask="99/9999"
+                    class="w-full"
+                    id="expiration-date"
+                    [ngClass]="{
+                      'ng-invalid ng-dirty':
+                        form.controls.expirationDate.invalid && submitted(),
+                    }"
+                    formControlName="expirationDate"
+                    placeholder="Type expiration date"
+                  />
+                  @if (
+                    form.controls.expirationDate.invalid &&
+                    (submitted() || form.controls.expirationDate.dirty)
+                  ) {
+                    <lib-error-message />
+                  }
+                </lib-form-field>
+
+                <lib-form-field label="Security code" [isRequired]="true">
+                  <p-inputMask
+                    slot="input"
+                    mask="999"
+                    class="w-full"
+                    id="security-code"
+                    [ngClass]="{
+                      'ng-invalid ng-dirty':
+                        form.controls.securityCode.invalid && submitted(),
+                    }"
+                    formControlName="securityCode"
+                    placeholder="Type security code"
+                  />
+                  @if (
+                    form.controls.securityCode.invalid &&
+                    (submitted() || form.controls.securityCode.dirty)
+                  ) {
+                    <lib-error-message />
+                  }
+                </lib-form-field>
+              </div>
+              <p-button label="Add credit card" />
+            </form>
+          }
+          <div
+            class="flex align-items-center justify-content-between p-3 border-round surface-hover"
+          >
+            <div class="flex align-items-center gap-2 w-full">
+              <p-radioButton
+                name="payment-method"
+                [value]="'6-digit-number'"
+                [formControl]="selectedPaymentMethod"
+                [inputId]="'6-digit-number'"
+              />
+              <label
+                [for]="'6-digit-number'"
+                class="flex align-items-center gap-3"
+              >
+                <span class="pi pi-money-bill"></span>
+                <span>6 digit number</span>
+              </label>
+            </div>
+            <div>free</div>
           </div>
         </div>
       </div>

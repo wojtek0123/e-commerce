@@ -11,40 +11,40 @@ export const shellRoutes: Route[] = [
   {
     path: '',
     component: ShellComponent,
-    children: [
-      {
-        path: 'address-information',
-        loadChildren: () =>
-          import(
-            '@e-commerce/client-web-app/order/feature/address-information'
-          ).then((r) => r.addressInformationRoutes),
-      },
-      {
-        path: 'shipping-method',
-        loadChildren: () =>
-          import(
-            '@e-commerce/client-web-app/order/feature/shipping-method'
-          ).then((r) => r.shippingMethodRoutes),
-      },
-      {
-        path: 'payment-method',
-        loadChildren: () =>
-          import('@e-commerce/client-web-app/order/feature/payment').then(
-            (r) => r.paymentRoutes,
-          ),
-      },
-      {
-        path: 'summary',
-        loadChildren: () =>
-          import('@e-commerce/client-web-app/order/feature/summary').then(
-            (r) => r.summaryRoutes,
-          ),
-      },
-      {
-        path: '**',
-        redirectTo: 'address-information',
-      },
-    ],
+    // children: [
+    //   {
+    //     path: 'address-information',
+    //     loadChildren: () =>
+    //       import(
+    //         '@e-commerce/client-web-app/order/feature/address-information'
+    //       ).then((r) => r.addressInformationRoutes),
+    //   },
+    //   {
+    //     path: 'shipping-method',
+    //     loadChildren: () =>
+    //       import(
+    //         '@e-commerce/client-web-app/order/feature/shipping-method'
+    //       ).then((r) => r.shippingMethodRoutes),
+    //   },
+    //   {
+    //     path: 'payment-method',
+    //     loadChildren: () =>
+    //       import('@e-commerce/client-web-app/order/feature/payment').then(
+    //         (r) => r.paymentRoutes,
+    //       ),
+    //   },
+    //   {
+    //     path: 'summary',
+    //     loadChildren: () =>
+    //       import('@e-commerce/client-web-app/order/feature/summary').then(
+    //         (r) => r.summaryRoutes,
+    //       ),
+    //   },
+    //   {
+    //     path: '**',
+    //     redirectTo: 'address-information',
+    //   },
+    // ],
     canActivate: [authGuard],
     canActivateChild: [stepGuard],
     providers: [StepService],

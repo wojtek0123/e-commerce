@@ -9,7 +9,7 @@ export class ShippingMethodApiService {
   private http = inject(HttpClient);
   private apiUrl = inject(API_URL);
 
-  getShippingMethods() {
+  getShippingMethods$() {
     return this.http
       .get<ShippingMethod[]>(`${this.apiUrl}/shipping-methods`)
       .pipe(shareReplay(1));
