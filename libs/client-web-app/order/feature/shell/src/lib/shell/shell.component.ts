@@ -4,17 +4,13 @@ import {
   DestroyRef,
   HostBinding,
   OnInit,
-  Signal,
-  computed,
   inject,
 } from '@angular/core';
 import { NavigationStart, Router, RouterOutlet } from '@angular/router';
 import { StepService } from '@e-commerce/client-web-app/order/data-access';
-import { MenuItem } from 'primeng/api';
 import { StepsModule } from 'primeng/steps';
 import { ToastModule } from 'primeng/toast';
 import { ButtonModule } from 'primeng/button';
-import { appRouterConfig } from '@e-commerce/client-web-app/shared/utils/router-config';
 import { filter } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CartService } from '@e-commerce/client-web-app/shared/data-access/stores';
@@ -27,6 +23,7 @@ import {
   CartItem,
 } from '@e-commerce/client-web-app/shared/data-access/api-types';
 import { CurrencyPipe, NgClass } from '@angular/common';
+import { SummaryComponent } from '@e-commerce/client-web-app/order/feature/summary';
 
 @Component({
   selector: 'lib-shell',
@@ -40,11 +37,11 @@ import { CurrencyPipe, NgClass } from '@angular/common';
     NgClass,
     CurrencyPipe,
     CartItemSkeletonComponent,
+    SummaryComponent,
   ],
   template: `
     <p-toast />
     <div class="w-full flex flex-column gap-6 p-3">
-      <p-steps class="mx-auto w-full" [model]="stepLabels()" />
       <div class="grid">
         <div class="cart flex flex-column gap-3 xl:gap-6">
           <h2 class="xl:text-5xl">Cart items</h2>
@@ -71,7 +68,7 @@ import { CurrencyPipe, NgClass } from '@angular/common';
         <div class="w-full content flex flex-column gap-3 xl:gap-6">
           <h2 class="xl:text-5xl">Checkout form</h2>
           <div class="w-full">
-            <router-outlet />
+            <lib-summary />
           </div>
         </div>
       </div>
@@ -87,13 +84,6 @@ export class ShellComponent implements OnInit {
   private destroyRef = inject(DestroyRef);
 
   @HostBinding('class') class = 'flex flex-column p-3';
-
-  stepLabels: Signal<MenuItem[]> = computed(() =>
-    [...this.stepService.stepConfiguration().keys()].map((key) => ({
-      label: key.replaceAll('-', ' '),
-      routerLink: `/${appRouterConfig.order.basePath}/${key}`,
-    })),
-  );
 
   cartItems = this.cartService.items;
   cartItemsLoading = this.cartService.loading;

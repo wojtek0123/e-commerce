@@ -104,7 +104,7 @@ export class ShippingMethodComponent implements OnInit {
     null,
     Validators.required,
   );
-  shippingMethods$ = this.shippingMethodApi.getShippingMethods();
+  shippingMethods$ = this.shippingMethodApi.getShippingMethods$();
   error$ = this.shippingMethods$.pipe(
     ignoreElements(),
     catchError((resError: ResponseError) => resError.error.message),
