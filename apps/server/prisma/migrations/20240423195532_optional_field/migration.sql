@@ -1,6 +1,0 @@
--- AlterTable
-ALTER TABLE "book" ALTER COLUMN "description" DROP NOT NULL,
-ALTER COLUMN "language" DROP NOT NULL,
-ALTER COLUMN "coverImage" DROP NOT NULL,
-ALTER COLUMN "numberPages" DROP NOT NULL,
-ALTER COLUMN "publishingDate" DROP NOT NULL;
