@@ -1,0 +1,73 @@
+<lib-container
+  [link]="{ url: '../register', label: 'Create an account!' }"
+  [queryParams]="route.snapshot.queryParams"
+  header="Welcome back!"
+  subtitle="Are you new here?"
+>
+  @let loading = loading$ | async;
+  <form
+    [formGroup]="loginForm"
+    class="flex flex-column gap-2 w-full max-w-30rem xl:align-items-center"
+    (submit)="onSubmit()"
+  >
+    <lib-form-field label="Email" [isRequired]="true">
+      @let emailControl = loginForm.controls.email;
+      <input
+        slot="input"
+        autofocus
+        pInputText
+        id="email"
+        autocomplete="off"
+        [ngClass]="{
+          'ng-dirty ng-invalid':
+            emailControl.invalid && submitted(),
+        }"
+        formControlName="email"
+      />
+      @if (emailControl.dirty || submitted()) {
+        <ng-container slot="error-message">
+          @if (emailControl.getError('required')) {
+            <lib-error-message />
+          } @else if (emailControl.getError('email')) {
+            <lib-error-message message="Email is invalid" />
+          }
+        </ng-container>
+      }
+    </lib-form-field>
+    <lib-form-field label="Password" [isRequired]="true">
+      @let passwordControl = loginForm.controls.password;
+      <p-password
+        slot="input"
+        id="password"
+        [feedback]="false"
+        [toggleMask]="true"
+        [ngClass]="{
+          'ng-dirty ng-invalid':
+            passwordControl.invalid && submitted(),
+        }"
+        formControlName="password"
+      />
+      @if (passwordControl.dirty || submitted()) {
+        <ng-container slot="error-message">
+          @if (passwordControl.getError('minlength')) {
+            <lib-error-message
+              message="Password should have at least 6 characters"
+            />
+          }
+          @if (passwordControl.getError('required')) {
+            <lib-error-message />
+          }
+        </ng-container>
+      }
+    </lib-form-field>
+
+    <p-button
+      type="submit"
+      label="Log in!"
+      [loading]="loading"
+      loading-icon="pi pi-spin pi-spinner"
+      iconPos="right"
+      class="w-full mt-4"
+    />
+  </form>
+</lib-container>
