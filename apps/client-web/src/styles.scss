@@ -1,1 +1,188 @@
-/* You can add global styles to this file, and also import other style files */
+// @import './assets/prime/primeng-extends';
+@import 'primeicons/primeicons.css';
+// @import './assets/prime/primeflex-extra.scss';
+@import 'primeng/resources/primeng.css';
+// @import 'primeflex/primeflex.css';
+
+:root {
+  --header-height: 4.8125rem;
+  --max-card-width: 20rem;
+  --border-radius: 1rem;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 100%;
+  scrollbar-width: thin;
+  scrollbar-color: var(--text-color-secondary) var(--surface-hover);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-family);
+}
+
+.scroller {
+  scrollbar-width: thin;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+input {
+  border-radius: var(--border-radius);
+}
+
+p {
+  margin: 0;
+  padding: 0;
+}
+
+.height-content {
+  height: calc(100svh - var(--header-height) - 3rem);
+}
+
+textarea,
+input {
+  font: inherit;
+  letter-spacing: inherit;
+  word-spacing: inherit;
+}
+
+// Prime
+.p-breadcrumb {
+  overflow: hidden;
+}
+
+.p-steps .p-steps-item .p-menuitem-link {
+  background: transparent;
+}
+
+.p-menuitem-content > .p-menuitem-link-active {
+  background-color: var(--surface-hover);
+  border-radius: var(--border-radius);
+}
+
+.p-menu {
+  border-radius: var(--border-radius);
+}
+
+.p-password {
+  width: 100%;
+}
+
+button {
+  border-radius: var(--border-radius);
+}
+
+button.p-button-rounded {
+  border-radius: 50%;
+}
+
+a.p-button {
+  border-radius: var(--border-radius);
+}
+
+p-button.w-full .p-button {
+  width: 100% !important;
+}
+
+.p-inputtext:enabled:focus {
+  box-shadow: none !important;
+}
+
+.p-menu-two-columns .p-menu {
+  width: max-content !important;
+  border-radius: var(--border-radius);
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+
+  & ul {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+}
+
+.p-menu .p-menuitem > .p-menuitem-content {
+  border-radius: var(--border-radius);
+}
+
+.p-menu-sidebar .p-menu {
+  border: none;
+  background-color: transparent;
+  width: 100%;
+}
+
+.p-accordion {
+  background: transparent;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+}
+
+.p-listbox {
+  border-bottom-left-radius: var(--border-radius);
+  border-bottom-right-radius: var(--border-radius);
+  overflow: hidden;
+}
+
+.p-toggleable-content {
+  border-bottom-left-radius: var(--border-radius);
+  border-bottom-right-radius: var(--border-radius);
+  overflow: hidden;
+}
+
+.p-accordion-tab {
+  border-radius: var(--border-radius);
+  background: transparent;
+}
+
+.p-menu
+  .p-menuitem:not(.p-highlight):not(.p-disabled).p-focus
+  > .p-menuitem-content {
+  background: transparent;
+  border-radius: var(--border-radius);
+}
+
+.p-menu .p-menuitem .p-menuitem-link:focus {
+  border-radius: var(--border-radius);
+}
+
+.p-breadcrumb {
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+.p-toast-message {
+  border-radius: var(--border-radius);
+}
+
+.p-sidebar-right {
+  width: 100%;
+  max-width: 40rem;
+}
+
+.p-dropdown {
+  border-radius: var(--border-radius);
+}
+
+@media (min-width: 40rem) {
+  .p-sidebar-right {
+    border-top-left-radius: calc(var(--border-radius) * 2);
+    border-bottom-left-radius: calc(var(--border-radius) * 2);
+  }
+}

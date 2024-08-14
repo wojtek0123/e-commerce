@@ -1,0 +1,113 @@
+<nav class="nav">
+  <div class="nav__links">
+    <a routerLink="/" [queryParams]="null" class="nav__links_logo">
+      <span class="nav__links_logo_name">Story</span>
+      <span class="nav__links_logo_name">Stash</span>
+    </a>
+    <p-divider layout="vertical" />
+    <ul class="links">
+      <!-- <li> -->
+      <!--   <lib-categories /> -->
+      <!-- </li> -->
+      @for (item of navItems; track item.id) {
+        <li>
+          <a
+            [routerLink]="item.url"
+            routerLinkActive="underline"
+            [queryParams]="item.queryParams"
+            [state]="item.state"
+            class="link"
+          >
+            {{ item.name }}
+          </a>
+        </li>
+      }
+    </ul>
+  </div>
+
+  <div class="utility-wrapper">
+    <a
+      class="p-button p-button-text search"
+      [routerLink]="search.routerLink"
+      [queryParams]="search.queryParams"
+      pTooltip="Search the books"
+      tooltipPosition="bottom"
+    >
+      <i class="pi pi-search" style="font-size: 1.5rem"></i>
+    </a>
+    <p-menu #menu [model]="menuItems()" [popup]="true">
+      <ng-template pTemplate="end">
+        <p-divider />
+        <div class="menu">
+          <span>light</span>
+          <p-inputSwitch
+            [(ngModel)]="theme"
+            (onChange)="onChangeTheme($event)"
+          />
+          <span>dark</span>
+        </div>
+      </ng-template>
+    </p-menu>
+    <p-button
+      type="button"
+      [text]="true"
+      (click)="menu.toggle($event)"
+      class="user"
+      pTooltip="View your account"
+      tooltipPosition="bottom"
+      icon="pi pi-user"
+    />
+    <!-- <p-button -->
+    <!--   #openCartSidebar -->
+    <!--   type="button" -->
+    <!--   [text]="true" -->
+    <!--   (click)="cartSidebarVisible.set(true)" -->
+    <!--   class="hidden flex-column justify-content-center md:flex" -->
+    <!--   pTooltip="View cart" -->
+    <!--   tooltipPosition="bottom" -->
+    <!-- > -->
+    <!--   <i -->
+    <!--     class="pi pi-shopping-cart" -->
+    <!--     style="font-size: 1.5rem" -->
+    <!--     pBadge -->
+    <!--     [value]="cartItemsCount().toString()" -->
+    <!--     severity="danger" -->
+    <!--   ></i> -->
+    <!-- </p-button> -->
+    <!---->
+    <!-- @defer (on interaction(openCartSidebar)) { -->
+    <!--   <lib-cart-sidebar -->
+    <!--     [sidebarVisible]="cartSidebarVisible()" -->
+    <!--     (onClose)="cartSidebarVisible.set(false)" -->
+    <!--   /> -->
+    <!-- } -->
+
+    <p-button
+      (click)="showSidebar()"
+      icon="pi pi-align-left"
+      class="mobile-menu"
+    ></p-button>
+    <p-sidebar
+      #sidebarRef
+      [(visible)]="sidebarVisible"
+      position="left"
+      appendTo="body"
+      [blockScroll]="true"
+    >
+      <ng-template pTemplate="header">
+        <div class="text-xl md:text-2xl xl:text-[2rem] text-white no-underline">
+          <span class="font-bold text-primary">Story</span>
+          <span class="uppercase">Stash</span>
+        </div>
+      </ng-template>
+      <p-accordion [multiple]="false" [activeIndex]="[]">
+        <p-accordionTab header="Categories">
+          <!-- <p-menu [model]="categories()" class="p-menu-sidebar" /> -->
+        </p-accordionTab>
+        <p-accordionTab header="User" class="md:hidden">
+          <p-menu [model]="menuItems()" class="p-menu-sidebar" />
+        </p-accordionTab>
+      </p-accordion>
+    </p-sidebar>
+  </div>
+</nav>

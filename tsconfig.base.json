@@ -14,7 +14,32 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@e-commerce/client-web/auth/data-access": [
+        "libs/client-web/auth/data-access/src/index.ts"
+      ],
+      "@e-commerce/client-web/auth/feature/login": [
+        "libs/client-web/auth/feature/login/src/index.ts"
+      ],
+      "@e-commerce/client-web/auth/feature/register": [
+        "libs/client-web/auth/feature/register/src/index.ts"
+      ],
+      "@e-commerce/client-web/auth/ui": [
+        "libs/client-web/auth/ui/src/index.ts"
+      ],
+      "@e-commerce/client-web/auth/utils": [
+        "libs/client-web/auth/utils/src/index.ts"
+      ],
+      "@e-commerce/client-web/shared/data-access": [
+        "libs/client-web/shared/data-access/src/index.ts"
+      ],
+      "@e-commerce/client-web/shared/ui": [
+        "libs/client-web/shared/ui/src/index.ts"
+      ],
+      "@e-commerce/client-web/shared/utils": [
+        "libs/client-web/shared/utils/src/index.ts"
+      ]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }
