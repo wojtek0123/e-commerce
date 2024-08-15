@@ -1,30 +1,22 @@
-<div
-  class="flex flex-column-reverse gap-3 xl:grid xl:flex-row xl:mb-0 xl:gap-0 height-content"
->
-  <div class="xl:col-6 h-full">
-    <div
-      class="justify-content-center flex flex-column w-full align-items-center height-content"
-    >
-      <div class="flex flex-column align-items-start mb-4 max-w-30rem w-full">
-        <h2 class="text-2xl md:text-3xl xl:text-5xl">{{ header() }}</h2>
-        <div class="flex align-items-center text-sm xl:text-base">
-          <span>{{ subtitle() }}</span>
-          <a
-            [routerLink]="[link().url]"
-            [queryParams]="queryParams()"
-            class="font-medium no-underline ml-2 text-primary cursor-pointer hover:underline"
-            >{{ link().label }}</a
-          >
-        </div>
+<div class="container">
+  <div class="container__form-wrapper">
+    <div class="container__form-wrapper_form">
+      <h2 class="container__form-wrapper_form_header">{{ header() }}</h2>
+      <div class="container__form-wrapper_form_subtitle">
+        <span>{{ subtitle() }}</span>
+        <a
+          [routerLink]="[link().url]"
+          [queryParams]="queryParams()"
+          class="container__form-wrapper_form_link"
+          >{{ link().label }}</a
+        >
       </div>
-      <ng-content></ng-content>
     </div>
+    <ng-content />
   </div>
-  <div
-    class="border-round overflow-hidden flex align-items-start h-full xl:col-6 xl:justify-content-end"
-  >
+  <div class="container__image-wrapper">
     <img
-      class="border-round overflow-hidden object-fit-cover object-position-center w-full h-full"
+      class="container__image-wrapper_image"
       src="assets/auth-books.jpg"
       alt="book store"
     />

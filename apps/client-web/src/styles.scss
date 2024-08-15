@@ -5,9 +5,10 @@
 // @import 'primeflex/primeflex.css';
 
 :root {
-  --header-height: 4.8125rem;
+  // --header-height: 4.8125rem;
   --max-card-width: 20rem;
   --border-radius: 1rem;
+  --max-content-height: calc(100svh - 4.25rem - 2rem);
 }
 
 html {
@@ -31,6 +32,7 @@ body {
   margin: 0;
   padding: 0;
   font-family: var(--font-family);
+  min-height: 100svh;
 }
 
 .scroller {
@@ -81,6 +83,10 @@ input {
 }
 
 .p-password {
+  width: 100%;
+}
+
+.p-inputtext {
   width: 100%;
 }
 

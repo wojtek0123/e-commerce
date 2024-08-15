@@ -3,7 +3,8 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 @Component({
   selector: 'lib-error-message',
   standalone: true,
-  template: `<small class="text-red-300">{{ message() }}</small>`,
+  templateUrl: './error-message.component.html',
+  styleUrl: './error-message.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ErrorMessageComponent {
