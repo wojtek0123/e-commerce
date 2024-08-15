@@ -1,10 +1,4 @@
-import {
-  Component,
-  HostBinding,
-  computed,
-  inject,
-  signal,
-} from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { Params, RouterLink } from '@angular/router';
 import { DividerModule } from 'primeng/divider';
 import { ButtonModule } from 'primeng/button';
@@ -110,7 +104,7 @@ export class NavComponent {
           {
             label: 'Orders',
             icon: 'pi pi-book',
-            routerLink: '/user/orders',
+            routerLink: '/account/orders',
             command: () => {
               if (this.sidebarVisible()) {
                 this.sidebarVisible.set(false);
@@ -120,7 +114,7 @@ export class NavComponent {
           {
             label: 'Settings',
             icon: 'pi pi-cog',
-            routerLink: '/user/settings',
+            routerLink: '/account/settings',
             command: () => {
               if (this.sidebarVisible()) {
                 this.sidebarVisible.set(false);
@@ -142,7 +136,7 @@ export class NavComponent {
           {
             label: 'Sign in',
             icon: 'pi pi-sign-in',
-            routerLink: '/auth/login',
+            routerLink: '/login',
             command: () => {
               if (this.sidebarVisible()) {
                 this.sidebarVisible.set(false);
@@ -152,7 +146,7 @@ export class NavComponent {
           {
             label: 'Sign up',
             icon: 'pi pi-user-plus',
-            routerLink: '/auth/register',
+            routerLink: '/register',
             command: () => {
               if (this.sidebarVisible()) {
                 this.sidebarVisible.set(false);
@@ -172,8 +166,6 @@ export class NavComponent {
       search: null,
     },
   };
-
-  @HostBinding('class') class = 'z-1';
 
   openCart() {
     this.cartSidebarVisible.set(true);

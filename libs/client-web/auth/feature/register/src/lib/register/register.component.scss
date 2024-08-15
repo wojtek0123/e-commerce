@@ -1,0 +1,24 @@
+:host ::ng-deep {
+  .p-button {
+    width: 100%;
+  }
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+  max-width: 30rem;
+
+  &__submit-btn {
+    width: 100%;
+    margin-top: 1.25rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .form {
+    align-items: center;
+  }
+}
