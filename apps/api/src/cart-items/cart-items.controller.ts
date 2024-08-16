@@ -33,7 +33,7 @@ export class CartItemsController {
   @ApiBearerAuth()
   create(
     @Headers('authorization') authHeader: string,
-    @Body() createCartItemDto: CreateCartItemDto
+    @Body() createCartItemDto: CreateCartItemDto,
   ) {
     return this.cartItemsService.create(authHeader, createCartItemDto);
   }
@@ -76,13 +76,13 @@ export class CartItemsController {
     @Headers('authorization') authHeader: string,
     @Param('bookId') bookId: string,
     @Param('shoppingSessionId') shoppingSessionId: string,
-    @Body() updateCartItemDto: UpdateCartItemDto
+    @Body() updateCartItemDto: UpdateCartItemDto,
   ) {
     return this.cartItemsService.update(
       authHeader,
       +shoppingSessionId,
       +bookId,
-      updateCartItemDto
+      updateCartItemDto,
     );
   }
 
@@ -94,12 +94,12 @@ export class CartItemsController {
   remove(
     @Headers('authorization') authHeader: string,
     @Param('bookId') bookId: string,
-    @Param('shoppingSessionId') shoppingSessionId: string
+    @Param('shoppingSessionId') shoppingSessionId: string,
   ) {
     return this.cartItemsService.remove(
       authHeader,
       +shoppingSessionId,
-      +bookId
+      +bookId,
     );
   }
 }

@@ -1,6 +1,7 @@
 import {
   ApplicationConfig,
-  provideExperimentalZonelessChangeDetection, isDevMode,
+  provideExperimentalZonelessChangeDetection,
+  isDevMode,
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { appRoutes } from './app.routes';
@@ -20,14 +21,19 @@ import {
   authFeature,
 } from '@e-commerce/client-web/auth/data-access';
 import { provideServiceWorker } from '@angular/service-worker';
+import {
+  ShoppingSessionEffect,
+  shoppingSessionFeature,
+} from '@e-commerce/client-web/cart/data-access';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideExperimentalZonelessChangeDetection(),
     provideRouter(appRoutes),
     provideStore(),
-    provideState(authFeature.name, authFeature.reducer),
-    provideEffects(AuthEffects),
+    provideState(authFeature),
+    provideState(shoppingSessionFeature),
+    provideEffects([AuthEffects, ShoppingSessionEffect]),
     provideAnimationsAsync(),
     provideHttpClient(
       withInterceptors([authInterceptor, unAuthErrorInterceptor]),
@@ -37,9 +43,10 @@ export const appConfig: ApplicationConfig = {
       useValue: 'http://localhost:3000',
     },
     AppInitializerProvider,
-    MessageService, provideServiceWorker('ngsw-worker.js', {
-            enabled: !isDevMode(),
-            registrationStrategy: 'registerWhenStable:30000'
-          }),
+    MessageService,
+    provideServiceWorker('ngsw-worker.js', {
+      enabled: !isDevMode(),
+      registrationStrategy: 'registerWhenStable:30000',
+    }),
   ],
 };

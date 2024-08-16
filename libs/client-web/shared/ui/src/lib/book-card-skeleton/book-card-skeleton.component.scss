@@ -1,0 +1,21 @@
+.book-card-skeleton {
+  max-width: 34rem;
+  border-radius: var(--border-radius);
+  border-color: var(--surface-border);
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding: 1rem;
+  }
+
+  &__footer {
+    border-radius: var(--border-radius);
+    display: flex;
+    justify-content: flex-end;
+  }
+}

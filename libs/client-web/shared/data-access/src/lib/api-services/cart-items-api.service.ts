@@ -8,11 +8,7 @@ export class CartItemsApiService {
   private http = inject(HttpClient);
   private apiUrl = inject(API_URL);
 
-  createCartItem(body: {
-    shoppingSessionId: ShoppingSession['id'];
-    bookId: Book['id'];
-    quantity: CartItem['quantity'];
-  }) {
+  createCartItem(body: { bookId: Book['id']; quantity: CartItem['quantity'] }) {
     return this.http.post<CartItem>(`${this.apiUrl}/cart-items`, body);
   }
 

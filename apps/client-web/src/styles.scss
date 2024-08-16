@@ -9,6 +9,12 @@
   --max-card-width: 20rem;
   --border-radius: 1rem;
   --max-content-height: calc(100svh - 4.25rem - 2rem);
+  --header-height: 4.25rem;
+  --sm: 640px;
+  --md: 768px;
+  --lg: 1024px;
+  --xl: 1280px;
+  --2xl: 1560px;
 }
 
 html {
@@ -33,6 +39,8 @@ body {
   padding: 0;
   font-family: var(--font-family);
   min-height: 100svh;
+  max-width: 3840px;
+  width: 100%;
 }
 
 .scroller {
@@ -45,7 +53,8 @@ a {
 }
 
 input {
-  border-radius: var(--border-radius);
+  // border-radius: var(--border-radius);
+  border-radius: 0.75rem;
 }
 
 p {

@@ -8,7 +8,9 @@ export class AuthorApiService {
   private http = inject(HttpClient);
   private apiUrl = inject(API_URL);
 
-  getAll$(params: { nameLike?: string } & Pagination) {
+  getAll$(
+    params: { page: number; size: number; nameLike?: string } & Pagination,
+  ) {
     return this.http.get<Author[]>(`${this.apiUrl}/authors`, {
       params: { ...params },
     });

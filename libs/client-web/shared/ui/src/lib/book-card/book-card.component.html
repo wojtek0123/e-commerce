@@ -1,0 +1,28 @@
+<div [routerLink]="['/browse', book().id]" class="book-card">
+  <img
+    alt="Card"
+    class="book-card__image"
+    [src]="
+      book().coverImage
+        ? book().coverImage
+        : 'https://primefaces.org/cdn/primeng/images/usercard.png'
+    "
+  />
+  <div class="book-card__body">
+    <div class="book-card__body__header">
+      <h3 class="book-card__body__header-title">{{ book().title }}</h3>
+      @for (author of book().authors; track author.id) {
+        <span class="book-card__body__header-author">{{ author.name }}</span>
+      }
+    </div>
+    <div class="book-card__body__content">
+      <span>{{ book().price | currency: 'USD' }}</span>
+      <p-button
+        label="Add to cart"
+        icon="pi pi-cart-plus"
+        [loading]="awaitingBookIdsToAddToCart().includes(book().id)"
+        (onClick)="addToCart($event, book())"
+      />
+    </div>
+  </div>
+</div>

@@ -10,7 +10,7 @@ export class BooksApiService {
   private apiUrl = inject(API_URL);
 
   getBooks$(params: {
-    title?: string;
+    titleLike?: string;
     categoryNamesIn?: Category['name'][];
     tagsIn?: BookTag[];
     publishDateFrom?: string;
