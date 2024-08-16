@@ -1,4 +1,10 @@
 import { Route } from '@angular/router';
+import {
+  BrowseEffect,
+  browseFeature,
+} from '@e-commerce/client-web/browse/data-access';
+import { provideEffects } from '@ngrx/effects';
+import { provideState } from '@ngrx/store';
 
 export const appRoutes: Route[] = [
   {
@@ -14,5 +20,19 @@ export const appRoutes: Route[] = [
       import('@e-commerce/client-web/auth/feature/register').then(
         (r) => r.registerRoutes,
       ),
+  },
+  {
+    path: 'browse',
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        loadChildren: () =>
+          import('@e-commerce/client-web/browse/feature/books').then(
+            (r) => r.booksRoutes,
+          ),
+      },
+    ],
+    providers: [provideState(browseFeature), provideEffects(BrowseEffect)],
   },
 ];

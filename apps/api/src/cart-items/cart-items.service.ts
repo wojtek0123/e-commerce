@@ -13,19 +13,26 @@ import { decode } from 'jsonwebtoken';
 export class CartItemsService {
   constructor(
     private prisma: PrismaService,
-    private shoppingSessionService: ShoppingSessionsService
+    private shoppingSessionService: ShoppingSessionsService,
   ) {}
 
   // async createMany(authHeader: string, data: CreateCartItemDto[]) {}
 
-  async create(
-    authHeader: string,
-    { bookId, quantity, shoppingSessionId }: CreateCartItemDto
-  ) {
+  async create(authHeader: string, { bookId, quantity }: CreateCartItemDto) {
     const userId = +decode(authHeader.split(' ')[1]).sub;
 
+    const shoppingSession = await this.prisma.shoppingSession.findUnique({
+      where: { userId },
+      select: { id: true },
+    });
+
     const existingCartItem = await this.prisma.cartItem.findUnique({
-      where: { bookId_shoppingSessionId: { bookId, shoppingSessionId } },
+      where: {
+        bookId_shoppingSessionId: {
+          bookId,
+          shoppingSessionId: shoppingSession.id,
+        },
+      },
       include: {
         shoppingSession: {
           include: { user: { select: { id: true } } },
@@ -36,7 +43,7 @@ export class CartItemsService {
     if (existingCartItem) {
       if (existingCartItem.shoppingSession.user.id !== userId) {
         throw new ForbiddenException(
-          'You do not have permission to modify this cart item'
+          'You do not have permission to modify this cart item',
         );
       }
 
@@ -80,7 +87,7 @@ export class CartItemsService {
     }
 
     const cartItem = await this.prisma.cartItem.create({
-      data: { bookId, shoppingSessionId, quantity },
+      data: { bookId, shoppingSessionId: shoppingSession.id, quantity },
       include: {
         book: {
           include: {
@@ -117,7 +124,7 @@ export class CartItemsService {
     authHeader: string,
     shoppingSessionId: number,
     bookId: number,
-    data: UpdateCartItemDto
+    data: UpdateCartItemDto,
   ) {
     const userId = +decode(authHeader.split(' ')[1]).sub;
 
@@ -129,7 +136,7 @@ export class CartItemsService {
 
     if (cartItem.shoppingSession.userId !== userId) {
       throw new ForbiddenException(
-        'You do not have permission to modify this cart item'
+        'You do not have permission to modify this cart item',
       );
     }
 

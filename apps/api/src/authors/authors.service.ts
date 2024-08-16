@@ -13,8 +13,8 @@ export class AuthorsService {
   findAll(opts: { page?: number; size?: number; nameLike?: string }) {
     return this.prisma.author.findMany({
       where: { name: { contains: opts.nameLike ?? '', mode: 'insensitive' } },
-      take: opts.size ?? 20,
-      skip: (opts.size ?? 20) * ((opts.page ?? 1) - 1),
+      take: opts.size || 20,
+      skip: (opts.size || 20) * ((opts.page || 1) - 1),
     });
   }
 

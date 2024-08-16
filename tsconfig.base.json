@@ -30,6 +30,18 @@
       "@e-commerce/client-web/auth/utils": [
         "libs/client-web/auth/utils/src/index.ts"
       ],
+      "@e-commerce/client-web/browse/data-access": [
+        "libs/client-web/browse/data-access/src/index.ts"
+      ],
+      "@e-commerce/client-web/browse/feature/books": [
+        "libs/client-web/browse/feature/books/src/index.ts"
+      ],
+      "@e-commerce/client-web/browse/ui": [
+        "libs/client-web/browse/ui/src/index.ts"
+      ],
+      "@e-commerce/client-web/cart/data-access": [
+        "libs/client-web/cart/data-access/src/index.ts"
+      ],
       "@e-commerce/client-web/shared/data-access": [
         "libs/client-web/shared/data-access/src/index.ts"
       ],

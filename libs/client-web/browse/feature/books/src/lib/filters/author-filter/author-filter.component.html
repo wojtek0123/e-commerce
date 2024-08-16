@@ -1,0 +1,16 @@
+@let filter = filter$ | async;
+<lib-filter
+  [filterName]="filterName()"
+  header="Authors"
+  [parseName]="parseName"
+  [trackBy]="trackBy"
+  [items]="filter?.items ?? []"
+  [selectedItems]="filter?.selectedItems ?? []"
+  (selectedItemsEvent)="changeSelectedItems($event)"
+>
+  <input
+    placeholder="Search for authors..."
+    pInputText
+    [formControl]="searchControl"
+  />
+</lib-filter>
