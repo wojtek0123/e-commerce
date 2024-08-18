@@ -5,8 +5,7 @@
       <p-breadcrumb [model]="breadcrumbs()" />
       <lib-search class="books__content-bar__input" />
     </div>
-    <!-- <lib-books-active-filters /> -->
-    <!-- <lib-books-view /> -->
+    <lib-active-filters [activeFilters]="(activeFilters$ | async) ??[]" (clearFilterEvent)="clearFilter($event)" (clearFiltersEvent)="clearFilters()" />
 
     @let books = books$ | async;
     @let loading = loading$ | async;

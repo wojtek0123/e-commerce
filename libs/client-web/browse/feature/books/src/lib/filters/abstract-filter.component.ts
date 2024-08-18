@@ -4,9 +4,10 @@ import { FormControl } from '@angular/forms';
 import {
   browseActions,
   Filter,
+  BrowseState,
+  ActiveFilter,
 } from '@e-commerce/client-web/browse/data-access';
 import { Store } from '@ngrx/store';
-import { BrowseState } from 'libs/client-web/browse/data-access/src/lib/store/browse.state';
 import { debounceTime, Observable } from 'rxjs';
 
 @Component({ template: '' })
@@ -17,7 +18,7 @@ export abstract class AbstractFilterComponent<ItemType> implements OnInit {
   abstract filterName: Signal<keyof BrowseState['filters']>;
   abstract filter$: Observable<Filter<ItemType>>;
   abstract parseName: (item: ItemType) => string;
-  abstract trackBy: (item: ItemType) => number | string;
+  abstract parseId: (item: ItemType) => number | string;
 
   protected searchControl = new FormControl<string | null>(null);
 
@@ -35,10 +36,18 @@ export abstract class AbstractFilterComponent<ItemType> implements OnInit {
       );
   }
 
-  public changeSelectedItems(selectedItems: ItemType[]) {
+  public clearFilterSelectedItems(filter: keyof BrowseState['filters']) {
+    this.store.dispatch(browseActions.clearFilterSelectedItems({ filter }));
+  }
+
+  public changeSelectedItems(event: {
+    selectedItems: ItemType[];
+    activeFilter: ActiveFilter;
+  }) {
     this.store.dispatch(
       browseActions.setSelectedItems({
-        selectedItems,
+        selectedItems: event.selectedItems,
+        activeFitler: event.activeFilter,
         filter: this.filterName(),
       }),
     );

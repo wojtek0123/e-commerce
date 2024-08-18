@@ -1,5 +1,5 @@
 {
-  "name": "utils",
+  "name": "client-web-auth-utils",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/client-web/auth/utils/src",
   "prefix": "lib",

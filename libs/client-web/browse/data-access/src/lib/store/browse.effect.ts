@@ -1,5 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import {
+  allBookTags,
   AuthorApiService,
   BooksApiService,
   CartItemsApiService,
@@ -8,7 +9,7 @@ import {
 } from '@e-commerce/client-web/shared/data-access';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { browseActions } from './browse.action';
-import { debounce, filter, of, switchMap, timer } from 'rxjs';
+import { debounce, filter, map, of, switchMap, timer } from 'rxjs';
 import { concatLatestFrom, mapResponse } from '@ngrx/operators';
 import { Store } from '@ngrx/store';
 import {
@@ -35,6 +36,10 @@ export class BrowseEffect {
         browseActions.setPage,
         browseActions.setSize,
         browseActions.setSelectedItems,
+        browseActions.setPrice,
+        browseActions.removeActiveFilter,
+        browseActions.removeActiveFilters,
+        browseActions.clearFilterSelectedItems,
       ),
       concatLatestFrom(() => [
         this.store.select(selectSearch),
@@ -49,12 +54,13 @@ export class BrowseEffect {
         this.bookApi
           .getBooks$({
             ...(search && { titleLike: search }),
-            authorNamesIn: filters.author.selectedItems.map(
-              (item) => item.name,
-            ),
+            ...(filters.price.min && { priceFrom: filters.price.min }),
+            ...(filters.price.max && { priceTo: filters.price.max }),
+            authorNamesIn: filters.author.selectedItems.map(({ name }) => name),
             categoryNamesIn: filters.category.selectedItems.map(
-              (item) => item.name,
+              ({ name }) => name,
             ),
+            tagsIn: filters.tag.selectedItems,
             page,
             size,
           })
@@ -148,6 +154,20 @@ export class BrowseEffect {
             }),
           ),
       ),
+    ),
+  );
+
+  getTagFilter = createEffect(() =>
+    this.actions$.pipe(
+      ofType(browseActions.getFilter),
+      filter(({ filter }) => filter === 'tag'),
+      map(({ name, filter }) => {
+        const tags = allBookTags.filter((tag) =>
+          tag.toLowerCase().includes(name?.toLowerCase() ?? ''),
+        );
+
+        return browseActions.getFilterSuccess({ items: tags, filter });
+      }),
     ),
   );
 }

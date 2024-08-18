@@ -2,11 +2,13 @@
   <img
     alt="Card"
     class="book-card__image"
-    [src]="
+    [ngSrc]="
       book().coverImage
-        ? book().coverImage
+        ? book().coverImage!
         : 'https://primefaces.org/cdn/primeng/images/usercard.png'
     "
+    width="518"
+    height="220"
   />
   <div class="book-card__body">
     <div class="book-card__body__header">

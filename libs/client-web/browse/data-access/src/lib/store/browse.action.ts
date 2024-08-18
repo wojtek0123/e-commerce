@@ -1,6 +1,7 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
 import { Book, ResponseError } from '@e-commerce/client-web/shared/data-access';
 import { BrowseState } from './browse.state';
+import { ActiveFilter } from '../models/active-filter.model';
 
 export const browseActions = createActionGroup({
   source: 'browse',
@@ -31,6 +32,13 @@ export const browseActions = createActionGroup({
     setSelectedItems: props<{
       selectedItems: any[];
       filter: keyof BrowseState['filters'];
+      activeFitler: ActiveFilter;
     }>(),
+    clearFilterSelectedItems: props<{ filter: keyof BrowseState['filters'] }>(),
+
+    setPrice: props<{ value: number | null; key: 'min' | 'max' }>(),
+
+    removeActiveFilter: props<{ activeFilterId: ActiveFilter['id'] }>(),
+    removeActiveFilters: emptyProps(),
   },
 });

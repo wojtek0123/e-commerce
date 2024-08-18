@@ -1,7 +1,9 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   computed,
+  contentChild,
   HostBinding,
   input,
   output,
@@ -16,6 +18,11 @@ import { AccordionModule } from 'primeng/accordion';
 import { BadgeModule } from 'primeng/badge';
 import { ButtonModule } from 'primeng/button';
 import { ListboxModule } from 'primeng/listbox';
+import {
+  ActiveFilter,
+  BrowseState,
+} from '@e-commerce/client-web/browse/data-access';
+import { CustomFilterDirective } from '@e-commerce/client-web/browse/utils';
 
 @Component({
   selector: 'lib-filter',
@@ -35,24 +42,43 @@ import { ListboxModule } from 'primeng/listbox';
     CheckboxModule,
     DividerModule,
     ChipModule,
+    CustomFilterDirective,
   ],
 })
-export class FilterComponent<FilterType> {
+export class FilterComponent<FilterType> implements AfterViewInit {
   public header = input.required<string>();
-  public filterName = input.required<string>();
-  public parseName = input.required<(filter: FilterType) => string>();
-  public trackBy = input.required<(filter: FilterType) => number | string>();
+  public filterName = input.required<keyof BrowseState['filters']>();
+  public parseName = input<(filter: FilterType) => string>();
+  public parseId = input<(filter: FilterType) => number | string>();
 
-  public items = input.required<FilterType[]>();
-  public selectedItems = input.required<FilterType[]>();
-  public selectedItemsCount = computed(() => this.selectedItems().length);
+  public items = input<FilterType[]>();
+  public selectedItems = input<FilterType[]>();
+  public selectedItemsCount = computed(() => this.selectedItems()?.length ?? 0);
 
-  public clearFilterEvent = output<string>();
-  public selectedItemsEvent = output<FilterType[]>();
+  public clearFilterSelectedItemsEvent = output<keyof BrowseState['filters']>();
+  public selectedItemsEvent = output<{
+    selectedItems: FilterType[];
+    activeFilter: ActiveFilter;
+  }>();
 
   @HostBinding('style.width') width = '100%';
 
-  public changeSelectedItems(event: FilterType[]) {
-    this.selectedItemsEvent.emit(event);
+  templateRef = contentChild(CustomFilterDirective);
+
+  ngAfterViewInit(): void {
+    console.log(this.templateRef());
+  }
+
+  public changeSelectedItems(selectedItems: FilterType[], item: FilterType) {
+    if (!this.parseName() || !this.parseId) return;
+    const activeFilter = {
+      id: `${this.filterName()}_${this.parseId()?.(item).toString()}`,
+      name: this.parseName()?.(item) ?? '',
+    };
+    this.selectedItemsEvent.emit({ selectedItems, activeFilter });
+  }
+
+  public clearFilterSelectedItems() {
+    this.clearFilterSelectedItemsEvent.emit(this.filterName());
   }
 }

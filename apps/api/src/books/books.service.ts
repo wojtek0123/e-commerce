@@ -69,15 +69,6 @@ export class BooksService {
       })
       .then((authors) => authors.map(({ id }) => id));
 
-    console.log(
-      this._parseQueryParams(tagsIn),
-      this._parseQueryParams(categoryNamesIn),
-      titleLike ?? '',
-      priceFrom || 0,
-      priceTo || 10000000,
-      this._parseQueryParams(authorNamesIn),
-    );
-
     const books = await this.prisma.book.findMany({
       where: {
         AND: [

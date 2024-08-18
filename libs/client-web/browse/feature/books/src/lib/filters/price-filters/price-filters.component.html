@@ -1,0 +1,35 @@
+<lib-filter
+  header="Price"
+  (clearEvent)="clearChecked()"
+  filterName="price"
+  [selectedItems]="(selected$ | async) ?? []"
+>
+  <div libCustomFilter class="price-filter">
+    <lib-form-field label="Min">
+      <p-inputNumber
+        slot="input"
+        [min]="0"
+        [maxFractionDigits]="2"
+        [(ngModel)]="minPrice"
+        (onBlur)="onBlur('min')"
+        mode="decimal"
+        currency="USD"
+      />
+    </lib-form-field>
+    <div class="price-filter__divider">
+      <p-divider />
+    </div>
+
+    <lib-form-field label="Max">
+      <p-inputNumber
+        slot="input"
+        [min]="0"
+        [(ngModel)]="maxPrice"
+        (onBlur)="onBlur('max')"
+        [maxFractionDigits]="2"
+        mode="decimal"
+        currency="USD"
+      />
+    </lib-form-field>
+  </div>
+</lib-filter>

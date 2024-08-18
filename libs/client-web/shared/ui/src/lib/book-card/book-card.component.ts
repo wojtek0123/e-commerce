@@ -9,12 +9,18 @@ import { Book } from '@e-commerce/client-web/shared/data-access';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { RouterLink } from '@angular/router';
-import { CurrencyPipe } from '@angular/common';
+import { CurrencyPipe, NgOptimizedImage } from '@angular/common';
 
 @Component({
   selector: 'lib-book-card',
   standalone: true,
-  imports: [ButtonModule, RouterLink, CardModule, CurrencyPipe],
+  imports: [
+    ButtonModule,
+    RouterLink,
+    CardModule,
+    CurrencyPipe,
+    NgOptimizedImage,
+  ],
   templateUrl: './book-card.component.html',
   styleUrl: './book-card.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

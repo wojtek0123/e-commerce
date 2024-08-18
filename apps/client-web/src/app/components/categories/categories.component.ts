@@ -2,19 +2,15 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  inject,
+  input,
   output,
 } from '@angular/core';
-import { CategoryStore } from '@e-commerce/client-web-app/shared/data-access/category';
-import {
-  appRouterConfig,
-  browseRoutePaths,
-} from '@e-commerce/client-web-app/shared/utils/router-config';
+import { Category } from '@e-commerce/client-web/shared/data-access';
 import { ButtonModule } from 'primeng/button';
 import { MenuModule } from 'primeng/menu';
 
 @Component({
-  selector: 'lib-categories',
+  selector: 'app-categories',
   template: `
     <p-button
       (click)="categoriesMenu.toggle($event)"
@@ -35,12 +31,12 @@ import { MenuModule } from 'primeng/menu';
   imports: [ButtonModule, MenuModule],
 })
 export class CategoriesComponent {
-  private categoryStore = inject(CategoryStore);
-  clickEvent = output<void>();
+  categories = input.required<Category[]>();
+  error = input.required<string | string[] | null>();
+  loading = input.required<boolean>();
 
-  error = this.categoryStore.error;
-  loading = this.categoryStore.loading;
-  categories = this.categoryStore.categories;
+  clickEvent = output<void>();
+  refetchCategoriesEvent = output<void>();
 
   menuItems = computed(() => {
     if (this.error()) {
@@ -49,7 +45,7 @@ export class CategoriesComponent {
           label: 'Error! Try again.',
           icon: 'pi pi-refresh',
           command: () => {
-            this.categoryStore.getCategories();
+            this.refetchCategoriesEvent.emit();
           },
         },
       ];
@@ -70,14 +66,11 @@ export class CategoriesComponent {
 
     return this.categories().map((category) => ({
       label: category.name,
-      routerLink: browseRoutePaths.default,
+      routerLink: '/browse',
       queryParams: {
-        [appRouterConfig.browse.categoriesQueryParams]: category.name
-          .toLowerCase()
-          .split(' ')
-          .join('_'),
+        categories: category.name.toLowerCase().split(' ').join('_'),
       },
-      state: { categoryIds: [category.id], clear: true },
+      state: { category: JSON.stringify(category) },
     }));
   });
 }

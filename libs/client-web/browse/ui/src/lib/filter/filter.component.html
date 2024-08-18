@@ -11,23 +11,31 @@
         class="ml-3"
         icon="pi pi-trash"
         [text]="true"
-        (onClick)="$event.stopImmediatePropagation(); changeSelectedItems([])"
+        (onClick)="
+          $event.stopImmediatePropagation(); clearFilterSelectedItems()
+        "
       />
     </div>
   </ng-template>
-  <div class="filter">
-    <ng-content select="input" />
-    <div class="filter__items">
-      @for (item of items(); track trackBy()(item)) {
-        <p-checkbox
-          [ngModel]="selectedItems()"
-          (ngModelChange)="changeSelectedItems($event)"
-          [label]="parseName()(item)"
-          [value]="item"
-        />
-      } @empty {
-        <div class="filter__items__message">Not found!</div>
-      }
+
+  <ng-content />
+
+  @if (!templateRef()) {
+    <div class="filter">
+      <ng-content select="input" />
+      <div class="filter__items">
+        @for (item of items(); track $index) {
+          <p-checkbox
+            #checkbox
+            [ngModel]="selectedItems()"
+            (ngModelChange)="changeSelectedItems($event, item)"
+            [label]="parseName()?.(item)"
+            [value]="item"
+          />
+        } @empty {
+          <div class="filter__items__message">Not found!</div>
+        }
+      </div>
     </div>
-  </div>
+  }
 </p-accordionTab>

@@ -1,5 +1,11 @@
-<app-nav />
+<p-toast />
+<app-nav>
+  <app-categories
+    [categories]="(categories$ | async) ?? []"
+    [loading]="!!(loading$ | async)"
+    [error]="error$ | async"
+  />
+</app-nav>
 <div class="wrapper">
   <router-outlet />
-  <div></div>
 </div>
