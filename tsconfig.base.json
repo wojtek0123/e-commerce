@@ -39,6 +39,9 @@
       "@e-commerce/client-web/browse/ui": [
         "libs/client-web/browse/ui/src/index.ts"
       ],
+      "@e-commerce/client-web/browse/utils": [
+        "libs/client-web/browse/utils/src/index.ts"
+      ],
       "@e-commerce/client-web/cart/data-access": [
         "libs/client-web/cart/data-access/src/index.ts"
       ],

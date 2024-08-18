@@ -1,0 +1,18 @@
+:host ::ng-deep {
+  .p-inputnumber {
+    width: 100%;
+  }
+}
+
+.price-filter {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.5rem;
+
+  &__divider {
+    margin-bottom: 0.5rem;
+    width: 2rem;
+    // display: flex;
+    // align-items: center;
+  }
+}

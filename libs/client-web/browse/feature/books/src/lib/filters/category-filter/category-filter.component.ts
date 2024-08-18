@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { AbstractFilterComponent } from '../../abstract-filter.component';
+import { AbstractFilterComponent } from '../abstract-filter.component';
 import { Category } from '@e-commerce/client-web/shared/data-access';
 import { selectCategoryFilter } from '@e-commerce/client-web/browse/data-access';
 import { FilterComponent } from '@e-commerce/client-web/browse/ui';
@@ -18,5 +18,5 @@ export class CategoryFilterComponent extends AbstractFilterComponent<Category> {
   override filterName = signal('category' as const);
   override filter$ = this.store.select(selectCategoryFilter);
   override parseName = (item: Category) => item.name;
-  override trackBy = (item: Category) => item.name;
+  override parseId = (item: Category) => item.id;
 }

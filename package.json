@@ -25,6 +25,7 @@
     "@ngrx/eslint-plugin": "^18.0.2",
     "@ngrx/operators": "^18.0.2",
     "@ngrx/store": "^18.0.2",
+    "@ngrx/store-devtools": "^18.0.2",
     "@nx/angular": "19.5.7",
     "@prisma/client": "^5.18.0",
     "@types/bcrypt": "^5.0.2",

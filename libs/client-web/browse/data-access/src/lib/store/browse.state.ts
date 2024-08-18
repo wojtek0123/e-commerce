@@ -5,11 +5,7 @@ import {
   Category,
 } from '@e-commerce/client-web/shared/data-access';
 import { Filter } from '../models/filter.model';
-
-// const initialFilter: Filter<T> = {
-//   items: [],
-//   selectedItems: []
-// }
+import { ActiveFilter } from '../models/active-filter.model';
 
 export interface BrowseState {
   books: Book[];
@@ -21,13 +17,14 @@ export interface BrowseState {
   count: number;
   loading: boolean;
   error: string | string[] | null;
+  activeFilters: ActiveFilter[];
   filters: {
     tag: Filter<BookTag>;
     author: Filter<Author>;
     category: Filter<Category>;
     price: {
-      min: number;
-      max: number;
+      min: number | null;
+      max: number | null;
     };
   };
 }
@@ -42,10 +39,11 @@ export const initialBrowseState: BrowseState = {
   loading: false,
   error: null,
   search: null,
+  activeFilters: [],
   filters: {
     tag: { items: [], selectedItems: [] },
     author: { items: [], selectedItems: [] },
     category: { items: [], selectedItems: [] },
-    price: { min: 0, max: 0 },
+    price: { min: null, max: null },
   },
 };

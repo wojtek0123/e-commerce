@@ -12,6 +12,7 @@ export const {
   selectSize,
   selectPendingBookIds,
   selectFilters,
+  selectActiveFilters,
 } = browseFeature;
 
 export const selectAuthorFilter = createSelector(
@@ -22,7 +23,15 @@ export const selectCategoryFilter = createSelector(
   selectFilters,
   (filters) => filters.category,
 );
-export const selectTagsFilter = createSelector(
+export const selectTagFilter = createSelector(
   selectFilters,
   (filters) => filters.tag,
+);
+export const selectPriceFilter = createSelector(
+  selectFilters,
+  (filters) => filters.price,
+);
+export const selectPriceFilterSelected = createSelector(
+  selectPriceFilter,
+  (priceFilter) => Object.values(priceFilter).filter((v) => v),
 );

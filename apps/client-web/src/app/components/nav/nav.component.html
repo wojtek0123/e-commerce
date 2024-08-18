@@ -6,9 +6,7 @@
     </a>
     <p-divider layout="vertical" />
     <ul class="links">
-      <!-- <li> -->
-      <!--   <lib-categories /> -->
-      <!-- </li> -->
+      <ng-content select="app-categories" />
       @for (item of navItems; track item.id) {
         <li>
           <a

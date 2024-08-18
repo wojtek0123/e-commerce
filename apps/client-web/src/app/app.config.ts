@@ -25,6 +25,11 @@ import {
   ShoppingSessionEffect,
   shoppingSessionFeature,
 } from '@e-commerce/client-web/cart/data-access';
+import {
+  CategoryEffect,
+  categoryFeature,
+} from '@e-commerce/client-web/shared/data-access';
+import { provideStoreDevtools } from '@ngrx/store-devtools';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -33,7 +38,16 @@ export const appConfig: ApplicationConfig = {
     provideStore(),
     provideState(authFeature),
     provideState(shoppingSessionFeature),
-    provideEffects([AuthEffects, ShoppingSessionEffect]),
+    provideState(categoryFeature),
+    provideEffects([AuthEffects, ShoppingSessionEffect, CategoryEffect]),
+    provideStoreDevtools({
+      maxAge: 25, // Retains last 25 states
+      logOnly: !isDevMode(), // Restrict extension to log-only mode
+      autoPause: true, // Pauses recording actions and state changes when the extension window is not open
+      trace: false, //  If set to true, will include stack trace for every dispatched action, so you can see it in trace tab jumping directly to that part of code
+      traceLimit: 75, // maximum stack trace frames to be stored (in case trace option was provided as true)
+      connectInZone: true, // If set to true, the connection is established within the Angular zone
+    }),
     provideAnimationsAsync(),
     provideHttpClient(
       withInterceptors([authInterceptor, unAuthErrorInterceptor]),
