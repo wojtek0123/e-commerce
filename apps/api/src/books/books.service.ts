@@ -123,9 +123,14 @@ export class BooksService {
   }
 
   async findOne(id: number) {
+    console.log(id);
     const book = await this.prisma.book.findUnique({
       where: { id },
-      include: { authors: { include: { author: true } }, category: true },
+      include: {
+        productInventory: true,
+        authors: { include: { author: true } },
+        category: true,
+      },
     });
 
     if (!book) {
