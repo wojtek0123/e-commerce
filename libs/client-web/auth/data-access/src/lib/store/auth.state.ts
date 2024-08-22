@@ -6,6 +6,7 @@ export interface AuthState {
   refreshToken: Tokens['refreshToken'] | null;
   loading: boolean;
   error: string | string[] | null;
+  event: 'auth-success' | 'logout-success' | null;
 }
 
 export const initialAuthState: AuthState = {
@@ -14,4 +15,5 @@ export const initialAuthState: AuthState = {
   refreshToken: null,
   loading: false,
   error: null,
+  event: null,
 };

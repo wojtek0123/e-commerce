@@ -22,8 +22,8 @@ import {
 } from '@e-commerce/client-web/auth/data-access';
 import { provideServiceWorker } from '@angular/service-worker';
 import {
-  ShoppingSessionEffect,
-  shoppingSessionFeature,
+  CartEffect,
+  cartFeature,
 } from '@e-commerce/client-web/cart/data-access';
 import {
   CategoryEffect,
@@ -37,9 +37,9 @@ export const appConfig: ApplicationConfig = {
     provideRouter(appRoutes),
     provideStore(),
     provideState(authFeature),
-    provideState(shoppingSessionFeature),
+    provideState(cartFeature),
     provideState(categoryFeature),
-    provideEffects([AuthEffects, ShoppingSessionEffect, CategoryEffect]),
+    provideEffects([AuthEffects, CartEffect, CategoryEffect]),
     provideStoreDevtools({
       maxAge: 25, // Retains last 25 states
       logOnly: !isDevMode(), // Restrict extension to log-only mode

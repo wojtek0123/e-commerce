@@ -1,6 +1,6 @@
 import { APP_INITIALIZER, Provider } from '@angular/core';
 import { authActions } from '@e-commerce/client-web/auth/data-access';
-import { shoppingSessionActions } from '@e-commerce/client-web/cart/data-access';
+import { cartActions } from '@e-commerce/client-web/cart/data-access';
 import { Theme, ThemeService } from '../services/theme.service';
 import { jwtDecode } from 'jwt-decode';
 import { Store } from '@ngrx/store';
@@ -28,7 +28,7 @@ const initializeAppFactory =
 
     store.dispatch(authActions.init());
     themeService.switchTheme(preferenceTheme ?? browserTheme);
-    store.dispatch(shoppingSessionActions.getShoppingSession());
+    store.dispatch(cartActions.getShoppingSession());
   };
 
 export const AppInitializerProvider: Provider = {

@@ -1,4 +1,11 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  input,
+  output,
+  signal,
+} from '@angular/core';
 import { Params, RouterLink } from '@angular/router';
 import { DividerModule } from 'primeng/divider';
 import { ButtonModule } from 'primeng/button';
@@ -44,6 +51,8 @@ export class NavComponent {
   // private cartService = inject(CartService);
   private themeSwitcherService = inject(ThemeService);
 
+  isAuthenticated = input.required<boolean>();
+
   userCartItemsTotal = signal(0);
 
   shoppingSession = signal<ShoppingSession | null>(null);
@@ -51,6 +60,8 @@ export class NavComponent {
   error = signal<string | null>(null);
 
   cartSidebarVisible = signal(false);
+
+  logoutEvent = output<void>();
   // browseRoutePaths = browseRoutePaths;
 
   // cartItemsCount = this.cartService.count;
@@ -97,7 +108,6 @@ export class NavComponent {
   ];
 
   sidebarVisible = signal(false);
-  isAuthenticated = signal(false);
   menuItems = computed(() =>
     this.isAuthenticated()
       ? [
@@ -125,7 +135,7 @@ export class NavComponent {
             label: 'Sign out',
             icon: 'pi pi-sign-out',
             command: () => {
-              // this.authService.logout();
+              this.logoutEvent.emit();
               if (this.sidebarVisible()) {
                 this.sidebarVisible.set(false);
               }

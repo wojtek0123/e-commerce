@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, effect, inject, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NavComponent } from './components/nav/nav.component';
 import { ToastModule } from 'primeng/toast';
@@ -10,7 +10,14 @@ import {
   selectLoading,
 } from '@e-commerce/client-web/shared/data-access';
 import { CategoriesComponent } from './components/categories/categories.component';
+import { CartSidebarComponent } from '@e-commerce/client-web/cart/feature/cart-sidebar';
 import { AsyncPipe } from '@angular/common';
+import {
+  authActions,
+  selectEvent,
+  selectIsAuthenticated,
+} from '@e-commerce/client-web/auth/data-access';
+import { cartActions } from '@e-commerce/client-web/cart/data-access';
 
 @Component({
   standalone: true,
@@ -20,6 +27,7 @@ import { AsyncPipe } from '@angular/common';
     ToastModule,
     CategoriesComponent,
     AsyncPipe,
+    CartSidebarComponent,
   ],
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -31,8 +39,28 @@ export class AppComponent implements OnInit {
   public categories$ = this.store.select(selectCategories);
   public loading$ = this.store.select(selectLoading);
   public error$ = this.store.select(selectError);
+  public event = this.store.selectSignal(selectEvent);
+  public isAuthenticated = this.store.selectSignal(selectIsAuthenticated);
+
+  constructor() {
+    effect(
+      () => {
+        if (this.event() === 'auth-success') {
+          this.store.dispatch(cartActions.getShoppingSession());
+        }
+        if (this.event() === 'logout-success') {
+          this.store.dispatch(cartActions.clearCart());
+        }
+      },
+      { allowSignalWrites: true },
+    );
+  }
 
   ngOnInit(): void {
     this.store.dispatch(categoryActions.getCategories());
+  }
+
+  logout() {
+    this.store.dispatch(authActions.logout());
   }
 }

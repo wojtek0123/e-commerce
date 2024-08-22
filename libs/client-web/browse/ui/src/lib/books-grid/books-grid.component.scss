@@ -18,11 +18,6 @@
     display: grid;
     grid-template-columns: 1fr;
     gap: 1rem;
-
-    &.loading {
-      animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-      pointer-events: none;
-    }
   }
 }
 
@@ -97,15 +92,5 @@
     &__content {
       grid-template-columns: repeat(10, 1fr);
     }
-  }
-}
-
-@keyframes pulse {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
   }
 }

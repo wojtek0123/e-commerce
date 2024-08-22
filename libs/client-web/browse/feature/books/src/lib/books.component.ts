@@ -32,6 +32,7 @@ import { combineLatest, filter, map } from 'rxjs';
 import { FiltersComponent } from './filters/filters.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { cartActions } from '@e-commerce/client-web/cart/data-access';
 
 @Component({
   selector: 'lib-books',
@@ -132,7 +133,7 @@ export class BooksComponent implements OnInit {
   }
 
   public addToCart(book: Book) {
-    this.store.dispatch(browseActions.addBookToCart({ book }));
+    this.store.dispatch(cartActions.addBookToCart({ book, quantity: 1 }));
   }
 
   public onPageChange(event: PaginatorState, size: number | null) {

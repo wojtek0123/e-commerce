@@ -23,6 +23,7 @@ export const authFeature = createFeature({
     on(
       authActions.login,
       authActions.register,
+      authActions.logout,
       (state): AuthState => ({
         ...state,
         loading: true,
@@ -36,6 +37,7 @@ export const authFeature = createFeature({
         ...tokens,
         userId: user.id,
         loading: false,
+        event: 'auth-success',
       }),
     ),
     on(
@@ -46,10 +48,24 @@ export const authFeature = createFeature({
         error: error.message,
       }),
     ),
-    on(authActions.refreshToken, (state, { refreshToken, userId }) => ({
-      ...state,
-      userId,
-      refreshToken,
-    })),
+    on(
+      authActions.logoutSuccess,
+      (state): AuthState => ({
+        ...state,
+        loading: false,
+        event: 'logout-success',
+        userId: null,
+        refreshToken: null,
+        accessToken: null,
+      }),
+    ),
+    on(
+      authActions.refreshToken,
+      (state, { refreshToken, userId }): AuthState => ({
+        ...state,
+        userId,
+        refreshToken,
+      }),
+    ),
   ),
 });

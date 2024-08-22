@@ -1,0 +1,67 @@
+<p-button
+  #openCartSidebar
+  type="button"
+  [text]="true"
+  (click)="visible.set(true)"
+  class="open-sidebar-button"
+  pTooltip="View cart"
+  tooltipPosition="bottom"
+>
+  <i
+    class="pi pi-shopping-cart"
+    style="font-size: 1.5rem"
+    pBadge
+    [value]="count().toString()"
+    severity="danger"
+  ></i>
+</p-button>
+
+<p-sidebar
+  [(visible)]="visible"
+  [closeOnEscape]="true"
+  position="right"
+  appendTo="body"
+  [blockScroll]="true"
+  class="sidebar"
+>
+  <ng-template pTemplate="header">
+    <span class="sidebar__header">Cart</span>
+  </ng-template>
+
+  <div class="sidebar__content">
+    <div
+      class="sidebar__content__cart-items"
+      [ngClass]="{
+        loading: loading(),
+      }"
+    >
+      @for (item of cartItems(); track item.book.id) {
+        <lib-cart-item
+          [item]="item"
+          (onUpdateQuantity)="updateQuantity($event)"
+          (onDelete)="remove($event)"
+        />
+      } @empty {
+        <div class="sidebar__content__cart-items__text">
+          <span class="text-4xl">Your cart is empty!</span>
+          <span class="text-lg text-gray-400">
+            You should add something to it.
+          </span>
+        </div>
+      }
+    </div>
+
+    <div class="sidebar__content__footer">
+      <div class="sidebar__content__footer__price">
+        Total: {{ total() | currency: 'USD' }}
+      </div>
+      <p-button
+        class="w-full"
+        label="Checkout"
+        icon="pi pi-shopping-bag"
+        (onClick)="checkout()"
+        [loading]="loading()"
+      />
+    </div>
+  </div>
+</p-sidebar>

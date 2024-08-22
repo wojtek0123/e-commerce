@@ -1,3 +1,4 @@
+import { createSelector } from '@ngrx/store';
 import { authFeature } from './auth.reducer';
 
 export const {
@@ -6,4 +7,13 @@ export const {
   selectLoading,
   selectAccessToken,
   selectRefreshToken,
+  selectEvent,
 } = authFeature;
+
+export const selectIsAuthenticated = createSelector(
+  selectUserId,
+  selectAccessToken,
+  selectRefreshToken,
+  (userId, accessToken, refreshToken) =>
+    !!userId && !!accessToken && !!refreshToken,
+);
