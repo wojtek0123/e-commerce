@@ -33,7 +33,16 @@
     >
       <i class="pi pi-search" style="font-size: 1.5rem"></i>
     </a>
-    <p-menu #menu [model]="menuItems()" [popup]="true">
+    <p-button
+      type="button"
+      [text]="true"
+      (click)="menu.toggle($event)"
+      class="user"
+      pTooltip="View your account"
+      tooltipPosition="bottom"
+      icon="pi pi-user"
+    />
+    <p-menu appendTo="body" #menu [model]="menuItems()" [popup]="true">
       <ng-template pTemplate="end">
         <p-divider />
         <div class="menu">
@@ -46,39 +55,8 @@
         </div>
       </ng-template>
     </p-menu>
-    <p-button
-      type="button"
-      [text]="true"
-      (click)="menu.toggle($event)"
-      class="user"
-      pTooltip="View your account"
-      tooltipPosition="bottom"
-      icon="pi pi-user"
-    />
-    <!-- <p-button -->
-    <!--   #openCartSidebar -->
-    <!--   type="button" -->
-    <!--   [text]="true" -->
-    <!--   (click)="cartSidebarVisible.set(true)" -->
-    <!--   class="hidden flex-column justify-content-center md:flex" -->
-    <!--   pTooltip="View cart" -->
-    <!--   tooltipPosition="bottom" -->
-    <!-- > -->
-    <!--   <i -->
-    <!--     class="pi pi-shopping-cart" -->
-    <!--     style="font-size: 1.5rem" -->
-    <!--     pBadge -->
-    <!--     [value]="cartItemsCount().toString()" -->
-    <!--     severity="danger" -->
-    <!--   ></i> -->
-    <!-- </p-button> -->
-    <!---->
-    <!-- @defer (on interaction(openCartSidebar)) { -->
-    <!--   <lib-cart-sidebar -->
-    <!--     [sidebarVisible]="cartSidebarVisible()" -->
-    <!--     (onClose)="cartSidebarVisible.set(false)" -->
-    <!--   /> -->
-    <!-- } -->
+
+    <ng-content select="lib-cart-sidebar" />
 
     <p-button
       (click)="showSidebar()"

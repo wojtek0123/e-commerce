@@ -22,6 +22,7 @@ import { Book } from '@e-commerce/client-web/shared/data-access';
 import { PanelModule } from 'primeng/panel';
 import { MenuItem } from 'primeng/api';
 import { DetailRowComponent } from '@e-commerce/client-web/browse/ui';
+import { cartActions } from '@e-commerce/client-web/cart/data-access';
 
 @Component({
   selector: 'lib-book',
@@ -64,6 +65,7 @@ export class BookComponent implements OnInit {
   ]);
   public amount = new FormControl<number>(1, {
     validators: [Validators.min(1)],
+    nonNullable: true,
   });
 
   constructor() {
@@ -83,7 +85,14 @@ export class BookComponent implements OnInit {
     }
   }
 
-  public addToCart(bookId?: Book['id']) {
-    if (!bookId) return;
+  public addToCart() {
+    if (!this.book()) return;
+
+    this.store.dispatch(
+      cartActions.addBookToCart({
+        book: this.book()!,
+        quantity: this.amount.value,
+      }),
+    );
   }
 }

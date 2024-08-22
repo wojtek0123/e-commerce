@@ -10,6 +10,7 @@ export const browseFeature = createFeature({
       browseActions.getBooks,
       (state): BrowseState => ({
         ...state,
+        books: [],
         loading: true,
         error: null,
       }),
