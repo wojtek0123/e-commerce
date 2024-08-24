@@ -67,6 +67,7 @@ export class CartSidebarComponent {
   }
 
   checkout() {
+    this.visible.set(false);
     this.store.dispatch(cartActions.checkout());
   }
 }

@@ -1,0 +1,43 @@
+.summary {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+
+  &__section {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  &__price-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    &__label {
+      color: var(--text-color-secondary);
+      font-weight: 600;
+      font-size: 1.25rem;
+      width: 10rem;
+
+      &--total {
+        font-size: 1.75rem;
+      }
+    }
+
+    &__value {
+      font-size: 1.25rem;
+
+      &--total {
+        font-size: 1.75rem;
+      }
+    }
+  }
+
+  &__buttons {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+}

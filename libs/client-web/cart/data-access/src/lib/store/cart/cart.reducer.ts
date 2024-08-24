@@ -1,7 +1,6 @@
 import { createFeature, createReducer, on } from '@ngrx/store';
 import { initialCartState, CartState } from './cart.state';
 import { cartActions } from './cart.actions';
-import { observeNotification } from 'rxjs/internal/Notification';
 
 export const cartFeature = createFeature({
   name: 'shopping-session',

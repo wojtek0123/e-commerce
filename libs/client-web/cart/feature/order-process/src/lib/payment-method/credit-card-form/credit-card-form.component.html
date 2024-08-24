@@ -1,0 +1,75 @@
+@if (loading()) {
+  <div>Loading...</div>
+}
+@if (error()) {
+  <div>{{ error() }}</div>
+}
+@if (!creditCard() && !loading()) {
+  <form [formGroup]="form" class="credit-card-form">
+    <lib-form-field label="Card number" [isRequired]="true">
+      <p-inputMask
+        slot="input"
+        mask="9999 9999 9999 9999"
+        id="card-number"
+        [ngClass]="{
+          'ng-invalid ng-dirty':
+            form.controls.cardNumber.invalid && submitted(),
+        }"
+        formControlName="cardNumber"
+        placeholder="Type your card number"
+      />
+      @if (
+        (form.controls.cardNumber.dirty || submitted()) &&
+        form.controls.cardNumber.invalid
+      ) {
+        <lib-error-message />
+      }
+    </lib-form-field>
+
+    <div class="credit-card-form__row">
+      <lib-form-field label="Expiration date" [isRequired]="true">
+        <p-inputMask
+          slot="input"
+          mask="99/9999"
+          id="expiration-date"
+          [ngClass]="{
+            'ng-invalid ng-dirty':
+              form.controls.expirationDate.invalid && submitted(),
+          }"
+          formControlName="expirationDate"
+          placeholder="Type expiration date"
+        />
+        @if (
+          form.controls.expirationDate.invalid &&
+          (submitted() || form.controls.expirationDate.dirty)
+        ) {
+          <lib-error-message />
+        }
+      </lib-form-field>
+
+      <lib-form-field label="Security code" [isRequired]="true">
+        <p-inputMask
+          slot="input"
+          mask="999"
+          id="security-code"
+          [ngClass]="{
+            'ng-invalid ng-dirty':
+              form.controls.securityCode.invalid && submitted(),
+          }"
+          formControlName="securityCode"
+          placeholder="Type security code"
+        />
+        @if (
+          form.controls.securityCode.invalid &&
+          (submitted() || form.controls.securityCode.dirty)
+        ) {
+          <lib-error-message />
+        }
+      </lib-form-field>
+    </div>
+    <p-button label="Add credit card" />
+  </form>
+}
+@if (!!creditCard() && !loading()) {
+  <div>{{ creditCard()?.number }}</div>
+}

@@ -1,0 +1,29 @@
+<div class="order-process">
+  <div class="cart order-process__cart">
+    <h2 class="order-process__header">Cart items</h2>
+    <div
+      class="order-process__cart__cart-items"
+      [ngClass]="{
+        loading: cartItemsLoading() && cartItems().length > 0,
+      }"
+    >
+      @if (cartItemsLoading() && cartItems().length === 0) {
+        <lib-cart-item-sekeleton />
+      } @else {
+        @for (cartItem of cartItems(); track cartItem.book.id) {
+          <lib-cart-item
+            [item]="cartItem"
+            (onDelete)="remove($event)"
+            (onUpdateQuantity)="updateQuantity($event)"
+          />
+        }
+      }
+    </div>
+  </div>
+  <div class="order-process__checkout">
+    <h2 class="order-process__header">Checkout form</h2>
+    <!-- <div class="w-full"> -->
+    <lib-summary />
+    <!-- </div> -->
+  </div>
+</div>

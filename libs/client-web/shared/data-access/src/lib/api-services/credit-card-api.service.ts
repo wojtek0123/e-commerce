@@ -8,11 +8,11 @@ export class CreditCardApiService {
   private url = inject(API_URL);
   private http = inject(HttpClient);
 
-  get(id: CreditCardBase['id']) {
-    return this.http.get<CreditCardBase>(`${this.url}/credit-cards/${id}`);
+  get$() {
+    return this.http.get<CreditCardBase>(`${this.url}/credit-cards`);
   }
 
-  create(body: {
+  create$(body: {
     number: string;
     expirationDate: string;
     securityCode: string;
@@ -20,14 +20,14 @@ export class CreditCardApiService {
     return this.http.post<CreditCardBase>(`${this.url}/credit-cards`, body);
   }
 
-  update(id: CreditCardBase['id'], body: Partial<CreditCard>) {
+  update$(id: CreditCardBase['id'], body: Partial<CreditCard>) {
     return this.http.patch<CreditCardBase>(
       `${this.url}/credit-cards/${id}`,
       body,
     );
   }
 
-  delete(id: CreditCardBase['id']) {
+  delete$(id: CreditCardBase['id']) {
     return this.http.delete<CreditCardBase>(`${this.url}/credit-cards/${id}`);
   }
 }

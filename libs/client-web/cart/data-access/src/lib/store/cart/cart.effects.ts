@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { cartActions } from './cart.actions';
-import { filter, map, switchMap } from 'rxjs';
+import { filter, map, switchMap, tap } from 'rxjs';
 import { concatLatestFrom, mapResponse } from '@ngrx/operators';
 import {
   CartItemsApiService,
@@ -11,6 +11,7 @@ import {
 import { Store } from '@ngrx/store';
 import { selectCartItems, selectShoppingSessionId } from './cart.selectors';
 import { MessageService } from 'primeng/api';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class CartEffect {
@@ -19,6 +20,7 @@ export class CartEffect {
   private readonly shoppingSessionApi = inject(ShoppingSessionApiService);
   private readonly cartItemApi = inject(CartItemsApiService);
   private readonly messageService = inject(MessageService);
+  private readonly router = inject(Router);
 
   getShoppingSession = createEffect(() =>
     this.actions$.pipe(
@@ -261,5 +263,16 @@ export class CartEffect {
           ),
       ),
     ),
+  );
+
+  checkout = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(cartActions.checkout),
+        tap(() => {
+          this.router.navigate(['/order-process']);
+        }),
+      ),
+    { dispatch: false },
   );
 }

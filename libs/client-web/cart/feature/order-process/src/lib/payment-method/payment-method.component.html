@@ -1,0 +1,23 @@
+<lib-section-wrapper header="Payment method">
+  <lib-order-process-detail-element
+    [price]="0"
+    [value]="payments()[0]"
+    [isActive]="selectedPaymentMethod.value === 'credit-card'"
+    (clickEvent)="selectPaymentMethod($event)"
+  >
+    <span class="pi pi-credit-card"></span>
+  </lib-order-process-detail-element>
+
+  @if (selectedPaymentMethod.value === 'credit-card') {
+    <lib-credit-card-form />
+  }
+
+  <lib-order-process-detail-element
+    [price]="0"
+    [value]="payments()[1]"
+    [isActive]="selectedPaymentMethod.value === '6-digit-number'"
+    (clickEvent)="selectPaymentMethod($event)"
+  >
+    <span class="pi pi-wallet"></span>
+  </lib-order-process-detail-element>
+</lib-section-wrapper>

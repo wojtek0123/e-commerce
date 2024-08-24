@@ -51,6 +51,9 @@
       "@e-commerce/client-web/cart/feature/cart-sidebar": [
         "libs/client-web/cart/feature/cart-sidebar/src/index.ts"
       ],
+      "@e-commerce/client-web/cart/feature/order-process": [
+        "libs/client-web/cart/feature/order-process/src/index.ts"
+      ],
       "@e-commerce/client-web/cart/ui": [
         "libs/client-web/cart/ui/src/index.ts"
       ],
