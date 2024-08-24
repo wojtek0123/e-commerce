@@ -1,0 +1,46 @@
+<div class="summary">
+  <div class="summary__section">
+    <lib-delivery-address />
+    <lib-shipping-method />
+    <lib-payment-method />
+  </div>
+
+  <div class="summary__section">
+    <div class="summary__price-wrapper">
+      <span class="summary__price-wrapper__label">Books</span>
+      <span class="summary__price-wrapper__price">{{
+        cartItemsTotal() | currency: 'USD'
+      }}</span>
+    </div>
+    <div>
+      <div class="summary__price-wrapper">
+        <span class="summary__price-wrapper__label">Shipping</span>
+        <span class="summary__price-wrapper__price">{{
+          shippingPrice() | currency: 'USD'
+        }}</span>
+      </div>
+      <p-divider layout="horizontal" />
+    </div>
+    <div class="summary__price-wrapper">
+      <span class="summary__price-wrapper__label--total">Total</span>
+      <span class="summary__price-wrapper__price--total">{{
+        total() | currency: 'USD'
+      }}</span>
+    </div>
+  </div>
+
+  <div class="summary__buttons">
+    <p-button
+      [outlined]="true"
+      icon="pi pi-arrow-left"
+      label="Back to address"
+      routerLink="/order/address-information"
+    />
+    <p-button
+      (onClick)="submit()"
+      icon="pi pi-arrow-right"
+      iconPos="right"
+      label="Pay"
+    />
+  </div>
+</div>

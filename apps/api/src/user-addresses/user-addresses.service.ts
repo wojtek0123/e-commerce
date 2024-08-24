@@ -22,6 +22,7 @@ export class UserAddressesService {
         ...data,
         userId: +decodedAccessToken.sub,
       },
+      include: { country: true },
     });
   }
 
@@ -40,15 +41,18 @@ export class UserAddressesService {
     });
   }
 
-  findOne(id: number) {
-    return this.prisma.userAddress.findUnique({ where: { id } });
-  }
-
   update(id: UserAddress['id'], data: UserAddressUpdateDto) {
-    return this.prisma.userAddress.update({ where: { id }, data });
+    return this.prisma.userAddress.update({
+      where: { id },
+      data,
+      include: { country: true },
+    });
   }
 
   remove(id: number) {
-    return this.prisma.userAddress.delete({ where: { id } });
+    return this.prisma.userAddress.delete({
+      where: { id },
+      include: { country: true },
+    });
   }
 }

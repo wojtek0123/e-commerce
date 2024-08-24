@@ -39,15 +39,12 @@ export class CreditCardsController {
     return this.creditCardsService.create(authHeader, data);
   }
 
-  @Get(':id')
+  @Get()
   @UseGuards(AccessTokenGuard)
   @ApiBearerAuth()
   @ApiOkResponse({ type: CreditCard })
-  findOne(
-    @Headers('authorization') authHeader: string,
-    @Param('id') id: string,
-  ) {
-    return this.creditCardsService.findOne(authHeader, +id);
+  findOne(@Headers('authorization') authHeader: string) {
+    return this.creditCardsService.findOne(authHeader);
   }
 
   @Patch(':id')

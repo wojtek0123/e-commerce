@@ -5,6 +5,10 @@ import {
   BrowseEffect,
   browseFeature,
 } from '@e-commerce/client-web/browse/data-access';
+import {
+  OrderProcessEffects,
+  orderProcessFeature,
+} from '@e-commerce/client-web/cart/data-access';
 import { provideEffects } from '@ngrx/effects';
 import { provideState } from '@ngrx/store';
 
@@ -50,5 +54,16 @@ export const appRoutes: Route[] = [
       },
     ],
     providers: [provideState(bookFeature), provideEffects(BookEffects)],
+  },
+  {
+    path: 'order-process',
+    loadChildren: () =>
+      import('@e-commerce/client-web/cart/feature/order-process').then(
+        (r) => r.orderProcessRoutes,
+      ),
+    providers: [
+      provideState(orderProcessFeature),
+      provideEffects(OrderProcessEffects),
+    ],
   },
 ];

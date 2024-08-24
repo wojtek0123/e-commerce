@@ -1,0 +1,22 @@
+<lib-section-wrapper header="Shipping">
+  <div class="shipping-method__container">
+    @if (loading()) {
+      <div>Loading...</div>
+    } @else if (error()) {
+      <div>{{ error() }}</div>
+    } @else if (shippingMethods().length > 0) {
+      <!-- <div class="flex flex-column gap-3"> -->
+      @for (sm of shippingMethods(); track sm.id) {
+        <lib-order-process-detail-element
+          [price]="sm.price"
+          [value]="sm"
+          [label]="sm.name"
+          [isActive]="selectedShippingMethod.value?.id === sm.id"
+          (clickEvent)="selectShippingMethod($event)"
+        >
+          <span class="pi pi-truck"></span>
+        </lib-order-process-detail-element>
+      }
+    }
+  </div>
+</lib-section-wrapper>

@@ -29,11 +29,11 @@ export class CreditCardsService {
     return this._removeVulnerability(creditCard);
   }
 
-  async findOne(authHeader: string, id: number) {
+  async findOne(authHeader: string) {
     const userId = getUserIdFromAccessToken(authHeader);
 
     const creditCard = await this.prisma.creditCard.findUnique({
-      where: { id, userId },
+      where: { userId },
     });
 
     return this._removeVulnerability(creditCard);
@@ -61,7 +61,9 @@ export class CreditCardsService {
     return hash(data, 256);
   }
 
-  private _removeVulnerability(data: CreditCard) {
+  private _removeVulnerability(data: CreditCard | null) {
+    if (!data) return null;
+
     return omit(data, 'securityCode', 'expirationDate');
   }
 }
