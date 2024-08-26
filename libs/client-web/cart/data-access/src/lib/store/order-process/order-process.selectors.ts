@@ -8,6 +8,8 @@ export const {
   selectShippingMethodsError,
   selectShippingMethodsLoading,
   selectCreditCard,
+  selectSelectedPaymentMethod,
+  selectSelectedShippingMethod,
 } = orderProcessFeature;
 
 export const selectCreditCardData = createSelector(
@@ -47,4 +49,8 @@ export const selectCountriesLoading = createSelector(
 export const selectCountriesError = createSelector(
   selectCountries,
   (countries) => countries.error,
+);
+export const selectSelectedShippingMethodPrice = createSelector(
+  selectSelectedShippingMethod,
+  (selectedShippingMethod) => selectedShippingMethod?.price ?? 0,
 );

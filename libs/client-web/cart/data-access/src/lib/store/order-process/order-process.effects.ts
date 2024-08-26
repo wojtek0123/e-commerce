@@ -10,6 +10,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { orderProcessActions } from './order-process.actions';
 import { switchMap } from 'rxjs';
 import { mapResponse } from '@ngrx/operators';
+import { MessageService } from 'primeng/api';
 
 @Injectable()
 export class OrderProcessEffects {
@@ -18,6 +19,7 @@ export class OrderProcessEffects {
   private readonly userAddressApi = inject(UserAddressApiService);
   private readonly creditCardApi = inject(CreditCardApiService);
   private readonly countryApi = inject(CountryApiService);
+  private readonly messageService = inject(MessageService);
 
   getUserAddress = createEffect(() =>
     this.actions$.pipe(
@@ -48,6 +50,31 @@ export class OrderProcessEffects {
             },
             error: (error: ResponseError) => {
               return orderProcessActions.addUserAddressFailure({ error });
+            },
+          }),
+        ),
+      ),
+    ),
+  );
+
+  updateUserAddress = createEffect(() =>
+    this.actions$.pipe(
+      ofType(orderProcessActions.updateUserAddress),
+      switchMap(({ id, data }) =>
+        this.userAddressApi.updateUserAddress$(id, data).pipe(
+          mapResponse({
+            next: (userAddress) => {
+              return orderProcessActions.updateUserAddressSucess({
+                userAddress,
+              });
+            },
+            error: (error: ResponseError) => {
+              this.messageService.add({
+                detail: 'Error',
+                summary: error.message || 'Error occur while updating address',
+                severity: 'danger',
+              });
+              return orderProcessActions.updateUserAddressFailure({ error });
             },
           }),
         ),
@@ -88,6 +115,26 @@ export class OrderProcessEffects {
             },
             error: (error: ResponseError) => {
               return orderProcessActions.getCreditCardFailure({ error });
+            },
+          }),
+        ),
+      ),
+    ),
+  );
+
+  addCreditCard = createEffect(() =>
+    this.actions$.pipe(
+      ofType(orderProcessActions.addCreditCard),
+      switchMap(({ data }) =>
+        this.creditCardApi.create$(data).pipe(
+          mapResponse({
+            next: (creditCard) => {
+              return orderProcessActions.addCreditCardSucess({
+                creditCard,
+              });
+            },
+            error: (error: ResponseError) => {
+              return orderProcessActions.addCreditCardFailure({ error });
             },
           }),
         ),

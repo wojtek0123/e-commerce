@@ -1,3 +1,9 @@
+:host ::ng-deep {
+  .p-inputotp-input {
+    width: 3rem;
+  }
+}
+
 .payment-method {
   display: flex;
   flex-direction: column;
@@ -27,5 +33,9 @@
         gap: 1rem;
       }
     }
+  }
+
+  &__input-otp {
+    margin: 0 auto;
   }
 }

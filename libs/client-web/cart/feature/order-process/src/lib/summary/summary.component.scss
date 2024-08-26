@@ -1,3 +1,9 @@
+:host ::ng-deep {
+  .p-button {
+    width: 100%;
+  }
+}
+
 .summary {
   display: flex;
   flex-direction: column;
@@ -7,18 +13,23 @@
     display: flex;
     flex-direction: column;
     gap: 2rem;
+
+    &--smaller-gap {
+      gap: 1rem;
+      margin-top: 2rem;
+    }
   }
 
   &__price-wrapper {
     display: flex;
     align-items: center;
+    justify-content: flex-end;
     gap: 1rem;
 
     &__label {
       color: var(--text-color-secondary);
       font-weight: 600;
       font-size: 1.25rem;
-      width: 10rem;
 
       &--total {
         font-size: 1.75rem;
@@ -27,6 +38,8 @@
 
     &__value {
       font-size: 1.25rem;
+      width: 10rem;
+      text-align: end;
 
       &--total {
         font-size: 1.75rem;
@@ -34,10 +47,15 @@
     }
   }
 
-  &__buttons {
+  &__button {
+    margin-top: 2rem;
+  }
+
+  &__error {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     gap: 1rem;
+    color: var(--red-300);
+    font-size: 1.25rem;
   }
 }

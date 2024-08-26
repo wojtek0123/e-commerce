@@ -1,17 +1,23 @@
-import { Component, inject, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  OnInit,
+} from '@angular/core';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { Store } from '@ngrx/store';
 import {
   orderProcessActions,
   orderProcessSelectors,
 } from '@e-commerce/client-web/cart/data-access';
-import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { ShippingMethod } from '@e-commerce/client-web/shared/data-access';
 import { CurrencyPipe } from '@angular/common';
 import {
   OrderProcessDetailElementComponent,
   SectionWrapperComponent,
 } from '@e-commerce/client-web/cart/ui';
+import { SkeletonModule } from 'primeng/skeleton';
 
 @Component({
   selector: 'lib-shipping-method',
@@ -22,13 +28,18 @@ import {
     CurrencyPipe,
     OrderProcessDetailElementComponent,
     SectionWrapperComponent,
+    SkeletonModule,
   ],
   templateUrl: './shipping-method.component.html',
   styleUrl: './shipping-method.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ShippingMethodComponent implements OnInit {
   private readonly store = inject(Store);
 
+  public selectedShippingMethod = this.store.selectSignal(
+    orderProcessSelectors.selectSelectedShippingMethod,
+  );
   public shippingMethods = this.store.selectSignal(
     orderProcessSelectors.selectShippingMethods,
   );
@@ -39,16 +50,13 @@ export class ShippingMethodComponent implements OnInit {
     orderProcessSelectors.selectShippingMethodsError,
   );
 
-  protected selectedShippingMethod = new FormControl<ShippingMethod | null>(
-    null,
-    Validators.required,
-  );
-
   public ngOnInit(): void {
     this.store.dispatch(orderProcessActions.getShippingMethods());
   }
 
-  public selectShippingMethod(method: ShippingMethod) {
-    this.selectedShippingMethod.setValue(method);
+  public selectShippingMethod(shippingMethod: ShippingMethod) {
+    this.store.dispatch(
+      orderProcessActions.selectShippingMethod({ shippingMethod }),
+    );
   }
 }

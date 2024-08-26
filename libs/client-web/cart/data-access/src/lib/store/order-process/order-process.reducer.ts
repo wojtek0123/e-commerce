@@ -33,6 +33,37 @@ export const orderProcessFeature = createFeature({
       }),
     ),
     on(
+      orderProcessActions.updateUserAddress,
+      (state, { data }): OrderProcessState => {
+        return {
+          ...state,
+          userAddress: {
+            ...state.userAddress,
+            cache: state.userAddress.data,
+            data: {
+              id: state.userAddress.data!.id,
+              ...data,
+            },
+          },
+        };
+      },
+    ),
+    on(orderProcessActions.updateUserAddressSucess, (state) => ({
+      ...state,
+      userAddress: {
+        ...state.userAddress,
+        cache: null,
+      },
+    })),
+    on(orderProcessActions.updateUserAddressFailure, (state) => ({
+      ...state,
+      userAddress: {
+        ...state.userAddress,
+        data: state.userAddress.cache,
+        cache: null,
+      },
+    })),
+    on(
       orderProcessActions.getUserAddressFailure,
       orderProcessActions.addUserAddressFailure,
       (state, { error }): OrderProcessState => ({
@@ -44,32 +75,44 @@ export const orderProcessFeature = createFeature({
         },
       }),
     ),
-    on(orderProcessActions.getShippingMethods, (state) => ({
-      ...state,
-      shippingMethodsLoading: true,
-    })),
+    on(
+      orderProcessActions.getShippingMethods,
+      (state): OrderProcessState => ({
+        ...state,
+        shippingMethodsLoading: true,
+      }),
+    ),
     on(
       orderProcessActions.getShippingMethodsSuccess,
-      (state, { shippingMethods }) => ({
+      (state, { shippingMethods }): OrderProcessState => ({
         ...state,
         shippingMethodsLoading: false,
         shippingMethods,
+        // selectedShippingMethod: shippingMethods.at(0) ?? null,
       }),
     ),
-    on(orderProcessActions.getShippingMethodsFailure, (state, { error }) => ({
-      ...state,
-      shippingMethodsLoading: false,
-      shippingMethodsError: error.message,
-    })),
-    on(orderProcessActions.getCreditCard, (state) => ({
-      ...state,
-      creditCard: {
-        ...state.creditCard,
-        loading: true,
-      },
-    })),
+    on(
+      orderProcessActions.getShippingMethodsFailure,
+      (state, { error }): OrderProcessState => ({
+        ...state,
+        shippingMethodsLoading: false,
+        shippingMethodsError: error.message,
+      }),
+    ),
+    on(
+      orderProcessActions.getCreditCard,
+      orderProcessActions.addCreditCard,
+      (state): OrderProcessState => ({
+        ...state,
+        creditCard: {
+          ...state.creditCard,
+          loading: true,
+        },
+      }),
+    ),
     on(
       orderProcessActions.getCreditCardSuccess,
+      orderProcessActions.addCreditCardSucess,
       (state, { creditCard }): OrderProcessState => ({
         ...state,
         creditCard: {
@@ -77,23 +120,31 @@ export const orderProcessFeature = createFeature({
           data: creditCard,
           loading: false,
         },
+        selectedPaymentMethod: 'credit-card',
       }),
     ),
-    on(orderProcessActions.getCreditCardFailure, (state, { error }) => ({
-      ...state,
-      creditCard: {
-        ...state.creditCard,
-        loading: false,
-        error: error.message,
-      },
-    })),
-    on(orderProcessActions.getCountries, (state) => ({
-      ...state,
-      countries: {
-        ...state.countries,
-        loading: true,
-      },
-    })),
+    on(
+      orderProcessActions.getCreditCardFailure,
+      orderProcessActions.addCreditCardFailure,
+      (state, { error }): OrderProcessState => ({
+        ...state,
+        creditCard: {
+          ...state.creditCard,
+          loading: false,
+          error: error.message,
+        },
+      }),
+    ),
+    on(
+      orderProcessActions.getCountries,
+      (state): OrderProcessState => ({
+        ...state,
+        countries: {
+          ...state.countries,
+          loading: true,
+        },
+      }),
+    ),
     on(
       orderProcessActions.getCountriesSuccess,
       (state, { countries }): OrderProcessState => ({
@@ -114,6 +165,20 @@ export const orderProcessFeature = createFeature({
           error: error.message,
           loading: false,
         },
+      }),
+    ),
+    on(
+      orderProcessActions.selectPaymentMethod,
+      (state, { paymentMethod }): OrderProcessState => ({
+        ...state,
+        selectedPaymentMethod: paymentMethod,
+      }),
+    ),
+    on(
+      orderProcessActions.selectShippingMethod,
+      (state, { shippingMethod }): OrderProcessState => ({
+        ...state,
+        selectedShippingMethod: shippingMethod,
       }),
     ),
   ),
