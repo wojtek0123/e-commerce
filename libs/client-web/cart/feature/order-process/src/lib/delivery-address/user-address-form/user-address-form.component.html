@@ -207,5 +207,17 @@
     }
   </lib-form-field>
 
-  <p-button severity="secondary" label="Save" type="submit" />
+  <div class="user-address-form__buttons">
+    <p-button
+      [outlined]="true"
+      label="Cancel"
+      (onClick)="this.formType.set(null)"
+    />
+    <p-button
+      severity="secondary"
+      [loading]="loading()"
+      label="Save"
+      type="submit"
+    />
+  </div>
 </form>

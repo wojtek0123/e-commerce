@@ -1,4 +1,9 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  signal,
+} from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -33,8 +38,9 @@ import {
   ],
   templateUrl: './credit-card-form.component.html',
   styleUrl: './credit-card-form.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CreditCardFormComponent implements OnInit {
+export class CreditCardFormComponent {
   private readonly store = inject(Store);
 
   public form = new FormGroup({
@@ -53,8 +59,27 @@ export class CreditCardFormComponent implements OnInit {
   public error = this.store.selectSignal(
     orderProcessSelectors.selectCreditCardError,
   );
+  changeCreditCard = signal(false);
 
-  ngOnInit(): void {
-    this.store.dispatch(orderProcessActions.getCreditCard());
+  submit() {
+    this.submitted.set(true);
+
+    if (this.form.invalid) return;
+
+    if (this.changeCreditCard) {
+      this.changeCreditCard.set(false);
+    }
+
+    const { cardNumber, expirationDate, securityCode } = this.form.value;
+
+    this.store.dispatch(
+      orderProcessActions.addCreditCard({
+        data: {
+          number: cardNumber!,
+          expirationDate: expirationDate!,
+          securityCode: securityCode!,
+        },
+      }),
+    );
   }
 }

@@ -1,23 +1,32 @@
 <lib-section-wrapper header="Payment method">
-  <lib-order-process-detail-element
-    [price]="0"
-    [value]="payments()[0]"
-    [isActive]="selectedPaymentMethod.value === 'credit-card'"
-    (clickEvent)="selectPaymentMethod($event)"
-  >
-    <span class="pi pi-credit-card"></span>
-  </lib-order-process-detail-element>
+  @if (loading()) {
+    <p-skeleton width="100%" height="3rem" />
+    <p-skeleton width="100%" height="3rem" />
+    <p-skeleton width="100%" height="3rem" />
+  } @else {
+    <lib-order-process-detail-element
+      [price]="0"
+      [value]="payments()[0]"
+      [isActive]="selectedPaymentMethod() === payments()[0]"
+      (clickEvent)="selectPaymentMethod($event)"
+    >
+      <span class="pi pi-credit-card"></span>
+    </lib-order-process-detail-element>
 
-  @if (selectedPaymentMethod.value === 'credit-card') {
-    <lib-credit-card-form />
+    @if (selectedPaymentMethod() === 'credit-card') {
+      <lib-credit-card-form />
+    }
+
+    <lib-order-process-detail-element
+      [price]="0"
+      [value]="payments()[1]"
+      [isActive]="selectedPaymentMethod() === payments()[1]"
+      (clickEvent)="selectPaymentMethod($event)"
+    >
+      <span class="pi pi-wallet"></span>
+    </lib-order-process-detail-element>
+    @if (selectedPaymentMethod() === '6-digit-number') {
+      <p-inputOtp class="payment-method__input-otp" [length]="6" />
+    }
   }
-
-  <lib-order-process-detail-element
-    [price]="0"
-    [value]="payments()[1]"
-    [isActive]="selectedPaymentMethod.value === '6-digit-number'"
-    (clickEvent)="selectPaymentMethod($event)"
-  >
-    <span class="pi pi-wallet"></span>
-  </lib-order-process-detail-element>
 </lib-section-wrapper>

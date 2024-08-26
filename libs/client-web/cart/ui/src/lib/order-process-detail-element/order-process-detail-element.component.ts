@@ -1,4 +1,9 @@
-import { Component, input, output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  output,
+} from '@angular/core';
 import { CurrencyPipe, NgClass } from '@angular/common';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { CheckboxModule } from 'primeng/checkbox';
@@ -9,6 +14,7 @@ import { CheckboxModule } from 'primeng/checkbox';
   imports: [CurrencyPipe, RadioButtonModule, CheckboxModule, NgClass],
   templateUrl: './order-process-detail-element.component.html',
   styleUrl: './order-process-detail-element.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OrderProcessDetailElementComponent<T> {
   label = input<string>();

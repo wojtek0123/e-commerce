@@ -4,6 +4,7 @@ import {
   ShippingMethod,
   UserAddress,
 } from '@e-commerce/client-web/shared/data-access';
+import { PaymentMethod } from '../../models/payment-method.model';
 
 export interface OrderProcessState {
   shippingMethods: ShippingMethod[];
@@ -18,12 +19,15 @@ export interface OrderProcessState {
     data: UserAddress | null;
     loading: boolean;
     error: string | string[] | null;
+    cache: UserAddress | null;
   };
   countries: {
     data: Country[];
     loading: boolean;
     error: string | string[] | null;
   };
+  selectedShippingMethod: ShippingMethod | null;
+  selectedPaymentMethod: PaymentMethod | null;
 }
 
 export const initialOrderProcessState: OrderProcessState = {
@@ -31,6 +35,7 @@ export const initialOrderProcessState: OrderProcessState = {
     data: null,
     loading: false,
     error: null,
+    cache: null,
   },
   countries: {
     data: [],
@@ -45,4 +50,6 @@ export const initialOrderProcessState: OrderProcessState = {
     loading: false,
     error: null,
   },
+  selectedPaymentMethod: null,
+  selectedShippingMethod: null,
 };

@@ -7,6 +7,7 @@ import {
   CreateUserAddressBody,
 } from '@e-commerce/client-web/shared/data-access';
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
+import { PaymentMethod } from '../../models/payment-method.model';
 
 export const orderProcessActions = createActionGroup({
   source: 'order-process',
@@ -17,14 +18,27 @@ export const orderProcessActions = createActionGroup({
     addUserAddress: props<{ data: CreateUserAddressBody }>(),
     addUserAddressSucess: props<{ userAddress: UserAddress }>(),
     addUserAddressFailure: props<{ error: ResponseError }>(),
+    updateUserAddress: props<{
+      id: UserAddress['id'];
+      data: CreateUserAddressBody & { country: Country };
+    }>(),
+    updateUserAddressSucess: props<{ userAddress: UserAddress }>(),
+    updateUserAddressFailure: props<{ error: ResponseError }>(),
 
     getShippingMethods: emptyProps(),
     getShippingMethodsSuccess: props<{ shippingMethods: ShippingMethod[] }>(),
     getShippingMethodsFailure: props<{ error: ResponseError }>(),
+    selectShippingMethod: props<{ shippingMethod: ShippingMethod }>(),
 
     getCreditCard: emptyProps(),
-    getCreditCardSuccess: props<{ creditCard: CreditCardBase }>(),
+    getCreditCardSuccess: props<{ creditCard: CreditCardBase | null }>(),
     getCreditCardFailure: props<{ error: ResponseError }>(),
+    addCreditCard: props<{
+      data: { number: string; expirationDate: string; securityCode: string };
+    }>(),
+    addCreditCardSucess: props<{ creditCard: CreditCardBase }>(),
+    addCreditCardFailure: props<{ error: ResponseError }>(),
+    selectPaymentMethod: props<{ paymentMethod: PaymentMethod }>(),
 
     getCountries: emptyProps(),
     getCountriesSuccess: props<{ countries: Country[] }>(),

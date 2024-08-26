@@ -3,56 +3,29 @@ import {
   Component,
   computed,
   inject,
+  OnInit,
   signal,
 } from '@angular/core';
-import { ShoppingSessionApiService } from '@e-commerce/client-web/shared/data-access';
-import { take } from 'rxjs';
-import { RouterLink } from '@angular/router';
-import { ShippingMethod } from '@e-commerce/client-web/shared/data-access';
-import { AsyncPipe, CurrencyPipe, NgClass } from '@angular/common';
+import { CurrencyPipe } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
-import { DividerModule } from 'primeng/divider';
-import { RadioButtonModule } from 'primeng/radiobutton';
-import {
-  FormControl,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { AccordionModule } from 'primeng/accordion';
-import {
-  ErrorMessageComponent,
-  FormFieldComponent,
-} from '@e-commerce/client-web/shared/ui';
-import { InputMaskModule } from 'primeng/inputmask';
 import { Store } from '@ngrx/store';
 import {
   cartSelectors,
+  orderProcessActions,
   orderProcessSelectors,
 } from '@e-commerce/client-web/cart/data-access';
 import { DeliveryAddressComponent } from '../delivery-address/delivery-address.component';
 import { PaymentMethodComponent } from '../payment-method/payment-method.component';
 import { ShippingMethodComponent } from '../shipping-method/shipping-method.component';
+import { DividerModule } from 'primeng/divider';
 
 @Component({
   selector: 'lib-summary',
   standalone: true,
   imports: [
-    InputMaskModule,
     CurrencyPipe,
     ButtonModule,
-    RouterLink,
     DividerModule,
-    AsyncPipe,
-    RadioButtonModule,
-    ReactiveFormsModule,
-    AccordionModule,
-    FormsModule,
-    ReactiveFormsModule,
-    NgClass,
-    ErrorMessageComponent,
-    FormFieldComponent,
     DeliveryAddressComponent,
     PaymentMethodComponent,
     ShippingMethodComponent,
@@ -61,76 +34,47 @@ import { ShippingMethodComponent } from '../shipping-method/shipping-method.comp
   styleUrl: './summary.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SummaryComponent {
+export class SummaryComponent implements OnInit {
   private readonly store = inject(Store);
-  private shoppingSessionApi = inject(ShoppingSessionApiService);
 
-  loading = signal(false);
-
-  userAddress = this.store.selectSignal(
-    orderProcessSelectors.selectUserAddress,
+  public cartItemsTotal = this.store.selectSignal(cartSelectors.selectTotal);
+  public shippingMethodPrice = this.store.selectSignal(
+    orderProcessSelectors.selectSelectedShippingMethodPrice,
   );
-  userAddressLoading = this.store.selectSignal(
-    orderProcessSelectors.selectUserAddressLoading,
-  );
-  userAddressError = this.store.selectSignal(
-    orderProcessSelectors.selectUserAddressError,
+  public total = computed(
+    () => this.cartItemsTotal() + this.shippingMethodPrice(),
   );
 
-  shippingMethods = this.store.selectSignal(
-    orderProcessSelectors.selectShippingMethods,
+  public userAddress = this.store.selectSignal(
+    orderProcessSelectors.selectUserAddressData,
   );
-  shippingMethodsError = this.store.selectSignal(
-    orderProcessSelectors.selectShippingMethodsError,
+  public shippingMethod = this.store.selectSignal(
+    orderProcessSelectors.selectSelectedShippingMethod,
   );
-  shippingMethodsLoading = this.store.selectSignal(
-    orderProcessSelectors.selectShippingMethodsLoading,
+  public paymentMethod = this.store.selectSignal(
+    orderProcessSelectors.selectSelectedPaymentMethod,
   );
-
-  selectedShippingMethod = new FormControl<ShippingMethod | null>(
-    null,
-    Validators.required,
+  public initialLoading = computed(
+    () =>
+      this.store.selectSignal(
+        orderProcessSelectors.selectCreditCardLoading,
+      )() ||
+      this.store.selectSignal(
+        orderProcessSelectors.selectUserAddressLoading,
+      )() ||
+      this.store.selectSignal(
+        orderProcessSelectors.selectShippingMethodsLoading,
+      )(),
   );
-  selectedPaymentMethod = new FormControl<string | null>(
-    null,
-    Validators.required,
-  );
-
-  cartItemsTotal = this.store.selectSignal(cartSelectors.selectTotal);
-  shippingPrice = computed(() => this.selectedShippingMethod.value?.price ?? 0);
-  total = computed(() => this.cartItemsTotal() + this.shippingPrice());
 
   protected submitted = signal(false);
-  protected form = new FormGroup({
-    cardNumber: new FormControl<string | null>(null, Validators.required),
-    expirationDate: new FormControl<string | null>(null, Validators.required),
-    securityCode: new FormControl<string | null>(null, Validators.required),
-  });
 
-  submit() {
-    // if (!this.addressInformation() || !this.shippingMethod()) return;
-    //
-    // this.orderDetailsApi
-    //   .create({
-    //     shippingMethodId: this.shippingMethod()!.id,
-    //     userAddressId: this.addressInformation()!.id,
-    //   })
-    //   .pipe(take(1))
-    //   .subscribe({
-    //     next: async () => {
-    //       this.loading.set(false);
-    //       this.deleteShoppingSession();
-    //       await this.router.navigate(['/order/payment-status']);
-    //     },
-    //     error: (resError: ResponseError) => {
-    //       this.loading.set(false);
-    //       console.error(resError.error.message);
-    //     },
-    //   });
-    //
+  ngOnInit(): void {
+    this.store.dispatch(orderProcessActions.getCreditCard());
   }
 
-  private deleteShoppingSession() {
-    this.shoppingSessionApi.delete().pipe(take(1)).subscribe();
+  submit() {
+    this.submitted.set(true);
+    console.log('pay');
   }
 }

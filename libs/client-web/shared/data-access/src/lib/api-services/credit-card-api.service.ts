@@ -9,7 +9,7 @@ export class CreditCardApiService {
   private http = inject(HttpClient);
 
   get$() {
-    return this.http.get<CreditCardBase>(`${this.url}/credit-cards`);
+    return this.http.get<CreditCardBase | null>(`${this.url}/credit-cards`);
   }
 
   create$(body: {
