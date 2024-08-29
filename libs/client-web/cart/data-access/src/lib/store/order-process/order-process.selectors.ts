@@ -99,3 +99,17 @@ export const selectShippingMethodsError = createSelector(
   selectShipping,
   (shipping) => shipping.error,
 );
+
+export const selectIsCreditCardInvalid = createSelector(
+  selectCreditCardData,
+  selectSelectedPaymentMethod,
+  (creditCard, selectedPaymentMethod) =>
+    !creditCard && selectedPaymentMethod === 'credit-card',
+);
+
+export const selectIsPaymentInvalid = createSelector(
+  selectIsSixDigitCodeInvalid,
+  selectIsCreditCardInvalid,
+  (isSixDigitCodeInvalid, isCreditCardInvalid) =>
+    isSixDigitCodeInvalid || isCreditCardInvalid,
+);

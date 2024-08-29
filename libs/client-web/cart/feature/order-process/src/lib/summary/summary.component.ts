@@ -18,6 +18,7 @@ import { DeliveryAddressComponent } from '../delivery-address/delivery-address.c
 import { PaymentMethodComponent } from '../payment-method/payment-method.component';
 import { ShippingMethodComponent } from '../shipping-method/shipping-method.component';
 import { DividerModule } from 'primeng/divider';
+import { selectSelectedPaymentMethod } from 'libs/client-web/cart/data-access/src/lib/store/order-process/order-process.selectors';
 
 @Component({
   selector: 'lib-summary',
@@ -70,12 +71,17 @@ export class SummaryComponent implements OnInit {
     orderProcessSelectors.selectIsSixDigitCodeInvalid,
   );
   public isDeliveryAddressUpdating = signal(false);
+  public creditCard = this.store.selectSignal(
+    orderProcessSelectors.selectCreditCardData,
+  );
+  public isPaymentInvalid = this.store.selectSignal(
+    orderProcessSelectors.selectIsPaymentInvalid,
+  );
 
   private errors = computed(() => [
-    this.isSixDigitCodeInvalid,
-    !!this.userAddress,
-    !!this.shippingMethod,
-    !!this.paymentMethod,
+    this.isPaymentInvalid(),
+    !this.userAddress(),
+    !this.shippingMethod(),
   ]);
 
   protected submitted = signal(false);
