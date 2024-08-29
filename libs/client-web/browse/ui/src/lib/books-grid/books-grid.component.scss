@@ -1,0 +1,96 @@
+.books-grid {
+  display: flex;
+  gap: 1rem;
+  container-name: books-view;
+  container-type: inline-size;
+
+  &__information {
+    width: 100%;
+    margin-top: 3rem;
+    grid-column: 1 / -1;
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+  }
+
+  &__content {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+@container books-view (min-width: 550px) {
+  .books-grid {
+    &__content {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+}
+
+@container books-view (min-width: 880px) {
+  .books-grid {
+    &__content {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+}
+
+@media (min-width: 1280px) {
+  .books-grid {
+    gap: 1.5rem;
+
+    &__content {
+      gap: 1.5rem;
+    }
+  }
+}
+
+@container books-view (min-width: 1280px) {
+  .books-grid {
+    &__content {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+}
+
+@container books-view (min-width: 1760px) {
+  .books-grid {
+    &__content {
+      grid-template-columns: repeat(5, 1fr);
+    }
+  }
+}
+
+@container books-view (min-width: 2200px) {
+  .books-grid {
+    &__content {
+      grid-template-columns: repeat(6, 1fr);
+    }
+  }
+}
+
+@container books-view (min-width: 2800px) {
+  .books-grid {
+    &__content {
+      grid-template-columns: repeat(7, 1fr);
+    }
+  }
+}
+
+@container books-view (min-width: 3300px) {
+  .books-grid {
+    &__content {
+      grid-template-columns: repeat(8, 1fr);
+    }
+  }
+}
+
+@container books-view (min-width: 3700px) {
+  .books-grid {
+    &__content {
+      grid-template-columns: repeat(10, 1fr);
+    }
+  }
+}

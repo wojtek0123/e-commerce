@@ -17,10 +17,10 @@
                 "onlyDependOnLibsWithTags": [
                   "type:feature",
                   "type:ui",
-                  "type:utils",
+                  "type:util",
                   "type:data-access",
                   "type:shared-data-access",
-                  "type:shared-utils",
+                  "type:shared-util",
                   "type:shared-ui"
                 ]
               },
@@ -29,75 +29,72 @@
                 "onlyDependOnLibsWithTags": [
                   "type:ui",
                   "type:data-access",
-                  "type:utils",
+                  "type:util",
                   "type:shared-data-access",
-                  "type:shared-utils",
+                  "type:shared-util",
                   "type:shared-ui"
                 ]
               },
               {
                 "sourceTag": "type:data-access",
                 "onlyDependOnLibsWithTags": [
-                  "type:utils",
+                  "type:util",
                   "type:shared-data-access",
-                  "type:shared-utils"
+                  "type:shared-util"
                 ]
               },
               {
                 "sourceTag": "type:shared-data-access",
                 "onlyDependOnLibsWithTags": [
-                  "type:utils",
-                  "type:shared-utils",
+                  "type:util",
+                  "type:shared-util",
                   "type:shared-data-access"
                 ]
               },
               {
                 "sourceTag": "type:ui",
                 "onlyDependOnLibsWithTags": [
-                  "type:utils",
+                  "type:util",
                   "type:data-access",
                   "type:shared-data-access",
                   "type:shared-ui",
-                  "type:shared-utils"
+                  "type:shared-util"
                 ]
               },
               {
                 "sourceTag": "type:shared-ui",
                 "onlyDependOnLibsWithTags": [
-                  "type:utils",
-                  "type:shared-utils",
+                  "type:util",
+                  "type:shared-util",
                   "type:data-access",
                   "type:shared-data-access"
                 ]
               },
               {
-                "sourceTag": "type:utils",
-                "onlyDependOnLibsWithTags": ["type:shared-utils"]
+                "sourceTag": "type:util",
+                "onlyDependOnLibsWithTags": ["type:shared-util"]
               },
               {
-                "sourceTag": "type:shared-utils",
+                "sourceTag": "type:shared-util",
                 "onlyDependOnLibsWithTags": []
               },
               {
                 "sourceTag": "type:shell",
                 "onlyDependOnLibsWithTags": [
-                  "type:shell",
                   "type:feature",
-                  "type:ui",
                   "type:data-access",
-                  "type:utils",
+                  "type:util",
                   "type:shared-data-access",
-                  "type:shared-utils",
-                  "type:shared-ui"
+                  "type:shared-util"
                 ]
               },
               {
-                "sourceTag": "scope:client-web-app",
-                "onlyDependOnLibsWithTags": ["scope:client-web-app"]
+                "sourceTag": "scope:client-web",
+                "onlyDependOnLibsWithTags": ["scope:client-web"]
               },
               {
-                "sourceTag": "scope:server",
-                "onlyDependOnLibsWithTags": ["scope:server"]
+                "sourceTag": "scope:api",
+                "onlyDependOnLibsWithTags": ["scope:api"]
               }
             ]
           }

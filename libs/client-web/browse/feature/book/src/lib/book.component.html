@@ -1,0 +1,148 @@
+@if (loading()) {
+  <div>Loading...</div>
+} @else if (error()) {
+  <div>{{ error() }}</div>
+} @else if (book()) {
+  <div class="book">
+    <div class="book__image-wrapper">
+      <img
+        class="book__image-wrapper__image"
+        [src]="book()?.coverImage"
+        [alt]="book()?.title + ' cover image'"
+      />
+    </div>
+    <div class="book__content">
+      <div class="book__content-wrapper">
+        <p-breadcrumb [model]="breadcrumbs()" />
+        <h3 class="book__title">
+          {{ book()?.title }}
+        </h3>
+        <div class="book__authors">
+          @for (author of book()?.authors; track author.id) {
+            <div class="book__authors__item">
+              {{ author.name }}
+            </div>
+          }
+        </div>
+        @if (book()?.tag) {
+          <p-chip [label]="book()?.tag" />
+        }
+        <div class="book__price-container price-container-default">
+          <span class="book__price-container__price">
+            {{ book()?.price | currency: 'USD' }}
+          </span>
+          <div class="book__price-container__quantity">
+            <p-inputNumber
+              [showButtons]="true"
+              [formControl]="amount"
+              [size]="6"
+              [min]="1"
+              (onBlur)="onBlurInput()"
+              buttonLayout="horizontal"
+              spinnerMode="horizontal"
+              inputId="integeronly"
+              decrementButtonClass="p-button-text p-button-secondary"
+              incrementButtonClass="p-button-text p-button-secondary"
+              incrementButtonIcon="pi pi-plus"
+              decrementButtonIcon="pi pi-minus"
+            />
+            <div
+              [pTooltip]="
+                amount.invalid ? 'Make sure that amount is correct' : ''
+              "
+              tooltipPosition="top"
+              tooltipStyleClass="min-w-max"
+            >
+              <p-button
+                label="Add to cart"
+                icon="pi pi-cart-plus"
+                size="large"
+                [disabled]="amount.invalid"
+                [loading]="loading()"
+                (onClick)="addToCart()"
+              />
+            </div>
+          </div>
+          <span class="book__price-container__available-prices">
+            {{
+              availableQuantity() !== 1
+                ? 'There are ' + availableQuantity() + ' pieces left'
+                : 'Hurry up! Only one piece left'
+            }}
+          </span>
+        </div>
+        <div class="flex flex-column gap-2">
+          <lib-detail-row
+            label="Category"
+            [value]="book()?.category?.name ?? ''"
+          />
+          @if (book()?.pages) {
+            <lib-detail-row label="Pages" [value]="book()?.pages ?? 0" />
+          }
+          @if (book()?.language) {
+            <lib-detail-row label="Language" [value]="book()?.language ?? ''" />
+          }
+          @if (book()?.publishedDate) {
+            <lib-detail-row
+              label="Publish date"
+              [value]="book()?.publishedDate | date"
+            />
+          }
+        </div>
+      </div>
+      <p-panel header="Description" [toggleable]="true">
+        <p class="line-height-3 description">
+          {{ book()?.description }}
+        </p>
+      </p-panel>
+    </div>
+
+    <div class="price-container-extended">
+      <div class="price-column">
+        <span class="price-column__price">
+          {{ book()?.price | currency: 'USD' }}
+        </span>
+        <div class="price-column__quantity">
+          <p-inputNumber
+            [showButtons]="true"
+            [formControl]="amount"
+            [size]="6"
+            [min]="1"
+            [max]="availableQuantity()"
+            (onBlur)="onBlurInput()"
+            buttonLayout="horizontal"
+            spinnerMode="horizontal"
+            inputId="integeronly"
+            decrementButtonClass="p-button-text p-button-secondary"
+            incrementButtonClass="p-button-text p-button-secondary"
+            incrementButtonIcon="pi pi-plus"
+            decrementButtonIcon="pi pi-minus"
+          />
+          <span class="book__price-container__available-prices">
+            {{
+              availableQuantity() !== 1
+                ? 'There are ' + availableQuantity() + ' pieces left'
+                : 'Hurry up! Only one piece left'
+            }}
+          </span>
+        </div>
+        <div
+          [pTooltip]="amount.invalid ? 'Make sure that amount is correct' : ''"
+          tooltipPosition="top"
+          tooltipStyleClass="min-w-max"
+          class="price-column__add-btn"
+        >
+          <p-button
+            label="Add to cart"
+            icon="pi pi-cart-plus"
+            class="price-column__add-btn"
+            size="large"
+            [disabled]="amount.invalid"
+            [loading]="loading()"
+            (onClick)="addToCart()"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+}

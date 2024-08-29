@@ -1,0 +1,223 @@
+<form [formGroup]="form" (ngSubmit)="submit()" class="user-address-form">
+  <div class="user-address-form__row">
+    <lib-form-field label="First name" [isRequired]="true">
+      <input
+        slot="input"
+        class="w-full"
+        pInputText
+        id="firstname"
+        [ngClass]="{
+          'ng-invalid ng-dirty':
+            form.controls.firstName.invalid &&
+            (form.controls.firstName.dirty || submitted()),
+        }"
+        formControlName="firstName"
+      />
+      @if (
+        form.controls.firstName.invalid &&
+        (form.controls.firstName.dirty || submitted())
+      ) {
+        <lib-error-message />
+      }
+    </lib-form-field>
+    <lib-form-field label="Last name" [isRequired]="true">
+      <input
+        slot="input"
+        class="w-full"
+        pInputText
+        id="lastname"
+        [ngClass]="{
+          'ng-invalid ng-dirty':
+            form.controls.lastName.invalid &&
+            (form.controls.lastName.dirty || submitted()),
+        }"
+        formControlName="lastName"
+      />
+      @if (
+        form.controls.lastName.invalid &&
+        (form.controls.lastName.dirty || submitted())
+      ) {
+        <lib-error-message />
+      }
+    </lib-form-field>
+  </div>
+  <div class="user-address-form__row">
+    <lib-form-field label="Street" [isRequired]="true">
+      <input
+        slot="input"
+        pInputText
+        id="street"
+        [ngClass]="{
+          'ng-invalid ng-dirty':
+            form.controls.street.invalid &&
+            (form.controls.street.dirty || submitted()),
+        }"
+        formControlName="street"
+      />
+      @if (
+        form.controls.street.invalid &&
+        (form.controls.street.dirty || submitted())
+      ) {
+        <lib-error-message />
+      }
+    </lib-form-field>
+    <lib-form-field
+      label="Home number"
+      [isRequired]="true"
+      class="user-address-form__row__number"
+    >
+      <input
+        slot="input"
+        pInputText
+        id="home-number"
+        [ngClass]="{
+          'ng-invalid ng-dirty':
+            form.controls.homeNumber.invalid &&
+            (form.controls.homeNumber.dirty || submitted()),
+        }"
+        formControlName="homeNumber"
+      />
+      @if (
+        form.controls.homeNumber.invalid &&
+        (form.controls.homeNumber.dirty || submitted())
+      ) {
+        <lib-error-message />
+      }
+    </lib-form-field>
+    <lib-form-field label="House number" class="user-address-form__row__number">
+      <input
+        slot="input"
+        pInputText
+        id="house-number"
+        [ngClass]="{
+          'ng-invalid ng-dirty':
+            form.controls.houseNumber.invalid &&
+            (form.controls.houseNumber.dirty || submitted()),
+        }"
+        formControlName="houseNumber"
+      />
+      @if (
+        form.controls.houseNumber.invalid &&
+        (form.controls.houseNumber.dirty || submitted())
+      ) {
+        <lib-error-message />
+      }
+    </lib-form-field>
+  </div>
+  <div class="user-address-form__row">
+    <lib-form-field
+      label="Post code"
+      [isRequired]="true"
+      [isLoading]="loading()"
+      labelSkeletonWidth="7rem"
+      inputSkeletonWidth="14rem"
+    >
+      <input
+        slot="input"
+        pInputText
+        id="postcode"
+        class="w-20rem"
+        [ngClass]="{
+          'ng-invalid ng-dirty':
+            form.controls.postcode.invalid &&
+            (form.controls.postcode.dirty || submitted()),
+        }"
+        formControlName="postcode"
+      />
+      @if (
+        form.controls.postcode.invalid &&
+        (form.controls.postcode.dirty || submitted())
+      ) {
+        <lib-error-message />
+      }
+    </lib-form-field>
+    <lib-form-field
+      label="City"
+      [isRequired]="true"
+      [isLoading]="loading()"
+      labelSkeletonWidth="5rem"
+    >
+      <input
+        slot="input"
+        pInputText
+        id="city"
+        [ngClass]="{
+          'ng-invalid ng-dirty':
+            form.controls.city.invalid &&
+            (form.controls.city.dirty || submitted()),
+        }"
+        formControlName="city"
+      />
+      @if (
+        form.controls.city.invalid && (form.controls.city.dirty || submitted())
+      ) {
+        <lib-error-message />
+      }
+    </lib-form-field>
+  </div>
+  <lib-form-field
+    label="Country"
+    [isRequired]="true"
+    class="user-address-form__country"
+  >
+    <p-dropdown
+      slot="input"
+      class="w-full"
+      formControlName="country"
+      class="user-address-form__country"
+      [options]="countries()"
+      [ngClass]="{
+        'ng-invalid ng-dirty':
+          form.controls.country.invalid &&
+          (form.controls.country.dirty || submitted()),
+      }"
+      optionLabel="name"
+      [showClear]="true"
+    />
+    @if (
+      form.controls.country.invalid &&
+      (form.controls.country.dirty || submitted())
+    ) {
+      <lib-error-message />
+    }
+  </lib-form-field>
+  <lib-form-field
+    label="Phone"
+    [isRequired]="true"
+    [isLoading]="loading()"
+    labelSkeletonWidth="8rem"
+    inputSkeletonWidth="20rem"
+  >
+    <input
+      slot="input"
+      pInputText
+      id="phone"
+      class="w-20rem"
+      [ngClass]="{
+        'ng-invalid ng-dirty':
+          form.controls.phone.invalid &&
+          (form.controls.phone.dirty || submitted()),
+      }"
+      formControlName="phone"
+    />
+    @if (
+      form.controls.phone.invalid && (form.controls.phone.dirty || submitted())
+    ) {
+      <lib-error-message />
+    }
+  </lib-form-field>
+
+  <div class="user-address-form__buttons">
+    <p-button
+      [outlined]="true"
+      label="Cancel"
+      (onClick)="this.formType.set(null)"
+    />
+    <p-button
+      severity="secondary"
+      [loading]="loading()"
+      label="Save"
+      type="submit"
+    />
+  </div>
+</form>

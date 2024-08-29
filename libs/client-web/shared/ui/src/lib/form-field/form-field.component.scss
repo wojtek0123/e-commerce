@@ -1,0 +1,25 @@
+.skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  &__label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  &__input {
+    margin-top: 0.25rem;
+  }
+}
+
+.host {
+  width: 100%;
+}

@@ -1,0 +1,13 @@
+<button
+  (click)="clickEvent.emit(value())"
+  class="order-process-detail-element"
+  [ngClass]="{ active: isActive() }"
+>
+  <label [for]="value()" class="order-process-detail-element__label__text">
+    <ng-content />
+    <span>{{ label() ?? value() }}</span>
+  </label>
+  <span class="order-process-detail-element__price">
+    {{ price() === 0 ? 'Free' : (price() | currency: 'USD') }}
+  </span>
+</button>

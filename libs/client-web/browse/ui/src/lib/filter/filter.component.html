@@ -1,0 +1,41 @@
+<p-accordionTab>
+  <ng-template pTemplate="header">
+    <div class="header">
+      <span class="font-bold white-space-nowrap">{{ header() }}</span>
+      <p-badge
+        [value]="selectedItemsCount()"
+        class="ml-2"
+        styleClass="p-badge-secondary"
+      />
+      <p-button
+        class="ml-3"
+        icon="pi pi-trash"
+        [text]="true"
+        (onClick)="
+          $event.stopImmediatePropagation(); clearFilterSelectedItems()
+        "
+      />
+    </div>
+  </ng-template>
+
+  <ng-content />
+
+  @if (!templateRef()) {
+    <div class="filter">
+      <ng-content select="input" />
+      <div class="filter__items">
+        @for (item of items(); track $index) {
+          <p-checkbox
+            #checkbox
+            [ngModel]="selectedItems()"
+            (ngModelChange)="changeSelectedItems($event, item)"
+            [label]="parseName()?.(item)"
+            [value]="item"
+          />
+        } @empty {
+          <div class="filter__items__message">Not found!</div>
+        }
+      </div>
+    </div>
+  }
+</p-accordionTab>

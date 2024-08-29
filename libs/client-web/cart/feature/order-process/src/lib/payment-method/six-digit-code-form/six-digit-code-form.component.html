@@ -1,0 +1,15 @@
+<p-inputOtp
+  [formControl]="sixDigitNumberControl"
+  class="six-digit-code-form"
+  [length]="6"
+/>
+@if (
+  (sixDigitNumberControl.getError('minlength') ||
+    sixDigitNumberControl.getError('required')) &&
+  sixDigitNumberControl.dirty
+) {
+  <lib-error-message
+    class="six-digit-code-form__error"
+    message="Invalid code"
+  />
+}

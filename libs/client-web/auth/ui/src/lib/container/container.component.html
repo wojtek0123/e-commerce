@@ -1,0 +1,24 @@
+<div class="container">
+  <div class="container__form-wrapper">
+    <div class="container__form-wrapper_form">
+      <h2 class="container__form-wrapper_form_header">{{ header() }}</h2>
+      <div class="container__form-wrapper_form_subtitle">
+        <span>{{ subtitle() }}</span>
+        <a
+          [routerLink]="[link().url]"
+          [queryParams]="queryParams()"
+          class="container__form-wrapper_form_link"
+          >{{ link().label }}</a
+        >
+      </div>
+    </div>
+    <ng-content />
+  </div>
+  <div class="container__image-wrapper">
+    <img
+      class="container__image-wrapper_image"
+      src="assets/auth-books.jpg"
+      alt="book store"
+    />
+  </div>
+</div>

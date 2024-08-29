@@ -1,0 +1,32 @@
+<lib-section-wrapper header="Payment method">
+  @if (loading()) {
+    <p-skeleton width="100%" height="3rem" />
+    <p-skeleton width="100%" height="3rem" />
+    <p-skeleton width="100%" height="3rem" />
+  } @else {
+    <lib-order-process-detail-element
+      [price]="0"
+      [value]="payments()[0]"
+      [isActive]="selectedPaymentMethod() === payments()[0]"
+      (clickEvent)="selectPaymentMethod($event)"
+    >
+      <span class="pi pi-credit-card"></span>
+    </lib-order-process-detail-element>
+
+    @if (selectedPaymentMethod() === 'credit-card') {
+      <lib-credit-card-form />
+    }
+
+    <lib-order-process-detail-element
+      [price]="0"
+      [value]="payments()[1]"
+      [isActive]="selectedPaymentMethod() === payments()[1]"
+      (clickEvent)="selectPaymentMethod($event)"
+    >
+      <span class="pi pi-wallet"></span>
+    </lib-order-process-detail-element>
+    @if (selectedPaymentMethod() === '6-digit-code') {
+      <lib-six-digit-code-form />
+    }
+  }
+</lib-section-wrapper>
