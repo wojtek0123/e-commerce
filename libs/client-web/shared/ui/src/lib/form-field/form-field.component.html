@@ -1,0 +1,16 @@
+@if (isLoading()) {
+  <div class="skeleton">
+    <p-skeleton [width]="labelSkeletonWidth()" height="1rem" />
+    <p-skeleton [width]="inputSkeletonWidth()" height="2.2rem" />
+  </div>
+} @else {
+  <div class="form-field">
+    <label class="form-field__label">
+      <span>{{ label() }} {{ isRequired() ? '*' : '' }}</span>
+      <ng-content select="[slot='input']" />
+    </label>
+    <div class="form-field__input">
+      <ng-content select="[slot='error-message'], lib-error-message" />
+    </div>
+  </div>
+}

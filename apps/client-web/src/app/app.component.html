@@ -1,0 +1,12 @@
+<p-toast />
+<app-nav [isAuthenticated]="isAuthenticated()" (logoutEvent)="logout()">
+  <app-categories
+    [categories]="(categories$ | async) ?? []"
+    [loading]="!!(loading$ | async)"
+    [error]="error$ | async"
+  />
+  <lib-cart-sidebar />
+</app-nav>
+<div class="wrapper">
+  <router-outlet />
+</div>

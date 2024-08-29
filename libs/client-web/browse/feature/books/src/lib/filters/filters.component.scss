@@ -1,0 +1,17 @@
+:host ::ng-deep {
+  .p-listbox .p-listbox-header .p-listbox-filter {
+    padding: 0.5rem;
+  }
+
+  .p-accordion .p-accordion-content {
+    padding: 0;
+  }
+}
+
+.filters {
+  position: sticky;
+  top: calc(var(--header-height) + 2rem);
+  height: calc(100svh - var(--header-height) - 4rem);
+  overflow-y: auto;
+  width: 100%;
+}

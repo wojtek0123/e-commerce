@@ -1,0 +1,30 @@
+<div class="books">
+  <lib-filters />
+  <div class="books__content">
+    <div class="books__content-bar">
+      <p-breadcrumb [model]="breadcrumbs()" />
+      <lib-search class="books__content-bar__input" />
+    </div>
+    <lib-active-filters [activeFilters]="(activeFilters$ | async) ??[]" (clearFilterEvent)="clearFilter($event)" (clearFiltersEvent)="clearFilters()" />
+
+    @let books = books$ | async;
+    @let loading = loading$ | async;
+    @let error = error$ | async;
+    @let count = count$ | async;
+    @let total = total$ | async;
+    @let first = first$ | async;
+    @let size = size$ | async;
+    @let pendingBookIds = pendingBookIds$ | async;
+    <lib-books-grid [books]="books ?? []" [pendingBookIds]="pendingBookIds ?? []" [loading]="!!loading" [error]="error" (addToCartEvent)="addToCart($event)" />
+      <div class="card flex justify-content-center">
+      @if (books?.length) {
+        <p-paginator
+          (onPageChange)="onPageChange($event, size)"
+          [rows]="size"
+          [totalRecords]="total"
+          [rowsPerPageOptions]="sizes()"
+        />
+      }
+      </div>
+  </div>
+</div>

@@ -1,0 +1,77 @@
+<div class="summary">
+  <div class="summary__section">
+    <lib-delivery-address (isUpdatingEvent)="setDeliveryAddressState($event)" />
+    <lib-shipping-method />
+    <lib-payment-method [submitted]="submitted()" />
+  </div>
+
+  <div class="summary__section summary__section--smaller-gap">
+    <div class="summary__price-wrapper">
+      <span class="summary__price-wrapper__label">Books</span>
+      <span class="summary__price-wrapper__value">
+        {{ cartItemsTotal() | currency: 'USD' }}
+      </span>
+    </div>
+    <div>
+      <div class="summary__price-wrapper">
+        <span class="summary__price-wrapper__label">Shipping</span>
+        <span class="summary__price-wrapper__value">
+          {{ shippingMethodPrice() | currency: 'USD' }}
+        </span>
+      </div>
+    </div>
+    <p-divider layout="horizontal" />
+    <div class="summary__price-wrapper">
+      <span
+        class="summary__price-wrapper__label summary__price-wrapper__label--total"
+        >Total</span
+      >
+      <span
+        class="summary__price-wrapper__value summary__price-wrapper__value--total"
+      >
+        {{ total() | currency: 'USD' }}
+      </span>
+    </div>
+  </div>
+
+  <div>
+    @if (!userAddress()) {
+      <div class="summary__error">
+        <span class="pi pi-exclamation-triangle"></span>
+        <div>Fill in delivery address form!</div>
+      </div>
+    }
+    @if (isDeliveryAddressUpdating()) {
+      <div class="summary__error">
+        <span class="pi pi-exclamation-triangle"></span>
+        <span>Delivery address is updating. Save changes or cancel.</span>
+      </div>
+    }
+    @if (!shippingMethod()) {
+      <div class="summary__error">
+        <span class="pi pi-exclamation-triangle"></span>
+        <span>Select shipping method!</span>
+      </div>
+    }
+    @if (!paymentMethod()) {
+      <div class="summary__error">
+        <span class="pi pi-exclamation-triangle"></span>
+        <span>Select payment method!</span>
+      </div>
+    }
+    @if (isSixDigitCodeInvalid()) {
+      <div class="summary__error">
+        <span class="pi pi-exclamation-triangle"></span>
+        <span>Six digit code is invalid</span>
+      </div>
+    }
+  </div>
+
+  <p-button
+    class="summary__button"
+    (onClick)="submit()"
+    [loading]="initialLoading()"
+    icon="pi pi-dollar"
+    label="Pay"
+  />
+</div>

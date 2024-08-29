@@ -1,0 +1,26 @@
+<div class="active-filters">
+  <p-button
+    size="small"
+    class="min-w-max"
+    label="Clear filters"
+    severity="contrast"
+    (click)="clearFiltersEvent.emit()"
+  />
+  @for (activeFilter of activeFilters(); track activeFilter.id) {
+    <div class="active-filters__item">
+      <span>
+        {{
+          (activeFilter.label ?? activeFilter.id.split('_')[0]) +
+            ': ' +
+            activeFilter.name
+        }}
+      </span>
+      <p-button
+        icon="pi pi-times"
+        size="small"
+        [text]="true"
+        (click)="clearFilterEvent.emit(activeFilter)"
+      />
+    </div>
+  }
+</div>

@@ -1,0 +1,21 @@
+<div class="p-input-icon-left search">
+  <i class="pi pi-search"></i>
+  @let search = search$ | async;
+  <input
+    #searchInput
+    [value]="search"
+    type="text"
+    pInputText
+    class="search__input"
+    placeholder="Search by title"
+    (input)="setSearch($event)"
+  />
+  @if (searchInput.value.length) {
+    <p-button
+      class="search__trash"
+      icon="pi pi-trash"
+      [text]="true"
+      (onClick)="clearInput()"
+    />
+  }
+</div>

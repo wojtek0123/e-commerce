@@ -1,0 +1,36 @@
+<div class="cart-item">
+  <div class="book-details">
+    <img
+      class="book-details__image"
+      [src]="item().book.coverImage"
+      [alt]="item().book.title + ' cover image'"
+    />
+    <div class="book-details__header">
+      <span class="book-details__header-title">
+        {{ item().book.title }}
+      </span>
+
+      <div clas="book-details__header-authors">
+        @for (author of item().book.authors; track author.id) {
+          <span class="book-details__header-authors-item">
+            {{ author.name }}
+          </span>
+        }
+      </div>
+    </div>
+  </div>
+  <div class="cart-details">
+    <span class="cart-details__price">
+      {{ item().book.price | currency: 'USD' }}
+    </span>
+    <div class="cart-details__quantity">
+      @if (item().quantity === 1) {
+        <p-button (onClick)="remove()" [text]="true" icon="pi pi-trash" />
+      } @else {
+        <p-button (onClick)="decrease()" [text]="true" icon="pi pi-minus" />
+      }
+      <span>{{ item().quantity }}</span>
+      <p-button (onClick)="increase()" [text]="true" icon="pi pi-plus" />
+    </div>
+  </div>
+</div>

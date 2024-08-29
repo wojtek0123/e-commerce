@@ -1,0 +1,20 @@
+{
+  "name": "client-web-auth-utils",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/client-web/auth/utils/src",
+  "prefix": "lib",
+  "projectType": "library",
+  "tags": ["scope:client-web", "domain:auth", "type:util"],
+  "targets": {
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "libs/client-web/auth/utils/jest.config.ts"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

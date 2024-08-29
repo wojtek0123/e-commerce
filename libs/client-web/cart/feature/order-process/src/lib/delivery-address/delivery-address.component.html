@@ -1,0 +1,57 @@
+<lib-section-wrapper header="Address information">
+  @if (loading() && !this.userAddress()) {
+    <div class="loading">
+      <div class="loading__row">
+        <p-skeleton width="10rem" height="2rem" />
+        <p-skeleton width="12rem" height="2rem" />
+      </div>
+      <div class="loading__row">
+        <p-skeleton width="8rem" height="2rem" />
+        <p-skeleton width="15rem" height="2rem" />
+      </div>
+      <div class="loading__row">
+        <p-skeleton width="12rem" height="2rem" />
+        <p-skeleton width="20rem" height="2rem" />
+      </div>
+    </div>
+  } @else if (error()) {
+    <div>{{ error() }}</div>
+  }
+  @if (userAddress() && !formType() && !loading()) {
+    <div class="delivery-address__wrapper">
+      <span class="delivery-address__wrapper__title">Phone</span>
+      <span class="delivery-address__wrapper__content">{{
+        userAddress()?.phone
+      }}</span>
+    </div>
+    <div class="delivery-address__wrapper">
+      <span class="delivery-address__wrapper__title">Name</span>
+      <span class="delivery-address__wrapper__content">
+        {{ userAddress()?.firstName }}
+        {{ userAddress()?.lastName }}
+      </span>
+    </div>
+    <div class="delivery-address__wrapper">
+      <span class="delivery-address__wrapper__title">Address</span>
+      <div class="container">
+        <span class="delivery-address__wrapper__content">
+          {{ userAddress()?.street }}
+          {{ userAddress()?.homeNumber }}
+          {{
+            userAddress()?.houseNumber ? '/ ' + userAddress()?.houseNumber : ''
+          }}, {{ userAddress()?.postcode }}, {{ userAddress()?.city }},
+          {{ userAddress()?.country?.name }}
+        </span>
+      </div>
+    </div>
+    <p-button
+      [outlined]="true"
+      class="delivery-address__update-button"
+      label="Update"
+      (onClick)="updateDeliveryAddress()"
+    />
+  }
+  @if ((!userAddress() || !!formType()) && !loading()) {
+    <lib-user-address-form [(formType)]="formType" />
+  }
+</lib-section-wrapper>
