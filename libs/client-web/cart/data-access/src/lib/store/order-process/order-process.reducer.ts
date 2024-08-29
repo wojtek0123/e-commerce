@@ -14,8 +14,8 @@ export const orderProcessFeature = createFeature({
       orderProcessActions.addUserAddress,
       (state): OrderProcessState => ({
         ...state,
-        userAddress: {
-          ...state.userAddress,
+        address: {
+          ...state.address,
           loading: true,
         },
       }),
@@ -25,8 +25,8 @@ export const orderProcessFeature = createFeature({
       orderProcessActions.addUserAddressSucess,
       (state, { userAddress }): OrderProcessState => ({
         ...state,
-        userAddress: {
-          ...state.userAddress,
+        address: {
+          ...state.address,
           data: userAddress,
           loading: false,
         },
@@ -35,13 +35,19 @@ export const orderProcessFeature = createFeature({
     on(
       orderProcessActions.updateUserAddress,
       (state, { data }): OrderProcessState => {
+        if (!state.address.data) {
+          return {
+            ...state,
+          };
+        }
+
         return {
           ...state,
-          userAddress: {
-            ...state.userAddress,
-            cache: state.userAddress.data,
+          address: {
+            ...state.address,
+            cache: state.address.data,
             data: {
-              id: state.userAddress.data!.id,
+              id: state.address.data.id,
               ...data,
             },
           },
@@ -51,15 +57,15 @@ export const orderProcessFeature = createFeature({
     on(orderProcessActions.updateUserAddressSucess, (state) => ({
       ...state,
       userAddress: {
-        ...state.userAddress,
+        ...state.address,
         cache: null,
       },
     })),
     on(orderProcessActions.updateUserAddressFailure, (state) => ({
       ...state,
       userAddress: {
-        ...state.userAddress,
-        data: state.userAddress.cache,
+        ...state.address,
+        data: state.address.cache,
         cache: null,
       },
     })),
@@ -68,8 +74,8 @@ export const orderProcessFeature = createFeature({
       orderProcessActions.addUserAddressFailure,
       (state, { error }): OrderProcessState => ({
         ...state,
-        userAddress: {
-          ...state.userAddress,
+        address: {
+          ...state.address,
           error: error.message,
           loading: false,
         },
@@ -79,24 +85,33 @@ export const orderProcessFeature = createFeature({
       orderProcessActions.getShippingMethods,
       (state): OrderProcessState => ({
         ...state,
-        shippingMethodsLoading: true,
+        shipping: {
+          ...state.shipping,
+          loading: true,
+        },
       }),
     ),
     on(
       orderProcessActions.getShippingMethodsSuccess,
       (state, { shippingMethods }): OrderProcessState => ({
         ...state,
-        shippingMethodsLoading: false,
-        shippingMethods,
-        // selectedShippingMethod: shippingMethods.at(0) ?? null,
+        shipping: {
+          ...state.shipping,
+          loading: false,
+          data: shippingMethods,
+          selectedShippingMethod: shippingMethods.at(0) ?? null,
+        },
       }),
     ),
     on(
       orderProcessActions.getShippingMethodsFailure,
       (state, { error }): OrderProcessState => ({
         ...state,
-        shippingMethodsLoading: false,
-        shippingMethodsError: error.message,
+        shipping: {
+          ...state.shipping,
+          loading: false,
+          error: error.message,
+        },
       }),
     ),
     on(
@@ -104,9 +119,12 @@ export const orderProcessFeature = createFeature({
       orderProcessActions.addCreditCard,
       (state): OrderProcessState => ({
         ...state,
-        creditCard: {
-          ...state.creditCard,
-          loading: true,
+        payment: {
+          ...state.payment,
+          creditCard: {
+            ...state.payment.creditCard,
+            loading: true,
+          },
         },
       }),
     ),
@@ -115,12 +133,15 @@ export const orderProcessFeature = createFeature({
       orderProcessActions.addCreditCardSucess,
       (state, { creditCard }): OrderProcessState => ({
         ...state,
-        creditCard: {
-          ...state.creditCard,
-          data: creditCard,
-          loading: false,
+        payment: {
+          ...state.payment,
+          creditCard: {
+            ...state.payment.creditCard,
+            data: creditCard,
+            loading: false,
+          },
+          selectedPaymentMethod: 'credit-card',
         },
-        selectedPaymentMethod: 'credit-card',
       }),
     ),
     on(
@@ -128,10 +149,13 @@ export const orderProcessFeature = createFeature({
       orderProcessActions.addCreditCardFailure,
       (state, { error }): OrderProcessState => ({
         ...state,
-        creditCard: {
-          ...state.creditCard,
-          loading: false,
-          error: error.message,
+        payment: {
+          ...state.payment,
+          creditCard: {
+            ...state.payment.creditCard,
+            loading: false,
+            error: error.message,
+          },
         },
       }),
     ),
@@ -139,9 +163,12 @@ export const orderProcessFeature = createFeature({
       orderProcessActions.getCountries,
       (state): OrderProcessState => ({
         ...state,
-        countries: {
-          ...state.countries,
-          loading: true,
+        address: {
+          ...state.address,
+          countries: {
+            ...state.address.countries,
+            loading: true,
+          },
         },
       }),
     ),
@@ -149,10 +176,13 @@ export const orderProcessFeature = createFeature({
       orderProcessActions.getCountriesSuccess,
       (state, { countries }): OrderProcessState => ({
         ...state,
-        countries: {
-          ...state.countries,
-          data: countries,
-          loading: false,
+        address: {
+          ...state.address,
+          countries: {
+            ...state.address.countries,
+            data: countries,
+            loading: false,
+          },
         },
       }),
     ),
@@ -160,10 +190,13 @@ export const orderProcessFeature = createFeature({
       orderProcessActions.getCountriesFailure,
       (state, { error }): OrderProcessState => ({
         ...state,
-        countries: {
-          ...state.countries,
-          error: error.message,
-          loading: false,
+        address: {
+          ...state.address,
+          countries: {
+            ...state.address.countries,
+            error: error.message,
+            loading: false,
+          },
         },
       }),
     ),
@@ -171,14 +204,30 @@ export const orderProcessFeature = createFeature({
       orderProcessActions.selectPaymentMethod,
       (state, { paymentMethod }): OrderProcessState => ({
         ...state,
-        selectedPaymentMethod: paymentMethod,
+        payment: {
+          ...state.payment,
+          selectedPaymentMethod: paymentMethod,
+        },
       }),
     ),
     on(
       orderProcessActions.selectShippingMethod,
       (state, { shippingMethod }): OrderProcessState => ({
         ...state,
-        selectedShippingMethod: shippingMethod,
+        shipping: {
+          ...state.shipping,
+          selectedShippingMethod: shippingMethod,
+        },
+      }),
+    ),
+    on(
+      orderProcessActions.setSixDigitCode,
+      (state, { code }): OrderProcessState => ({
+        ...state,
+        payment: {
+          ...state.payment,
+          sixDigitCode: code,
+        },
       }),
     ),
   ),

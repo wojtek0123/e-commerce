@@ -39,6 +39,7 @@ export const orderProcessActions = createActionGroup({
     addCreditCardSucess: props<{ creditCard: CreditCardBase }>(),
     addCreditCardFailure: props<{ error: ResponseError }>(),
     selectPaymentMethod: props<{ paymentMethod: PaymentMethod }>(),
+    setSixDigitCode: props<{ code: string | null }>(),
 
     getCountries: emptyProps(),
     getCountriesSuccess: props<{ countries: Country[] }>(),

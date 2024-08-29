@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   inject,
+  input,
   signal,
 } from '@angular/core';
 import { RadioButtonModule } from 'primeng/radiobutton';
@@ -24,6 +25,7 @@ import {
 } from '@e-commerce/client-web/cart/data-access';
 import { InputOtpModule } from 'primeng/inputotp';
 import { SkeletonModule } from 'primeng/skeleton';
+import { SixDigitCodeFormComponent } from './six-digit-code-form/six-digit-code-form.component';
 
 @Component({
   selector: 'lib-payment-method',
@@ -39,6 +41,7 @@ import { SkeletonModule } from 'primeng/skeleton';
     SectionWrapperComponent,
     InputOtpModule,
     SkeletonModule,
+    SixDigitCodeFormComponent,
   ],
   templateUrl: './payment-method.component.html',
   styleUrl: './payment-method.component.scss',
@@ -53,8 +56,8 @@ export class PaymentMethodComponent {
   public creditCard = this.store.selectSignal(
     orderProcessSelectors.selectCreditCardData,
   );
-  public submitted = signal(false);
-  public payments = signal<PaymentMethod[]>(['credit-card', '6-digit-number']);
+  public submitted = input.required<boolean>();
+  public payments = signal<PaymentMethod[]>(['credit-card', '6-digit-code']);
   public loading = this.store.selectSignal(
     orderProcessSelectors.selectCreditCardLoading,
   );

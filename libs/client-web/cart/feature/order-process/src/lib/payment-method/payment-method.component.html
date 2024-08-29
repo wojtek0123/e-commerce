@@ -25,8 +25,8 @@
     >
       <span class="pi pi-wallet"></span>
     </lib-order-process-detail-element>
-    @if (selectedPaymentMethod() === '6-digit-number') {
-      <p-inputOtp class="payment-method__input-otp" [length]="6" />
+    @if (selectedPaymentMethod() === '6-digit-code') {
+      <lib-six-digit-code-form />
     }
   }
 </lib-section-wrapper>
