@@ -1,8 +1,8 @@
 <div class="summary">
   <div class="summary__section">
-    <lib-delivery-address />
+    <lib-delivery-address (isUpdatingEvent)="setDeliveryAddressState($event)" />
     <lib-shipping-method />
-    <lib-payment-method />
+    <lib-payment-method [submitted]="submitted()" />
   </div>
 
   <div class="summary__section summary__section--smaller-gap">
@@ -39,7 +39,13 @@
       @if (!userAddress()) {
         <div class="summary__error">
           <span class="pi pi-exclamation-triangle"></span>
-          <div>Fill in delivery address!</div>
+          <div>Fill in delivery address form!</div>
+        </div>
+      }
+      @if (isDeliveryAddressUpdating()) {
+        <div class="summary__error">
+          <span class="pi pi-exclamation-triangle"></span>
+          <span>Delivery address is updating. Save changes or cancel.</span>
         </div>
       }
       @if (!shippingMethod()) {
@@ -52,6 +58,12 @@
         <div class="summary__error">
           <span class="pi pi-exclamation-triangle"></span>
           <span>Select payment method!</span>
+        </div>
+      }
+      @if (isSixDigitCodeInvalid()) {
+        <div class="summary__error">
+          <span class="pi pi-exclamation-triangle"></span>
+          <span>Six digit code is invalid</span>
         </div>
       }
     </div>

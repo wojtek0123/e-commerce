@@ -7,49 +7,61 @@ import {
 import { PaymentMethod } from '../../models/payment-method.model';
 
 export interface OrderProcessState {
-  shippingMethods: ShippingMethod[];
-  shippingMethodsLoading: boolean;
-  shippingMethodsError: string | string[] | null;
-  creditCard: {
-    data: CreditCardBase | null;
-    loading: boolean;
-    error: string[] | string | null;
-  };
-  userAddress: {
+  address: {
     data: UserAddress | null;
     loading: boolean;
     error: string | string[] | null;
     cache: UserAddress | null;
+    countries: {
+      data: Country[];
+      loading: boolean;
+      error: string | null;
+    };
   };
-  countries: {
-    data: Country[];
+  shipping: {
+    data: ShippingMethod[];
     loading: boolean;
-    error: string | string[] | null;
+    error: string | null;
+    selectedShippingMethod: ShippingMethod | null;
   };
-  selectedShippingMethod: ShippingMethod | null;
-  selectedPaymentMethod: PaymentMethod | null;
+  payment: {
+    creditCard: {
+      data: CreditCardBase | null;
+      loading: boolean;
+      error: string | null;
+      isEditing: boolean;
+    };
+    sixDigitCode: string | null;
+    selectedPaymentMethod: PaymentMethod | null;
+  };
 }
 
 export const initialOrderProcessState: OrderProcessState = {
-  userAddress: {
+  address: {
     data: null,
     loading: false,
     error: null,
     cache: null,
+    countries: {
+      data: [],
+      loading: false,
+      error: null,
+    },
   },
-  countries: {
+  shipping: {
     data: [],
     loading: false,
     error: null,
+    selectedShippingMethod: null,
   },
-  shippingMethods: [],
-  shippingMethodsLoading: false,
-  shippingMethodsError: null,
-  creditCard: {
-    data: null,
-    loading: false,
-    error: null,
+  payment: {
+    creditCard: {
+      data: null,
+      loading: false,
+      error: null,
+      isEditing: false,
+    },
+    sixDigitCode: null,
+    selectedPaymentMethod: null,
   },
-  selectedPaymentMethod: null,
-  selectedShippingMethod: null,
 };

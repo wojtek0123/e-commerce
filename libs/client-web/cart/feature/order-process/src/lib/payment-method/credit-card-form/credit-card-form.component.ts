@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   inject,
+  output,
   signal,
 } from '@angular/core';
 import {
@@ -60,6 +61,8 @@ export class CreditCardFormComponent {
     orderProcessSelectors.selectCreditCardError,
   );
   changeCreditCard = signal(false);
+
+  changeCreditCardUpdated = output<boolean>();
 
   submit() {
     this.submitted.set(true);

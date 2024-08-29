@@ -66,6 +66,17 @@ export class SummaryComponent implements OnInit {
         orderProcessSelectors.selectShippingMethodsLoading,
       )(),
   );
+  public isSixDigitCodeInvalid = this.store.selectSignal(
+    orderProcessSelectors.selectIsSixDigitCodeInvalid,
+  );
+  public isDeliveryAddressUpdating = signal(false);
+
+  private errors = computed(() => [
+    this.isSixDigitCodeInvalid,
+    !!this.userAddress,
+    !!this.shippingMethod,
+    !!this.paymentMethod,
+  ]);
 
   protected submitted = signal(false);
 
@@ -75,6 +86,13 @@ export class SummaryComponent implements OnInit {
 
   submit() {
     this.submitted.set(true);
+
+    if (this.errors().some((error) => error)) return;
+
     console.log('pay');
+  }
+
+  setDeliveryAddressState(state: boolean) {
+    this.isDeliveryAddressUpdating.set(state);
   }
 }

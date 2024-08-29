@@ -186,6 +186,7 @@ model ShippingMethod {
   id           Int            @id @default(autoincrement())
   name         String
   price        Float
+  deliveryTime String
   orderDetails OrderDetails[]
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt

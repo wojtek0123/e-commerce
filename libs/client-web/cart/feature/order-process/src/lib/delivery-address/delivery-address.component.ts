@@ -1,8 +1,10 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  effect,
   inject,
   OnInit,
+  output,
   signal,
 } from '@angular/core';
 import { Store } from '@ngrx/store';
@@ -41,13 +43,22 @@ export class DeliveryAddressComponent implements OnInit {
     orderProcessSelectors.selectUserAddressData,
   );
 
-  formType = signal<'add' | 'update' | null>(!this.userAddress ? 'add' : null);
+  public formType = signal<'add' | 'update' | null>(
+    !this.userAddress ? 'add' : null,
+  );
+  public isUpdatingEvent = output<boolean>();
 
-  ngOnInit(): void {
+  constructor() {
+    effect(() => {
+      this.isUpdatingEvent.emit(this.formType() === 'update');
+    });
+  }
+
+  public ngOnInit(): void {
     this.store.dispatch(orderProcessActions.getUserAddress());
   }
 
-  updateDeliveryAddress() {
+  public updateDeliveryAddress() {
     this.formType.set('update');
   }
 }
