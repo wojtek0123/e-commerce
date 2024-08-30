@@ -18,7 +18,6 @@ import { DeliveryAddressComponent } from '../delivery-address/delivery-address.c
 import { PaymentMethodComponent } from '../payment-method/payment-method.component';
 import { ShippingMethodComponent } from '../shipping-method/shipping-method.component';
 import { DividerModule } from 'primeng/divider';
-import { selectSelectedPaymentMethod } from 'libs/client-web/cart/data-access/src/lib/store/order-process/order-process.selectors';
 
 @Component({
   selector: 'lib-summary',

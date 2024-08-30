@@ -34,38 +34,40 @@
     </div>
   </div>
 
-  <div>
-    @if (!userAddress()) {
-      <div class="summary__error">
-        <span class="pi pi-exclamation-triangle"></span>
-        <div>Fill in delivery address form!</div>
-      </div>
-    }
-    @if (isDeliveryAddressUpdating()) {
-      <div class="summary__error">
-        <span class="pi pi-exclamation-triangle"></span>
-        <span>Delivery address is updating. Save changes or cancel.</span>
-      </div>
-    }
-    @if (!shippingMethod()) {
-      <div class="summary__error">
-        <span class="pi pi-exclamation-triangle"></span>
-        <span>Select shipping method!</span>
-      </div>
-    }
-    @if (!paymentMethod()) {
-      <div class="summary__error">
-        <span class="pi pi-exclamation-triangle"></span>
-        <span>Select payment method!</span>
-      </div>
-    }
-    @if (isSixDigitCodeInvalid()) {
-      <div class="summary__error">
-        <span class="pi pi-exclamation-triangle"></span>
-        <span>Six digit code is invalid</span>
-      </div>
-    }
-  </div>
+  @if (submitted()) {
+    <div>
+      @if (!userAddress()) {
+        <div class="summary__error">
+          <span class="pi pi-exclamation-triangle"></span>
+          <div>Fill in delivery address form!</div>
+        </div>
+      }
+      @if (isDeliveryAddressUpdating()) {
+        <div class="summary__error">
+          <span class="pi pi-exclamation-triangle"></span>
+          <span>Delivery address is updating. Save changes or cancel.</span>
+        </div>
+      }
+      @if (!shippingMethod()) {
+        <div class="summary__error">
+          <span class="pi pi-exclamation-triangle"></span>
+          <span>Select shipping method!</span>
+        </div>
+      }
+      @if (!paymentMethod()) {
+        <div class="summary__error">
+          <span class="pi pi-exclamation-triangle"></span>
+          <span>Select payment method!</span>
+        </div>
+      }
+      @if (isSixDigitCodeInvalid()) {
+        <div class="summary__error">
+          <span class="pi pi-exclamation-triangle"></span>
+          <span>Six digit code is invalid</span>
+        </div>
+      }
+    </div>
+  }
 
   <p-button
     class="summary__button"
