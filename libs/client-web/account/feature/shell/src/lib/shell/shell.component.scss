@@ -1,0 +1,25 @@
+.shell {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+}
+
+.router {
+  width: 100%;
+}
+
+.menu {
+  display: none;
+}
+
+@media (min-width: 1280px) {
+  .menu {
+    display: block;
+  }
+}
+
+@media (min-width: 1920px) {
+  .shell {
+    gap: 2rem;
+  }
+}

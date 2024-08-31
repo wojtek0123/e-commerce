@@ -1,0 +1,42 @@
+.orders {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.order-details {
+  display: none;
+}
+
+@media (min-width: 1536px) {
+  .orders {
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .sidebar {
+    display: none;
+  }
+
+  .order-details {
+    display: flex;
+    width: 100%;
+
+    &__info {
+      text-align: center;
+      margin-top: 3rem;
+      font-size: 2rem;
+    }
+  }
+}
+
+@media (min-width: 1920px) {
+  .orders {
+    gap: 2rem;
+  }
+}
+
+@media (min-width: 2800px) {
+  .orders {
+    grid-template-columns: 1fr 0.7fr;
+  }
+}

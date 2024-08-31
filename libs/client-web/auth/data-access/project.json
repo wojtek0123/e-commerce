@@ -1,5 +1,5 @@
 {
-  "name": "auth-data-access",
+  "name": "client-web-auth-data-access",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/client-web/auth/data-access/src",
   "prefix": "lib",
