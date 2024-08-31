@@ -76,6 +76,9 @@ export class SummaryComponent implements OnInit {
   public isPaymentInvalid = this.store.selectSignal(
     orderProcessSelectors.selectIsPaymentInvalid,
   );
+  public checkoutLoading = this.store.selectSignal(
+    orderProcessSelectors.selectCheckoutLoading,
+  );
 
   private errors = computed(() => [
     this.isPaymentInvalid(),
@@ -95,6 +98,7 @@ export class SummaryComponent implements OnInit {
     if (this.errors().some((error) => error)) return;
 
     console.log('pay');
+    this.store.dispatch(orderProcessActions.checkout());
   }
 
   setDeliveryAddressState(state: boolean) {

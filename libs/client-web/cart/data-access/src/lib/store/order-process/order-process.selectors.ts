@@ -1,7 +1,8 @@
 import { createSelector } from '@ngrx/store';
 import { orderProcessFeature } from './order-process.reducer';
 
-const { selectAddress, selectPayment, selectShipping } = orderProcessFeature;
+const { selectAddress, selectPayment, selectShipping, selectCheckout } =
+  orderProcessFeature;
 
 const selectCreditCard = createSelector(
   selectPayment,
@@ -112,4 +113,9 @@ export const selectIsPaymentInvalid = createSelector(
   selectIsCreditCardInvalid,
   (isSixDigitCodeInvalid, isCreditCardInvalid) =>
     isSixDigitCodeInvalid || isCreditCardInvalid,
+);
+
+export const selectCheckoutLoading = createSelector(
+  selectCheckout,
+  (checkout) => checkout.loading,
 );

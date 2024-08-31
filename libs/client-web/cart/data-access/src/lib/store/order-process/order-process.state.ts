@@ -7,6 +7,10 @@ import {
 import { PaymentMethod } from '../../models/payment-method.model';
 
 export interface OrderProcessState {
+  checkout: {
+    loading: boolean;
+    error: string | null;
+  };
   address: {
     data: UserAddress | null;
     loading: boolean;
@@ -37,6 +41,10 @@ export interface OrderProcessState {
 }
 
 export const initialOrderProcessState: OrderProcessState = {
+  checkout: {
+    loading: false,
+    error: null,
+  },
   address: {
     data: null,
     loading: false,

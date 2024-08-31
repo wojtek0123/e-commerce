@@ -5,6 +5,7 @@ import {
   CreditCardBase,
   Country,
   CreateUserAddressBody,
+  OrderDetails,
 } from '@e-commerce/client-web/shared/data-access';
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
 import { PaymentMethod } from '../../models/payment-method.model';
@@ -44,5 +45,9 @@ export const orderProcessActions = createActionGroup({
     getCountries: emptyProps(),
     getCountriesSuccess: props<{ countries: Country[] }>(),
     getCountriesFailure: props<{ error: ResponseError }>(),
+
+    checkout: emptyProps(),
+    checkoutSuccess: props<{ orderDetailsId: OrderDetails['id'] }>(),
+    checkoutFailure: props<{ error: ResponseError }>(),
   },
 });

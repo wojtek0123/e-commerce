@@ -17,19 +17,29 @@
     ],
     "sharedGlobals": ["{workspaceRoot}/.github/workflows/ci.yml"]
   },
-  "nxCloudAccessToken": "ZWZlNmM4ODUtNGVmYy00NjQ5LTg2YjYtZjk2YWMyYTM4NGU1fHJlYWQtd3JpdGU=",
+  "nxCloudAccessToken": "NmQzZmRmZjMtOTZiZi00YTliLTk3YWEtNTQxOWZjODZhM2YzfHJlYWQtd3JpdGU=",
   "targetDefaults": {
     "@angular-devkit/build-angular:application": {
       "cache": true,
       "dependsOn": ["^build"],
       "inputs": ["production", "^production"]
     },
-    "e2e": { "inputs": ["default", "^production"], "cache": true },
+    "e2e": {
+      "inputs": ["default", "^production"],
+      "cache": true
+    },
     "@nx/jest:jest": {
       "cache": true,
       "inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js"],
-      "options": { "passWithNoTests": true },
-      "configurations": { "ci": { "ci": true, "codeCoverage": true } },
+      "options": {
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      },
       "testEnvironment": "@happy-dom/jest-environment"
     },
     "@nx/eslint:lint": {
@@ -73,9 +83,13 @@
       "style": "scss",
       "unitTestRunner": "jest"
     },
-    "@nx/angular:library": { "linter": "eslint", "unitTestRunner": "jest" },
-    "@nx/angular:component": { "style": "scss" }
+    "@nx/angular:library": {
+      "linter": "eslint",
+      "unitTestRunner": "jest"
+    },
+    "@nx/angular:component": {
+      "style": "scss"
+    }
   },
-  "nxCloudAccessToken": "NmQzZmRmZjMtOTZiZi00YTliLTk3YWEtNTQxOWZjODZhM2YzfHJlYWQtd3JpdGU=",
   "useInferencePlugins": false
 }
