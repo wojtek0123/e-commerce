@@ -230,5 +230,32 @@ export const orderProcessFeature = createFeature({
         },
       }),
     ),
+    on(
+      orderProcessActions.checkout,
+      (state): OrderProcessState => ({
+        ...state,
+        checkout: {
+          ...state.checkout,
+          loading: true,
+        },
+      }),
+    ),
+    on(
+      orderProcessActions.checkoutFailure,
+      (state, { error }): OrderProcessState => ({
+        ...state,
+        checkout: {
+          ...state.checkout,
+          loading: false,
+          error: error.message,
+        },
+      }),
+    ),
+    on(
+      orderProcessActions.checkoutSuccess,
+      (): OrderProcessState => ({
+        ...initialOrderProcessState,
+      }),
+    ),
   ),
 });

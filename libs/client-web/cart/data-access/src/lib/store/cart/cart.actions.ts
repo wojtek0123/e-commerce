@@ -36,5 +36,7 @@ export const cartActions = createActionGroup({
     syncDatabaseFailure: props<{ error: ResponseError }>(),
 
     clearCart: emptyProps(),
+    clearCartSuccess: emptyProps(),
+    clearCartFailure: props<{ error: ResponseError }>(),
   },
 });

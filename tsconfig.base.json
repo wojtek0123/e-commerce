@@ -54,6 +54,9 @@
       "@e-commerce/client-web/cart/feature/order-process": [
         "libs/client-web/cart/feature/order-process/src/index.ts"
       ],
+      "@e-commerce/client-web/cart/feature/payment-status": [
+        "libs/client-web/cart/feature/payment-status/src/index.ts"
+      ],
       "@e-commerce/client-web/cart/ui": [
         "libs/client-web/cart/ui/src/index.ts"
       ],

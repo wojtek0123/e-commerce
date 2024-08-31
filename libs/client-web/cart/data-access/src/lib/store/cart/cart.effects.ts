@@ -74,7 +74,7 @@ export class CartEffect {
                   summary: 'Error',
                   detail: Array.isArray(message)
                     ? message.join(', ')
-                    : message ?? 'Error has occur while adding book to cart',
+                    : (message ?? 'Error has occur while adding book to cart'),
                   severity: 'error',
                 });
                 return cartActions.addBookToCartFailure({ error });
@@ -138,7 +138,8 @@ export class CartEffect {
                   summary: 'Error',
                   detail: Array.isArray(message)
                     ? message.join(', ')
-                    : message ?? 'Error occur while updating the book quantity',
+                    : (message ??
+                      'Error occur while updating the book quantity'),
                   severity: 'error',
                 });
                 return cartActions.updateQuantituFailure({ error });
@@ -199,7 +200,7 @@ export class CartEffect {
                 summary: 'Error',
                 detail: Array.isArray(message)
                   ? message.join(', ')
-                  : message ?? 'Error occur while removing the book quantity',
+                  : (message ?? 'Error occur while removing the book quantity'),
                 severity: 'error',
               });
               return cartActions.removeBookFromCartFailure({ error });
@@ -274,5 +275,23 @@ export class CartEffect {
         }),
       ),
     { dispatch: false },
+  );
+
+  clearCart = createEffect(() =>
+    this.actions$.pipe(
+      ofType(cartActions.clearCart),
+      switchMap(() =>
+        this.shoppingSessionApi.delete().pipe(
+          mapResponse({
+            next: () => {
+              return cartActions.clearCartSuccess();
+            },
+            error: (error: ResponseError) => {
+              return cartActions.clearCartFailure({ error });
+            },
+          }),
+        ),
+      ),
+    ),
   );
 }

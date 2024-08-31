@@ -66,4 +66,11 @@ export const appRoutes: Route[] = [
       provideEffects(OrderProcessEffects),
     ],
   },
+  {
+    path: 'payment-status/:order-details-id',
+    loadChildren: () =>
+      import('@e-commerce/client-web/cart/feature/payment-status').then(
+        (r) => r.paymentStatusRoutes,
+      ),
+  },
 ];
