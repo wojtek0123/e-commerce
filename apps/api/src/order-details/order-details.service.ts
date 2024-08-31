@@ -180,6 +180,13 @@ export class OrderDetailsService {
             book: true,
           },
         },
+        userAddress: {
+          include: {
+            country: true,
+          },
+        },
+        paymentDetails: true,
+        shippingMethod: true,
       },
     });
   }

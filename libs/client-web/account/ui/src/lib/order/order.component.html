@@ -1,0 +1,152 @@
+<!-- <div class="surface-hover border-round p-3"> -->
+<!--   <p-steps -->
+<!--     [activeIndex]="activeStep$ | async" -->
+<!--     [readonly]="true" -->
+<!--     [model]="stepStatuses()" -->
+<!--   /> -->
+<!-- </div> -->
+<div class="wrapper">
+  <div class="order">
+    <div class="order__row">
+      <span class="order__row__header">Order number</span>
+      <span class="order__row__text">
+        {{ orderDetails()?.id }}
+      </span>
+    </div>
+    <div class="order__row order__row--flex-end">
+      <span class="order__row__header">The order has been placed</span>
+      <span class="order__row__text">
+        {{ orderDetails()?.createdAt | date }}
+      </span>
+    </div>
+  </div>
+  <div class="order">
+    <div class="flex flex-column gap-2">
+      <span class="order__row__header">Order address</span>
+      <div class="flex align-items-center gap-1">
+        <span class="text-color-secondary">
+          {{ orderDetails()?.userAddress?.street }}
+        </span>
+        <span class="text-color-secondary">
+          {{ orderDetails()?.userAddress?.homeNumber }}
+          @if (orderDetails()?.userAddress?.houseNumber) {
+            /{{ orderDetails()?.userAddress?.houseNumber }}
+          }
+        </span>
+      </div>
+      <div class="text-color-secondary">
+        <span>{{ orderDetails()?.userAddress?.postcode }}, </span>
+        <span>{{ orderDetails()?.userAddress?.city }}</span>
+      </div>
+      <span class="text-color-secondary">
+        {{ orderDetails()?.userAddress?.country?.name }}
+      </span>
+    </div>
+    <div class="order__row">
+      <span class="order__row__header">Personal information</span>
+      <div class="order__wrapper">
+        <span class="text-color-secondary">
+          {{ orderDetails()?.userAddress?.firstName }}
+          {{ orderDetails()?.userAddress?.lastName }}
+        </span>
+        <span class="text-color-secondary">
+          {{ orderDetails()?.userAddress?.phone }}
+        </span>
+      </div>
+    </div>
+  </div>
+  <div class="order">
+    <div class="order__row">
+      <span class="order__header">Payment method</span>
+      <span class="text-color-secondary">
+        {{ orderDetails()?.paymentDetails?.provider }}
+      </span>
+    </div>
+  </div>
+  <div class="order">
+    <div class="order__row">
+      <span class="order__row__header">Shipping method</span>
+      <span class="text-color-secondary">
+        {{ orderDetails()?.shippingMethod?.name }}
+      </span>
+    </div>
+  </div>
+  <div class="table">
+    <span class="order__row__header">Order items</span>
+    <!-- [tableStyle]="{ -->
+    <!--   'min-width': '50rem', -->
+    <!-- }" -->
+    <p-table [value]="orderDetails()?.orderItems ?? []">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Cover</th>
+          <th>Title</th>
+          <th>Authors</th>
+          <th>Quanity</th>
+          <th>Price</th>
+          <th>Value</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-item>
+        <tr>
+          <td>
+            <img
+              [ngSrc]="item.book.coverImage ?? ''"
+              [alt]="item.book.title"
+              width="150"
+              height="150"
+              priority
+            />
+          </td>
+          <td>{{ item.book.title }}</td>
+          <td>{{ item.book.title }}</td>
+          <td>{{ item.quantity }}</td>
+          <td>{{ item.book.price | currency: 'USD' }}</td>
+          <td>
+            {{ item.quantity * item.book.price | currency: 'USD' }}
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="footer">
+        <tr>
+          <td colspan="3" class="text-right">Totals</td>
+          <td>
+            {{ tableTotalSummary()?.quantity }}
+          </td>
+          <td>
+            {{ tableTotalSummary()?.price ?? 0 | currency: 'USD' }}
+          </td>
+          <td>
+            {{ orderDetails()?.total ?? 0 | currency: 'USD' }}
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+  <div class="summary">
+    <span class="order__row__header">Cost summary</span>
+    <div class="summary__contsainer">
+      <div class="summary__row">
+        <span class="order__row__header">Value</span>
+        <span class="text-color-secondary">
+          {{ orderDetails()?.total ?? 0 | currency: 'USD' }}
+        </span>
+      </div>
+      <div class="summary__row">
+        <span class="order__row__header">Shipping cost</span>
+        <span class="text-color-secondary">
+          {{ orderDetails()?.shippingMethod?.price ?? 0 | currency: 'USD' }}
+        </span>
+      </div>
+      <div class="summary__total">
+        <span class="">Total cost</span>
+        <span class="text-color-secondary">
+          {{
+            (orderDetails()?.shippingMethod?.price ?? 0) +
+              (orderDetails()?.total ?? 0) | currency: 'USD'
+          }}
+        </span>
+      </div>
+    </div>
+  </div>
+</div>

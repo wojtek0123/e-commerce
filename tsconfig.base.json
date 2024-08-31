@@ -15,6 +15,18 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@e-commerce/client-web/account/data-access": [
+        "libs/client-web/account/data-access/src/index.ts"
+      ],
+      "@e-commerce/client-web/account/feature/orders": [
+        "libs/client-web/account/feature/orders/src/index.ts"
+      ],
+      "@e-commerce/client-web/account/feature/shell": [
+        "libs/client-web/account/feature/shell/src/index.ts"
+      ],
+      "@e-commerce/client-web/account/ui": [
+        "libs/client-web/account/ui/src/index.ts"
+      ],
       "@e-commerce/client-web/auth/data-access": [
         "libs/client-web/auth/data-access/src/index.ts"
       ],
