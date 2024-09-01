@@ -3,7 +3,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  HostBinding,
   input,
 } from '@angular/core';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
@@ -13,6 +12,7 @@ import { TableModule } from 'primeng/table';
 import { SkeletonModule } from 'primeng/skeleton';
 import { CurrencyPipe } from '@angular/common';
 import { OrderDetails } from '@e-commerce/client-web/shared/data-access';
+import { DividerModule } from 'primeng/divider';
 
 @Component({
   selector: 'lib-order',
@@ -29,6 +29,7 @@ import { OrderDetails } from '@e-commerce/client-web/shared/data-access';
     TableModule,
     CurrencyPipe,
     SkeletonModule,
+    DividerModule,
   ],
 })
 export class OrderComponent {

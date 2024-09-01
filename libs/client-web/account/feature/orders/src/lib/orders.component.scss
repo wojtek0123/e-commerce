@@ -5,6 +5,10 @@
 
 .order-details {
   display: none;
+
+  &__info {
+    display: none;
+  }
 }
 
 @media (min-width: 1536px) {
@@ -22,10 +26,18 @@
     width: 100%;
 
     &__info {
+      display: block;
       text-align: center;
       margin-top: 3rem;
       font-size: 2rem;
     }
+  }
+
+  .table {
+    position: sticky;
+    top: calc(var(--header-height) + 2rem);
+    max-height: calc(100svh - var(--header-height) - 4rem);
+    overflow-y: auto;
   }
 }
 

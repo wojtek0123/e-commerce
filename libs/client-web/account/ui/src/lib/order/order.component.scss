@@ -26,7 +26,17 @@
   &__row {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 1.5rem;
+
+    &__address {
+      display: flex;
+      flex-direction: column;
+
+      & > div {
+        display: block;
+        color: var(--text-color-secondary);
+      }
+    }
 
     &__header {
       font-size: 1.25rem;
@@ -66,6 +76,10 @@
   flex-direction: column;
   border-radius: var(--border-radius);
   gap: 1.5rem;
+
+  &__header {
+    font-size: 1.25rem;
+  }
 
   &__container {
     display: flex;
