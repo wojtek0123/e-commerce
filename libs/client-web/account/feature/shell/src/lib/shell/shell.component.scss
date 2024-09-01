@@ -15,6 +15,9 @@
 @media (min-width: 1280px) {
   .menu {
     display: block;
+    position: sticky;
+    top: calc(var(--header-height) + 2rem);
+    max-height: calc(100svh - var(--header-height) - 4rem);
   }
 }
 

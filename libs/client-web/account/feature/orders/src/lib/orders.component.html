@@ -1,12 +1,13 @@
 <div class="orders">
   <p-table
+    class="table"
     [value]="orders()"
     selectionMode="single"
     [selection]="selectedOrder()"
     (selectionChange)="selectOrder($event)"
     dataKey="id"
     [tableStyle]="{
-      'min-width': '30rem',
+      width: '100%',
     }"
     [loading]="loading()"
     [showLoader]="false"
