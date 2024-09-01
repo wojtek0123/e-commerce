@@ -15,7 +15,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
   app.enableCors({
-    origin: ['http://localhost:4200'],
+    origin: ['http://localhost:4200', 'http://127.0.0.1:4200'],
   });
 
   const config = new DocumentBuilder()

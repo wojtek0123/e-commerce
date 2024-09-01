@@ -25,5 +25,17 @@
         ]
       }
     }
+  ],
+  "dataGroups": [
+    {
+      "name": "api",
+      "urls": ["http://localhost:3000/**"],
+      "cacheConfig": {
+        "strategy": "performance",
+        "maxSize": 5000,
+        "maxAge": "5m",
+        "timeout": "10s"
+      }
+    }
   ]
 }
