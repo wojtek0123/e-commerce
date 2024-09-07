@@ -24,7 +24,10 @@ export const authActions = createActionGroup({
       userId: User['id'];
       refreshToken: Tokens['refreshToken'];
     }>(),
-    refreshTokenSuccess: props<{ refreshToken: Tokens['refreshToken'] }>(),
+    refreshTokenSuccess: props<{
+      accessToken: Tokens['accessToken'];
+      refreshToken: Tokens['refreshToken'];
+    }>(),
     refreshTokenFailure: props<{ error: ResponseError }>(),
 
     logout: emptyProps(),

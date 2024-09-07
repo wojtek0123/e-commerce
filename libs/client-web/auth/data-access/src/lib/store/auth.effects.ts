@@ -9,7 +9,7 @@ import { filter, map, switchMap, tap } from 'rxjs';
 import { concatLatestFrom, mapResponse } from '@ngrx/operators';
 import { MessageService } from 'primeng/api';
 import { ActivatedRoute, Router } from '@angular/router';
-import { selectUserId } from './auth.selectors';
+import { selectRefreshToken, selectUserId } from './auth.selectors';
 import { Store } from '@ngrx/store';
 
 @Injectable()
@@ -119,13 +119,45 @@ export class AuthEffects {
     { dispatch: false },
   );
 
-  refreshToken = createEffect(
+  refreshToken = createEffect(() =>
+    this.actions$.pipe(
+      ofType(authActions.refreshToken),
+      concatLatestFrom(() => [
+        this.store.select(selectUserId),
+        this.store.select(selectRefreshToken),
+      ]),
+      filter(([, userId, refreshToken]) => !!userId && !!refreshToken),
+      switchMap(([, userId, refreshToken]) =>
+        this.authApi.getRefreshToken$(userId!, refreshToken!).pipe(
+          mapResponse({
+            next: ({ accessToken, refreshToken }) => {
+              localStorage.setItem('refreshToken', refreshToken);
+              localStorage.setItem('accessToken', accessToken);
+
+              return authActions.refreshTokenSuccess({
+                accessToken,
+                refreshToken,
+              });
+            },
+            error: (error: ResponseError) => {
+              localStorage.removeItem('refreshToken');
+              localStorage.removeItem('accessToken');
+              localStorage.removeItem('userId');
+              return authActions.refreshTokenFailure({ error });
+            },
+          }),
+        ),
+      ),
+    ),
+  );
+
+  refreshTokenSuccess = createEffect(
     () =>
       this.actions$.pipe(
-        ofType(authActions.refreshToken),
-        tap(({ refreshToken, userId }) => {
-          localStorage.setItem('userId', userId.toString());
+        ofType(authActions.refreshTokenSuccess),
+        tap(({ refreshToken, accessToken }) => {
           localStorage.setItem('refreshToken', refreshToken);
+          localStorage.setItem('accessToken', accessToken);
         }),
       ),
     { dispatch: false },

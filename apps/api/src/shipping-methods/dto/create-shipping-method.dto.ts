@@ -14,4 +14,8 @@ export class CreateShippingMethodDto {
   @IsNumber()
   @IsOptional()
   orderDetailsId: number;
+  //
+  // @ApiProperty({ type: String, required: true })
+  // @IsString()
+  // deliveryTime: string;
 }

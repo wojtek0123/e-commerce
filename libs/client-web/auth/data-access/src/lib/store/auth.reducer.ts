@@ -60,11 +60,11 @@ export const authFeature = createFeature({
       }),
     ),
     on(
-      authActions.refreshToken,
-      (state, { refreshToken, userId }): AuthState => ({
+      authActions.refreshTokenSuccess,
+      (state, { refreshToken, accessToken }): AuthState => ({
         ...state,
-        userId,
         refreshToken,
+        accessToken,
       }),
     ),
   ),
