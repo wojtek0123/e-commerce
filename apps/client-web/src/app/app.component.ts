@@ -22,8 +22,10 @@ import {
   authActions,
   selectEvent,
   selectIsAuthenticated,
+  selectRefreshToken,
 } from '@e-commerce/client-web/auth/data-access';
 import { cartActions } from '@e-commerce/client-web/cart/data-access';
+import { jwtDecode } from 'jwt-decode';
 
 @Component({
   standalone: true,
@@ -48,6 +50,7 @@ export class AppComponent implements OnInit {
   public error$ = this.store.select(selectError);
   public event = this.store.selectSignal(selectEvent);
   public isAuthenticated = this.store.selectSignal(selectIsAuthenticated);
+  public refreshToken = this.store.selectSignal(selectRefreshToken);
 
   constructor() {
     effect(
@@ -63,11 +66,20 @@ export class AppComponent implements OnInit {
     );
   }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.store.dispatch(categoryActions.getCategories());
+
+    if (this.refreshToken()) {
+      const { exp } = jwtDecode(this.refreshToken() ?? '');
+      const expirationTime = (exp ?? 0) * 1000 - 60000;
+
+      if (expirationTime <= Date.now()) {
+        this.logout();
+      }
+    }
   }
 
-  logout() {
+  public logout() {
     this.store.dispatch(authActions.logout());
   }
 }

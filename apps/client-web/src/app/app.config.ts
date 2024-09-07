@@ -5,10 +5,7 @@ import {
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { appRoutes } from './app.routes';
-import {
-  authInterceptor,
-  unAuthErrorInterceptor,
-} from '@e-commerce/client-web/auth/utils';
+import { authInterceptor } from '@e-commerce/client-web/auth/utils';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { API_URL } from '@e-commerce/client-web/shared/utils';
 import { provideState, provideStore } from '@ngrx/store';
@@ -49,9 +46,7 @@ export const appConfig: ApplicationConfig = {
       connectInZone: true, // If set to true, the connection is established within the Angular zone
     }),
     provideAnimationsAsync(),
-    provideHttpClient(
-      withInterceptors([authInterceptor, unAuthErrorInterceptor]),
-    ),
+    provideHttpClient(withInterceptors([authInterceptor])),
     {
       provide: API_URL,
       useValue: 'http://localhost:3000',
