@@ -72,6 +72,15 @@
       "@e-commerce/client-web/cart/ui": [
         "libs/client-web/cart/ui/src/index.ts"
       ],
+      "@e-commerce/client-web/home/data-acess": [
+        "libs/client-web/home/data-access/src/index.ts"
+      ],
+      "@e-commerce/client-web/home/feature": [
+        "libs/client-web/home/feature/src/index.ts"
+      ],
+      "@e-commerce/client-web/home/ui": [
+        "libs/client-web/home/ui/src/index.ts"
+      ],
       "@e-commerce/client-web/shared/data-access": [
         "libs/client-web/shared/data-access/src/index.ts"
       ],
