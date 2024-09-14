@@ -28,6 +28,7 @@ export enum BookTag {
   NEW = 'NEW',
   INCOMING = 'INCOMING',
   DISCOUNT = 'DISCOUNT',
+  PREMIERE_OF_THE_MONTH = 'PREMIERE_OF_THE_MONTH ',
 }
 
 export const allBookTags = [

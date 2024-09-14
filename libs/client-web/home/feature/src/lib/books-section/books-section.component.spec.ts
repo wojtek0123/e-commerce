@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { DataAccessComponent } from './data-access.component';
+import { BooksSectionComponent } from './books-section.component';
 
-describe('DataAccessComponent', () => {
-  let component: DataAccessComponent;
-  let fixture: ComponentFixture<DataAccessComponent>;
+describe('BooksSectionComponent', () => {
+  let component: BooksSectionComponent;
+  let fixture: ComponentFixture<BooksSectionComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DataAccessComponent],
+      imports: [BooksSectionComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(DataAccessComponent);
+    fixture = TestBed.createComponent(BooksSectionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

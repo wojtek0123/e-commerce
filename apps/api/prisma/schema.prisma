@@ -202,6 +202,7 @@ enum Tag {
   BESTSELLER
   INCOMING
   DISCOUNT
+  PREMIERE_OF_THE_MONTH
 }
 
 enum OrderStatus {

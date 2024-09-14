@@ -17,15 +17,9 @@ import {
   selectSize,
   selectTotal,
 } from '@e-commerce/client-web/browse/data-access';
-import {
-  BookCardComponent,
-  BookCardSkeletonComponent,
-} from '@e-commerce/client-web/shared/ui';
+import { BooksGridComponent } from '@e-commerce/client-web/shared/ui';
 import { AsyncPipe, ViewportScroller } from '@angular/common';
-import {
-  ActiveFiltersComponent,
-  BooksGridComponent,
-} from '@e-commerce/client-web/browse/ui';
+import { ActiveFiltersComponent } from '@e-commerce/client-web/browse/ui';
 
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 import { combineLatest, filter, map } from 'rxjs';
@@ -40,8 +34,6 @@ import { cartActions } from '@e-commerce/client-web/cart/data-access';
   imports: [
     BreadcrumbModule,
     SearchComponent,
-    BookCardSkeletonComponent,
-    BookCardComponent,
     AsyncPipe,
     BooksGridComponent,
     PaginatorModule,
