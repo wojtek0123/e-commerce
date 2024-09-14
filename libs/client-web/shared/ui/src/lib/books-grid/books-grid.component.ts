@@ -7,10 +7,8 @@ import {
   output,
 } from '@angular/core';
 import { Book } from '@e-commerce/client-web/shared/data-access';
-import {
-  BookCardComponent,
-  BookCardSkeletonComponent,
-} from '@e-commerce/client-web/shared/ui';
+import { BookCardComponent } from '../book-card/book-card.component';
+import { BookCardSkeletonComponent } from '../book-card-skeleton/book-card-skeleton.component';
 
 @Component({
   selector: 'lib-books-grid',
@@ -21,14 +19,17 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BooksGridComponent {
-  books = input.required<Book[]>();
-  loading = input<boolean>(false);
-  error = input<string | string[] | null>(null);
-  pendingBookIds = input<Book['id'][]>([]);
+  public books = input.required<Book[]>();
+  public loading = input<boolean>(false);
+  public error = input<string | string[] | null>(null);
+  public skeletonsCount = input<number>(8);
+  public pendingBookIds = input<Book['id'][]>([]);
 
-  errors = computed(() =>
+  public skeleconts = computed(() => new Array(this.skeletonsCount()));
+
+  public errors = computed(() =>
     typeof this.error() === 'string' ? [this.error()] : this.error(),
   );
 
-  addToCartEvent = output<Book>();
+  public addToCartEvent = output<Book>();
 }

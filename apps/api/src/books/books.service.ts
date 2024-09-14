@@ -35,12 +35,6 @@ export class BooksService {
     });
   }
 
-  private _parseQueryParams(queryParam?: string) {
-    if (typeof queryParam === 'string') {
-      return queryParam?.replaceAll('_', ' ').split(',') ?? undefined;
-    }
-  }
-
   async findMany({
     categoryNamesIn,
     tagsIn,
@@ -60,68 +54,72 @@ export class BooksService {
     page?: string;
     authorNamesIn?: string;
   }) {
-    const pageNumber = +page || 1;
-    const sizeNumber = +size || 20;
+    try {
+      const pageNumber = this.parseNumber(page, 1);
+      const sizeNumber = this.parseNumber(size, 20);
 
-    const authorsId = await this.prisma.author
-      .findMany({
-        where: { name: { in: this._parseQueryParams(authorNamesIn) } },
-      })
-      .then((authors) => authors.map(({ id }) => id));
+      const parsedCategories = this._parseQueryParams(categoryNamesIn);
+      const parsedTags = this._parseQueryParams(tagsIn);
+      const parsedAuthors = this._parseQueryParams(authorNamesIn);
 
-    const books = await this.prisma.book.findMany({
-      where: {
+      const authorsId = await this.prisma.author
+        .findMany({
+          where: { name: { in: parsedAuthors } },
+          select: { id: true },
+        })
+        .then((authors) => authors.map(({ id }) => id));
+
+      const whereClause: Prisma.BookWhereInput = {
         AND: [
-          { tag: { in: this._parseQueryParams(tagsIn) as Tag[] } },
+          parsedTags.length > 0 ? { tag: { in: parsedTags as Tag[] } } : {},
+          parsedCategories.length > 0 ? { category: { name: { in: parsedCategories } } } : {},
+          titleLike ? { title: { contains: titleLike, mode: 'insensitive' } } : {},
           {
-            category: { name: { in: this._parseQueryParams(categoryNamesIn) } },
-          },
-          { title: { contains: titleLike ?? '', mode: 'insensitive' } },
-          { price: { gte: +priceFrom || 0, lte: +priceTo || 100000000 } },
-          { authors: { some: { authorId: { in: authorsId } } } },
-        ],
-      },
-      include: {
-        authors: {
-          include: {
-            author: true,
-          },
-        },
-      },
-      skip: (pageNumber - 1) * sizeNumber,
-      take: sizeNumber,
-      orderBy: { title: 'asc' },
-    });
-
-    const total = (
-      await this.prisma.book.findMany({
-        where: {
-          AND: [
-            { tag: { in: this._parseQueryParams(tagsIn) as Tag[] } },
-            {
-              category: {
-                name: { in: this._parseQueryParams(categoryNamesIn) },
-              },
+            price: {
+              gte: this.parseNumber(priceFrom, 0),
+              lte: this.parseNumber(priceTo, Number.MAX_SAFE_INTEGER),
             },
-            { title: { contains: titleLike ?? '', mode: 'insensitive' } },
-            { price: { gte: +priceFrom || 0, lte: +priceTo || 100000000 } },
-            { authors: { some: { authorId: { in: authorsId } } } },
-          ],
-        },
-      })
-    ).length;
+          },
+          authorsId.length > 0 ? { authors: { some: { authorId: { in: authorsId } } } } : {},
+        ],
+      };
 
-    return {
-      items: books.map((book) => ({
-        ...book,
-        authors: book.authors.map((a) => a.author),
-      })),
-      total,
-      count: books.length,
-      page: pageNumber,
-    };
+      const [books, total] = await Promise.all([
+        this.prisma.book.findMany({
+          where: whereClause,
+          include: {
+            authors: { include: { author: true } },
+          },
+          skip: (pageNumber - 1) * sizeNumber,
+          take: sizeNumber,
+          orderBy: { title: 'asc' },
+        }),
+        this.prisma.book.count({ where: whereClause }),
+      ]);
+
+      return {
+        items: books.map((book) => ({
+          ...book,
+          authors: book.authors.map((a) => a.author),
+        })),
+        total,
+        count: books.length,
+        page: pageNumber,
+      };
+    } catch (error) {
+      console.error('Błąd podczas wyszukiwania książek:', error);
+      throw new Error('Wystąpił błąd podczas wyszukiwania książek');
+    }
   }
 
+  private _parseQueryParams(param?: string): string[] {
+    return param?.split(',').filter(Boolean).map((item) => item.trim()) || [];
+  }
+
+  private parseNumber(value: string | undefined, fallback: number): number {
+    const parsedValue = value ? parseInt(value, 10) : NaN;
+    return isNaN(parsedValue) ? fallback : parsedValue;
+  }
   async findOne(id: number) {
     console.log(id);
     const book = await this.prisma.book.findUnique({

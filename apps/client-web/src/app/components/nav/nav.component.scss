@@ -88,9 +88,17 @@
   justify-content: center;
 }
 
+.utility {
+  display: none;
+}
+
 @media (min-width: 1024px) {
   .mobile-menu {
     display: none;
+  }
+
+  .utility {
+    display: flex;
   }
 
   .links {

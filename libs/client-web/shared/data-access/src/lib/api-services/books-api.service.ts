@@ -22,7 +22,14 @@ export class BooksApiService {
     size?: number;
     page?: number;
   }) {
-    return this.http.get<Paginated<Book>>(`${this.apiUrl}/books`, { params });
+    const convertedParams = {
+      ...params,
+      categoryNamesIn: params.categoryNamesIn?.join(',') ?? '',
+      tagsIn: params.tagsIn?.join(',') ?? '',
+      publisherIds: params.publisherIds?.join(',') ?? '',
+      authorNamesIn: params.authorNamesIn?.join(',') ?? ''
+    };
+    return this.http.get<Paginated<Book>>(`${this.apiUrl}/books`, { params: convertedParams as {[key: string]: string | number | boolean } });
   }
 
   getBook$(id: Book['id']) {

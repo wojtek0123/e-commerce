@@ -1,15 +1,14 @@
 <div [routerLink]="['/book', book().id]" class="book-card">
+  <div class="book-card__image-container">
   <img
     alt="Card"
     class="book-card__image"
     [ngSrc]="
-      book().coverImage
-        ? book().coverImage!
-        : 'https://primefaces.org/cdn/primeng/images/usercard.png'
+      book().coverImage ? book().coverImage! : 'assets/images/not-found.png'
     "
-    width="518"
-    height="220"
+    fill
   />
+</div>
   <div class="book-card__body">
     <div class="book-card__body__header">
       <h3 class="book-card__body__header-title">{{ book().title }}</h3>
