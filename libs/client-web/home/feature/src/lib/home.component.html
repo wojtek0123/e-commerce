@@ -25,16 +25,18 @@
   @defer (on viewport) {
     <lib-books-section tag="incoming" [bookTag]="bookTag.INCOMING" />
   } @placeholder {
-    <div>Loading...</div>
+    <lib-skeleton-books-section />
   }
+
   @defer (on viewport) {
     <lib-books-section tag="bestsellers" [bookTag]="bookTag.BESTSELLER" />
   } @placeholder {
-    <div>Loading...</div>
+    <lib-skeleton-books-section />
   }
+
   @defer (on viewport) {
     <lib-books-section tag="new" [bookTag]="bookTag.NEW" />
   } @placeholder {
-    <div>Loading...</div>
+    <lib-skeleton-books-section />
   }
 </main>

@@ -1,9 +1,12 @@
 <div class="books">
-  <lib-filters />
+  <lib-filters class="desktop-filters" maxWidth="26rem" />
   <div class="books__content">
     <div class="books__content-bar">
       <p-breadcrumb [model]="breadcrumbs()" />
-      <lib-search class="books__content-bar__input" />
+      <div class="books__content-row">
+        <lib-search class="books__content-bar__input" />
+        <lib-filters class="mobile-filters" />
+      </div>
     </div>
     <lib-active-filters
       [activeFilters]="(activeFilters$ | async) ?? []"

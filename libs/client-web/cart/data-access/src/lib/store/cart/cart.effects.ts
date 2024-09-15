@@ -50,6 +50,16 @@ export class CartEffect {
     ),
   );
 
+  getCartItemsLocally = createEffect(() =>
+    this.actions$.pipe(
+      ofType(cartActions.getCartItemsLocally),
+      map(() => {
+        const cartItems = JSON.parse(localStorage.getItem('cart') ?? '') ?? [];
+        return cartActions.getCartItemsLocallySuccess({ cartItems });
+      }),
+    ),
+  );
+
   addToCart = createEffect(() =>
     this.actions$.pipe(
       ofType(cartActions.addBookToCart),

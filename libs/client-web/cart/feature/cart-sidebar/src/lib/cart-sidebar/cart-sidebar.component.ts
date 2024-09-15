@@ -49,14 +49,14 @@ import { BadgeModule } from 'primeng/badge';
 export class CartSidebarComponent {
   private readonly store = inject(Store);
 
-  cartItems = this.store.selectSignal(cartSelectors.selectCartItems);
-  count = this.store.selectSignal(cartSelectors.selectCount);
-  total = this.store.selectSignal(cartSelectors.selectTotal);
-  loading = this.store.selectSignal(cartSelectors.selectLoading);
-  error = this.store.selectSignal(cartSelectors.selectError);
+  public cartItems = this.store.selectSignal(cartSelectors.selectCartItems);
+  public count = this.store.selectSignal(cartSelectors.selectCount);
+  public total = this.store.selectSignal(cartSelectors.selectTotal);
+  public loading = this.store.selectSignal(cartSelectors.selectLoading);
+  public error = this.store.selectSignal(cartSelectors.selectError);
 
-  visible = signal(false);
-  skeletons = new Array(5);
+  public visible = signal(false);
+  // public skeletons = signal(new Array(5));
 
   updateQuantity(args: { book: Book; quantity: number }) {
     this.store.dispatch(cartActions.updateQuantity({ ...args }));

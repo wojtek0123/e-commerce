@@ -1,6 +1,5 @@
 <lib-filter
   header="Price"
-  (clearEvent)="clearChecked()"
   filterName="price"
   [selectedItems]="(selected$ | async) ?? []"
 >
@@ -10,7 +9,8 @@
         slot="input"
         [min]="0"
         [maxFractionDigits]="2"
-        [(ngModel)]="minPrice"
+        [ngModel]="minPrice()()"
+        (ngModelChange)="minPrice().set($event)"
         (onBlur)="onBlur('min')"
         mode="decimal"
         currency="USD"
@@ -24,7 +24,8 @@
       <p-inputNumber
         slot="input"
         [min]="0"
-        [(ngModel)]="maxPrice"
+        [ngModel]="maxPrice()()"
+        (ngModelChange)="maxPrice().set($event)"
         (onBlur)="onBlur('max')"
         [maxFractionDigits]="2"
         mode="decimal"

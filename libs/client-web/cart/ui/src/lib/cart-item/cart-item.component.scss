@@ -33,9 +33,11 @@
   container-type: inline-size;
 
   &__image {
-    aspect-ratio: 3 / 4;
-    width: 5rem;
-    display: none;
+    object-fit: cover;
+
+    &-wrapper {
+      display: none;
+    }
   }
 
   &__header {
@@ -84,7 +86,12 @@
 
   .book-details {
     &__image {
-      display: block;
+      &-wrapper {
+        display: block;
+        aspect-ratio: 3 / 4;
+        width: 5rem;
+        position: relative;
+      }
     }
 
     &__header {
@@ -110,7 +117,7 @@
     gap: 1.5rem;
   }
 
-  .book-details__image {
+  .book-details__image-wrapper {
     width: 8rem;
   }
 
