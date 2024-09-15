@@ -3,6 +3,7 @@ import {
   ShoppingSession,
   ResponseError,
   Book,
+  CartItemBase,
 } from '@e-commerce/client-web/shared/data-access';
 
 export const cartActions = createActionGroup({
@@ -10,7 +11,12 @@ export const cartActions = createActionGroup({
   events: {
     getShoppingSession: emptyProps(),
     getShoppingSessionSuccess: props<{ shoppingSession: ShoppingSession }>(),
-    getShoppingSessionFailure: props<{ error: ResponseError }>(),
+    getShoppingSessionFailure: props<{
+      error: ResponseError;
+    }>(),
+
+    getCartItemsLocally: emptyProps(),
+    getCartItemsLocallySuccess: props<{ cartItems: CartItemBase[] }>(),
 
     addBookToCart: props<{ book: Book; quantity: number }>(),
     addBookToCartSuccess: props<{ book: Book; quantity: number }>(),

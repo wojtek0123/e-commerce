@@ -1,10 +1,13 @@
 <div class="cart-item">
   <div class="book-details">
-    <img
-      class="book-details__image"
-      [src]="item().book.coverImage"
-      [alt]="item().book.title + ' cover image'"
-    />
+    <div class="book-details__image-wrapper">
+      <img
+        class="book-details__image"
+        [ngSrc]="item().book.coverImage ?? 'assets/images/not-found.png'"
+        [alt]="item().book.title + ' cover image'"
+        fill
+      />
+    </div>
     <div class="book-details__header">
       <span class="book-details__header-title">
         {{ item().book.title }}

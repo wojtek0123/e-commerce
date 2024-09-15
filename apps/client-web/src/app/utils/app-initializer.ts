@@ -14,9 +14,17 @@ const initializeAppFactory =
       ? 'dark'
       : 'light';
 
+    const userId = localStorage.getItem('user');
+    const accessToken = localStorage.getItem('accessToken');
+
     store.dispatch(authActions.init());
     themeService.switchTheme(preferenceTheme ?? browserTheme);
-    store.dispatch(cartActions.getShoppingSession());
+
+    if (userId && accessToken) {
+      store.dispatch(cartActions.getShoppingSession());
+    } else {
+      store.dispatch(cartActions.getCartItemsLocally());
+    }
   };
 
 export const AppInitializerProvider: Provider = {

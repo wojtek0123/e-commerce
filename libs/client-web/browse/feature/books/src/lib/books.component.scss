@@ -20,6 +20,13 @@
       // }
     }
 
+    &-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+
     &-books {
       display: flex;
       gap: 1rem;
@@ -34,6 +41,10 @@
       }
     }
   }
+}
+
+.desktop-filters {
+  display: none;
 }
 
 @container books-view (min-width: 768px) {
@@ -73,6 +84,16 @@
         align-items: center;
       }
     }
+  }
+}
+
+@media (min-width: 1280px) {
+  .mobile-filters {
+    display: none;
+  }
+
+  .desktop-filters {
+    display: flex;
   }
 }
 

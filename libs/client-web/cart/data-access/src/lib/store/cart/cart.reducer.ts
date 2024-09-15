@@ -23,6 +23,20 @@ export const cartFeature = createFeature({
       }),
     ),
     on(
+      cartActions.getShoppingSessionFailure,
+      (state, { error }): CartState => ({
+        ...state,
+        error: error.message,
+      }),
+    ),
+    on(
+      cartActions.getCartItemsLocallySuccess,
+      (state, { cartItems }): CartState => ({
+        ...state,
+        cartItems,
+      }),
+    ),
+    on(
       cartActions.addBookToCart,
       (state): CartState => ({
         ...state,

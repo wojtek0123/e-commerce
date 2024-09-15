@@ -9,7 +9,7 @@ import {
   CartItem,
   CartItemBase,
 } from '@e-commerce/client-web/shared/data-access';
-import { CurrencyPipe } from '@angular/common';
+import { CurrencyPipe, NgOptimizedImage } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { FormsModule } from '@angular/forms';
@@ -17,7 +17,13 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'lib-cart-item',
   standalone: true,
-  imports: [CurrencyPipe, ButtonModule, InputNumberModule, FormsModule],
+  imports: [
+    CurrencyPipe,
+    ButtonModule,
+    InputNumberModule,
+    FormsModule,
+    NgOptimizedImage,
+  ],
   templateUrl: './cart-item.component.html',
   styleUrl: './cart-item.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

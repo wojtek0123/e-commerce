@@ -1,8 +1,10 @@
 import { Component, computed, inject, input, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { HomeStore, HomeState } from '@e-commerce/client-web/home/data-acess';
-import { BookTag } from '@e-commerce/client-web/shared/data-access';
+import { Book, BookTag } from '@e-commerce/client-web/shared/data-access';
 import { BooksGridComponent } from '@e-commerce/client-web/shared/ui';
+import { Store } from '@ngrx/store';
+import { cartActions } from '@e-commerce/client-web/cart/data-access';
 
 @Component({
   selector: 'lib-books-section',
@@ -12,16 +14,21 @@ import { BooksGridComponent } from '@e-commerce/client-web/shared/ui';
   styleUrl: './books-section.component.scss',
 })
 export class BooksSectionComponent implements OnInit {
-  private store = inject(HomeStore);
+  private readonly store = inject(Store);
+  private readonly homeStore = inject(HomeStore);
 
-  tag = input.required<keyof HomeState>();
-  bookTag = input.required<BookTag>();
+  public tag = input.required<keyof HomeState>();
+  public bookTag = input.required<BookTag>();
 
-  public books = computed(() => this.store[this.tag()].books());
-  public loading = computed(() => this.store[this.tag()].loading());
-  public error = computed(() => this.store[this.tag()].error());
+  public books = computed(() => this.homeStore[this.tag()].books());
+  public loading = computed(() => this.homeStore[this.tag()].loading());
+  public error = computed(() => this.homeStore[this.tag()].error());
 
   ngOnInit(): void {
-    this.store.getBooks([this.tag(), this.bookTag()]);
+    this.homeStore.getBooks([this.tag(), this.bookTag()]);
+  }
+
+  addToCart(book: Book) {
+    this.store.dispatch(cartActions.addBookToCart({ book, quantity: 1 }));
   }
 }

@@ -1,8 +1,27 @@
 <div class="filters">
-  <p-accordion>
+  <ng-container [ngTemplateOutlet]="filters" />
+</div>
+
+<p-button
+  class="open-sidebar-button"
+  icon="pi pi-bars"
+  (onClick)="sidebarVisible.set(true)"
+/>
+
+<p-sidebar
+  [(visible)]="sidebarVisible"
+  appendTo="body"
+  position="right"
+  [blockScroll]="true"
+>
+  <ng-container [ngTemplateOutlet]="filters" />
+</p-sidebar>
+
+<ng-template #filters>
+  <p-accordion [multiple]="false">
     <lib-tag-filter />
     <lib-author-filter />
     <lib-category-filter />
     <lib-price-filter />
   </p-accordion>
-</div>
+</ng-template>

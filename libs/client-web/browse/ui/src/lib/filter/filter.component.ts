@@ -1,5 +1,4 @@
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   computed,
@@ -45,7 +44,7 @@ import { CustomFilterDirective } from '@e-commerce/client-web/browse/utils';
     CustomFilterDirective,
   ],
 })
-export class FilterComponent<FilterType> implements AfterViewInit {
+export class FilterComponent<FilterType> {
   public header = input.required<string>();
   public filterName = input.required<keyof BrowseState['filters']>();
   public parseName = input<(filter: FilterType) => string>();
@@ -64,10 +63,6 @@ export class FilterComponent<FilterType> implements AfterViewInit {
   @HostBinding('style.width') width = '100%';
 
   templateRef = contentChild(CustomFilterDirective);
-
-  ngAfterViewInit(): void {
-    console.log(this.templateRef());
-  }
 
   public changeSelectedItems(selectedItems: FilterType[], item: FilterType) {
     if (!this.parseName() || !this.parseId) return;

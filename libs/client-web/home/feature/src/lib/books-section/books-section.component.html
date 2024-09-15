@@ -1,9 +1,10 @@
 <section class="section">
   <div class="section__header">
     <h2 class="section__header-title">{{ tag() }}</h2>
-    <a routerLink="/browse" [queryParams]="{ tags: tag()}"> See more </a>
+    <a routerLink="/browse" [queryParams]="{ tags: tag() }"> See more </a>
   </div>
   <lib-books-grid
+    (addToCartEvent)="addToCart($event)"
     class="section__books"
     [books]="books()"
     [loading]="loading()"
