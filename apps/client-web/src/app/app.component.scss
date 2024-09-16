@@ -1,9 +1,9 @@
 .wrapper {
-  padding: 1rem;
+  padding: var(--gap);
 }
 
-@media (min-width: 1280px) {
-  .wrapper {
-    padding: 2rem;
-  }
-}
+/* @media (min-width: 1280px) { */
+/*   .wrapper { */
+/*     padding:  */
+/*   } */
+/* } */

@@ -1,6 +1,6 @@
 .books-grid {
   display: flex;
-  gap: 1rem;
+  gap: var(--gap);
   container-name: books-view;
   container-type: inline-size;
 
@@ -17,7 +17,7 @@
     width: 100%;
     display: grid;
     grid-template-columns: 1fr;
-    gap: 1rem;
+    gap: var(--gap);
   }
 }
 
@@ -33,16 +33,6 @@
   .books-grid {
     &__content {
       grid-template-columns: repeat(3, 1fr);
-    }
-  }
-}
-
-@media (min-width: 1280px) {
-  .books-grid {
-    gap: 1.5rem;
-
-    &__content {
-      gap: 1.5rem;
     }
   }
 }

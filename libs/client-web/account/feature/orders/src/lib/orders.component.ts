@@ -3,17 +3,12 @@ import {
   effect,
   HostListener,
   inject,
-  OnInit,
   Pipe,
   PipeTransform,
   signal,
 } from '@angular/core';
 import { TableModule } from 'primeng/table';
-import { Store } from '@ngrx/store';
-import {
-  ordersActions,
-  ordersSelectors,
-} from '@e-commerce/client-web/account/data-access';
+import { OrdersStore } from '@e-commerce/client-web/account/data-access';
 import {
   OrderDetails,
   OrderDetailsStatus,
@@ -62,12 +57,12 @@ export class StatusToServerityPipe implements PipeTransform {
   templateUrl: './orders.component.html',
   styleUrl: './orders.component.scss',
 })
-export class OrdersComponent implements OnInit {
-  private readonly store = inject(Store);
+export class OrdersComponent {
+  private readonly store = inject(OrdersStore);
 
-  public orders = this.store.selectSignal(ordersSelectors.selectOrders);
-  public loading = this.store.selectSignal(ordersSelectors.selectLoading);
-  public error = this.store.selectSignal(ordersSelectors.selectError);
+  public orders = this.store.orders;
+  public loading = this.store.loading;
+  public error = this.store.error;
 
   public selectedOrder = signal<OrderDetails | null>(null);
   public columns = signal<Column[]>([
@@ -84,6 +79,7 @@ export class OrdersComponent implements OnInit {
     this.isWidthHigherThan1280.set(window.innerWidth > 1536);
   }
 
+  // TODO: To change
   constructor() {
     effect(
       () => {
@@ -99,14 +95,11 @@ export class OrdersComponent implements OnInit {
     );
   }
 
-  public ngOnInit(): void {
-    this.store.dispatch(ordersActions.getOrders());
-  }
-
   public selectOrder(order: OrderDetails | null) {
     if (window.innerWidth <= 1536) {
       this.sidebarVisible.set(!!order);
     }
+    console.log(order);
     this.selectedOrder.set(order);
   }
 }

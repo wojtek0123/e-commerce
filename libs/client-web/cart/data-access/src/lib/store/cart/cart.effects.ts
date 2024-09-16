@@ -54,7 +54,8 @@ export class CartEffect {
     this.actions$.pipe(
       ofType(cartActions.getCartItemsLocally),
       map(() => {
-        const cartItems = JSON.parse(localStorage.getItem('cart') ?? '') ?? [];
+        const cart = localStorage.getItem('cart');
+        const cartItems = cart ? JSON.parse(cart) : [];
         return cartActions.getCartItemsLocallySuccess({ cartItems });
       }),
     ),

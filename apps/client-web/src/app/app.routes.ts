@@ -11,10 +11,7 @@ import {
 } from '@e-commerce/client-web/cart/data-access';
 import { provideEffects } from '@ngrx/effects';
 import { provideState } from '@ngrx/store';
-import {
-  ordersFeature,
-  OrdersEffects,
-} from '@e-commerce/client-web/account/data-access';
+import { OrdersStore } from '@e-commerce/client-web/account/data-access';
 
 export const appRoutes: Route[] = [
   {
@@ -96,10 +93,7 @@ export const appRoutes: Route[] = [
           import('@e-commerce/client-web/account/feature/orders').then(
             (r) => r.ordersRoutes,
           ),
-        providers: [
-          provideState(ordersFeature),
-          provideEffects([OrdersEffects]),
-        ],
+        providers: [OrdersStore],
       },
     ],
   },

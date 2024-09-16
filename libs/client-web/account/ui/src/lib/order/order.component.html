@@ -90,13 +90,12 @@
       </ng-template>
       <ng-template pTemplate="body" let-item>
         <tr>
-          <td>
+          <td class="image-wrapper">
             <img
-              [ngSrc]="item.book.coverImage ?? ''"
+              class="image"
+              [ngSrc]="item.book.coverImage ?? 'assets/images/not-found.png'"
               [alt]="item.book.title"
-              width="150"
-              height="150"
-              priority
+              fill
             />
           </td>
           <td>{{ item.book.title }}</td>
