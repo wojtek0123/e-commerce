@@ -3,9 +3,11 @@
 
 :root {
   --max-card-width: 20rem;
+  --gap: 2rem;
   --border-radius: 1rem;
   --max-content-height: calc(100svh - 4.25rem - 2rem);
   --header-height: 4.25rem;
+
   --sm: 640px;
   --md: 768px;
   --lg: 1024px;
@@ -97,8 +99,16 @@ button {
   border-radius: var(--border-radius);
 }
 
+.p-button {
+  min-width: fit-content;
+}
+
 button.p-button-rounded {
   border-radius: 50%;
+}
+
+.p-paginator {
+  border-radius: var(--border-radius);
 }
 
 a.p-button {
