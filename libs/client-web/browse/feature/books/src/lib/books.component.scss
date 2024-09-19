@@ -91,18 +91,6 @@
   }
 }
 
-// @media (min-width: 1280px) {
-//   .books {
-//     &__content {
-//       &-books {
-//         &__view {
-//           grid-template-columns: repeat(4, 1fr);
-//         }
-//       }
-//     }
-//   }
-// }
-
 @container books-view (min-width: 1536px) {
   .books {
     &__content {

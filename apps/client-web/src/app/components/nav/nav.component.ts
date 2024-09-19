@@ -1,19 +1,28 @@
 import {
   Component,
   computed,
+  HostBinding,
   inject,
   input,
   output,
   signal,
 } from '@angular/core';
-import { Params, RouterLink } from '@angular/router';
+import { NavigationEnd, Params, Router, RouterLink } from '@angular/router';
 import { DividerModule } from 'primeng/divider';
 import { ButtonModule } from 'primeng/button';
 import { MenuModule } from 'primeng/menu';
-import { BookTag } from '@e-commerce/client-web/shared/data-access';
+import { BookTag, Category } from '@e-commerce/client-web/shared/data-access';
 import { InputSwitchChangeEvent, InputSwitchModule } from 'primeng/inputswitch';
 import { ThemeService, Theme } from '../../services/theme.service';
 import { FormsModule } from '@angular/forms';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { filter, map } from 'rxjs';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
+import { SidebarModule } from 'primeng/sidebar';
+import { ToolbarModule } from 'primeng/toolbar';
+import { NavToolbarDirective } from '../../utils/toolbar.directive';
+import { SidebarLeftDirective } from '../../utils/sidebar-left.directive';
+import { NavButtonDirective } from '../../utils/nav-button.directive';
 
 @Component({
   selector: 'app-nav',
@@ -26,6 +35,13 @@ import { FormsModule } from '@angular/forms';
     RouterLink,
     InputSwitchModule,
     FormsModule,
+    NgClass,
+    SidebarModule,
+    NgTemplateOutlet,
+    ToolbarModule,
+    NavToolbarDirective,
+    SidebarLeftDirective,
+    NavButtonDirective,
   ],
   templateUrl: './nav.component.html',
   styleUrl: './nav.component.scss',
@@ -39,9 +55,24 @@ export class NavComponent {
     this.themeSwitcherService.theme() === 'dark' ? true : false,
   )();
 
-  logoutEvent = output<void>();
+  isOpen = signal(false);
 
-  navItems: {
+  public categories = input.required<Category[]>();
+
+  public logoutEvent = output<void>();
+
+  public stringifyCategory(category: Category) {
+    return JSON.stringify(category);
+  }
+
+  protected isAccountRouteActive = toSignal(
+    inject(Router).events.pipe(
+      filter((events) => events instanceof NavigationEnd),
+      map((event) => event.url.includes('account')),
+    ),
+  );
+
+  public navItems: {
     id: BookTag;
     name: string;
     url: string;
@@ -82,44 +113,26 @@ export class NavComponent {
   ];
 
   sidebarVisible = signal(false);
-  menuItems = computed(() =>
-    this.isAuthenticated()
-      ? [
-          {
-            label: 'Orders',
-            icon: 'pi pi-book',
-            routerLink: '/account/orders',
-          },
-          {
-            label: 'Settings',
-            icon: 'pi pi-cog',
-            routerLink: '/account/settings',
-          },
-          {
-            label: 'Sign out',
-            icon: 'pi pi-sign-out',
-            command: () => {
-              this.logoutEvent.emit();
-            },
-          },
-        ]
-      : [
-          {
-            label: 'Sign in',
-            icon: 'pi pi-sign-in',
-            routerLink: '/login',
-          },
-          {
-            label: 'Sign up',
-            icon: 'pi pi-user-plus',
-            routerLink: '/register',
-          },
-        ],
-  );
+  menuItems = signal([
+    {
+      label: 'Orders',
+      icon: 'pi pi-book',
+      routerLink: '/account/orders',
+    },
+    {
+      label: 'Settings',
+      icon: 'pi pi-cog',
+      routerLink: '/account/settings',
+    },
+  ]);
 
   onChangeTheme(event: InputSwitchChangeEvent) {
     const theme: Theme = event.checked ? 'dark' : 'light';
 
     this.themeSwitcherService.switchTheme(theme);
+  }
+
+  public toggleNavigation() {
+    this.isOpen.update((isOpen) => !isOpen);
   }
 }
