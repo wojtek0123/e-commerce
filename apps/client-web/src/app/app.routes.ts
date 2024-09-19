@@ -82,10 +82,6 @@ export const appRoutes: Route[] = [
   },
   {
     path: 'account',
-    loadComponent: () =>
-      import('@e-commerce/client-web/account/feature/shell').then(
-        (r) => r.ShellComponent,
-      ),
     children: [
       {
         path: 'orders',
@@ -94,6 +90,17 @@ export const appRoutes: Route[] = [
             (r) => r.ordersRoutes,
           ),
         providers: [OrdersStore],
+      },
+      {
+        path: 'settings',
+        loadChildren: () =>
+          import('@e-commerce/client-web/account/feature/settings').then(
+            (r) => r.settingsRoutes,
+          ),
+      },
+      {
+        path: '**',
+        redirectTo: 'orders',
       },
     ],
   },

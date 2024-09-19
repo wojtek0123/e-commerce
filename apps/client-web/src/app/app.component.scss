@@ -1,9 +1,27 @@
 .wrapper {
+  display: flex;
+  flex-direction: column-reverse;
+  width: 100%;
+  height: 100svh;
+}
+
+.router {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
   padding: var(--gap);
 }
 
-/* @media (min-width: 1280px) { */
-/*   .wrapper { */
-/*     padding:  */
-/*   } */
-/* } */
+@media (min-width: 1280px) {
+  .router {
+    padding: 0 0 0 var(--gap);
+    overflow-y: initial;
+  }
+
+  .wrapper {
+    flex-direction: row;
+    padding: var(--gap);
+    min-height: 100svh;
+    height: 100%;
+  }
+}

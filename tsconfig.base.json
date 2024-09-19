@@ -21,6 +21,9 @@
       "@e-commerce/client-web/account/feature/orders": [
         "libs/client-web/account/feature/orders/src/index.ts"
       ],
+      "@e-commerce/client-web/account/feature/settings": [
+        "libs/client-web/account/feature/settings/src/index.ts"
+      ],
       "@e-commerce/client-web/account/feature/shell": [
         "libs/client-web/account/feature/shell/src/index.ts"
       ],

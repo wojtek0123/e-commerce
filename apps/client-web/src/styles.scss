@@ -39,6 +39,7 @@ body {
   min-height: 100svh;
   max-width: 3840px;
   width: 100%;
+  background-color: var(--surface-ground);
 }
 
 .scroller {
@@ -85,6 +86,32 @@ input {
 
 .p-menu {
   border-radius: var(--border-radius);
+  background: var(--surface-hover) !important;
+}
+
+.p-datatable .p-datatable-thead > tr > th {
+  background: var(--surface-hover);
+
+  &:first-child {
+    border-top-left-radius: var(--border-radius);
+  }
+  &:last-child {
+    border-top-right-radius: var(--border-radius);
+  }
+}
+
+.p-datatable .p-datatable-tbody > tr:not(.p-highlight) {
+  background: var(--surface-hover);
+}
+
+.p-datatable .p-datatable-tbody > tr {
+  &:last-child > td:first-child {
+    border-bottom-left-radius: var(--border-radius);
+  }
+
+  &:last-child > td:last-child {
+    border-bottom-right-radius: var(--border-radius);
+  }
 }
 
 .p-password {
@@ -201,6 +228,10 @@ p-button.w-full .p-button {
 
 .p-dropdown {
   border-radius: var(--border-radius);
+}
+
+p-toolbar {
+  width: 100%;
 }
 
 @media (min-width: 40rem) {

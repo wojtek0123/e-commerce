@@ -1,5 +1,5 @@
 .book-card {
-  background-color: var(--surface-hover);
+  background-color: var(--surface-section);
   cursor: pointer;
   color: var(--text-color);
   display: flex;
@@ -9,9 +9,7 @@
   width: 100%;
 
   &__image-container {
-    // width: var(--max-card-width);
     width: 100%;
-    /* min-width: var(--max-card-width); */
     height: 26rem;
     border-radius: var(--border-radius);
     position: relative;

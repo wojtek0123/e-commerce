@@ -1,7 +1,12 @@
 .open-sidebar-button {
   display: flex;
-  justify-content: center;
-  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+
+  &__text {
+    display: none;
+  }
 }
 
 .sidebar {
@@ -48,6 +53,14 @@
       &__price {
         font-size: 2.5rem;
       }
+    }
+  }
+}
+
+@media (min-width: 1280px) {
+  .open-sidebar-button {
+    &__text {
+      display: block;
     }
   }
 }

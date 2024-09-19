@@ -36,8 +36,10 @@
   .table {
     position: sticky;
     top: calc(var(--header-height) + 2rem);
-    max-height: calc(100svh - var(--header-height) - 4rem);
+    max-height: calc(100svh - 2 * var(--gap));
     overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--text-color-secondary) var(--surface-hover);
   }
 }
 

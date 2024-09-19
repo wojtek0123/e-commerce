@@ -1,19 +1,18 @@
 <p-button
   #openCartSidebar
-  type="button"
-  [text]="true"
   (click)="visible.set(true)"
+  type="button"
+  [plain]="true"
   class="open-sidebar-button"
-  pTooltip="View cart"
-  tooltipPosition="bottom"
+  [text]="true"
 >
   <i
     class="pi pi-shopping-cart"
-    style="font-size: 1.5rem"
     pBadge
     [value]="count().toString()"
     severity="danger"
   ></i>
+  <span class="open-sidebar-button__text">Cart</span>
 </p-button>
 
 <p-sidebar

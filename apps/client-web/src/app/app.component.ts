@@ -45,9 +45,9 @@ import { jwtDecode } from 'jwt-decode';
 export class AppComponent implements OnInit {
   private store = inject(Store);
 
-  public categories$ = this.store.select(selectCategories);
-  public loading$ = this.store.select(selectLoading);
-  public error$ = this.store.select(selectError);
+  public categories = this.store.selectSignal(selectCategories);
+  // public loading$ = this.store.select(selectLoading);
+  // public error$ = this.store.select(selectError);
   public event = this.store.selectSignal(selectEvent);
   public isAuthenticated = this.store.selectSignal(selectIsAuthenticated);
   public refreshToken = this.store.selectSignal(selectRefreshToken);
