@@ -1,7 +1,7 @@
 <div class="active-filters">
   <p-button
     size="small"
-    class="min-w-max"
+    [style]="{ 'min-width': 'max-content' }"
     label="Clear filters"
     severity="contrast"
     (click)="clearFiltersEvent.emit()"

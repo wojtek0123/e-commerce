@@ -14,7 +14,7 @@
 @media (min-width: 1536px) {
   .orders {
     grid-template-columns: 1fr 1fr;
-    gap: 1rem;
+    gap: var(--gap);
   }
 
   .sidebar {
@@ -35,7 +35,7 @@
 
   .table {
     position: sticky;
-    top: calc(var(--header-height) + 2rem);
+    top: var(--gap);
     max-height: calc(100svh - 2 * var(--gap));
     overflow-y: auto;
     scrollbar-width: thin;

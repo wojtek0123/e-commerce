@@ -5,8 +5,7 @@
   --max-card-width: 20rem;
   --gap: 2rem;
   --border-radius: 1rem;
-  --max-content-height: calc(100svh - 4.25rem - 2rem);
-  --header-height: 4.25rem;
+  --max-content-height: calc(100svh - 2 * var(--gap));
 
   --sm: 640px;
   --md: 768px;
@@ -40,6 +39,7 @@ body {
   max-width: 3840px;
   width: 100%;
   background-color: var(--surface-ground);
+  overflow-x: hidden;
 }
 
 .scroller {
@@ -90,18 +90,12 @@ input {
 }
 
 .p-datatable .p-datatable-thead > tr > th {
-  background: var(--surface-hover);
-
   &:first-child {
     border-top-left-radius: var(--border-radius);
   }
   &:last-child {
     border-top-right-radius: var(--border-radius);
   }
-}
-
-.p-datatable .p-datatable-tbody > tr:not(.p-highlight) {
-  background: var(--surface-hover);
 }
 
 .p-datatable .p-datatable-tbody > tr {
@@ -174,26 +168,26 @@ p-button.w-full .p-button {
 }
 
 .p-accordion {
-  background: transparent;
-  border-radius: var(--border-radius);
-  overflow: hidden;
+  /* background: transparent; */
+  /* border-radius: var(--border-radius); */
+  /* overflow: hidden; */
 }
 
 .p-listbox {
-  border-bottom-left-radius: var(--border-radius);
-  border-bottom-right-radius: var(--border-radius);
+  /* border-bottom-left-radius: var(--border-radius); */
+  /* border-bottom-right-radius: var(--border-radius); */
   overflow: hidden;
 }
 
 .p-toggleable-content {
-  border-bottom-left-radius: var(--border-radius);
-  border-bottom-right-radius: var(--border-radius);
+  /* border-bottom-left-radius: var(--border-radius); */
+  /* border-bottom-right-radius: var(--border-radius); */
   overflow: hidden;
 }
 
 .p-accordion-tab {
-  border-radius: var(--border-radius);
-  background: transparent;
+  /* border-radius: var(--border-radius); */
+  /* background: transparent; */
 }
 
 .p-menu
@@ -234,10 +228,14 @@ p-toolbar {
   width: 100%;
 }
 
+.p-accordion .p-accordion-header .p-accordion-header-link {
+  border-radius: 0;
+}
+
 @media (min-width: 40rem) {
   .p-sidebar-right {
-    border-top-left-radius: calc(var(--border-radius));
-    border-bottom-left-radius: calc(var(--border-radius));
+    border-top-left-radius: var(--border-radius);
+    border-bottom-left-radius: var(--border-radius);
   }
 }
 

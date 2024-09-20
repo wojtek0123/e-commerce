@@ -12,8 +12,11 @@ export class NavToolbarDirective {
     this.toolbar.style = {
       width: '100%',
       'max-width': '35rem',
-      margin: '1rem auto',
-      'border-radius': 'var(--border-radius)',
+      margin: '0 auto',
+      'border-top-left-radius': 'var(--border-radius)',
+      'border-top-right-radius': 'var(--border-radius)',
+      'border-bottom-left-radius': 0,
+      'border-bottom-right-radius': 0,
     };
   }
 }
