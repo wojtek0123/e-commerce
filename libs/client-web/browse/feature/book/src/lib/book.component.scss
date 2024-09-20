@@ -104,16 +104,9 @@
   }
 
   .book {
-    /* grid-template-columns: 1fr 1fr; */
-
     &__content-wrapper {
       gap: 3rem;
     }
-
-    /* &__image-wrapper { */
-    /*   position: sticky; */
-    /*   top: var(--gap); */
-    /* } */
   }
 }
 
@@ -142,14 +135,14 @@
 
   .book__price-container {
     position: sticky;
-    top: 7rem;
+    top: var(--gap);
   }
 
   .price-container-extended {
     position: sticky;
-    top: 7rem;
+    top: var(--gap);
     overflow: hidden;
-    max-height: calc(100svh - 9rem);
+    max-height: calc(100svh - 2 * var(--gap));
     display: flex;
     justify-content: center;
   }

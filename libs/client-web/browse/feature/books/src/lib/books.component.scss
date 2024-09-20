@@ -1,11 +1,13 @@
 .books {
   display: flex;
   gap: var(--gap);
+
   &__content {
     display: flex;
     flex-direction: column;
     gap: var(--gap);
     width: 100%;
+    overflow-x: hidden;
 
     &-bar {
       display: flex;

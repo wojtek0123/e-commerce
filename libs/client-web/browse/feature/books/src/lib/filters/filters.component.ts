@@ -34,15 +34,14 @@ import { NgTemplateOutlet } from '@angular/common';
 })
 export class FiltersComponent {
   @HostBinding('style.maxWidth') maximumWidth =
-    window.innerWidth >= 1280 ? '26rem' : 'fit-content';
+    window.innerWidth >= 1280 ? '20rem' : 'fit-content';
   @HostBinding('style.width') width =
     window.innerWidth >= 1280 ? '100%' : 'fit-content';
 
   @HostListener('window:resize')
   onResize() {
-    console.log('here rer');
     if (window.innerWidth >= 1280) {
-      this.maximumWidth = '26rem';
+      this.maximumWidth = '20rem';
       this.width = '100%';
     } else {
       this.maximumWidth = 'fit-content';
