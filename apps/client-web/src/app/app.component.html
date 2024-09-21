@@ -1,12 +1,6 @@
 <p-toast />
 <div class="wrapper">
-  <app-nav
-    [isAuthenticated]="isAuthenticated()"
-    (logoutEvent)="logout()"
-    [categories]="categories()"
-  >
-    <lib-cart-sidebar />
-  </app-nav>
+  <app-nav />
   <div class="router">
     <router-outlet />
   </div>

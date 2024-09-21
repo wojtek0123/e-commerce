@@ -4,6 +4,12 @@
   type="button"
   [plain]="true"
   class="open-sidebar-button"
+  [style]="{
+    display: 'flex',
+    gap: '0.5rem',
+    padding: '0.5rem 1rem',
+    height: '2.375rem',
+  }"
   [text]="true"
 >
   <i
@@ -12,7 +18,9 @@
     [value]="count().toString()"
     severity="danger"
   ></i>
-  <span class="open-sidebar-button__text">Cart</span>
+  @if (isLabelShowed()) {
+    <span class="open-sidebar-button__text">Cart</span>
+  }
 </p-button>
 
 <p-sidebar

@@ -1,17 +1,19 @@
 import {
   Component,
   computed,
-  HostBinding,
   inject,
-  input,
-  output,
+  OnDestroy,
   signal,
+  OnInit,
 } from '@angular/core';
-import { NavigationEnd, Params, Router, RouterLink } from '@angular/router';
+import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { DividerModule } from 'primeng/divider';
 import { ButtonModule } from 'primeng/button';
 import { MenuModule } from 'primeng/menu';
-import { BookTag, Category } from '@e-commerce/client-web/shared/data-access';
+import {
+  Category,
+  selectCategories,
+} from '@e-commerce/client-web/shared/data-access';
 import { InputSwitchChangeEvent, InputSwitchModule } from 'primeng/inputswitch';
 import { ThemeService, Theme } from '../../services/theme.service';
 import { FormsModule } from '@angular/forms';
@@ -23,6 +25,19 @@ import { ToolbarModule } from 'primeng/toolbar';
 import { NavToolbarDirective } from '../../utils/toolbar.directive';
 import { SidebarLeftDirective } from '../../utils/sidebar-left.directive';
 import { NavButtonDirective } from '../../utils/nav-button.directive';
+import {
+  animate,
+  state,
+  style,
+  transition,
+  trigger,
+} from '@angular/animations';
+import { Store } from '@ngrx/store';
+import {
+  authActions,
+  selectIsAuthenticated,
+} from '@e-commerce/client-web/auth/data-access';
+import { CartSidebarComponent } from '@e-commerce/client-web/cart/feature/cart-sidebar';
 
 @Component({
   selector: 'app-nav',
@@ -42,24 +57,74 @@ import { NavButtonDirective } from '../../utils/nav-button.directive';
     NavToolbarDirective,
     SidebarLeftDirective,
     NavButtonDirective,
+    CartSidebarComponent,
   ],
   templateUrl: './nav.component.html',
   styleUrl: './nav.component.scss',
+  animations: [
+    trigger('slideInOut', [
+      state(
+        'in',
+        style({
+          width: '20rem',
+        }),
+      ),
+      state(
+        'out',
+        style({
+          width: '4rem',
+        }),
+      ),
+      transition('in => out', [animate('300ms ease-in-out')]),
+      transition('out => in', [animate('300ms ease-in-out')]),
+    ]),
+  ],
 })
-export class NavComponent {
-  private themeSwitcherService = inject(ThemeService);
+export class NavComponent implements OnInit, OnDestroy {
+  private readonly themeSwitcherService = inject(ThemeService);
+  private readonly store = inject(Store);
 
-  public isAuthenticated = input.required<boolean>();
-
+  public isAuthenticated = this.store.selectSignal(selectIsAuthenticated);
+  public categories = this.store.selectSignal(selectCategories);
   public theme = computed(() =>
     this.themeSwitcherService.theme() === 'dark' ? true : false,
   )();
+  public isOpen = signal(false);
+  public isExpanded = signal(
+    JSON.parse(localStorage.getItem('isExpanded') || '') ?? true,
+  );
+  public isLabelShowed = signal(computed(() => this.isExpanded())());
 
-  isOpen = signal(false);
+  private resizeObserver?: ResizeObserver;
+  private timer?: ReturnType<typeof setTimeout>;
+  private shouldRestoreExpanded = signal(false);
+  protected isAnimationDisabled = signal(false);
 
-  public categories = input.required<Category[]>();
+  ngOnInit() {
+    const mediaQueryList = matchMedia('(min-width: 1280px)');
 
-  public logoutEvent = output<void>();
+    this.resizeObserver = new ResizeObserver(() => {
+      if (mediaQueryList.matches && this.shouldRestoreExpanded()) {
+        this.isAnimationDisabled.set(true);
+        const isExpanded = JSON.parse(localStorage.getItem('isExpanded') || '');
+
+        this.isExpanded.set(isExpanded);
+        this.isLabelShowed.set(isExpanded);
+        this.shouldRestoreExpanded.set(false);
+        // this.isAnimationDisabled.set(false);
+      } else if (!mediaQueryList.matches) {
+        this.isLabelShowed.set(true);
+        this.isExpanded.set(true);
+        this.shouldRestoreExpanded.set(true);
+      }
+    });
+
+    this.resizeObserver.observe(document.body);
+  }
+
+  ngOnDestroy(): void {
+    this.resizeObserver?.unobserve(document.body);
+  }
 
   public stringifyCategory(category: Category) {
     return JSON.stringify(category);
@@ -72,48 +137,8 @@ export class NavComponent {
     ),
   );
 
-  public navItems: {
-    id: BookTag;
-    name: string;
-    url: string;
-    queryParams: Params;
-  }[] = [
-    {
-      id: BookTag.INCOMING,
-      name: BookTag.INCOMING.toLowerCase(),
-      url: '/browse',
-      queryParams: {
-        tags: BookTag.INCOMING.toLowerCase(),
-      },
-    },
-    {
-      id: BookTag.BESTSELLER,
-      name: BookTag.BESTSELLER.toLowerCase(),
-      url: '/browse',
-      queryParams: {
-        tags: BookTag.BESTSELLER.toLowerCase(),
-      },
-    },
-    {
-      id: BookTag.DISCOUNT,
-      name: BookTag.DISCOUNT.toLowerCase(),
-      url: '/browse',
-      queryParams: {
-        tags: BookTag.DISCOUNT.toLowerCase(),
-      },
-    },
-    {
-      id: BookTag.NEW,
-      name: BookTag.NEW.toLowerCase(),
-      url: '/browse',
-      queryParams: {
-        tags: BookTag.NEW.toLowerCase(),
-      },
-    },
-  ];
-
-  sidebarVisible = signal(false);
-  menuItems = signal([
+  // TODO: stworzyć injectionToken dla, aby było jedno źródło danych (app.routes i tutaj)
+  public menuItems = signal([
     {
       label: 'Orders',
       icon: 'pi pi-book',
@@ -126,7 +151,7 @@ export class NavComponent {
     },
   ]);
 
-  onChangeTheme(event: InputSwitchChangeEvent) {
+  public onChangeTheme(event: InputSwitchChangeEvent) {
     const theme: Theme = event.checked ? 'dark' : 'light';
 
     this.themeSwitcherService.switchTheme(theme);
@@ -134,5 +159,26 @@ export class NavComponent {
 
   public toggleNavigation() {
     this.isOpen.update((isOpen) => !isOpen);
+  }
+
+  public expandCollapseNavigation() {
+    if (this.isAnimationDisabled()) this.isAnimationDisabled.set(false);
+
+    this.isExpanded.update((isExpanded) => !isExpanded);
+    localStorage.setItem('isExpanded', JSON.stringify(this.isExpanded()));
+
+    if (this.isExpanded()) {
+      this.timer = setTimeout(() => {
+        this.isLabelShowed.set(true);
+      }, 150);
+    } else {
+      this.isLabelShowed.set(false);
+
+      if (this.timer) clearTimeout(this.timer);
+    }
+  }
+
+  public logout() {
+    this.store.dispatch(authActions.logout());
   }
 }
