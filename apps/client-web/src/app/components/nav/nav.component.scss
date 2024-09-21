@@ -1,3 +1,23 @@
+:host ::ng-deep {
+  .p-inputswitch {
+    width: 3rem;
+    .p-inputswitch-slider:before {
+      width: 1.5rem;
+      height: 1.5rem;
+      margin-top: -0.75rem;
+      left: 0.1rem;
+      background: transparent;
+      font-size: 1rem;
+      content: '🔆';
+    }
+  }
+
+  .p-inputswitch-checked .p-inputswitch-slider:before {
+    content: '🌙';
+    transform: translateX(1.3rem);
+  }
+}
+
 .active {
   background: var(--surface-hover);
   border-radius: var(--border-radius);
@@ -8,19 +28,36 @@
 }
 
 .mobile-toolbar {
+  width: 100%;
   display: flex;
   align-items: center;
-  background-color: transparent;
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  /* z-index: 1002; */
+
+  &__items {
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 
 .nav {
   display: flex;
-  min-width: 20rem;
   justify-content: space-between;
   gap: 1rem;
   width: 100%;
   flex-direction: column;
   height: calc(100svh - 2 * var(--gap) - 2rem);
+
+  &__footer {
+    display: flex;
+    flex-direction: column;
+  }
 
   &__links {
     display: flex;
@@ -79,7 +116,6 @@
 
 .utility-wrapper {
   display: flex;
-  /* align-items: center; */
   flex-direction: column;
   width: 100%;
 }
@@ -98,12 +134,16 @@
 }
 
 .menu {
+  margin: 0 auto;
+  width: 4rem;
+}
+
+.expanded-menu {
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 1rem;
-  padding: var(--gap);
 }
 
 .user {
@@ -114,6 +154,11 @@
 
 .utility {
   display: none;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
 }
 
 @media (min-width: 1280px) {
@@ -130,7 +175,6 @@
     flex-direction: column;
     list-style-type: none;
     gap: 2rem;
-    /* align-items: center; */
     justify-content: center;
     padding: 0;
   }
@@ -149,14 +193,13 @@
 
   .aside {
     display: flex;
-    min-width: 20rem;
     justify-content: space-between;
     gap: 1rem;
     height: var(--header-height);
     padding: 1rem 0.5rem;
     background-color: var(--surface-section);
     display: flex;
-    width: 100%;
+    width: 4rem;
     position: sticky;
     z-index: 1001;
     top: var(--gap);
@@ -171,5 +214,26 @@
 
   .mobile-toolbar {
     display: none;
+  }
+
+  .expanded-divider {
+    width: 19rem !important;
+  }
+
+  .collapse-divider {
+    width: 3rem !important;
+  }
+
+  .logo {
+    height: 2.375rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .footer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
   }
 }

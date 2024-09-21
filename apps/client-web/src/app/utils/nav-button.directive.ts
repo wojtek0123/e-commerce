@@ -2,7 +2,7 @@ import { Directive, inject } from '@angular/core';
 import { Button } from 'primeng/button';
 
 @Directive({
-  selector: 'p-button[navButton]',
+  selector: 'p-button[appNavButton]',
   standalone: true,
 })
 export class NavButtonDirective {
@@ -10,8 +10,8 @@ export class NavButtonDirective {
 
   constructor() {
     this.button.style = {
-      width: '100%',
-      'text-align': 'left',
+      padding: '0.5rem 1rem',
+      'text-transform': 'capitalize',
     };
     this.button.text = true;
     this.button.plain = true;

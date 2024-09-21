@@ -1,7 +1,9 @@
 import {
+  booleanAttribute,
   ChangeDetectionStrategy,
   Component,
   inject,
+  input,
   signal,
 } from '@angular/core';
 import { AsyncPipe, CurrencyPipe, NgClass } from '@angular/common';
@@ -48,6 +50,8 @@ import { BadgeModule } from 'primeng/badge';
 })
 export class CartSidebarComponent {
   private readonly store = inject(Store);
+
+  public isLabelShowed = input<boolean>(false);
 
   public cartItems = this.store.selectSignal(cartSelectors.selectCartItems);
   public count = this.store.selectSignal(cartSelectors.selectCount);

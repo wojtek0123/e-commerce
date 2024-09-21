@@ -1,100 +1,141 @@
 <div class="mobile-toolbar">
-  <p-toolbar nav>
-    <p-button
-      navButton
-      size="large"
-      icon="pi pi-bars"
-      (onClick)="toggleNavigation()"
-    />
-    <p-button
-      navButton
-      size="large"
-      routerLink="/browse"
-      routerLinkActive="active"
-      [queryParams]="null"
-      [state]="{}"
-      icon="pi pi-search"
-    />
-    <p-button
-      navButton
-      size="large"
-      routerLink="/"
-      routerLinkActive="active"
-      [routerLinkActiveOptions]="{ exact: true }"
-      [queryParams]="null"
-      [state]="{}"
-      icon="pi pi-home"
-    />
-    <p-button navButton size="large" routerLink="/account" icon="pi pi-user" />
-    <ng-content select="lib-cart-sidebar" />
+  <p-toolbar appNavToolbar>
+    <div class="mobile-toolbar__items">
+      <p-button
+        appNavButton
+        size="large"
+        icon="pi pi-bars"
+        (onClick)="toggleNavigation()"
+      />
+      <p-button
+        appNavButton
+        size="large"
+        routerLink="/browse"
+        routerLinkActive="active"
+        [queryParams]="null"
+        [state]="{}"
+        icon="pi pi-search"
+      />
+      <p-button
+        appNavButton
+        size="large"
+        routerLink="/"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        [queryParams]="null"
+        [state]="{}"
+        icon="pi pi-home"
+      />
+      <p-button
+        appNavButton
+        size="large"
+        routerLink="/account"
+        icon="pi pi-user"
+      />
+      <lib-cart-sidebar />
+    </div>
   </p-toolbar>
 </div>
 
-<p-sidebar
-  sidebarLeft
-  [(visible)]="isOpen"
-  [blockScroll]="true"
-  class="sidebar"
->
-  <ng-container [ngTemplateOutlet]="links" />
+<p-sidebar appSidebarLeft [(visible)]="isOpen" [blockScroll]="true">
+  <ng-template pTemplate="header">
+    <a routerLink="/" [queryParams]="null" class="nav__links_logo">
+      <span class="nav__links_logo_name">Story</span>
+      <span class="nav__links_logo_name">Stash</span>
+    </a>
+  </ng-template>
+  <div class="sidebar">
+    <ng-container [ngTemplateOutlet]="links" />
+  </div>
 </p-sidebar>
 
-<aside class="aside">
+<aside
+  class="aside"
+  [@slideInOut]="isExpanded() ? 'in' : 'out'"
+  [@.disabled]="isAnimationDisabled()"
+>
   <nav class="nav">
     <div class="nav__links">
-      <a routerLink="/" [queryParams]="null" class="nav__links_logo">
-        <span class="nav__links_logo_name">Story</span>
-        <span class="nav__links_logo_name">Stash</span>
-      </a>
+      <div class="logo">
+        @if (isLabelShowed()) {
+          <a routerLink="/" [queryParams]="null" class="nav__links_logo">
+            <span class="nav__links_logo_name">Story</span>
+            <span class="nav__links_logo_name">Stash</span>
+          </a>
+        } @else {
+          <p-button
+            appNavButton
+            routerLink="/"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            icon="pi pi-home"
+          />
+        }
+      </div>
       <p-divider />
       <ul class="items">
         <p-button
-          navButton
+          appNavButton
           routerLink="/browse"
-          routerLinkActive="active"
           [queryParams]="null"
+          routerLinkActive="active"
           [state]="{}"
           icon="pi pi-search"
-          label="Browse"
+          [label]="isLabelShowed() ? 'Browse' : ''"
         />
         <ng-container [ngTemplateOutlet]="links" />
       </ul>
     </div>
 
     <div class="nav__footer">
-      <ng-content select="lib-cart-sidebar" />
+      <lib-cart-sidebar [isLabelShowed]="isLabelShowed()" />
       @if (isAuthenticated()) {
         <p-button
-          navButton
+          appNavButton
           routerLink="/account"
           icon="pi pi-user"
-          label="Account"
+          [label]="isLabelShowed() ? 'Account' : ''"
         />
         <p-button
-          navButton
-          (onClick)="logoutEvent.emit()"
+          appNavButton
+          (onClick)="logout()"
           icon="pi pi-sign-out"
-          label="Log out"
+          [label]="isLabelShowed() ? 'Log out' : ''"
         />
       } @else {
         <p-button
-          navButton
+          appNavButton
           routerLink="/login"
           icon="pi pi-sign-in"
-          label="Log in"
+          [label]="isLabelShowed() ? 'Log in' : ''"
         />
         <p-button
-          navButton
+          appNavButton
           routerLink="/register"
           icon="pi pi-user-plus"
-          label="Register"
+          [label]="isLabelShowed() ? 'Register' : ''"
         />
       }
       <p-divider />
-      <div class="menu">
-        <span>Light</span>
-        <p-inputSwitch [(ngModel)]="theme" (onChange)="onChangeTheme($event)" />
-        <span>Dark</span>
+      <div class="footer">
+        <div class="menu" [ngClass]="{ 'expanded-menu': isLabelShowed() }">
+          @if (isLabelShowed()) {
+            <span>Light</span>
+          }
+          <p-inputSwitch
+            [(ngModel)]="theme"
+            (onChange)="onChangeTheme($event)"
+          />
+          @if (isLabelShowed()) {
+            <span>Dark</span>
+          }
+        </div>
+        <p-button
+          appNavButton
+          class="expand-collapse-button"
+          (onClick)="expandCollapseNavigation()"
+          [icon]="isExpanded() ? 'pi pi-arrow-left' : 'pi pi-arrow-right'"
+        />
       </div>
     </div>
   </nav>
@@ -104,24 +145,25 @@
   @if (isAccountRouteActive()) {
     @for (menuItem of menuItems(); track menuItem.label) {
       <p-button
-        navButton
+        appNavButton
         [routerLink]="menuItem.routerLink"
         routerLinkActive="active"
         [queryParams]="null"
         [icon]="menuItem.icon"
-        [label]="menuItem.label"
+        [label]="isLabelShowed() ? menuItem.label : ''"
         (onClick)="isOpen.set(false)"
       />
     }
   } @else {
     @for (category of categories(); track category.id) {
       <p-button
-        navButton
+        appNavButton
+        class="category"
         routerLink="/browse"
         [queryParams]="{
           categories: category.name.toLowerCase().split(' ').join('_'),
         }"
-        [label]="category.name"
+        [label]="isLabelShowed() ? category.name : category.name[0]"
         [state]="{ category: stringifyCategory(category) }"
         (onClick)="isOpen.set(false)"
       />

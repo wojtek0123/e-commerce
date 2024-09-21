@@ -2,7 +2,7 @@ import { Directive, inject } from '@angular/core';
 import { Toolbar } from 'primeng/toolbar';
 
 @Directive({
-  selector: 'p-toolbar[nav]',
+  selector: 'p-toolbar[appNavToolbar]',
   standalone: true,
 })
 export class NavToolbarDirective {
@@ -11,7 +11,6 @@ export class NavToolbarDirective {
   constructor() {
     this.toolbar.style = {
       width: '100%',
-      'max-width': '35rem',
       margin: '0 auto',
       'border-top-left-radius': 'var(--border-radius)',
       'border-top-right-radius': 'var(--border-radius)',
