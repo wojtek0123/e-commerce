@@ -90,28 +90,30 @@ export class NavComponent implements OnInit, OnDestroy {
     this.themeSwitcherService.theme() === 'dark' ? true : false,
   )();
   public isOpen = signal(false);
-  public isExpanded = signal(
-    JSON.parse(localStorage.getItem('isExpanded') || '') ?? true,
-  );
+  public isExpanded = signal(true);
   public isLabelShowed = signal(computed(() => this.isExpanded())());
 
   private resizeObserver?: ResizeObserver;
   private timer?: ReturnType<typeof setTimeout>;
   private shouldRestoreExpanded = signal(false);
-  protected isAnimationDisabled = signal(false);
 
   ngOnInit() {
+    const isExpanded = localStorage.getItem('isExpanded');
+
+    if (isExpanded) {
+      this.isExpanded.set(JSON.parse(isExpanded));
+      this.isLabelShowed.set(JSON.parse(isExpanded));
+    }
+
     const mediaQueryList = matchMedia('(min-width: 1280px)');
 
     this.resizeObserver = new ResizeObserver(() => {
       if (mediaQueryList.matches && this.shouldRestoreExpanded()) {
-        this.isAnimationDisabled.set(true);
         const isExpanded = JSON.parse(localStorage.getItem('isExpanded') || '');
 
         this.isExpanded.set(isExpanded);
         this.isLabelShowed.set(isExpanded);
         this.shouldRestoreExpanded.set(false);
-        // this.isAnimationDisabled.set(false);
       } else if (!mediaQueryList.matches) {
         this.isLabelShowed.set(true);
         this.isExpanded.set(true);
@@ -162,8 +164,6 @@ export class NavComponent implements OnInit, OnDestroy {
   }
 
   public expandCollapseNavigation() {
-    if (this.isAnimationDisabled()) this.isAnimationDisabled.set(false);
-
     this.isExpanded.update((isExpanded) => !isExpanded);
     localStorage.setItem('isExpanded', JSON.stringify(this.isExpanded()));
 
