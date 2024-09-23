@@ -49,11 +49,7 @@
   </div>
 </p-sidebar>
 
-<aside
-  class="aside"
-  [@slideInOut]="isExpanded() ? 'in' : 'out'"
-  [@.disabled]="isAnimationDisabled()"
->
+<aside class="aside" [@slideInOut]="isExpanded() ? 'in' : 'out'">
   <nav class="nav">
     <div class="nav__links">
       <div class="logo">

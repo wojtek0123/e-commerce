@@ -38,7 +38,6 @@ export const browseFeature = createFeature({
       (state, { value }): BrowseState => ({
         ...state,
         search: value,
-        loading: true,
       }),
     ),
     on(
@@ -114,7 +113,6 @@ export const browseFeature = createFeature({
       return {
         ...state,
         page: 1,
-        loading: true,
         activeFilters:
           value === null
             ? [...activeFilters]
@@ -190,7 +188,6 @@ export const browseFeature = createFeature({
       (state): BrowseState => ({
         ...state,
         page: 1,
-        loading: true,
         activeFilters: [],
         filters: {
           category: {

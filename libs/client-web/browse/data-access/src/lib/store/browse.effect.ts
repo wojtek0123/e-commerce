@@ -9,7 +9,15 @@ import {
 } from '@e-commerce/client-web/shared/data-access';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { browseActions } from './browse.action';
-import { debounce, filter, map, of, switchMap, timer } from 'rxjs';
+import {
+  debounce,
+  distinctUntilChanged,
+  filter,
+  map,
+  of,
+  switchMap,
+  timer,
+} from 'rxjs';
 import { concatLatestFrom, mapResponse } from '@ngrx/operators';
 import { Store } from '@ngrx/store';
 import {
@@ -28,17 +36,56 @@ export class BrowseEffect {
   private authorApi = inject(AuthorApiService);
   private categoryApi = inject(CategoryApiService);
 
+  triggerGetBooks = createEffect(() =>
+    this.actions$.pipe(
+      ofType(
+        browseActions.removeActiveFilters,
+        browseActions.setSearch,
+        browseActions.setPrice,
+      ),
+      concatLatestFrom(() => [
+        this.store.select(selectSearch),
+        this.store.select(selectFilters),
+      ]),
+      debounce(([action]) =>
+        action.type === browseActions.setSearch.type ? timer(350) : of({}),
+      ),
+      distinctUntilChanged((prev, curr) => {
+        const [, prevSearch, prevFilters] = prev;
+        const [, currSearch, currFilters] = curr;
+
+        const isEqual = (a: any, b: any) =>
+          JSON.stringify(a) === JSON.stringify(b);
+
+        return (
+          prevSearch === currSearch &&
+          isEqual(
+            prevFilters.tag.selectedItems,
+            currFilters.tag.selectedItems,
+          ) &&
+          isEqual(prevFilters.price, currFilters.price) &&
+          isEqual(
+            prevFilters.author.selectedItems,
+            currFilters.author.selectedItems,
+          ) &&
+          isEqual(
+            prevFilters.category.selectedItems,
+            currFilters.category.selectedItems,
+          )
+        );
+      }),
+      map(() => browseActions.getBooks()),
+    ),
+  );
+
   getBooks = createEffect(() =>
     this.actions$.pipe(
       ofType(
         browseActions.getBooks,
-        browseActions.setSearch,
         browseActions.setPage,
         browseActions.setSize,
         browseActions.setSelectedItems,
-        browseActions.setPrice,
         browseActions.removeActiveFilter,
-        browseActions.removeActiveFilters,
         browseActions.clearFilterSelectedItems,
       ),
       concatLatestFrom(() => [
@@ -47,9 +94,6 @@ export class BrowseEffect {
         this.store.select(selectSize),
         this.store.select(selectFilters),
       ]),
-      debounce(([action]) =>
-        action.type === browseActions.setSearch.type ? timer(350) : of({}),
-      ),
       switchMap(([, search, page, size, filters]) =>
         this.bookApi
           .getBooks$({
