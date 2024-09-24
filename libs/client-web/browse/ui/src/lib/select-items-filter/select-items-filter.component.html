@@ -1,0 +1,16 @@
+<div>
+  <input />
+  <div>
+    @for (item of items(); track trackFn) {
+      <p-checkbox
+        #checkbox
+        [ngModel]="selectedItems()"
+        (ngModelChange)="changeSelectedItems($event, item)"
+        [label]="getItemLabel(item)"
+        [value]="item"
+      />
+    } @empty {
+      <div class="filter__items__message">Not found!</div>
+    }
+  </div>
+</div>

@@ -1,0 +1,14 @@
+<div class="header">
+  <span class="font-bold white-space-nowrap">{{ header() }}</span>
+  <p-badge
+    [value]="selectedItemsCount()"
+    class="ml-2"
+    styleClass="p-badge-secondary"
+  />
+  <p-button
+    class="ml-3"
+    icon="pi pi-trash"
+    [text]="true"
+    (onClick)="$event.stopImmediatePropagation(); clearFilterSelectedItems()"
+  />
+</div>

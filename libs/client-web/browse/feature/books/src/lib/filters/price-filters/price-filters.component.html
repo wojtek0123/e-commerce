@@ -1,36 +1,30 @@
-<lib-filter
-  header="Price"
-  filterName="price"
-  [selectedItems]="(selected$ | async) ?? []"
->
-  <div libCustomFilter class="price-filter">
-    <lib-form-field label="Min">
-      <p-inputNumber
-        slot="input"
-        [min]="0"
-        [maxFractionDigits]="2"
-        [ngModel]="minPrice()()"
-        (ngModelChange)="minPrice().set($event)"
-        (onBlur)="onBlur('min')"
-        mode="decimal"
-        currency="USD"
-      />
-    </lib-form-field>
-    <div class="price-filter__divider">
-      <p-divider />
-    </div>
-
-    <lib-form-field label="Max">
-      <p-inputNumber
-        slot="input"
-        [min]="0"
-        [ngModel]="maxPrice()()"
-        (ngModelChange)="maxPrice().set($event)"
-        (onBlur)="onBlur('max')"
-        [maxFractionDigits]="2"
-        mode="decimal"
-        currency="USD"
-      />
-    </lib-form-field>
+<div class="price-filter">
+  <lib-form-field label="Min">
+    <p-inputNumber
+      slot="input"
+      [min]="0"
+      [maxFractionDigits]="2"
+      [ngModel]="minPrice()()"
+      (ngModelChange)="minPrice().set($event)"
+      (onBlur)="onBlur('min')"
+      mode="decimal"
+      currency="USD"
+    />
+  </lib-form-field>
+  <div class="price-filter__divider">
+    <p-divider />
   </div>
-</lib-filter>
+
+  <lib-form-field label="Max">
+    <p-inputNumber
+      slot="input"
+      [min]="0"
+      [ngModel]="maxPrice()()"
+      (ngModelChange)="maxPrice().set($event)"
+      (onBlur)="onBlur('max')"
+      [maxFractionDigits]="2"
+      mode="decimal"
+      currency="USD"
+    />
+  </lib-form-field>
+</div>

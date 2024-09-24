@@ -19,9 +19,45 @@
 
 <ng-template #filters>
   <p-accordion>
-    <lib-tag-filter />
-    <lib-author-filter />
-    <lib-category-filter />
-    <lib-price-filter />
+    <p-accordionTab>
+      <ng-template pTemplate="header">
+        <lib-accordion-filter-header
+          header="Tags"
+          [selectedItemsCount]="selectedTags().length"
+          (clearSelectedItems)="clearSelectedItems('tag')"
+        />
+      </ng-template>
+      <lib-filter libTags />
+    </p-accordionTab>
+    <p-accordionTab>
+      <ng-template pTemplate="header">
+        <lib-accordion-filter-header
+          header="Authors"
+          [selectedItemsCount]="selectedAuthors().length"
+          (clearSelectedItems)="clearSelectedItems('author')"
+        />
+      </ng-template>
+      <lib-filter libAuthors />
+    </p-accordionTab>
+    <p-accordionTab>
+      <ng-template pTemplate="header">
+        <lib-accordion-filter-header
+          header="Categories"
+          [selectedItemsCount]="selectedCategories().length"
+          (clearSelectedItems)="clearSelectedItems('category')"
+        />
+      </ng-template>
+      <lib-filter libCategories />
+    </p-accordionTab>
+    <p-accordionTab>
+      <ng-template pTemplate="header">
+        <lib-accordion-filter-header
+          header="Price"
+          [selectedItemsCount]="selectedPrices().length"
+          (clearSelectedItems)="clearSelectedItems('price')"
+        />
+      </ng-template>
+      <lib-price-filter />
+    </p-accordionTab>
   </p-accordion>
 </ng-template>
