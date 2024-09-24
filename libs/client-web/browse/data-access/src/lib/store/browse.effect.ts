@@ -152,29 +152,29 @@ export class BrowseEffect {
     ),
   );
 
-  getAuthorFilter = createEffect(() =>
-    this.actions$.pipe(
-      ofType(browseActions.getFilter),
-      filter(({ filter }) => filter === 'author'),
-      switchMap(({ name, filter }) =>
-        this.authorApi
-          .getAll$({ page: 1, size: 20, ...(name && { nameLike: name }) })
-          .pipe(
-            mapResponse({
-              next: (authors) => {
-                return browseActions.getFilterSuccess({
-                  items: authors,
-                  filter,
-                });
-              },
-              error: (error: ResponseError) => {
-                return browseActions.getFilterFailure({ error });
-              },
-            }),
-          ),
-      ),
-    ),
-  );
+  // getAuthorFilter = createEffect(() =>
+  //   this.actions$.pipe(
+  //     ofType(browseActions.getFilter),
+  //     filter(({ filter }) => filter === 'author'),
+  //     switchMap(({ name, filter }) =>
+  //       this.authorApi
+  //         .getAll$({ page: 1, size: 20, ...(name && { nameLike: name }) })
+  //         .pipe(
+  //           mapResponse({
+  //             next: (authors) => {
+  //               return browseActions.getFilterSuccess({
+  //                 items: authors,
+  //                 filter,
+  //               });
+  //             },
+  //             error: (error: ResponseError) => {
+  //               return browseActions.getFilterFailure({ error });
+  //             },
+  //           }),
+  //         ),
+  //     ),
+  //   ),
+  // );
 
   getCategoryFilter = createEffect(() =>
     this.actions$.pipe(
@@ -201,17 +201,17 @@ export class BrowseEffect {
     ),
   );
 
-  getTagFilter = createEffect(() =>
-    this.actions$.pipe(
-      ofType(browseActions.getFilter),
-      filter(({ filter }) => filter === 'tag'),
-      map(({ name, filter }) => {
-        const tags = allBookTags.filter((tag) =>
-          tag.toLowerCase().includes(name?.toLowerCase() ?? ''),
-        );
-
-        return browseActions.getFilterSuccess({ items: tags, filter });
-      }),
-    ),
-  );
+  // getTagFilter = createEffect(() =>
+  //   this.actions$.pipe(
+  //     ofType(browseActions.getFilter),
+  //     filter(({ filter }) => filter === 'tag'),
+  //     map(({ name, filter }) => {
+  //       const tags = allBookTags.filter((tag) =>
+  //         tag.toLowerCase().includes(name?.toLowerCase() ?? ''),
+  //       );
+  //
+  //       return browseActions.getFilterSuccess({ items: tags, filter });
+  //     }),
+  //   ),
+  // );
 }

@@ -1,4 +1,11 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { SearchComponent } from './search/search.component';
@@ -42,6 +49,7 @@ import { cartActions } from '@e-commerce/client-web/cart/data-access';
   ],
   templateUrl: './books.component.html',
   styleUrl: './books.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BooksComponent implements OnInit {
   private store = inject(Store);
@@ -139,6 +147,7 @@ export class BooksComponent implements OnInit {
   }
 
   public clearFilter(activeFilter: ActiveFilter) {
+    console.log(activeFilter);
     this.store.dispatch(
       browseActions.removeActiveFilter({ activeFilterId: activeFilter.id }),
     );

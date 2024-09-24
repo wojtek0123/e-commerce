@@ -167,27 +167,12 @@ p-button.w-full .p-button {
   width: 100%;
 }
 
-.p-accordion {
-  /* background: transparent; */
-  /* border-radius: var(--border-radius); */
-  /* overflow: hidden; */
-}
-
 .p-listbox {
-  /* border-bottom-left-radius: var(--border-radius); */
-  /* border-bottom-right-radius: var(--border-radius); */
   overflow: hidden;
 }
 
 .p-toggleable-content {
-  /* border-bottom-left-radius: var(--border-radius); */
-  /* border-bottom-right-radius: var(--border-radius); */
   overflow: hidden;
-}
-
-.p-accordion-tab {
-  /* border-radius: var(--border-radius); */
-  /* background: transparent; */
 }
 
 .p-menu
@@ -226,10 +211,6 @@ p-button.w-full .p-button {
 
 p-toolbar {
   width: 100%;
-}
-
-.p-accordion .p-accordion-header .p-accordion-header-link {
-  border-radius: 0;
 }
 
 @media (min-width: 40rem) {

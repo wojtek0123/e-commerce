@@ -10,13 +10,12 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { DividerModule } from 'primeng/divider';
 import { FormFieldComponent } from '@e-commerce/client-web/shared/ui';
 import { AsyncPipe } from '@angular/common';
-import { FilterComponent } from '@e-commerce/client-web/browse/ui';
 import { CustomFilterDirective } from '@e-commerce/client-web/browse/utils';
 import { Store } from '@ngrx/store';
 import {
   browseActions,
   selectPriceFilter,
-  selectPriceFilterSelected,
+  selectSelectedPrices,
 } from '@e-commerce/client-web/browse/data-access';
 
 @Component({
@@ -28,7 +27,6 @@ import {
   imports: [
     InputNumberModule,
     DividerModule,
-    FilterComponent,
     FormFieldComponent,
     AsyncPipe,
     FormsModule,
@@ -39,7 +37,7 @@ import {
 export class PriceFilterComponent {
   private store = inject(Store);
 
-  selected$ = this.store.select(selectPriceFilterSelected);
+  selected$ = this.store.select(selectSelectedPrices);
 
   filter = this.store.selectSignal(selectPriceFilter);
 

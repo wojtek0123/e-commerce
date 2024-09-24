@@ -31,7 +31,25 @@ export const selectPriceFilter = createSelector(
   selectFilters,
   (filters) => filters.price,
 );
-export const selectPriceFilterSelected = createSelector(
+
+export const selectSelectedPrices = createSelector(
   selectPriceFilter,
   (priceFilter) => Object.values(priceFilter).filter((v) => v),
+);
+export const selectSelectedAuthors = createSelector(
+  selectAuthorFilter,
+  (filter) => filter.selectedItems,
+);
+export const selectSelectedCategories = createSelector(
+  selectCategoryFilter,
+  (filter) => filter.selectedItems,
+);
+export const selectSelectedTags = createSelector(
+  selectTagFilter,
+  (filter) => filter.selectedItems,
+);
+
+export const selectAuthors = createSelector(
+  selectAuthorFilter,
+  (filter) => filter.items,
 );

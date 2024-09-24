@@ -1,0 +1,19 @@
+<div class="filter">
+  <input
+    pInputText
+    [placeholder]="placeholder()"
+    [formControl]="searchControl"
+  />
+  <div class="filter__items">
+    @for (item of items(); track $index) {
+      <p-checkbox
+        [ngModel]="selectedItems()"
+        (ngModelChange)="selectItem($event, item)"
+        [label]="getLabelItem(item)"
+        [value]="item"
+      />
+    } @empty {
+      <div class="filter__items__message">Not found!</div>
+    }
+  </div>
+</div>
