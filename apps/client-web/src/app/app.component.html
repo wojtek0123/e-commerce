@@ -1,7 +1,11 @@
 <p-toast />
-<div class="wrapper">
+<div
+  class="flex flex-col-reverse w-full h-svh xl:flex-row xl:p-gap xl:min-h-svh xl:h-full"
+>
   <app-nav />
-  <div class="router">
+  <div
+    class="w-full h-full overflow-y-auto xl:pl-gap xl:px-0 xl:py-0 xl:overflow-y-visible"
+  >
     <router-outlet />
   </div>
 </div>

@@ -6,9 +6,12 @@
         #checkbox
         [ngModel]="selectedItems()"
         (ngModelChange)="changeSelectedItems($event, item)"
-        [label]="getItemLabel(item)"
         [value]="item"
+        [inputId]="trackFn(0, item).toString()"
       />
+      <label [for]="trackFn(0, item).toString()">
+        {{ getItemLabel(item) }}
+      </label>
     } @empty {
       <div class="filter__items__message">Not found!</div>
     }
