@@ -14,7 +14,6 @@
 
     &__image {
       border-radius: var(--border-radius);
-      min-height: calc(100svh - 2 * var(--gap));
       width: 100%;
     }
   }
@@ -53,6 +52,9 @@
     flex-direction: column;
     margin: 2rem 0;
     gap: 1rem;
+    background-color: var(--surface-section);
+    padding: 1rem;
+    border-radius: var(--border-radius);
 
     &__price {
       font-size: 2.5rem;
@@ -77,6 +79,24 @@
 
 .price-column {
   display: none;
+}
+
+.description {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background-color: var(--surface-section);
+  border-radius: var(--border-radius);
+  padding: var(--gap);
+
+  & > span {
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+
+  & > p {
+    line-height: 1.5;
+  }
 }
 
 @media (min-width: 640px) {
@@ -104,16 +124,19 @@
   }
 
   .book {
+    grid-template-columns: 0.75fr 1fr;
     &__content-wrapper {
       gap: 3rem;
+    }
+
+    &__image-wrapper__image {
+      min-height: calc(100svh - 2 * var(--gap));
     }
   }
 }
 
 @media (min-width: 1536px) {
   .book {
-    grid-template-columns: 0.75fr 1fr;
-
     &__image-wrapper {
       position: sticky;
       top: var(--gap);
@@ -150,8 +173,13 @@
   .price-column {
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 3rem;
-    padding: 2rem;
+    padding: 6rem;
+    overflow-y: auto;
+    width: 100%;
+    background-color: var(--surface-section);
+    border-radius: var(--border-radius);
 
     &__price {
       font-size: 4rem;
@@ -167,7 +195,6 @@
     }
 
     &__add-btn {
-      width: 100%;
       display: block;
     }
   }
