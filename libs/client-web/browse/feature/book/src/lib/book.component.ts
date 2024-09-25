@@ -18,8 +18,6 @@ import { CurrencyPipe, DatePipe } from '@angular/common';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
-import { Book } from '@e-commerce/client-web/shared/data-access';
-import { PanelModule } from 'primeng/panel';
 import { MenuItem } from 'primeng/api';
 import { DetailRowComponent } from '@e-commerce/client-web/browse/ui';
 import { cartActions } from '@e-commerce/client-web/cart/data-access';
@@ -34,7 +32,6 @@ import { cartActions } from '@e-commerce/client-web/cart/data-access';
     InputNumberModule,
     ReactiveFormsModule,
     ButtonModule,
-    PanelModule,
     DetailRowComponent,
     DatePipe,
   ],

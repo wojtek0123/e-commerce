@@ -1,4 +1,4 @@
-@if (loading()) {
+@if (!loading()) {
   <div>Loading...</div>
 } @else if (error()) {
   <div>{{ error() }}</div>
@@ -90,11 +90,12 @@
           }
         </div>
       </div>
-      <p-panel header="Description" [toggleable]="true">
-        <p class="line-height-3 description">
+      <div class="description">
+        <span>Description</span>
+        <p>
           {{ book()?.description }}
         </p>
-      </p-panel>
+      </div>
     </div>
 
     <div class="price-container-extended">
