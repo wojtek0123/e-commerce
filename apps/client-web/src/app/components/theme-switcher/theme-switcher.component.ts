@@ -6,10 +6,10 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { Theme } from '@e-commerce/client-web-app/shell/data-access/theme-switcher';
+// import { Theme } from '../categories';
 
 @Component({
-  selector: 'lib-theme-switcher',
+  selector: 'app-theme-switcher',
   template: `
     <button
       class="theme-toggle"
@@ -103,7 +103,8 @@ import { Theme } from '@e-commerce/client-web-app/shell/data-access/theme-switch
         }
 
         .sun-and-moon > .sun-beams {
-          transition: transform 0.5s var(--ease-elastic-4),
+          transition:
+            transform 0.5s var(--ease-elastic-4),
             opacity 0.5s var(--ease-3);
         }
 
@@ -140,29 +141,29 @@ import { Theme } from '@e-commerce/client-web-app/shell/data-access/theme-switch
 export class ThemeSwitcherComponent implements OnInit {
   private document = inject(DOCUMENT);
 
-  theme = signal<Theme>('dark');
+  // theme = signal<Theme>('dark');
 
   ngOnInit() {
-    const preferenceTheme =
-      localStorage.getItem('theme') ??
-      window.matchMedia('(prefers-color-scheme: dark)').matches
-        ? 'dark'
-        : 'light';
-
-    this.theme.set(preferenceTheme);
+    // const preferenceTheme =
+    //   (localStorage.getItem('theme') ??
+    //   window.matchMedia('(prefers-color-scheme: dark)').matches)
+    //     ? 'dark'
+    //     : 'light';
+    //
+    // this.theme.set(preferenceTheme);
   }
 
   changeTheme() {
-    const themeLink = this.document.getElementById(
-      'app-theme'
-    ) as HTMLLinkElement;
-
-    const theme = this.theme() === 'dark' ? 'light' : 'dark';
-
-    if (themeLink) {
-      themeLink.href = theme + '.css';
-      this.theme.set(theme);
-      localStorage.setItem('theme', theme);
-    }
+    // const themeLink = this.document.getElementById(
+    //   'app-theme',
+    // ) as HTMLLinkElement;
+    //
+    // const theme = this.theme() === 'dark' ? 'light' : 'dark';
+    //
+    // if (themeLink) {
+    //   themeLink.href = theme + '.css';
+    //   this.theme.set(theme);
+    //   localStorage.setItem('theme', theme);
+    // }
   }
 }

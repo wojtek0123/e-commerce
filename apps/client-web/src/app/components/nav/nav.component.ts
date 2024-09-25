@@ -86,9 +86,9 @@ export class NavComponent implements OnInit, OnDestroy {
 
   public isAuthenticated = this.store.selectSignal(selectIsAuthenticated);
   public categories = this.store.selectSignal(selectCategories);
-  public theme = computed(() =>
-    this.themeSwitcherService.theme() === 'dark' ? true : false,
-  )();
+  // public theme = computed(() =>
+  //   this.themeSwitcherService.theme() === 'dark' ? true : false,
+  // )();
   public isOpen = signal(false);
   public isExpanded = signal(true);
   public isLabelShowed = signal(computed(() => this.isExpanded())());
@@ -153,10 +153,13 @@ export class NavComponent implements OnInit, OnDestroy {
     },
   ]);
 
-  public onChangeTheme(event: InputSwitchChangeEvent) {
-    const theme: Theme = event.checked ? 'dark' : 'light';
+  theme = signal(false);
 
-    this.themeSwitcherService.switchTheme(theme);
+  toggleDarkMode() {
+    const element = document.querySelector('html');
+
+    element?.classList.toggle('dark');
+    // localStorage.setItem('isDark', JSON.stringify(true));
   }
 
   public toggleNavigation() {

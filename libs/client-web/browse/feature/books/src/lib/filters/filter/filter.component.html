@@ -9,9 +9,12 @@
       <p-checkbox
         [ngModel]="selectedItems()"
         (ngModelChange)="selectItem($event, item)"
-        [label]="getLabelItem(item)"
         [value]="item"
+        [inputId]="trackFn($index, item).toString()"
       />
+      <label [for]="trackFn($index, item).toString()">
+        {{ getLabelItem(item) }}
+      </label>
     } @empty {
       <div class="filter__items__message">Not found!</div>
     }

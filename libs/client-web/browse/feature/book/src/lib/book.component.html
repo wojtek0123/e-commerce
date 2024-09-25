@@ -1,4 +1,4 @@
-@if (!loading()) {
+@if (loading()) {
   <div>Loading...</div>
 } @else if (error()) {
   <div>{{ error() }}</div>

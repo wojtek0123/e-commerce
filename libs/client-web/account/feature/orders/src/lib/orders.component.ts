@@ -31,7 +31,7 @@ export class StatusToServerityPipe implements PipeTransform {
       case 'NEW':
         return 'danger';
       case 'PROCESSING':
-        return 'warning';
+        return 'warn';
       case 'SHIPPED':
         return 'info';
       case 'COMPLETED':

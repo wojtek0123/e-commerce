@@ -20,6 +20,34 @@ import {
 } from '@e-commerce/client-web/auth/data-access';
 import { cartActions } from '@e-commerce/client-web/cart/data-access';
 import { jwtDecode } from 'jwt-decode';
+import { PrimeNGConfig } from 'primeng/api';
+import { Aura } from 'primeng/themes/aura';
+import { definePreset } from 'primeng/themes';
+
+const borderRadius = '1rem' as const;
+
+const MyPreset = definePreset(Aura, {
+  semantic: {
+    primary: {
+      50: '{blue.50}',
+      100: '{blue.100}',
+      200: '{blue.200}',
+      300: '{blue.300}',
+      400: '{blue.400}',
+      500: '{blue.500}',
+      600: '{blue.600}',
+      700: '{blue.700}',
+      800: '{blue.800}',
+      900: '{blue.900}',
+      950: '{blue.950}',
+    },
+  },
+  components: {
+    button: {
+      borderRadius,
+    },
+  },
+});
 
 @Component({
   standalone: true,
@@ -38,6 +66,7 @@ import { jwtDecode } from 'jwt-decode';
 })
 export class AppComponent implements OnInit {
   private store = inject(Store);
+  private readonly config = inject(PrimeNGConfig);
 
   public event = this.store.selectSignal(selectEvent);
   public refreshToken = this.store.selectSignal(selectRefreshToken);
@@ -54,6 +83,17 @@ export class AppComponent implements OnInit {
       },
       { allowSignalWrites: true },
     );
+
+    this.config.theme.set({
+      preset: MyPreset,
+      options: {
+        darkModeSelector: '.dark',
+        cssLayer: {
+          name: 'primeng',
+          order: 'tailwind-base, primeng, tailwind-utilities',
+        },
+      },
+    });
   }
 
   public ngOnInit(): void {

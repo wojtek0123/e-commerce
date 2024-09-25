@@ -18,7 +18,7 @@ const initializeAppFactory =
     const accessToken = localStorage.getItem('accessToken');
 
     store.dispatch(authActions.init());
-    themeService.switchTheme(preferenceTheme ?? browserTheme);
+    // themeService.switchTheme(preferenceTheme ?? browserTheme);
 
     if (userId && accessToken) {
       store.dispatch(cartActions.getShoppingSession());
