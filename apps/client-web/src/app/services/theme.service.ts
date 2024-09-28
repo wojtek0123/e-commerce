@@ -1,26 +1,43 @@
-import { DOCUMENT } from '@angular/common';
-import { Injectable, inject, signal } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 
-export type Theme = 'dark' | 'light';
+const DARK_THEME_CLASS_NAME = 'dark' as const;
+const LOCAL_STORAGE_THEME_NAME = 'isDark' as const;
 
 @Injectable({
   providedIn: 'root',
 })
 export class ThemeService {
-  private document = inject(DOCUMENT);
-  // private _theme = signal<Theme>('dark');
+  private _isDark = signal(false);
+  public isDark = this._isDark.asReadonly();
+  private htmlElement = document.querySelector('html');
 
-  // public theme = this._theme.asReadonly();
+  constructor() {
+    const userPreference = window.matchMedia(
+      '(prefers-color-scheme: dark)',
+    ).matches;
 
-  // switchTheme(theme: Theme) {
-  // const themeLink = this.document.getElementById(
-  //   'app-theme',
-  // ) as HTMLLinkElement;
+    const isDark: boolean | null = JSON.parse(
+      localStorage.getItem(LOCAL_STORAGE_THEME_NAME) ?? 'null',
+    );
 
-  // if (themeLink) {
-  // themeLink.href = theme + '.css';
-  // this._theme.set(theme);
-  // localStorage.setItem('theme', theme);
-  // }
-  // }
+    this.setMode(isDark || userPreference);
+  }
+
+  public toggleDarkMode() {
+    const isDark = this.htmlElement?.classList.toggle(DARK_THEME_CLASS_NAME);
+
+    localStorage.setItem(LOCAL_STORAGE_THEME_NAME, JSON.stringify(isDark));
+  }
+
+  public setMode(isDark: boolean) {
+    this._isDark.set(isDark);
+
+    if (isDark) {
+      this.htmlElement?.classList.add(DARK_THEME_CLASS_NAME);
+    } else {
+      this.htmlElement?.classList.remove(DARK_THEME_CLASS_NAME);
+    }
+
+    localStorage.setItem(LOCAL_STORAGE_THEME_NAME, JSON.stringify(isDark));
+  }
 }
