@@ -37,6 +37,7 @@ import {
   selectIsAuthenticated,
 } from '@e-commerce/client-web/auth/data-access';
 import { CartSidebarComponent } from '@e-commerce/client-web/cart/feature/cart-sidebar';
+import { ThemeService } from '../../services/theme.service';
 
 @Component({
   selector: 'app-nav',
@@ -81,12 +82,14 @@ import { CartSidebarComponent } from '@e-commerce/client-web/cart/feature/cart-s
 })
 export class NavComponent implements OnInit, OnDestroy {
   private readonly store = inject(Store);
+  private readonly themeService = inject(ThemeService);
 
   public isAuthenticated = this.store.selectSignal(selectIsAuthenticated);
   public categories = this.store.selectSignal(selectCategories);
   public isOpen = signal(false);
   public isExpanded = signal(true);
   public isLabelShowed = signal(computed(() => this.isExpanded())());
+  public isDark = this.themeService.isDark;
 
   private resizeObserver?: ResizeObserver;
   private timer?: ReturnType<typeof setTimeout>;
@@ -151,10 +154,7 @@ export class NavComponent implements OnInit, OnDestroy {
   theme = signal(false);
 
   toggleDarkMode() {
-    const element = document.querySelector('html');
-
-    element?.classList.toggle('dark');
-    // localStorage.setItem('isDark', JSON.stringify(true));
+    this.themeService.toggleDarkMode();
   }
 
   public toggleNavigation() {

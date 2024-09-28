@@ -115,7 +115,7 @@
           @if (isLabelShowed()) {
             <span>Light</span>
           }
-          <p-inputSwitch [(ngModel)]="theme" (onChange)="toggleDarkMode()" />
+          <p-inputSwitch [ngModel]="isDark()" (onChange)="toggleDarkMode()" />
           @if (isLabelShowed()) {
             <span>Dark</span>
           }
