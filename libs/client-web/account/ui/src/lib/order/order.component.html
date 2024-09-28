@@ -5,26 +5,30 @@
 <!--     [model]="stepStatuses()" -->
 <!--   /> -->
 <!-- </div> -->
-<div class="wrapper">
-  <div class="order">
-    <div class="order__row">
-      <span class="order__row__header">Order number</span>
-      <span class="order__row__text">
+<div class="flex flex-col gap-base min-h-fit w-full">
+  <div
+    class="bg-content-background rounded-base p-4 flex flex-col gap-6 lg:justify-between lg:flex-row"
+  >
+    <div class="flex flex-col gap-6">
+      <span class="text-xl">Order number</span>
+      <span class="text-muted-color text-left">
         {{ orderDetails()?.id }}
       </span>
     </div>
-    <div class="order__row order__row--flex-end">
-      <span class="order__row__header">The order has been placed</span>
-      <span class="order__row__text">
+    <div class="flex flex-col gap-6">
+      <span class="text-xl">The order has been placed</span>
+      <span class="text-muted-color text-end">
         {{ orderDetails()?.createdAt | date }}
       </span>
     </div>
   </div>
-  <div class="order">
-    <div class="order__row">
-      <span class="order__row__header">Order address</span>
-      <div class="order__row__adress">
-        <div class="text-color-secondary">
+  <div
+    class="bg-content-background rounded-base p-4 flex flex-col gap-6 lg:justify-between lg:flex-row"
+  >
+    <div class="flex flex-col gap-6">
+      <span class="text-xl">Order address</span>
+      <div class="flex flex-col">
+        <div class="text-muted-color">
           <span>{{ orderDetails()?.userAddress?.street }}</span>
           <span
             >{{ orderDetails()?.userAddress?.homeNumber }}
@@ -34,49 +38,55 @@
           </span>
         </div>
         <div>
-          <span class="text-color-secondary"
+          <span class="text-muted-color"
             >{{ orderDetails()?.userAddress?.postcode }},
           </span>
-          <span class="text-color-secondary">{{
+          <span class="text-muted-color">{{
             orderDetails()?.userAddress?.city
           }}</span>
         </div>
-        <div class="text-color-secondary">
+        <div class="text-muted-color">
           {{ orderDetails()?.userAddress?.country?.name }}
         </div>
       </div>
     </div>
-    <div class="order__row">
-      <span class="order__row__header">Personal information</span>
-      <div class="order__wrapper">
-        <span class="text-color-secondary">
+    <div class="flex flex-col gap-6">
+      <span class="text-xl">Personal information</span>
+      <div class="flex flex-col lg:text-end">
+        <span class="text-muted-color">
           {{ orderDetails()?.userAddress?.firstName }}
           {{ orderDetails()?.userAddress?.lastName }}
         </span>
-        <span class="text-color-secondary">
+        <span class="text-muted-color">
           phone {{ orderDetails()?.userAddress?.phone }}
         </span>
       </div>
     </div>
   </div>
-  <div class="order">
-    <div class="order__row">
-      <span class="order__row__header">Payment method</span>
-      <span class="text-color-secondary">
+  <div
+    class="bg-content-background rounded-base p-4 flex flex-col gap-6 lg:justify-between lg:flex-row"
+  >
+    <div class="flex flex-col gap-6">
+      <span class="text-xl">Payment method</span>
+      <span class="text-muted-color">
         {{ orderDetails()?.paymentDetails?.provider }}
       </span>
     </div>
   </div>
-  <div class="order">
-    <div class="order__row">
-      <span class="order__row__header">Shipping method</span>
-      <span class="text-color-secondary">
+  <div
+    class="bg-content-background rounded-base p-4 flex flex-col gap-6 lg:justify-between lg:flex-row"
+  >
+    <div class="flex flex-col gap-6">
+      <span class="text-xl">Shipping method</span>
+      <span class="text-muted-color">
         {{ orderDetails()?.shippingMethod?.name }}
       </span>
     </div>
   </div>
-  <div class="table">
-    <span class="order__row__header">Order items</span>
+  <div
+    class="rounded-base overflow-hidden flex flex-col gap-2 bg-content-background p-4"
+  >
+    <span class="text-xl">Order items</span>
     <p-table [value]="orderDetails()?.orderItems ?? []">
       <ng-template pTemplate="header">
         <tr>
@@ -90,9 +100,9 @@
       </ng-template>
       <ng-template pTemplate="body" let-item>
         <tr>
-          <td class="image-wrapper">
+          <td class="h-[11rem] relative">
             <img
-              class="image"
+              class="object-cover py-4 rounded-base"
               [ngSrc]="item.book.coverImage ?? 'assets/images/not-found.png'"
               [alt]="item.book.title"
               fill
@@ -123,25 +133,25 @@
       </ng-template>
     </p-table>
   </div>
-  <div class="summary">
-    <span class="order__row__header">Cost summary</span>
-    <div class="summary__contsainer">
-      <div class="summary__row">
-        <span class="summary__header">Books</span>
-        <span class="text-color-secondary">
+  <div class="bg-content-background p-4 flex flex-col rounded-base gap-6">
+    <span class="text-xl">Cost summary</span>
+    <div class="flex flex-col gap-6 text-left">
+      <div class="flex items-center gap-6 justify-end">
+        <span class="text-xl">Books</span>
+        <span class="text-muted-color w-48 text-end text-xl">
           {{ orderDetails()?.total ?? 0 | currency: 'USD' }}
         </span>
       </div>
-      <div class="summary__row">
-        <span class="summary__header">Shipping</span>
-        <span class="text-color-secondary">
+      <div class="flex items-center gap-6 justify-end">
+        <span class="text-xl">Shipping</span>
+        <span class="text-muted-color w-48 text-end text-xl">
           {{ orderDetails()?.shippingMethod?.price ?? 0 | currency: 'USD' }}
         </span>
       </div>
       <p-divider />
-      <div class="summary__total">
-        <span class="">Total cost</span>
-        <span class="text-color-secondary">
+      <div class="flex items-center gap-6 justify-end">
+        <span class="text-3xl">Total cost</span>
+        <span class="text-muted-color w-48 text-end text-3xl">
           {{
             (orderDetails()?.shippingMethod?.price ?? 0) +
               (orderDetails()?.total ?? 0) | currency: 'USD'

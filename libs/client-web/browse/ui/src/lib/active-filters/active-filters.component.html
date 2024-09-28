@@ -1,26 +1,20 @@
-<div class="active-filters">
+<div class="flex flex-wrap gap-1 pb-1">
   <p-button
     size="small"
-    [style]="{ 'min-width': 'max-content' }"
+    [styleClass]="'min-w-max'"
     label="Clear filters"
     severity="contrast"
     (click)="clearFiltersEvent.emit()"
   />
   @for (activeFilter of activeFilters(); track activeFilter.id) {
-    <div class="active-filters__item">
-      <span>
-        {{
-          (activeFilter.label ?? activeFilter.id.split('_')[0]) +
-            ': ' +
-            activeFilter.name
-        }}
-      </span>
-      <p-button
-        icon="pi pi-times"
-        size="small"
-        [text]="true"
-        (click)="clearFilterEvent.emit(activeFilter)"
-      />
-    </div>
+    @let label =
+      activeFilter.label ??
+      activeFilter.id.split('_')[0] + ': ' + activeFilter.name;
+    <p-chip
+      styleClass="bg-content-background"
+      [label]="label"
+      [removable]="true"
+      (onRemove)="clearFilterEvent.emit(activeFilter)"
+    />
   }
 </div>

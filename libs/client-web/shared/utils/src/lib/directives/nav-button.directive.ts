@@ -9,10 +9,7 @@ export class NavButtonDirective {
   private readonly button = inject(Button);
 
   constructor() {
-    this.button.style = {
-      padding: '0.5rem 1rem',
-      'text-transform': 'capitalize',
-    };
+    this.button.styleClass = 'h-[2.625rem] capitalize py-0';
     this.button.text = true;
     this.button.plain = true;
   }

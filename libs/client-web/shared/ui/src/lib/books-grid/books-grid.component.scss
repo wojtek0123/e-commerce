@@ -1,6 +1,6 @@
 .books-grid {
   display: flex;
-  gap: var(--gap);
+  gap: theme('gap.base');
   container-name: books-view;
   container-type: inline-size;
 
@@ -17,7 +17,7 @@
     width: 100%;
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--gap);
+    gap: theme('gap.base');
   }
 }
 
@@ -29,7 +29,7 @@
   }
 }
 
-@container books-view (min-width: 880px) {
+@container books-view (min-width: 770px) {
   .books-grid {
     &__content {
       grid-template-columns: repeat(3, 1fr);
@@ -37,7 +37,7 @@
   }
 }
 
-@container books-view (min-width: 1280px) {
+@container books-view (min-width: 1040px) {
   .books-grid {
     &__content {
       grid-template-columns: repeat(4, 1fr);
@@ -45,7 +45,7 @@
   }
 }
 
-@container books-view (min-width: 1760px) {
+@container books-view (min-width: 1380px) {
   .books-grid {
     &__content {
       grid-template-columns: repeat(5, 1fr);
@@ -53,7 +53,7 @@
   }
 }
 
-@container books-view (min-width: 2200px) {
+@container books-view (min-width: 1760px) {
   .books-grid {
     &__content {
       grid-template-columns: repeat(6, 1fr);
@@ -61,7 +61,7 @@
   }
 }
 
-@container books-view (min-width: 2800px) {
+@container books-view (min-width: 2000px) {
   .books-grid {
     &__content {
       grid-template-columns: repeat(7, 1fr);
@@ -69,10 +69,18 @@
   }
 }
 
-@container books-view (min-width: 3300px) {
+@container books-view (min-width: 2400px) {
   .books-grid {
     &__content {
       grid-template-columns: repeat(8, 1fr);
+    }
+  }
+}
+
+@container books-view (min-width: 2650px) {
+  .books-grid {
+    &__content {
+      grid-template-columns: repeat(9, 1fr);
     }
   }
 }

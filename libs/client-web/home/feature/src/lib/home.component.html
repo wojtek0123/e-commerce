@@ -1,11 +1,15 @@
-<header class="header">
-  <div class="header__wrapper">
-    <h2 class="header__title">
+<header
+  class="w-full flex flex-col-reverse justify-center relative 2xl:grid 2xl:grid-cols-2 2xl:place-items-center"
+>
+  <div class="flex flex-col gap-4 lg:gap-8">
+    <h2
+      class="text-3xl sm:text-4xl md:text-6xl lg:text-8xl 5xl:text-[8rem] 8xl:text-[9rem] 9xl:text-[10rem] 9xl:leading-[12rem]"
+    >
       Unleash the power of your imagination with our books.
     </h2>
     <a
       routerLink="/browse"
-      class="p-button-large header__link"
+      class="p-button-large max-w-fit 2xl:text-4xl md:px-6 md:py-4 md:text-2xl lg:px-8 lg:py-5 lg:text-4xl"
       pButton
       [raised]="true"
       size="large"
@@ -14,16 +18,20 @@
     </a>
   </div>
   <img
-    class="header__image"
+    class="w-full h-auto"
     ngSrc="assets/images/books-home.png"
     width="640"
     height="415"
     priority
   />
 </header>
-<main class="main">
+<main class="flex gap-8 xl:gap-16 mt-16 flex-col">
   @defer (on viewport) {
-    <lib-books-section tag="incoming" [bookTag]="bookTag.INCOMING" />
+    <lib-books-section
+      class="w-full"
+      tag="incoming"
+      [bookTag]="bookTag.INCOMING"
+    />
   } @placeholder {
     <lib-skeleton-books-section />
   }

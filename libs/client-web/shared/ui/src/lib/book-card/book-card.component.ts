@@ -31,7 +31,7 @@ export class BookCardComponent {
 
   onAddToCart = output<Book>();
 
-  @HostBinding('class') class = 'card';
+  @HostBinding('class') class = 'max-w-book-card';
 
   addToCart(event: Event, book: Book) {
     event.preventDefault();

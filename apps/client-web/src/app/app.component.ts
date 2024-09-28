@@ -10,7 +10,6 @@ import { NavComponent } from './components/nav/nav.component';
 import { ToastModule } from 'primeng/toast';
 import { Store } from '@ngrx/store';
 import { categoryActions } from '@e-commerce/client-web/shared/data-access';
-import { CategoriesComponent } from './components/categories/categories.component';
 import { CartSidebarComponent } from '@e-commerce/client-web/cart/feature/cart-sidebar';
 import { AsyncPipe } from '@angular/common';
 import {
@@ -55,7 +54,6 @@ const MyPreset = definePreset(Aura, {
     RouterOutlet,
     NavComponent,
     ToastModule,
-    CategoriesComponent,
     AsyncPipe,
     CartSidebarComponent,
   ],

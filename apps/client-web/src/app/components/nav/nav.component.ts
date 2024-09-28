@@ -14,8 +14,7 @@ import {
   Category,
   selectCategories,
 } from '@e-commerce/client-web/shared/data-access';
-import { InputSwitchChangeEvent, InputSwitchModule } from 'primeng/inputswitch';
-import { ThemeService, Theme } from '../../services/theme.service';
+import { InputSwitchModule } from 'primeng/inputswitch';
 import { FormsModule } from '@angular/forms';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { filter, map } from 'rxjs';
@@ -24,7 +23,7 @@ import { SidebarModule } from 'primeng/sidebar';
 import { ToolbarModule } from 'primeng/toolbar';
 import { NavToolbarDirective } from '../../utils/toolbar.directive';
 import { SidebarLeftDirective } from '../../utils/sidebar-left.directive';
-import { NavButtonDirective } from '../../utils/nav-button.directive';
+import { NavButtonDirective } from '@e-commerce/client-web/shared/utils';
 import {
   animate,
   state,
@@ -81,14 +80,10 @@ import { CartSidebarComponent } from '@e-commerce/client-web/cart/feature/cart-s
   ],
 })
 export class NavComponent implements OnInit, OnDestroy {
-  private readonly themeSwitcherService = inject(ThemeService);
   private readonly store = inject(Store);
 
   public isAuthenticated = this.store.selectSignal(selectIsAuthenticated);
   public categories = this.store.selectSignal(selectCategories);
-  // public theme = computed(() =>
-  //   this.themeSwitcherService.theme() === 'dark' ? true : false,
-  // )();
   public isOpen = signal(false);
   public isExpanded = signal(true);
   public isLabelShowed = signal(computed(() => this.isExpanded())());
