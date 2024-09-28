@@ -1,11 +1,11 @@
-<div class="books">
-  <lib-filters class="desktop-filters" />
-  <div class="books__content">
-    <div class="books__content-bar">
+<div class="flex gap-base">
+  <lib-filters class="hidden xl:flex" />
+  <div class="flex flex-col gap-base w-full overflow-x-hidden">
+    <div class="flex flex-col xl:flex-row justify-between gap-base">
       <p-breadcrumb [model]="breadcrumbs()" />
-      <div class="books__content-row">
-        <lib-search class="books__content-bar__input" />
-        <lib-filters class="mobile-filters" />
+      <div class="flex items-center justify-between gap-base">
+        <lib-search class="" />
+        <lib-filters class="xl:hidden" />
       </div>
     </div>
     <lib-active-filters
@@ -27,9 +27,12 @@
       [error]="error"
       (addToCartEvent)="addToCart($event)"
     />
-    <div class="card flex justify-content-center">
+    <div
+      class="flex items-center justify-center bg-content-background rounded-base w-full"
+    >
       @if (books?.length) {
         <p-paginator
+          styleClass="w-full mx-auto"
           (onPageChange)="onPageChange($event, size)"
           [rows]="size"
           [totalRecords]="total"

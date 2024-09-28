@@ -1,44 +1,15 @@
-:host ::ng-deep {
-  .p-datatable .p-datatable-thead > tr > th {
-    background: transparent;
-  }
-
-  .p-datatable .p-datatable-tbody > tr {
-    background: transparent;
-  }
-}
-
-.wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  width: 100%;
-}
-
-.image {
-  object-fit: cover;
-  padding: 1rem 0;
-  border-radius: var(--border-radius);
-
-  &-wrapper {
-    height: 11rem;
-    position: relative;
-  }
-}
+/* :host ::ng-deep { */
+/*   .p-datatable .p-datatable-thead > tr > th { */
+/*     background: transparent; */
+/*   } */
+/**/
+/*   .p-datatable .p-datatable-tbody > tr { */
+/*     background: transparent; */
+/*   } */
+/* } */
 
 .order {
-  background-color: var(--surface-section);
-  border-radius: var(--border-radius);
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-
   &__row {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-
     &__address {
       display: flex;
       flex-direction: column;
@@ -59,25 +30,6 @@
       text-align: left;
     }
   }
-}
-
-.order__wrapper {
-  display: flex;
-  flex-direction: column;
-}
-
-.text-color-secondary {
-  color: var(--text-color-secondary);
-}
-
-.table {
-  border-radius: var(--border-radius);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  background-color: var(--surface-section);
-  padding: 1rem;
 }
 
 .summary {

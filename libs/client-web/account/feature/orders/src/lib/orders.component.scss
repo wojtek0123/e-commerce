@@ -1,8 +1,3 @@
-.orders {
-  display: grid;
-  grid-template-columns: 1fr;
-}
-
 .order-details {
   display: none;
 
@@ -40,17 +35,5 @@
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: var(--text-color-secondary) var(--surface-hover);
-  }
-}
-
-@media (min-width: 1920px) {
-  .orders {
-    gap: 2rem;
-  }
-}
-
-@media (min-width: 2800px) {
-  .orders {
-    grid-template-columns: 1fr 0.7fr;
   }
 }

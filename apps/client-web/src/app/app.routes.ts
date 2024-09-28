@@ -12,6 +12,7 @@ import {
 import { provideEffects } from '@ngrx/effects';
 import { provideState } from '@ngrx/store';
 import { OrdersStore } from '@e-commerce/client-web/account/data-access';
+import { canMatchAuth } from './guards/auth.guard';
 
 export const appRoutes: Route[] = [
   {
@@ -64,6 +65,7 @@ export const appRoutes: Route[] = [
   },
   {
     path: 'order-process',
+    canMatch: [canMatchAuth],
     loadChildren: () =>
       import('@e-commerce/client-web/cart/feature/order-process').then(
         (r) => r.orderProcessRoutes,
@@ -82,6 +84,7 @@ export const appRoutes: Route[] = [
   },
   {
     path: 'account',
+    canMatch: [canMatchAuth],
     children: [
       {
         path: 'orders',
@@ -103,5 +106,9 @@ export const appRoutes: Route[] = [
         redirectTo: 'orders',
       },
     ],
+  },
+  {
+    path: '**',
+    redirectTo: '/',
   },
 ];

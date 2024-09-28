@@ -1,11 +1,13 @@
-<section class="section">
-  <div class="section__header">
-    <h2 class="section__header-title">{{ tag() }}</h2>
+<section
+  class="flex flex-col items-center w-full mx-auto max-w-[120rem] gap-base"
+>
+  <div class="flex items-center justify-between w-full capitalize">
+    <h2 class="text-4xl">{{ tag() }}</h2>
     <a routerLink="/browse" [queryParams]="{ tags: tag() }"> See more </a>
   </div>
   <lib-books-grid
     (addToCartEvent)="addToCart($event)"
-    class="section__books"
+    class="w-full"
     [books]="books()"
     [loading]="loading()"
     [error]="error()"

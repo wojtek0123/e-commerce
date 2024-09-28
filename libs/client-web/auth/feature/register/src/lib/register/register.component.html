@@ -7,7 +7,7 @@
   @let loading = loading$ | async;
   <form
     [formGroup]="registerForm"
-    class="form"
+    class="flex flex-col gap-2 w-full xl:items-center"
     (submit)="onSubmit()"
   >
     <lib-form-field label="Email" [isRequired]="true">
@@ -85,7 +85,7 @@
       [loading]="loading"
       loading-icon="pi pi-spin pi-spinner"
       iconPos="right"
-      class="form__submit-btn"
+      class="mt-5 w-full"
     />
   </form>
 </lib-container>

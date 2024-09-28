@@ -23,5 +23,5 @@ export class FormFieldComponent {
   labelSkeletonWidth = input<string>('5rem');
   inputSkeletonWidth = input<string>('100%');
 
-  @HostBinding('style.width') width = '100%';
+  @HostBinding('class') class = 'w-full';
 }

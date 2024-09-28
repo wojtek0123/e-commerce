@@ -1,9 +1,11 @@
-<div class="filters">
+<div
+  class="hidden xl:block sticky top-8 h-content rounded-base overflow-y-auto w-full"
+>
   <ng-container [ngTemplateOutlet]="filters" />
 </div>
 
 <p-button
-  class="open-sidebar-button"
+  class="xl:hidden"
   icon="pi pi-bars"
   (onClick)="sidebarVisible.set(true)"
 />

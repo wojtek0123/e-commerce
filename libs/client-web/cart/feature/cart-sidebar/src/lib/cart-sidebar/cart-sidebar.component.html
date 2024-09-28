@@ -1,16 +1,8 @@
 <p-button
   #openCartSidebar
+  appNavButton
   (click)="visible.set(true)"
-  type="button"
-  [plain]="true"
-  class="open-sidebar-button"
-  [style]="{
-    display: 'flex',
-    gap: '0.5rem',
-    padding: '0.5rem 1rem',
-    height: '2.375rem',
-  }"
-  [text]="true"
+  class="flex items-center gap-4 w-full"
 >
   <i
     class="pi pi-shopping-cart"
@@ -19,25 +11,24 @@
     severity="danger"
   ></i>
   @if (isLabelShowed()) {
-    <span class="open-sidebar-button__text">Cart</span>
+    <span [style]="{ 'font-weight': '500' }">Cart</span>
   }
 </p-button>
 
 <p-sidebar
   [(visible)]="visible"
   [closeOnEscape]="true"
-  position="right"
-  appendTo="body"
+  position="left"
   [blockScroll]="true"
-  class="sidebar"
+  styleClass="w-48"
 >
   <ng-template pTemplate="header">
-    <span class="sidebar__header">Cart</span>
+    <span class="font-semibold text-2xl">Cart</span>
   </ng-template>
 
-  <div class="sidebar__content">
+  <div class="flex flex-col justify-between gap-4 h-full">
     <div
-      class="sidebar__content__cart-items"
+      class="flex flex-col gap-4 overflow-y-auto"
       [ngClass]="{
         loading: loading(),
       }"
@@ -49,21 +40,19 @@
           (onDelete)="remove($event)"
         />
       } @empty {
-        <div class="sidebar__content__cart-items__text">
+        <div class="text-center flex flex-col gap-4 mt-4">
           <span class="text-4xl">Your cart is empty!</span>
-          <span class="text-lg text-gray-400">
+          <span class="text-lg text-muted-color">
             You should add something to it.
           </span>
         </div>
       }
     </div>
 
-    <div class="sidebar__content__footer">
-      <div class="sidebar__content__footer__price">
-        Total: {{ total() | currency: 'USD' }}
-      </div>
+    <div class="flex flex-col gap-4">
+      <div class="text-4xl">Total: {{ total() | currency: 'USD' }}</div>
       <p-button
-        class="w-full"
+        styleClass="w-full"
         label="Checkout"
         icon="pi pi-shopping-bag"
         (onClick)="checkout()"
