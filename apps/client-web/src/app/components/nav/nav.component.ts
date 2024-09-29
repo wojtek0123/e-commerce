@@ -72,7 +72,7 @@ import { ThemeService } from '../../services/theme.service';
       state(
         'out',
         style({
-          width: '4rem',
+          width: '3.5rem',
         }),
       ),
       transition('in => out', [animate('300ms ease-in-out')]),

@@ -2,13 +2,13 @@
   <p-toolbar appNavToolbar>
     <div class="mx-auto w-full flex items-center justify-center">
       <p-button
-        appNavButton
+        libNavButton
         size="large"
         icon="pi pi-bars"
         (onClick)="toggleNavigation()"
       />
       <p-button
-        appNavButton
+        libNavButton
         size="large"
         routerLink="/browse"
         routerLinkActive="active"
@@ -17,7 +17,7 @@
         icon="pi pi-search"
       />
       <p-button
-        appNavButton
+        libNavButton
         size="large"
         routerLink="/"
         routerLinkActive="active"
@@ -27,7 +27,7 @@
         icon="pi pi-home"
       />
       <p-button
-        appNavButton
+        libNavButton
         size="large"
         routerLink="/account"
         icon="pi pi-user"
@@ -57,7 +57,7 @@
           <ng-container [ngTemplateOutlet]="logo" />
         } @else {
           <p-button
-            appNavButton
+            libNavButton
             routerLink="/"
             routerLinkActive=""
             [routerLinkActiveOptions]="{ exact: true }"
@@ -68,7 +68,7 @@
       <p-divider />
       <ul class="flex flex-col">
         <p-button
-          appNavButton
+          libNavButton
           routerLink="/browse"
           [queryParams]="null"
           routerLinkActive="active"
@@ -84,26 +84,26 @@
       <lib-cart-sidebar [isLabelShowed]="isLabelShowed()" />
       @if (isAuthenticated()) {
         <p-button
-          appNavButton
+          libNavButton
           routerLink="/account"
           icon="pi pi-user"
           [label]="isLabelShowed() ? 'Account' : ''"
         />
         <p-button
-          appNavButton
+          libNavButton
           (onClick)="logout()"
           icon="pi pi-sign-out"
           [label]="isLabelShowed() ? 'Log out' : ''"
         />
       } @else {
         <p-button
-          appNavButton
+          libNavButton
           routerLink="/login"
           icon="pi pi-sign-in"
           [label]="isLabelShowed() ? 'Log in' : ''"
         />
         <p-button
-          appNavButton
+          libNavButton
           routerLink="/register"
           icon="pi pi-user-plus"
           [label]="isLabelShowed() ? 'Register' : ''"
@@ -121,9 +121,10 @@
           }
         </div>
         <p-button
-          appNavButton
+          libNavButton
           (onClick)="expandCollapseNavigation()"
           [icon]="isExpanded() ? 'pi pi-arrow-left' : 'pi pi-arrow-right'"
+          [label]="isLabelShowed() ? 'Collapse' : ''"
         />
       </div>
     </div>
@@ -145,7 +146,7 @@
   @if (isAccountRouteActive()) {
     @for (menuItem of menuItems(); track menuItem.label) {
       <p-button
-        appNavButton
+        libNavButton
         [routerLink]="menuItem.routerLink"
         routerLinkActive="active"
         [queryParams]="null"
@@ -157,7 +158,7 @@
   } @else {
     @for (category of categories(); track category.id) {
       <p-button
-        appNavButton
+        libNavButton
         routerLink="/browse"
         [queryParams]="{
           categories: category.name.toLowerCase().split(' ').join('_'),

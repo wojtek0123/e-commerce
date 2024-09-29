@@ -1,6 +1,5 @@
 <p-button
-  #openCartSidebar
-  appNavButton
+  libNavButton
   (click)="visible.set(true)"
   class="flex items-center gap-4 w-full"
 >
@@ -15,17 +14,8 @@
   }
 </p-button>
 
-<p-sidebar
-  [(visible)]="visible"
-  [closeOnEscape]="true"
-  position="left"
-  [blockScroll]="true"
-  styleClass="w-48"
->
-  <ng-template pTemplate="header">
-    <span class="font-semibold text-2xl">Cart</span>
-  </ng-template>
-
+<!-- styleClass="!w-[40rem] rounded-r-base fixed top-0 bottom-0 left-0 bg-surface-100 dark:bg-surface-950" -->
+<p-drawer [blockScroll]="true" [(visible)]="visible" header="Cart">
   <div class="flex flex-col justify-between gap-4 h-full">
     <div
       class="flex flex-col gap-4 overflow-y-auto"
@@ -60,4 +50,4 @@
       />
     </div>
   </div>
-</p-sidebar>
+</p-drawer>
