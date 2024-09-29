@@ -63,7 +63,6 @@ export class CartSidebarComponent {
   public error = this.store.selectSignal(cartSelectors.selectError);
 
   public visible = signal(false);
-  // public skeletons = signal(new Array(5));
 
   updateQuantity(args: { book: Book; quantity: number }) {
     this.store.dispatch(cartActions.updateQuantity({ ...args }));

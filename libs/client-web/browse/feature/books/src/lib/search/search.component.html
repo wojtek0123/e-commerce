@@ -1,12 +1,11 @@
-<div class="w-full relative">
-  <!-- <i class="pi pi-search"></i> -->
-  @let search = search$ | async;
+<div class="2xl:min-w-[30rem] w-full relative">
   <input
     #searchInput
-    [value]="search"
+    [value]="search()"
     type="text"
     pInputText
     class="pr-12"
+    [fluid]="true"
     placeholder="Search by title"
     (input)="setSearch($event)"
   />
