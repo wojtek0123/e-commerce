@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { afterNextRender, Injectable, signal } from '@angular/core';
 
 const DARK_THEME_CLASS_NAME = 'dark' as const;
 const LOCAL_STORAGE_THEME_NAME = 'isDark' as const;
@@ -9,35 +9,37 @@ const LOCAL_STORAGE_THEME_NAME = 'isDark' as const;
 export class ThemeService {
   private _isDark = signal(false);
   public isDark = this._isDark.asReadonly();
-  private htmlElement = document.querySelector('html');
+  // private htmlElement = document.querySelector('html');
 
   constructor() {
-    const userPreference = window.matchMedia(
-      '(prefers-color-scheme: dark)',
-    ).matches;
+    afterNextRender(() => {
+      const userPreference = window.matchMedia(
+        '(prefers-color-scheme: dark)',
+      ).matches;
 
-    const isDark: boolean | null = JSON.parse(
-      localStorage.getItem(LOCAL_STORAGE_THEME_NAME) ?? 'null',
-    );
+      const isDark: boolean | null = JSON.parse(
+        localStorage.getItem(LOCAL_STORAGE_THEME_NAME) ?? 'null',
+      );
 
-    this.setMode(isDark || userPreference);
+      this.setMode(isDark || userPreference);
+    });
   }
 
   public toggleDarkMode() {
-    const isDark = this.htmlElement?.classList.toggle(DARK_THEME_CLASS_NAME);
-
-    localStorage.setItem(LOCAL_STORAGE_THEME_NAME, JSON.stringify(isDark));
+    // const isDark = this.htmlElement?.classList.toggle(DARK_THEME_CLASS_NAME);
+    //
+    // localStorage.setItem(LOCAL_STORAGE_THEME_NAME, JSON.stringify(isDark));
   }
 
   public setMode(isDark: boolean) {
-    this._isDark.set(isDark);
-
-    if (isDark) {
-      this.htmlElement?.classList.add(DARK_THEME_CLASS_NAME);
-    } else {
-      this.htmlElement?.classList.remove(DARK_THEME_CLASS_NAME);
-    }
-
-    localStorage.setItem(LOCAL_STORAGE_THEME_NAME, JSON.stringify(isDark));
+    // this._isDark.set(isDark);
+    //
+    // if (isDark) {
+    //   this.htmlElement?.classList.add(DARK_THEME_CLASS_NAME);
+    // } else {
+    //   this.htmlElement?.classList.remove(DARK_THEME_CLASS_NAME);
+    // }
+    //
+    // localStorage.setItem(LOCAL_STORAGE_THEME_NAME, JSON.stringify(isDark));
   }
 }

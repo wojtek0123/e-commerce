@@ -23,7 +23,13 @@
           }
         ],
         "styles": ["apps/client-web/src/styles.scss"],
-        "scripts": []
+        "scripts": [],
+        "server": "apps/client-web/src/main.server.ts",
+        "polyfills": ["zone.js"],
+        "prerender": true,
+        "ssr": {
+          "entry": "apps/client-web/server.ts"
+        }
       },
       "configurations": {
         "production": {
