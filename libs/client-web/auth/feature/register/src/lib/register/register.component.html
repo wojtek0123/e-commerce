@@ -18,11 +18,10 @@
         autocomplete="off"
         formControlName="email"
         [ngClass]="{
-          'ng-dirty ng-invalid':
-            registerForm.controls.email.invalid && submitted(),
+          'ng-dirty ng-invalid': registerForm.controls.email.invalid,
         }"
       />
-      @if (registerForm.controls.email.dirty || submitted()) {
+      @if (registerForm.controls.email.dirty) {
         <ng-container slot="error-message">
           @if (registerForm.controls.email.getError('required')) {
             <lib-error-message message="Field is required" />
@@ -39,12 +38,11 @@
         [feedback]="false"
         [toggleMask]="true"
         [ngClass]="{
-          'ng-dirty ng-invalid':
-            registerForm.controls.password.invalid && submitted(),
+          'ng-dirty ng-invalid': registerForm.controls.password.invalid,
         }"
         formControlName="password"
       />
-      @if (registerForm.controls.password.dirty || submitted()) {
+      @if (registerForm.controls.password.dirty) {
         <ng-container slot="error-message">
           @if (registerForm.controls.password.getError('minlength')) {
             <lib-error-message
@@ -63,12 +61,11 @@
         [feedback]="false"
         [toggleMask]="true"
         [ngClass]="{
-          'ng-dirty ng-invalid':
-            registerForm.controls.confirmPassword.invalid && submitted(),
+          'ng-dirty ng-invalid': registerForm.controls.confirmPassword.invalid,
         }"
         formControlName="confirmPassword"
       />
-      @if (registerForm.controls.confirmPassword.dirty || submitted()) {
+      @if (registerForm.controls.confirmPassword.dirty) {
         <ng-container slot="error-message">
           @if (registerForm.controls.confirmPassword.getError('required')) {
             <lib-error-message />

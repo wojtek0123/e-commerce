@@ -19,11 +19,11 @@
         id="email"
         autocomplete="off"
         [ngClass]="{
-          'ng-dirty ng-invalid': emailControl.invalid && submitted(),
+          'ng-dirty ng-invalid': emailControl.invalid,
         }"
         formControlName="email"
       />
-      @if (emailControl.dirty || submitted()) {
+      @if (emailControl.dirty) {
         <ng-container slot="error-message">
           @if (emailControl.getError('required')) {
             <lib-error-message />
@@ -43,11 +43,11 @@
         styleClass="w-full"
         [toggleMask]="true"
         [ngClass]="{
-          'ng-dirty ng-invalid': passwordControl.invalid && submitted(),
+          'ng-dirty ng-invalid': passwordControl.invalid,
         }"
         formControlName="password"
       />
-      @if (passwordControl.dirty || submitted()) {
+      @if (passwordControl.dirty) {
         <ng-container slot="error-message">
           @if (passwordControl.getError('minlength')) {
             <lib-error-message
