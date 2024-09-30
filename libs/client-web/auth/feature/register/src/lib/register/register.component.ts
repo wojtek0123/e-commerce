@@ -54,10 +54,9 @@ export class RegisterComponent {
   private readonly fb = inject(FormBuilder);
   protected readonly route = inject(ActivatedRoute);
 
-  loading$ = this.store.select(selectLoading);
-  submitted = signal(false);
+  public loading$ = this.store.select(selectLoading);
 
-  registerForm = this.fb.nonNullable.group(
+  public registerForm = this.fb.nonNullable.group(
     {
       email: this.fb.control<string>('', {
         validators: [Validators.required, Validators.email],
@@ -75,7 +74,7 @@ export class RegisterComponent {
     { validators: this.matchPassword() },
   );
 
-  matchPassword() {
+  public matchPassword() {
     return (formGroup: AbstractControl): ValidationErrors | null => {
       const passwordControl = formGroup.get('password');
       const confirmPasswordControl = formGroup.get('confirmPassword');
@@ -101,9 +100,7 @@ export class RegisterComponent {
     };
   }
 
-  onSubmit() {
-    this.submitted.set(true);
-
+  public onSubmit() {
     if (this.registerForm.invalid) return;
 
     const { email, password } = this.registerForm.value;

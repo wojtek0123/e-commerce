@@ -44,24 +44,20 @@ export class LoginComponent {
   private fb = inject(FormBuilder);
   protected readonly route = inject(ActivatedRoute);
 
-  loading$ = this.store.select(selectLoading);
-  submitted = signal(false);
+  public loading$ = this.store.select(selectLoading);
 
-  loginForm = this.fb.nonNullable.group({
+  public loginForm = this.fb.nonNullable.group({
     email: this.fb.control<string>('', {
       validators: [Validators.required, Validators.email],
-      updateOn: 'blur',
       nonNullable: true,
     }),
     password: this.fb.control<string>('', {
       validators: [Validators.required, Validators.minLength(6)],
-      updateOn: 'blur',
       nonNullable: true,
     }),
   });
 
-  onSubmit() {
-    this.submitted.set(true);
+  public onSubmit() {
     const { invalid } = this.loginForm;
 
     if (invalid) return;
