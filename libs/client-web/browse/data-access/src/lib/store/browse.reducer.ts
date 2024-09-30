@@ -176,7 +176,7 @@ export const browseFeature = createFeature({
                       (item) => item !== itemId,
                     )
                   : state.filters[filter].selectedItems.filter(
-                      ({ id }) => id !== Number(itemId),
+                      ({ id }) => id !== itemId,
                     ),
             },
           },

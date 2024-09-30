@@ -20,7 +20,7 @@ export class PublishersService {
 
   update(
     where: Prisma.PublisherWhereUniqueInput,
-    data: Prisma.PublisherUpdateInput
+    data: Prisma.PublisherUpdateInput,
   ) {
     return this.prisma.publisher.update({ where, data });
   }

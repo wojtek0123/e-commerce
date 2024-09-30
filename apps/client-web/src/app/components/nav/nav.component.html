@@ -163,7 +163,7 @@
         [queryParams]="{
           categories: category.name.toLowerCase().split(' ').join('_'),
         }"
-        [label]="isLabelShowed() ? category.name : category.name[0]"
+        [label]="isLabelShowed() ? category.name : category.name.slice(0, 2)"
         [state]="{ category: stringifyCategory(category) }"
         (onClick)="isOpen.set(false)"
       />

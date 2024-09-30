@@ -4,7 +4,7 @@ import { Country } from '../../countries/entities/country.entity';
 
 export class UserAddressDto implements UserAddress {
   @ApiProperty()
-  id: number;
+  id: string;
 
   @ApiProperty()
   firstName: string;
@@ -31,10 +31,10 @@ export class UserAddressDto implements UserAddress {
   street: string;
 
   @ApiProperty()
-  userId: number;
+  userId: string;
 
   @ApiProperty()
-  countryId: number;
+  countryId: string;
 
   @ApiProperty()
   country: Country;

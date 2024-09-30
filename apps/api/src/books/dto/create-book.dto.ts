@@ -1,4 +1,4 @@
-import { ApiCreatedResponse, ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { Tag } from '@prisma/client';
 import {
   IsArray,
@@ -7,7 +7,6 @@ import {
   IsNumber,
   IsOptional,
   IsString,
-  IsStrongPassword,
 } from 'class-validator';
 
 export class CreateBookDto {
@@ -46,14 +45,14 @@ export class CreateBookDto {
   @IsOptional()
   publishedDate: string;
 
-  @ApiProperty({ type: Number, required: false })
-  @IsNumber()
+  @ApiProperty({ type: String, required: false })
+  @IsString()
   @IsOptional()
-  publisherId?: number;
+  publisherId?: string;
 
-  @ApiProperty({ type: Number })
-  @IsNumber()
-  categoryId: number;
+  @ApiProperty({ type: String })
+  @IsString()
+  categoryId: string;
 
   @ApiProperty({ type: Number, required: false })
   @IsOptional()
@@ -65,9 +64,9 @@ export class CreateBookDto {
   @IsEnum(Tag)
   tag: Tag;
 
-  @ApiProperty({ type: Number, isArray: true })
+  @ApiProperty({ type: String, isArray: true })
   @IsArray()
-  authorsId: number[];
+  authorsId: string[];
 
   @ApiProperty({ type: String, required: false })
   @IsString()

@@ -3,8 +3,8 @@ import { ProductInventory } from '@prisma/client';
 import { BookEntity } from '../../books/entities/book.entity';
 
 export class ProductInventoryEntity implements ProductInventory {
-  @ApiProperty({ readOnly: true, type: Number })
-  id: number;
+  @ApiProperty({ readOnly: true, type: String })
+  id: string;
 
   @ApiProperty({ type: Number })
   quantity: number;

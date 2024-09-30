@@ -80,8 +80,8 @@ export class CartItemsController {
   ) {
     return this.cartItemsService.update(
       authHeader,
-      +shoppingSessionId,
-      +bookId,
+      shoppingSessionId,
+      bookId,
       updateCartItemDto,
     );
   }
@@ -96,10 +96,6 @@ export class CartItemsController {
     @Param('bookId') bookId: string,
     @Param('shoppingSessionId') shoppingSessionId: string,
   ) {
-    return this.cartItemsService.remove(
-      authHeader,
-      +shoppingSessionId,
-      +bookId,
-    );
+    return this.cartItemsService.remove(authHeader, shoppingSessionId, bookId);
   }
 }

@@ -1,47 +1,46 @@
-import { DestroyRef, Directive, inject, OnInit } from '@angular/core';
-import { BrowseState } from '@e-commerce/client-web/browse/data-access';
-import { Store } from '@ngrx/store';
+import { DestroyRef, Directive, effect, inject, OnInit } from '@angular/core';
+import {
+  BooksState,
+  BooksStore,
+} from '@e-commerce/client-web/browse/data-access';
 import { FilterComponent } from '../filter/filter.component';
-import { debounce, Observable, of, startWith, switchMap, timer } from 'rxjs';
+import { debounce, of, timer, Unsubscribable } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
-export const PAGE = 1 as const;
-export const SIZE = 20 as const;
-
 @Directive({})
-export abstract class AbstractSelectItemsFilterDirective<T> implements OnInit {
+export abstract class AbstractSelectItemsFilterDirective<Item>
+  implements OnInit
+{
   protected filterComponent = inject(FilterComponent);
-  protected store = inject(Store);
+  protected booksStore = inject(BooksStore);
   private destroyRef = inject(DestroyRef);
 
-  abstract getItems$: (search: string) => Observable<T[]>;
-  abstract selectedItems$: Observable<T[]>;
-  abstract trackFn: (_: number, item: T) => number | string;
-  abstract getItemLabel: (item: T) => string;
+  abstract triggerGetItems: (search: string) => Unsubscribable | void;
+  abstract items: () => Item[];
+  abstract trackFn: (_: number, item: Item) => number | string;
+  abstract getItemLabel: (item: Item) => string;
   abstract placeholder: string;
-  abstract filterName: keyof BrowseState['filters'];
+  abstract filterName: keyof BooksState['filters'];
+  abstract selectedItems: () => Item[];
+
+  constructor() {
+    effect(
+      () => {
+        this.filterComponent.selectedItems.set(this.selectedItems());
+        this.filterComponent.items.set(this.items());
+      },
+      { allowSignalWrites: true },
+    );
+  }
 
   ngOnInit(): void {
-    this.filterComponent.trackFn = this.trackFn;
-    this.filterComponent.getLabelItem = this.getItemLabel;
-    this.filterComponent.filterName.set(this.filterName);
-    this.filterComponent.placeholder.set(this.placeholder);
-
-    this.selectedItems$
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((selectedItems) => {
-        this.filterComponent.selectedItems.set(selectedItems);
-      });
-
     this.filterComponent.searchControl.valueChanges
       .pipe(
-        startWith(''),
         debounce((search) => (search ? timer(350) : of({}))),
-        switchMap((search) => this.getItems$(search ?? '')),
         takeUntilDestroyed(this.destroyRef),
       )
-      .subscribe((authors) => {
-        this.filterComponent.items.set(authors);
+      .subscribe((search) => {
+        this.triggerGetItems(search ?? '');
       });
   }
 }

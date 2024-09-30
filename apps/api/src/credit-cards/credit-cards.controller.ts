@@ -53,10 +53,10 @@ export class CreditCardsController {
   @ApiCreatedResponse({ type: CreditCard })
   update(
     @Headers('authorization') authHeader: string,
-    @Param('id') id: string,
+    @Param('id') id: CreditCard['id'],
     @Body() updateCreditCardDto: UpdateCreditCardDto,
   ) {
-    return this.creditCardsService.update(authHeader, +id, updateCreditCardDto);
+    return this.creditCardsService.update(authHeader, id, updateCreditCardDto);
   }
 
   @Delete(':id')
@@ -65,8 +65,8 @@ export class CreditCardsController {
   @ApiOkResponse({ type: CreditCard })
   remove(
     @Headers('authorization') authHeader: string,
-    @Param('id') id: string,
+    @Param('id') id: CreditCard['id'],
   ) {
-    return this.creditCardsService.remove(authHeader, +id);
+    return this.creditCardsService.remove(authHeader, id);
   }
 }

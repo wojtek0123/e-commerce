@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { $Enums, Book, Tag } from '@prisma/client';
-import { IsNumber, IsOptional } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 import { AuthorEntity } from '../../authors/enities/author.entity';
 import { CategoryDto } from '../../categories/dto/category.dto';
 
@@ -21,11 +21,11 @@ export class BookEntity implements Book {
   @ApiProperty({ type: Number })
   pages: number;
 
-  @ApiProperty({ type: Number })
-  publisherId: number;
+  @ApiProperty({ type: String })
+  publisherId: string;
 
-  @ApiProperty({ type: Number })
-  categoryId: number;
+  @ApiProperty({ type: String })
+  categoryId: string;
 
   @ApiProperty({ required: false, type: String })
   coverImage: string;
@@ -37,9 +37,9 @@ export class BookEntity implements Book {
   @ApiProperty({ type: String })
   language: string;
 
-  @ApiProperty({ type: Number })
-  @IsNumber()
-  id: number;
+  @ApiProperty({ type: String })
+  @IsString()
+  id: string;
 
   @ApiProperty({ enum: Tag, required: false })
   tag: $Enums.Tag;
@@ -53,6 +53,6 @@ export class BookEntity implements Book {
   @ApiProperty({ type: CategoryDto })
   category: CategoryDto;
 
-  @ApiProperty({ type: Number })
-  productInventoryId: number;
+  @ApiProperty({ type: String })
+  productInventoryId: string;
 }

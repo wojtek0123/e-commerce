@@ -1,7 +1,7 @@
 import { Country } from './country.model';
 
 export interface UserAddress {
-  id: number;
+  id: string;
   firstName: string;
   lastName: string;
   postcode: string;

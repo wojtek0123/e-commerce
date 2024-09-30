@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { UserAddress } from '../api-models';
+import { Country, UserAddress } from '../api-models';
 import { API_URL } from '@e-commerce/client-web/shared/utils';
 
 export type CreateUserAddressBody = Omit<UserAddress, 'id' | 'country'>;
@@ -14,7 +14,7 @@ interface UpdateUserAddressBody {
   postcode?: string | null;
   houseNumber?: string | null;
   homeNumber?: string | null;
-  countryId?: number | null;
+  countryId?: Country['id'] | null;
 }
 
 @Injectable({ providedIn: 'root' })

@@ -36,51 +36,50 @@ export class BooksService {
   }
 
   async findMany({
-    categoryNamesIn,
+    categoryIdIn,
     tagsIn,
     titleLike,
     priceFrom,
     priceTo,
     size,
     page,
-    authorNamesIn,
+    authorIdIn,
   }: {
-    categoryNamesIn?: string;
+    categoryIdIn?: string;
     tagsIn?: string;
     titleLike?: string;
     priceFrom?: string;
     priceTo?: string;
     size?: string;
     page?: string;
-    authorNamesIn?: string;
+    authorIdIn?: string;
   }) {
     try {
       const pageNumber = this.parseNumber(page, 1);
       const sizeNumber = this.parseNumber(size, 20);
 
-      const parsedCategories = this._parseQueryParams(categoryNamesIn);
+      const parsedCategories = this._parseQueryParams(categoryIdIn);
       const parsedTags = this._parseQueryParams(tagsIn);
-      const parsedAuthors = this._parseQueryParams(authorNamesIn);
-
-      const authorsId = await this.prisma.author
-        .findMany({
-          where: { name: { in: parsedAuthors } },
-          select: { id: true },
-        })
-        .then((authors) => authors.map(({ id }) => id));
+      const parsedAuthors = this._parseQueryParams(authorIdIn);
 
       const whereClause: Prisma.BookWhereInput = {
         AND: [
           parsedTags.length > 0 ? { tag: { in: parsedTags as Tag[] } } : {},
-          parsedCategories.length > 0 ? { category: { name: { in: parsedCategories } } } : {},
-          titleLike ? { title: { contains: titleLike, mode: 'insensitive' } } : {},
+          parsedCategories.length > 0
+            ? { category: { id: { in: parsedCategories } } }
+            : {},
+          titleLike
+            ? { title: { contains: titleLike, mode: 'insensitive' } }
+            : {},
           {
             price: {
               gte: this.parseNumber(priceFrom, 0),
               lte: this.parseNumber(priceTo, Number.MAX_SAFE_INTEGER),
             },
           },
-          authorsId.length > 0 ? { authors: { some: { authorId: { in: authorsId } } } } : {},
+          parsedAuthors.length > 0
+            ? { authors: { some: { authorId: { in: parsedAuthors } } } }
+            : {},
         ],
       };
 
@@ -107,21 +106,24 @@ export class BooksService {
         page: pageNumber,
       };
     } catch (error) {
-      console.error('Błąd podczas wyszukiwania książek:', error);
-      throw new Error('Wystąpił błąd podczas wyszukiwania książek');
+      throw new Error('Error occur while searching books');
     }
   }
 
   private _parseQueryParams(param?: string): string[] {
-    return param?.split(',').filter(Boolean).map((item) => item.trim()) || [];
+    return (
+      param
+        ?.split(',')
+        .filter(Boolean)
+        .map((item) => item.trim()) || []
+    );
   }
 
   private parseNumber(value: string | undefined, fallback: number): number {
     const parsedValue = value ? parseInt(value, 10) : NaN;
     return isNaN(parsedValue) ? fallback : parsedValue;
   }
-  async findOne(id: number) {
-    console.log(id);
+  async findOne(id: string) {
     const book = await this.prisma.book.findUnique({
       where: { id },
       include: {
@@ -138,11 +140,11 @@ export class BooksService {
     return { ...book, authors: book.authors.map((a) => a.author) };
   }
 
-  update(id: number, data: Prisma.BookUpdateInput) {
+  update(id: string, data: Prisma.BookUpdateInput) {
     return this.prisma.book.update({ where: { id }, data });
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return this.prisma.book.delete({ where: { id } });
   }
 }

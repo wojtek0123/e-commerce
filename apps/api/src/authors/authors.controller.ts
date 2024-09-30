@@ -51,7 +51,7 @@ export class AuthorsController {
   @ApiOperation({ summary: 'Get specific author by id' })
   @ApiOkResponse({ type: AuthorDto })
   findOne(@Param('id') id: string) {
-    return this.authorsService.findOne({ id: +id });
+    return this.authorsService.findOne({ id });
   }
 
   @Patch(':id')
@@ -59,13 +59,13 @@ export class AuthorsController {
   @ApiCreatedResponse({ type: AuthorDto })
   @ApiBody({ description: 'Update an author', type: AuthorDto })
   update(@Param('id') id: string, @Body() data: { name: string }) {
-    return this.authorsService.update({ id: +id }, data);
+    return this.authorsService.update({ id }, data);
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete an author' })
   @ApiOkResponse({ type: AuthorDto })
   remove(@Param('id') id: string) {
-    return this.authorsService.remove({ id: +id });
+    return this.authorsService.remove({ id });
   }
 }

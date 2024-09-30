@@ -35,7 +35,7 @@ export class UserAddressesController {
   @ApiOperation({ summary: 'create user address' })
   create(
     @Body() body: UserAddressCreateDto,
-    @Headers('authorization') authHeader: string
+    @Headers('authorization') authHeader: string,
   ) {
     return this.userAddressesService.create(authHeader, body);
   }
@@ -64,7 +64,7 @@ export class UserAddressesController {
   @ApiCreatedResponse({ type: UserAddressDto })
   @ApiOperation({ summary: 'update user address' })
   update(@Param('id') id: string, @Body() data: UserAddressUpdateDto) {
-    return this.userAddressesService.update(+id, data);
+    return this.userAddressesService.update(id, data);
   }
 
   @Delete(':id')
@@ -72,7 +72,7 @@ export class UserAddressesController {
   @ApiBearerAuth()
   @ApiOkResponse({ type: UserAddressDto })
   @ApiOperation({ summary: 'delete user address' })
-  remove(@Param('id') id: number) {
+  remove(@Param('id') id: string) {
     return this.userAddressesService.remove(id);
   }
 }

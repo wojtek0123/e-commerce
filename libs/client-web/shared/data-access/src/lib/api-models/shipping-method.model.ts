@@ -1,5 +1,5 @@
 export interface ShippingMethod {
-  id: number;
+  id: string;
   price: number;
   name: string;
   createdAt: string;

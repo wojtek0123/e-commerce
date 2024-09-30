@@ -72,7 +72,7 @@ export class BookComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    const bookId = Number(this.route.snapshot.params['bookId']);
+    const bookId = this.route.snapshot.params['bookId'];
     this.store.dispatch(bookActions.getBook({ bookId }));
   }
 

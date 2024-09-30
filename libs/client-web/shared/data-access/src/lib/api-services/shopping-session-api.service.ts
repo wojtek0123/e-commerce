@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { API_URL } from '@e-commerce/client-web/shared/utils';
-import { ShoppingSession } from '../api-models';
+import { Book, ShoppingSession } from '../api-models';
 
 @Injectable({ providedIn: 'root' })
 export class ShoppingSessionApiService {
@@ -13,8 +13,8 @@ export class ShoppingSessionApiService {
   }
 
   createManyCartItems(
-    shoppingSessionId: number,
-    cartItems: { bookId: number; quantity: number }[],
+    shoppingSessionId: ShoppingSession['id'],
+    cartItems: { bookId: Book['id']; quantity: number }[],
   ) {
     return this.http.post<ShoppingSession>(
       `${this.apiUrl}/shopping-sessions/${shoppingSessionId}`,

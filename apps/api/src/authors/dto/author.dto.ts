@@ -3,10 +3,10 @@ import { Author } from '@prisma/client';
 
 export class AuthorDto implements Author {
   @ApiProperty({
-    type: Number,
+    type: String,
     readOnly: true,
   })
-  id: number;
+  id: string;
 
   @ApiProperty({
     type: String,

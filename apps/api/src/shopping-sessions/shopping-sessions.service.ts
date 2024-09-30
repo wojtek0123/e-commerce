@@ -8,9 +8,10 @@ import {
 import { PrismaService } from '../prisma/prisma.service';
 import { decode } from 'jsonwebtoken';
 import { ShoppingSessionEntity } from './entities/shopping-session.entity';
+import { Book, ShoppingSession } from '@prisma/client';
 
 interface CartItem {
-  bookId: number;
+  bookId: Book['id'];
   quantity: number;
 }
 
@@ -28,10 +29,10 @@ export class ShoppingSessionsService {
 
   async createManyCartItems(
     authHeader: string,
-    shoppingSessionId: number,
-    cartItems: CartItem[]
+    shoppingSessionId: ShoppingSession['id'],
+    cartItems: CartItem[],
   ) {
-    const userId = +decode(authHeader.split(' ')[1]).sub;
+    const userId = String(decode(authHeader.split(' ')[1]).sub);
 
     const shoppingSession = await this.prisma.shoppingSession.findUnique({
       where: { id: shoppingSessionId },
@@ -44,12 +45,12 @@ export class ShoppingSessionsService {
 
     if (shoppingSession.userId !== userId) {
       throw new ForbiddenException(
-        'You do not have permission to modify this shopping session'
+        'You do not have permission to modify this shopping session',
       );
     }
 
     const existingCartItem: CartItem[] = shoppingSession.cartItems.map(
-      ({ bookId, quantity }) => ({ bookId, quantity })
+      ({ bookId, quantity }) => ({ bookId, quantity }),
     );
 
     const uniqueCartItems = new Set([...existingCartItem, ...cartItems]);
@@ -135,7 +136,7 @@ export class ShoppingSessionsService {
       data: {
         total: shoppingSession.cartItems.reduce(
           (acc, ct) => acc + ct.book.price * ct.quantity,
-          0
+          0,
         ),
       },
     });
@@ -145,7 +146,7 @@ export class ShoppingSessionsService {
     const decodedAccessToken = decode(authHeader.split(' ')[1]);
 
     const shoppingSession = await this.prisma.shoppingSession.findUnique({
-      where: { userId: +decodedAccessToken.sub },
+      where: { userId: String(decodedAccessToken.sub) },
       include: {
         cartItems: {
           include: {
@@ -166,7 +167,7 @@ export class ShoppingSessionsService {
         .create({
           data: {
             total: 0,
-            userId: +decodedAccessToken.sub,
+            userId: String(decodedAccessToken.sub),
           },
           include: {
             cartItems: {
@@ -204,7 +205,7 @@ export class ShoppingSessionsService {
   // }
 
   async remove(authHeader: string) {
-    const userId = +decode(authHeader.split(' ')[1]).sub;
+    const userId = String(decode(authHeader.split(' ')[1]).sub);
     return this.prisma.shoppingSession.delete({ where: { userId } });
   }
 }

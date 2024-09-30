@@ -22,7 +22,7 @@ import { ShippingMethod } from './entities/shipping-method.entity';
 @Controller('shipping-methods')
 export class ShippingMethodsController {
   constructor(
-    private readonly shippingMethodsService: ShippingMethodsService
+    private readonly shippingMethodsService: ShippingMethodsService,
   ) {}
 
   @Post()
@@ -43,7 +43,7 @@ export class ShippingMethodsController {
   @ApiOperation({ summary: 'Get specific shipping method' })
   @ApiOkResponse({ type: ShippingMethod })
   findOne(@Param('id') id: string) {
-    return this.shippingMethodsService.findOne(+id);
+    return this.shippingMethodsService.findOne(id);
   }
 
   @Patch(':id')
@@ -51,15 +51,15 @@ export class ShippingMethodsController {
   @ApiCreatedResponse({ type: ShippingMethod })
   update(
     @Param('id') id: string,
-    @Body() updateShippingMethodDto: UpdateShippingMethodDto
+    @Body() updateShippingMethodDto: UpdateShippingMethodDto,
   ) {
-    return this.shippingMethodsService.update(+id, updateShippingMethodDto);
+    return this.shippingMethodsService.update(id, updateShippingMethodDto);
   }
 
   @Delete(':id')
   @ApiOkResponse({ type: ShippingMethod })
   @ApiOperation({ summary: 'Remove specific shipping method' })
   remove(@Param('id') id: string) {
-    return this.shippingMethodsService.remove(+id);
+    return this.shippingMethodsService.remove(id);
   }
 }

@@ -11,15 +11,10 @@ import { PriceFilterComponent } from './price-filters/price-filters.component';
 import { SidebarModule } from 'primeng/sidebar';
 import { ButtonModule } from 'primeng/button';
 import { NgTemplateOutlet } from '@angular/common';
-import { Store } from '@ngrx/store';
 import {
-  BrowseState,
-  selectSelectedAuthors,
-  selectSelectedCategories,
-  selectSelectedPrices,
-  selectSelectedTags,
+  BooksState,
+  BooksStore,
 } from '@e-commerce/client-web/browse/data-access';
-import { browseActions } from '@e-commerce/client-web/browse/data-access';
 import {
   AccordionFilterHeaderComponent,
   SelectItemsFilterComponent,
@@ -50,12 +45,12 @@ import { TagsDirective } from './directives/tags.directive';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FiltersComponent {
-  private store = inject(Store);
+  private readonly booksStore = inject(BooksStore);
 
-  public selectedTags = this.store.selectSignal(selectSelectedTags);
-  public selectedAuthors = this.store.selectSignal(selectSelectedAuthors);
-  public selectedCategories = this.store.selectSignal(selectSelectedCategories);
-  public selectedPrices = this.store.selectSignal(selectSelectedPrices);
+  public selectedTags = this.booksStore.selectedTags;
+  public selectedAuthors = this.booksStore.selectedAuthors;
+  public selectedCategories = this.booksStore.selectedCategories;
+  public selectedPrices = this.booksStore.enteredPrices;
 
   @HostBinding('style.maxWidth') maximumWidth =
     window.innerWidth >= 1280 ? '20rem' : 'fit-content';
@@ -75,7 +70,7 @@ export class FiltersComponent {
 
   sidebarVisible = signal(false);
 
-  clearSelectedItems(filter: keyof BrowseState['filters']) {
-    this.store.dispatch(browseActions.clearFilterSelectedItems({ filter }));
+  clearSelectedItems(filter: keyof BooksState['filters']) {
+    this.booksStore.clearSelectedItems(filter);
   }
 }

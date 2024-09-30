@@ -6,8 +6,8 @@ import { OrderStatus } from '@prisma/client';
 import { OrderItem } from '../../order-items/entities/order-item.entity';
 
 export class OrderDetail {
-  @ApiProperty({ readOnly: true, type: Number })
-  id: number;
+  @ApiProperty({ readOnly: true, type: String })
+  id: string;
 
   @ApiProperty({ type: Number })
   total: number;

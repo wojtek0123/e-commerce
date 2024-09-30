@@ -46,12 +46,12 @@ export class UsersService {
 
   async update(
     where: Prisma.UserWhereUniqueInput,
-    data: Prisma.UserUpdateInput
+    data: Prisma.UserUpdateInput,
   ) {
     if (data.password) {
       const hashedPassword = await hash(
         data.password.toString(),
-        roundsOfHashing
+        roundsOfHashing,
       );
 
       data = { ...data, password: hashedPassword };

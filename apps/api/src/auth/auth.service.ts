@@ -9,7 +9,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import { compare, hash } from 'bcrypt';
 import { roundsOfHashing } from '../users/users.service';
-import { Prisma } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 import { ConfigService } from '@nestjs/config';
 import { omit } from 'lodash';
 
@@ -72,14 +72,14 @@ export class AuthService {
     return { tokens, user };
   }
 
-  async logout(id: number) {
+  async logout(id: User['id']) {
     return this.prisma.user.update({
       where: { id },
       data: { refreshToken: null },
     });
   }
 
-  private async _updateRefreshToken(id: number, refreshToken: string) {
+  private async _updateRefreshToken(id: User['id'], refreshToken: string) {
     const hashedRefreshToken = await this._hashData(refreshToken);
     await this.prisma.user.update({
       where: { id },
@@ -87,7 +87,7 @@ export class AuthService {
     });
   }
 
-  private async _getTokens(id: number, email: string) {
+  private async _getTokens(id: User['id'], email: string) {
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(
         {
@@ -117,7 +117,7 @@ export class AuthService {
     };
   }
 
-  async refreshTokens(id: number, refreshToken: string) {
+  async refreshTokens(id: User['id'], refreshToken: string) {
     const user = await this.prisma.user.findUnique({ where: { id } });
 
     if (!user || !user.refreshToken)

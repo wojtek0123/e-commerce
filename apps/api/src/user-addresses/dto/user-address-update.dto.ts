@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Prisma } from '@prisma/client';
-import { IsNumber, IsString } from 'class-validator';
+import { IsString } from 'class-validator';
 
 export class UserAddressUpdateDto implements Prisma.UserAddressUpdateInput {
   @ApiProperty({ required: false, type: String })
@@ -35,7 +35,7 @@ export class UserAddressUpdateDto implements Prisma.UserAddressUpdateInput {
   @IsString()
   houseNumber?: string;
 
-  @ApiProperty({ required: false, type: Number })
-  @IsNumber()
-  countryId?: number;
+  @ApiProperty({ required: false, type: String })
+  @IsString()
+  countryId?: string;
 }

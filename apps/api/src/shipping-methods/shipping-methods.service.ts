@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateShippingMethodDto } from './dto/create-shipping-method.dto';
 import { UpdateShippingMethodDto } from './dto/update-shipping-method.dto';
 import { PrismaService } from '../prisma/prisma.service';
+import { ShippingMethod } from '@prisma/client';
 
 @Injectable()
 export class ShippingMethodsService {
@@ -15,15 +16,15 @@ export class ShippingMethodsService {
     return this.prisma.shippingMethod.findMany();
   }
 
-  findOne(id: number) {
+  findOne(id: ShippingMethod['id']) {
     return this.prisma.shippingMethod.findUnique({ where: { id } });
   }
 
-  update(id: number, data: UpdateShippingMethodDto) {
+  update(id: ShippingMethod['id'], data: UpdateShippingMethodDto) {
     return this.prisma.shippingMethod.update({ where: { id }, data });
   }
 
-  remove(id: number) {
+  remove(id: ShippingMethod['id']) {
     return this.prisma.shippingMethod.delete({ where: { id } });
   }
 }

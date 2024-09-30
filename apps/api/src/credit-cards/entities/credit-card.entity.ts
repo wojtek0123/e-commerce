@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreditCard {
-  @ApiProperty({ type: Number, readOnly: true })
-  id: number;
+  @ApiProperty({ type: String, readOnly: true })
+  id: string;
 
   @ApiProperty({ type: String })
   number: string;

@@ -1,6 +1,13 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Book, BookDetails, BookTag, Category, Paginated } from '../api-models';
+import {
+  Author,
+  Book,
+  BookDetails,
+  BookTag,
+  Category,
+  Paginated,
+} from '../api-models';
 import { API_URL } from '@e-commerce/client-web/shared/utils';
 
 @Injectable({ providedIn: 'root' })
@@ -10,26 +17,29 @@ export class BooksApiService {
 
   getBooks$(params: {
     titleLike?: string;
-    categoryNamesIn?: Category['name'][];
-    tagsIn?: BookTag[];
+    categoryIdIn?: Category['id'][];
+    tagIn?: BookTag[];
     publishDateFrom?: string;
     publishedDateTo?: string;
-    publisherIds?: number[];
+    publisherIds?: string[];
     priceFrom?: number;
     priceTo?: number;
     authorName?: string;
-    authorNamesIn?: string[];
+    authorIdIn?: Author['id'][];
     size?: number;
     page?: number;
   }) {
     const convertedParams = {
       ...params,
-      categoryNamesIn: params.categoryNamesIn?.join(',') ?? '',
-      tagsIn: params.tagsIn?.join(',') ?? '',
+      categoryIdIn: params.categoryIdIn?.join(',') ?? '',
+      tagIn: params.tagIn?.join(',') ?? '',
       publisherIds: params.publisherIds?.join(',') ?? '',
-      authorNamesIn: params.authorNamesIn?.join(',') ?? ''
+      authorIdIn: params.authorIdIn?.join(',') ?? '',
     };
-    return this.http.get<Paginated<Book>>(`${this.apiUrl}/books`, { params: convertedParams as {[key: string]: string | number | boolean } });
+
+    return this.http.get<Paginated<Book>>(`${this.apiUrl}/books`, {
+      params: convertedParams as { [key: string]: string | number | boolean },
+    });
   }
 
   getBook$(id: Book['id']) {

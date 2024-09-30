@@ -3,8 +3,8 @@ import { UserDto } from '../../users/dto/user.dto';
 import { Country } from '../../countries/entities/country.entity';
 
 export class UserAddress {
-  @ApiProperty({ readOnly: true, type: Number })
-  id: number;
+  @ApiProperty({ readOnly: true, type: String })
+  id: string;
 
   @ApiProperty({ type: String })
   firstName: string;
@@ -33,11 +33,11 @@ export class UserAddress {
   @ApiProperty({ type: UserDto })
   user: UserDto;
 
-  @ApiProperty({ type: Number })
-  userId: number;
+  @ApiProperty({ type: String })
+  userId: string;
 
-  @ApiProperty({ type: Number })
-  countryId: number;
+  @ApiProperty({ type: String })
+  countryId: string;
 
   @ApiProperty({ type: Country })
   country: { code: string; name: string };

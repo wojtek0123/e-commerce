@@ -29,16 +29,16 @@ export class CountriesController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.countriesService.findOne(+id);
+    return this.countriesService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() data: UpdateCountryDto) {
-    return this.countriesService.update(+id, data);
+    return this.countriesService.update(id, data);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.countriesService.remove(+id);
+    return this.countriesService.remove(id);
   }
 }

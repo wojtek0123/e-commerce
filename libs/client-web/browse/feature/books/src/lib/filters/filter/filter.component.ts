@@ -2,14 +2,14 @@ import {
   ChangeDetectionStrategy,
   Component,
   inject,
+  input,
   signal,
 } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
-  browseActions,
-  BrowseState,
+  BooksState,
+  BooksStore,
 } from '@e-commerce/client-web/browse/data-access';
-import { Store } from '@ngrx/store';
 import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextModule } from 'primeng/inputtext';
 
@@ -22,12 +22,16 @@ import { InputTextModule } from 'primeng/inputtext';
   templateUrl: './filter.component.html',
 })
 export class FilterComponent<T> {
-  private readonly store = inject(Store);
+  private readonly booksStore = inject(BooksStore);
 
   public getLabelItem = (item: T) => item?.toString() ?? '';
-  public trackFn = (index: number, _: T): number | string => index;
-  public filterName = signal<keyof BrowseState['filters']>('author');
+  // @Input() public trackFn = (index: number, item: T): number | string => index;
+  public filterName = signal<keyof BooksState['filters'] | null>(null);
   public placeholder = signal<string>('');
+
+  public getItemId = input<(item: T) => string>(
+    (item) => item?.toString() ?? '',
+  );
 
   public items = signal<T[]>([]);
   public selectedItems = signal<T[]>([]);
@@ -35,16 +39,15 @@ export class FilterComponent<T> {
   public searchControl = new FormControl<string | null>(null);
 
   public selectItem(selectedItems: T[], item: T) {
+    const getItemId = this.getItemId();
+    const filterName = this.filterName();
+
+    if (!getItemId || !filterName) return;
+
     const activeFilter = {
-      id: `${this.filterName()}_${this.trackFn(0, item).toString()}`,
+      id: `${this.filterName()}_${getItemId(item).toString()}`,
       name: this.getLabelItem(item) ?? '',
     };
-    this.store.dispatch(
-      browseActions.setSelectedItems({
-        selectedItems,
-        activeFitler: activeFilter,
-        filter: this.filterName(),
-      }),
-    );
+    this.booksStore.setSelectedItems(selectedItems, filterName, activeFilter);
   }
 }

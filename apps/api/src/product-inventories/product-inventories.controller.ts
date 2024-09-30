@@ -1,12 +1,13 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { ProductInventoriesService } from './product-inventories.service';
 import { ApiTags } from '@nestjs/swagger';
+import { BookEntity } from '../books/entities/book.entity';
 
 @ApiTags('product-inventories')
 @Controller('product-inventories')
 export class ProductInventoriesController {
   constructor(
-    private readonly productInventoriesService: ProductInventoriesService
+    private readonly productInventoriesService: ProductInventoriesService,
   ) {}
 
   // @Post()
@@ -20,8 +21,8 @@ export class ProductInventoriesController {
   // }
 
   @Get(':bookId')
-  findOne(@Param('bookId') bookId: string) {
-    return this.productInventoriesService.findOne(+bookId);
+  findOne(@Param('bookId') bookId: BookEntity['id']) {
+    return this.productInventoriesService.findOne(bookId);
   }
 
   // @Patch(':id')

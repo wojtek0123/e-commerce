@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateOrderItemDto } from './dto/create-order-item.dto';
 import { UpdateOrderItemDto } from './dto/update-order-item.dto';
+import { OrderItem } from './entities/order-item.entity';
 
 @Injectable()
 export class OrderItemsService {
@@ -12,15 +13,15 @@ export class OrderItemsService {
     return `This action returns all orderItems`;
   }
 
-  findOne(id: number) {
+  findOne(id: OrderItem['id']) {
     return `This action returns a #${id} orderItem`;
   }
 
-  update(id: number, updateOrderItemDto: UpdateOrderItemDto) {
+  update(id: OrderItem['id'], updateOrderItemDto: UpdateOrderItemDto) {
     return `This action updates a #${id} orderItem`;
   }
 
-  remove(id: number) {
+  remove(id: OrderItem['id']) {
     return `This action removes a #${id} orderItem`;
   }
 }
