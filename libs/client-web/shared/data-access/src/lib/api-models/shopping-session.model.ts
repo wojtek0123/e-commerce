@@ -1,7 +1,7 @@
 import { CartItem } from './cart-item.model';
 
 export interface ShoppingSession {
-  id: number;
+  id: string;
   createdAt: string;
   udpatedAt: string;
   total: number;

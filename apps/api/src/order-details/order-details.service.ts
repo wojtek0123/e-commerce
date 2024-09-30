@@ -2,9 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { CreateOrderDetailDto } from './dto/create-order-detail.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { decode } from 'jsonwebtoken';
-import { Book, ProductInventory } from '@prisma/client';
-import { ProductInventoryEntity } from '../product-inventories/entities/product-inventory.entity';
-import { BookEntity } from '../books/entities/book.entity';
+import { OrderDetail } from './entities/order-detail.entity';
 
 @Injectable()
 export class OrderDetailsService {
@@ -88,9 +86,9 @@ export class OrderDetailsService {
     authHeader: string,
   ) {
     // Decode and get the userId from the auth token
-    let userId: number;
+    let userId: string;
     try {
-      userId = +decode(authHeader.split(' ')[1]).sub;
+      userId = String(decode(authHeader.split(' ')[1]).sub);
     } catch (error) {
       throw new UnauthorizedException('Invalid authentication token');
     }
@@ -128,8 +126,6 @@ export class OrderDetailsService {
         if (newQuantity < 0) {
           throw new Error(`Not enough stock for bookId: ${pi.book.id}`);
         }
-
-        console.log('HALO', newQuantity);
 
         return this.prisma.productInventory.update({
           where: { id: pi.id },
@@ -171,7 +167,7 @@ export class OrderDetailsService {
   }
 
   findAll(authHeader: string) {
-    const userId = +decode(authHeader.split(' ')[1]).sub;
+    const userId = String(decode(authHeader.split(' ')[1]).sub);
     return this.prisma.orderDetails.findMany({
       where: { userId },
       include: {
@@ -191,8 +187,8 @@ export class OrderDetailsService {
     });
   }
 
-  findOne(authHeader: string, id: number) {
-    const userId = +decode(authHeader.split(' ')[1]).sub;
+  findOne(authHeader: string, id: OrderDetail['id']) {
+    const userId = String(decode(authHeader.split(' ')[1]).sub);
 
     return this.prisma.orderDetails.findUnique({
       where: { id, userId },

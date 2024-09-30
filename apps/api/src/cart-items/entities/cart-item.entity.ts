@@ -1,12 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { CartItem } from '@prisma/client';
+import { CartItem, ShoppingSession } from '@prisma/client';
 import { IsNumber, IsString } from 'class-validator';
 import { BookEntity } from '../../books/entities/book.entity';
 
 export class CartItemEntity implements CartItem {
-  @ApiProperty({ readOnly: true, type: Number })
-  @IsNumber()
-  id: number;
+  @ApiProperty({ readOnly: true, type: String })
+  @IsString()
+  id: string;
 
   @ApiProperty({ type: Number })
   @IsNumber()
@@ -16,9 +16,9 @@ export class CartItemEntity implements CartItem {
   @IsNumber()
   userId: number;
 
-  @ApiProperty({ type: Number })
-  @IsNumber()
-  bookId: number;
+  @ApiProperty({ type: String })
+  @IsString()
+  bookId: BookEntity['id'];
 
   @ApiProperty({ type: String })
   @IsString()
@@ -31,8 +31,9 @@ export class CartItemEntity implements CartItem {
   @ApiProperty({ type: BookEntity })
   book: BookEntity;
 
-  @ApiProperty({ type: Number })
-  shoppingSessionId: number;
+  @ApiProperty({ type: String })
+  @IsString()
+  shoppingSessionId: ShoppingSession['id'];
 
   @ApiProperty()
   shoppingSession: string;

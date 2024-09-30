@@ -1,40 +1,39 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { UserAddressCreateDto } from './dto/user-address-create.dto';
-import { decode } from 'jsonwebtoken';
 import { UserAddress } from './entities/user-addresses.entity';
 import { UserAddressUpdateDto } from './dto/user-address-update.dto';
-import { JwtPayload } from '../auth/types/jwt-payload.type';
+import { getUserIdFromAccessToken } from '../common/utils/get-user-id-from-access-token';
 
 @Injectable()
 export class UserAddressesService {
   constructor(private prisma: PrismaService) {}
 
   create(authHeader: string, data: UserAddressCreateDto) {
-    const decodedAccessToken = decode(authHeader.split(' ')[1]);
+    const userId = getUserIdFromAccessToken(authHeader);
 
-    if (!decodedAccessToken) {
+    if (!userId) {
       throw new UnauthorizedException('You are not log in');
     }
 
     return this.prisma.userAddress.create({
       data: {
         ...data,
-        userId: +decodedAccessToken.sub,
+        userId,
       },
       include: { country: true },
     });
   }
 
   find(authHeader: string) {
-    const decodedAccessToken = decode(authHeader.split(' ')[1]) as JwtPayload;
+    const userId = getUserIdFromAccessToken(authHeader);
 
-    if (!decodedAccessToken) {
+    if (!userId) {
       throw new UnauthorizedException('You are unauthorized to get this data');
     }
 
     return this.prisma.userAddress.findUnique({
-      where: { userId: +decodedAccessToken.sub },
+      where: { userId },
       include: {
         country: true,
       },
@@ -49,7 +48,7 @@ export class UserAddressesService {
     });
   }
 
-  remove(id: number) {
+  remove(id: UserAddress['id']) {
     return this.prisma.userAddress.delete({
       where: { id },
       include: { country: true },

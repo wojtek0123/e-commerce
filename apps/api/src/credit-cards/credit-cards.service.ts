@@ -39,7 +39,11 @@ export class CreditCardsService {
     return this._removeVulnerability(creditCard);
   }
 
-  async update(authHeader: string, id: number, data: UpdateCreditCardDto) {
+  async update(
+    authHeader: string,
+    id: CreditCard['id'],
+    data: UpdateCreditCardDto,
+  ) {
     const userId = getUserIdFromAccessToken(authHeader);
     const creditCard = await this.prisma.creditCard.update({
       where: { id, userId },
@@ -49,7 +53,7 @@ export class CreditCardsService {
     return this._removeVulnerability(creditCard);
   }
 
-  async remove(authHeader: string, id: number) {
+  async remove(authHeader: string, id: CreditCard['id']) {
     const userId = getUserIdFromAccessToken(authHeader);
     const creditCard = await this.prisma.creditCard.delete({
       where: { id, userId },

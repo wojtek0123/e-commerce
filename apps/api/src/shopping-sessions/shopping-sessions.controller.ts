@@ -23,7 +23,7 @@ import { CreateCartItemDto } from '../cart-items/dto/create-cart-item.dto';
 @Controller('shopping-sessions')
 export class ShoppingSessionsController {
   constructor(
-    private readonly shoppingSessionsService: ShoppingSessionsService
+    private readonly shoppingSessionsService: ShoppingSessionsService,
   ) {}
 
   @Get()
@@ -52,12 +52,12 @@ export class ShoppingSessionsController {
   createManyCartItems(
     @Body() body: { cartItems: CreateCartItemDto[] },
     @Headers('authorization') authHeader: string,
-    @Param('id') shoppingSessionId: string
+    @Param('id') shoppingSessionId: string,
   ) {
     return this.shoppingSessionsService.createManyCartItems(
       authHeader,
-      +shoppingSessionId,
-      body.cartItems
+      shoppingSessionId,
+      body.cartItems,
     );
   }
 }

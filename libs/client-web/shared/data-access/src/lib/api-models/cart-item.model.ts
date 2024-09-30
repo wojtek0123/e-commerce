@@ -7,7 +7,7 @@ export interface CartItemBase {
 }
 
 export interface CartItem extends CartItemBase {
-  id: number;
+  id: string;
   bookId: Book['id'];
   userId: User['id'];
   createdAt: string;

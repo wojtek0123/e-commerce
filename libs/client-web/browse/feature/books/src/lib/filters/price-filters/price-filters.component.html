@@ -1,12 +1,12 @@
 <div class="flex items-end gap-2 p-4">
   <lib-form-field label="Min">
     <p-inputNumber
+      #minPriceInput
       slot="input"
       [min]="0"
       [maxFractionDigits]="2"
-      [ngModel]="minPrice()()"
-      (ngModelChange)="minPrice().set($event)"
-      (onBlur)="onBlur('min')"
+      [ngModel]="minPrice()"
+      (onBlur)="setPrice('min')"
       mode="decimal"
       currency="USD"
     />
@@ -17,11 +17,11 @@
 
   <lib-form-field label="Max">
     <p-inputNumber
+      #maxPriceInput
       slot="input"
       [min]="0"
-      [ngModel]="maxPrice()()"
-      (ngModelChange)="maxPrice().set($event)"
-      (onBlur)="onBlur('max')"
+      [ngModel]="maxPrice()"
+      (onBlur)="setPrice('max')"
       [maxFractionDigits]="2"
       mode="decimal"
       currency="USD"

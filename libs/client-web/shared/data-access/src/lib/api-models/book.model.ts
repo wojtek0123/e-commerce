@@ -3,7 +3,7 @@ import { Category } from './category.model';
 import { ProductInventory } from './product-inventory.model';
 
 export interface Book {
-  id: number;
+  id: string;
   title: string;
   createdAt: string;
   updatedAt: string;

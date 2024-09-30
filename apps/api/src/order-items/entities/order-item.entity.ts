@@ -2,8 +2,8 @@ import { ApiProperty } from '@nestjs/swagger';
 import { BookEntity } from '../../books/entities/book.entity';
 
 export class OrderItem {
-  @ApiProperty({ type: Number, readOnly: true })
-  id: number;
+  @ApiProperty({ type: String, readOnly: true })
+  id: string;
 
   @ApiProperty({ type: BookEntity })
   book: BookEntity;

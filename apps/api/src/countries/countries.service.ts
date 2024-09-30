@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateCountryDto } from './dto/create-country.dto';
 import { UpdateCountryDto } from './dto/update-country.dto';
 import { PrismaService } from '../prisma/prisma.service';
+import { Country } from '@prisma/client';
 
 @Injectable()
 export class CountriesService {
@@ -15,15 +16,15 @@ export class CountriesService {
     return this.prisma.country.findMany();
   }
 
-  findOne(id: number) {
+  findOne(id: Country['id']) {
     return this.prisma.country.findUnique({ where: { id } });
   }
 
-  update(id: number, data: UpdateCountryDto) {
+  update(id: Country['id'], data: UpdateCountryDto) {
     return this.prisma.country.update({ where: { id }, data });
   }
 
-  remove(id: number) {
+  remove(id: Country['id']) {
     return this.prisma.country.delete({ where: { id } });
   }
 }

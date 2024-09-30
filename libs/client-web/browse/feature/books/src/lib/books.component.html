@@ -9,33 +9,26 @@
       </div>
     </div>
     <lib-active-filters
-      [activeFilters]="(activeFilters$ | async) ?? []"
+      [activeFilters]="activeFilters()"
       (clearFilterEvent)="clearFilter($event)"
       (clearFiltersEvent)="clearFilters()"
     />
 
-    @let books = books$ | async;
-    @let loading = loading$ | async;
-    @let error = error$ | async;
-    @let total = total$ | async;
-    @let size = size$ | async;
-    @let pendingBookIds = pendingBookIds$ | async;
     <lib-books-grid
-      [books]="books ?? []"
-      [pendingBookIds]="pendingBookIds ?? []"
-      [loading]="!!loading"
-      [error]="error"
+      [books]="books()"
+      [loading]="loading()"
+      [error]="error()"
       (addToCartEvent)="addToCart($event)"
     />
     <div
       class="flex items-center justify-center bg-content-background rounded-base w-full"
     >
-      @if (books?.length) {
+      @if (books().length) {
         <p-paginator
           styleClass="w-full mx-auto"
-          (onPageChange)="onPageChange($event, size)"
-          [rows]="size"
-          [totalRecords]="total"
+          (onPageChange)="onPageChange($event, size())"
+          [rows]="size()"
+          [totalRecords]="total()"
           [rowsPerPageOptions]="sizes()"
         />
       }

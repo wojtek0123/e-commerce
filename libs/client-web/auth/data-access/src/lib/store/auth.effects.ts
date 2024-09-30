@@ -27,7 +27,7 @@ export class AuthEffects {
       map(() => {
         const accessToken = localStorage.getItem('accessToken');
         const refreshToken = localStorage.getItem('refreshToken');
-        const userId = Number(localStorage.getItem('userId'));
+        const userId = localStorage.getItem('userId');
 
         if (!accessToken || !refreshToken || !userId) {
           return authActions.initFailure();

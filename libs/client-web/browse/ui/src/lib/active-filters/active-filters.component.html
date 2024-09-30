@@ -8,8 +8,9 @@
   />
   @for (activeFilter of activeFilters(); track activeFilter.id) {
     @let label =
-      activeFilter.label ??
-      activeFilter.id.split('_')[0] + ': ' + activeFilter.name;
+      (activeFilter.label ?? activeFilter.id.split('_')[0]) +
+      ': ' +
+      activeFilter.name;
     <p-chip
       styleClass="bg-content-background"
       [label]="label"

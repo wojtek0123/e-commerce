@@ -3,8 +3,8 @@ import { ShoppingSession } from '@prisma/client';
 import { CartItemEntity } from '../../cart-items/entities/cart-item.entity';
 
 export class ShoppingSessionEntity implements ShoppingSession {
-  @ApiProperty({ readOnly: true, type: Number })
-  id: number;
+  @ApiProperty({ readOnly: true, type: String })
+  id: string;
 
   @ApiProperty({ type: String })
   createdAt: Date;
@@ -12,8 +12,8 @@ export class ShoppingSessionEntity implements ShoppingSession {
   @ApiProperty({ type: String })
   updatedAt: Date;
 
-  @ApiProperty({ type: Number })
-  userId: number;
+  @ApiProperty({ type: String })
+  userId: string;
 
   @ApiProperty({ type: Number })
   total: number;

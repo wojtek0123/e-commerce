@@ -2,8 +2,7 @@ import { Route } from '@angular/router';
 import {
   BookEffects,
   bookFeature,
-  BrowseEffect,
-  browseFeature,
+  BooksStore,
 } from '@e-commerce/client-web/browse/data-access';
 import {
   OrderProcessEffects,
@@ -47,7 +46,7 @@ export const appRoutes: Route[] = [
           ),
       },
     ],
-    providers: [provideState(browseFeature), provideEffects(BrowseEffect)],
+    providers: [BooksStore],
   },
   {
     path: 'book/:bookId',

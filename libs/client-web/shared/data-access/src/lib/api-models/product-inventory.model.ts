@@ -1,5 +1,5 @@
 export interface ProductInventory {
-  id: number;
+  id: string;
   quantity: number;
   updatedAt: string;
   createdAt: string;

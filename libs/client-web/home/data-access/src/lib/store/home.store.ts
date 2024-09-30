@@ -43,12 +43,12 @@ export const HomeStore = signalStore(
           patchState(store, (state) => ({
             ...state,
             [tag]: { ...state[tag], loading: true },
-          }))
+          })),
         ),
         mergeMap(([tag, bookTag]) =>
           booksApi
             .getBooks$({
-              tagsIn: [bookTag],
+              tagIn: [bookTag],
               size: 5,
             })
             .pipe(
@@ -73,10 +73,10 @@ export const HomeStore = signalStore(
                     },
                   }));
                 },
-              })
-            )
-        )
-      )
+              }),
+            ),
+        ),
+      ),
     ),
-  }))
+  })),
 );

@@ -8,6 +8,7 @@ import { UpdateCartItemDto } from './dto/update-cart-item.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { ShoppingSessionsService } from '../shopping-sessions/shopping-sessions.service';
 import { decode } from 'jsonwebtoken';
+import { Book, ShoppingSession } from '@prisma/client';
 
 @Injectable()
 export class CartItemsService {
@@ -19,7 +20,7 @@ export class CartItemsService {
   // async createMany(authHeader: string, data: CreateCartItemDto[]) {}
 
   async create(authHeader: string, { bookId, quantity }: CreateCartItemDto) {
-    const userId = +decode(authHeader.split(' ')[1]).sub;
+    const userId = String(decode(authHeader.split(' ')[1]).sub);
 
     const shoppingSession = await this.prisma.shoppingSession.findUnique({
       where: { userId },
@@ -113,7 +114,7 @@ export class CartItemsService {
     };
   }
 
-  findOne(shoppingSessionId: number, bookId: number) {
+  findOne(shoppingSessionId: ShoppingSession['id'], bookId: Book['id']) {
     return this.prisma.cartItem.findUnique({
       where: { bookId_shoppingSessionId: { bookId, shoppingSessionId } },
       include: { shoppingSession: { select: { userId: true } } },
@@ -122,11 +123,11 @@ export class CartItemsService {
 
   async update(
     authHeader: string,
-    shoppingSessionId: number,
-    bookId: number,
+    shoppingSessionId: ShoppingSession['id'],
+    bookId: Book['id'],
     data: UpdateCartItemDto,
   ) {
-    const userId = +decode(authHeader.split(' ')[1]).sub;
+    const userId = String(decode(authHeader.split(' ')[1]).sub);
 
     const cartItem = await this.findOne(shoppingSessionId, bookId);
 
@@ -173,8 +174,12 @@ export class CartItemsService {
     };
   }
 
-  async remove(authHeader: string, shoppingSessionId: number, bookId: number) {
-    const userId = +decode(authHeader.split(' ')[1]).sub;
+  async remove(
+    authHeader: string,
+    shoppingSessionId: ShoppingSession['id'],
+    bookId: Book['id'],
+  ) {
+    const userId = String(decode(authHeader.split(' ')[1]).sub);
 
     const deletedCartItem = await this.prisma.cartItem.delete({
       where: {

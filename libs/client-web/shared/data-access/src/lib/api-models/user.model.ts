@@ -1,7 +1,7 @@
 import { Role } from './role.model';
 
 export interface User {
-  id: number;
+  id: string;
   email: string;
   role: Role;
   refreshToken: string;

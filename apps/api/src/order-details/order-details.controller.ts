@@ -50,6 +50,6 @@ export class OrderDetailsController {
     @Headers('authorization') authHeader: string,
     @Param('id') id: string,
   ) {
-    return this.orderDetailsService.findOne(authHeader, +id);
+    return this.orderDetailsService.findOne(authHeader, id);
   }
 }

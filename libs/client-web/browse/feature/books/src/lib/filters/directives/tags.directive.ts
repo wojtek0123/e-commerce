@@ -1,37 +1,26 @@
-import { Directive, inject, Injector, signal } from '@angular/core';
-import { selectSelectedTags } from '@e-commerce/client-web/browse/data-access';
-import {
-  BookTag,
-  allBookTags,
-} from '@e-commerce/client-web/shared/data-access';
-import {
-  AbstractSelectItemsFilterDirective,
-  SIZE,
-} from './select-item-filter.directive';
-import { toObservable } from '@angular/core/rxjs-interop';
-import { map } from 'rxjs';
+import { Directive } from '@angular/core';
+import { BookTag } from '@e-commerce/client-web/shared/data-access';
+import { AbstractSelectItemsFilterDirective } from './select-item-filter.directive';
 
 @Directive({
   selector: 'lib-filter[libTags]',
   standalone: true,
 })
 export class TagsDirective extends AbstractSelectItemsFilterDirective<BookTag> {
-  private allTags = signal([...allBookTags]);
-  private injector = inject(Injector);
-
-  override getItems$ = (search: string) =>
-    toObservable(this.allTags, { injector: this.injector }).pipe(
-      map((tags) =>
-        tags
-          .filter((tag) =>
-            tag.toLowerCase().includes(search.toLowerCase() ?? ''),
-          )
-          .slice(0, SIZE),
-      ),
-    );
-  override selectedItems$ = this.store.select(selectSelectedTags);
+  override triggerGetItems = (search: string) =>
+    this.booksStore.getTags(search);
+  override selectedItems = this.booksStore.selectedTags;
+  override items = this.booksStore.filters.tag.items;
   override trackFn = (_: number, item: BookTag) => item;
   override getItemLabel = (item: BookTag) => item;
   override placeholder = 'Search for tag';
   override readonly filterName = 'tag';
+
+  constructor() {
+    super();
+    // this.filterComponent.trackFn = this.trackFn;
+    this.filterComponent.getLabelItem = this.getItemLabel;
+    this.filterComponent.filterName.set(this.filterName);
+    this.filterComponent.placeholder.set(this.placeholder);
+  }
 }

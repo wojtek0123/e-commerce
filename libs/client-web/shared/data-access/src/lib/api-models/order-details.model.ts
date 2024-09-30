@@ -3,7 +3,7 @@ import { ShippingMethod } from './shipping-method.model';
 import { UserAddress } from './user-address.model';
 
 export interface OrderDetails {
-  id: number;
+  id: string;
   total: number;
   createdAt: string;
   updatedAt: string;

@@ -3,8 +3,8 @@ import { PaymentStatus } from '@prisma/client';
 import { OrderDetail } from '../../order-details/entities/order-detail.entity';
 
 export class Payment {
-  @ApiProperty({ type: Number, readOnly: true })
-  id: number;
+  @ApiProperty({ type: String, readOnly: true })
+  id: string;
 
   @ApiProperty({ type: String })
   createdAt: Date;

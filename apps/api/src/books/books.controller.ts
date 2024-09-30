@@ -17,7 +17,6 @@ import {
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
-import { GetBooksBodyDto } from './dto/get-books.dto';
 import { BookEntity } from './entities/book.entity';
 import { UpdateBookBodyDto } from './dto/update-body.dto';
 import { CreateBookDto } from './dto/create-book.dto';
@@ -61,8 +60,8 @@ export class BooksController {
     @Query('page') page: string,
     @Query('size') size: string,
     @Query('tagsIn') tagsIn: string,
-    @Query('categoryNamesIn') categoryNamesIn: string,
-    @Query('authorNamesIn') authorNamesIn: string,
+    @Query('categoryIdIn') categoryIdIn: string,
+    @Query('authorIdIn') authorIdIn: string,
     @Query('titleLike') titleLike: string,
     @Query('priceFrom') priceFrom: string,
     @Query('priceTo') priceTo: string,
@@ -70,9 +69,9 @@ export class BooksController {
     return this.booksService.findMany({
       page,
       size,
-      categoryNamesIn,
+      categoryIdIn,
       tagsIn,
-      authorNamesIn,
+      authorIdIn,
       titleLike,
       priceFrom,
       priceTo,
@@ -83,20 +82,20 @@ export class BooksController {
   @ApiOperation({ summary: 'Get a specific book' })
   @ApiOkResponse({ type: BookEntity })
   findOne(@Param('id') id: string) {
-    return this.booksService.findOne(+id);
+    return this.booksService.findOne(id);
   }
 
   @Patch(':id')
   @ApiOperation({ summary: 'Update a book' })
   @ApiCreatedResponse({ type: BookEntity })
   update(@Param('id') id: string, @Body() data: UpdateBookBodyDto) {
-    return this.booksService.update(+id, data);
+    return this.booksService.update(id, data);
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a book' })
   @ApiOkResponse({ type: BookEntity })
   remove(@Param('id') id: string) {
-    return this.booksService.remove(+id);
+    return this.booksService.remove(id);
   }
 }

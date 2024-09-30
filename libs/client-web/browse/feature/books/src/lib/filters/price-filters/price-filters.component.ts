@@ -3,20 +3,15 @@ import {
   Component,
   computed,
   inject,
-  signal,
+  viewChild,
 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DividerModule } from 'primeng/divider';
 import { FormFieldComponent } from '@e-commerce/client-web/shared/ui';
 import { AsyncPipe } from '@angular/common';
 import { CustomFilterDirective } from '@e-commerce/client-web/browse/utils';
-import { Store } from '@ngrx/store';
-import {
-  browseActions,
-  selectPriceFilter,
-  selectSelectedPrices,
-} from '@e-commerce/client-web/browse/data-access';
+import { BooksStore } from '@e-commerce/client-web/browse/data-access';
 
 @Component({
   selector: 'lib-price-filter',
@@ -32,30 +27,28 @@ import {
     FormsModule,
     CustomFilterDirective,
     AsyncPipe,
+    ReactiveFormsModule,
   ],
 })
 export class PriceFilterComponent {
-  private store = inject(Store);
+  private readonly booksStore = inject(BooksStore);
 
-  selected$ = this.store.select(selectSelectedPrices);
+  public enteredPrices = this.booksStore.enteredPrices;
 
-  filter = this.store.selectSignal(selectPriceFilter);
+  public minPrice = this.booksStore.minPrice;
+  public maxPrice = this.booksStore.maxPrice;
 
-  minPrice = computed(() => signal(this.filter().min));
-  maxPrice = computed(() => signal(this.filter().max));
-
-  choosenPriceLimitsCount = computed(
+  public choosenPriceLimitsCount = computed(
     () => [this.minPrice(), this.maxPrice()].filter((v) => v).length,
   );
 
-  onBlur(key: 'min' | 'max') {
-    const value = key === 'min' ? this.minPrice() : this.maxPrice();
+  private minPriceInput = viewChild.required<HTMLInputElement>('minPriceInput');
+  private maxPriceInput = viewChild.required<HTMLInputElement>('maxPriceInput');
 
-    this.store.dispatch(
-      browseActions.setPrice({
-        value: value(),
-        key,
-      }),
-    );
+  public setPrice(key: 'min' | 'max') {
+    const value =
+      key === 'min' ? this.minPriceInput().value : this.maxPriceInput().value;
+
+    this.booksStore.setPrice(value ? Number(value) : null, key);
   }
 }

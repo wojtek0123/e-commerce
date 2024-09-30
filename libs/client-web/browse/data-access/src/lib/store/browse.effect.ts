@@ -33,7 +33,6 @@ export class BrowseEffect {
   private actions$ = inject(Actions);
   private bookApi = inject(BooksApiService);
   private cartItemApi = inject(CartItemsApiService);
-  private authorApi = inject(AuthorApiService);
   private categoryApi = inject(CategoryApiService);
 
   triggerGetBooks = createEffect(() =>
@@ -100,10 +99,10 @@ export class BrowseEffect {
             ...(search && { titleLike: search }),
             ...(filters.price.min && { priceFrom: filters.price.min }),
             ...(filters.price.max && { priceTo: filters.price.max }),
-            authorNamesIn: filters.author.selectedItems.map(({ name }) => name),
-            categoryNamesIn: filters.category.selectedItems.map(
-              ({ name }) => name,
-            ),
+            // authorNamesIn: filters.author.selectedItems.map(({ name }) => name),
+            // categoryNamesIn: filters.category.selectedItems.map(
+            //   ({ name }) => name,
+            // ),
             tagsIn: filters.tag.selectedItems,
             page,
             size,

@@ -34,7 +34,7 @@ export class UserAddressCreateDto {
   @IsString()
   postcode: string;
 
-  @ApiProperty({ type: Number })
-  @IsNumber()
-  countryId: number;
+  @ApiProperty({ type: String })
+  @IsString()
+  countryId: string;
 }

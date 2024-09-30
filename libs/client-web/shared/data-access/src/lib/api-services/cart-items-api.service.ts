@@ -13,7 +13,7 @@ export class CartItemsApiService {
   }
 
   updateQuantity(
-    shoppingSessionId: number,
+    shoppingSessionId: ShoppingSession['id'],
     bookId: Book['id'],
     body: { quantity: number },
   ) {

@@ -5,15 +5,14 @@
     [formControl]="searchControl"
   />
   <div class="flex flex-col gap-1">
-    @for (item of items(); track $index) {
+    @for (item of items(); track getItemId()(item)) {
       <div class="flex items-center gap-2">
-        <p-checkbox
-          [ngModel]="selectedItems()"
-          (ngModelChange)="selectItem($event, item)"
-          [value]="item"
-          [inputId]="trackFn($index, item).toString()"
-        />
-        <label [for]="trackFn($index, item).toString()">
+        <label>
+          <p-checkbox
+            [ngModel]="selectedItems()"
+            (ngModelChange)="selectItem($event, item)"
+            [value]="item"
+          />
           {{ getLabelItem(item) }}
         </label>
       </div>

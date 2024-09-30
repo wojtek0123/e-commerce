@@ -42,7 +42,7 @@ export class PublishersController {
   @ApiOperation({ summary: 'Get a specific publisher' })
   @ApiOkResponse({ type: PublisherDto })
   findOne(@Param('id') id: string) {
-    return this.publishersService.findOne({ id: +id });
+    return this.publishersService.findOne({ id });
   }
 
   @Patch(':id')
@@ -50,13 +50,13 @@ export class PublishersController {
   @ApiCreatedResponse({ type: PublisherDto })
   @ApiBody({ description: '', type: PublisherDto })
   update(@Param('id') id: string, @Body() data: Prisma.PublisherUpdateInput) {
-    return this.publishersService.update({ id: +id }, data);
+    return this.publishersService.update({ id }, data);
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a publisher' })
   @ApiOkResponse({ type: PublisherDto })
   remove(@Param('id') id: string) {
-    return this.publishersService.remove({ id: +id });
+    return this.publishersService.remove({ id });
   }
 }
