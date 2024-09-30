@@ -5,6 +5,7 @@ import {
   OnDestroy,
   signal,
   OnInit,
+  afterNextRender,
 } from '@angular/core';
 import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { DividerModule } from 'primeng/divider';
@@ -95,32 +96,38 @@ export class NavComponent implements OnInit, OnDestroy {
   private timer?: ReturnType<typeof setTimeout>;
   private shouldRestoreExpanded = signal(false);
 
-  ngOnInit() {
-    const isExpanded = localStorage.getItem('isExpanded');
+  constructor() {
+    afterNextRender(() => {
+      const isExpanded = localStorage.getItem('isExpanded');
 
-    if (isExpanded) {
-      this.isExpanded.set(JSON.parse(isExpanded));
-      this.isLabelShowed.set(JSON.parse(isExpanded));
-    }
-
-    const mediaQueryList = matchMedia('(min-width: 1280px)');
-
-    this.resizeObserver = new ResizeObserver(() => {
-      if (mediaQueryList.matches && this.shouldRestoreExpanded()) {
-        const isExpanded = JSON.parse(localStorage.getItem('isExpanded') || '');
-
-        this.isExpanded.set(isExpanded);
-        this.isLabelShowed.set(isExpanded);
-        this.shouldRestoreExpanded.set(false);
-      } else if (!mediaQueryList.matches) {
-        this.isLabelShowed.set(true);
-        this.isExpanded.set(true);
-        this.shouldRestoreExpanded.set(true);
+      if (isExpanded) {
+        this.isExpanded.set(JSON.parse(isExpanded));
+        this.isLabelShowed.set(JSON.parse(isExpanded));
       }
-    });
 
-    this.resizeObserver.observe(document.body);
+      const mediaQueryList = matchMedia('(min-width: 1280px)');
+
+      this.resizeObserver = new ResizeObserver(() => {
+        if (mediaQueryList.matches && this.shouldRestoreExpanded()) {
+          const isExpanded = JSON.parse(
+            localStorage.getItem('isExpanded') || '',
+          );
+
+          this.isExpanded.set(isExpanded);
+          this.isLabelShowed.set(isExpanded);
+          this.shouldRestoreExpanded.set(false);
+        } else if (!mediaQueryList.matches) {
+          this.isLabelShowed.set(true);
+          this.isExpanded.set(true);
+          this.shouldRestoreExpanded.set(true);
+        }
+      });
+
+      this.resizeObserver.observe(document.body);
+    });
   }
+
+  ngOnInit() {}
 
   ngOnDestroy(): void {
     this.resizeObserver?.unobserve(document.body);
