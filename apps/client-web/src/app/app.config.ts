@@ -2,11 +2,16 @@ import {
   ApplicationConfig,
   provideExperimentalZonelessChangeDetection,
   isDevMode,
+  provideZoneChangeDetection,
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { appRoutes } from './app.routes';
 import { authInterceptor } from '@e-commerce/client-web/auth/utils';
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import {
+  provideHttpClient,
+  withFetch,
+  withInterceptors,
+} from '@angular/common/http';
 import { API_URL } from '@e-commerce/client-web/shared/utils';
 import { provideState, provideStore } from '@ngrx/store';
 import { MessageService } from 'primeng/api';
@@ -27,10 +32,16 @@ import {
   categoryFeature,
 } from '@e-commerce/client-web/shared/data-access';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
+import {
+  provideClientHydration,
+  withEventReplay,
+} from '@angular/platform-browser';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideExperimentalZonelessChangeDetection(),
+    provideClientHydration(withEventReplay()),
+    provideZoneChangeDetection(),
+    // provideExperimentalZonelessChangeDetection(),
     provideRouter(appRoutes),
     provideStore(),
     provideState(authFeature),
@@ -46,7 +57,7 @@ export const appConfig: ApplicationConfig = {
       connectInZone: true, // If set to true, the connection is established within the Angular zone
     }),
     provideAnimationsAsync(),
-    provideHttpClient(withInterceptors([authInterceptor])),
+    provideHttpClient(withFetch(), withInterceptors([authInterceptor])),
     {
       provide: API_URL,
       useValue: 'http://localhost:3000',
