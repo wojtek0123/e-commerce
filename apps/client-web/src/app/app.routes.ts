@@ -64,7 +64,6 @@ export const appRoutes: Route[] = [
   },
   {
     path: 'order-process',
-    // canMatch: [canMatchAuth],
     loadChildren: () =>
       import('@e-commerce/client-web/cart/feature/order-process').then(
         (r) => r.orderProcessRoutes,

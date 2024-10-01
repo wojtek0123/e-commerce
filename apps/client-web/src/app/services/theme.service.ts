@@ -9,10 +9,12 @@ const LOCAL_STORAGE_THEME_NAME = 'isDark' as const;
 export class ThemeService {
   private _isDark = signal(false);
   public isDark = this._isDark.asReadonly();
-  // private htmlElement = document.querySelector('html');
+  private htmlElement?: HTMLHtmlElement | null;
 
   constructor() {
     afterNextRender(() => {
+      this.htmlElement = document.querySelector('html');
+
       const userPreference = window.matchMedia(
         '(prefers-color-scheme: dark)',
       ).matches;
@@ -21,7 +23,8 @@ export class ThemeService {
         localStorage.getItem(LOCAL_STORAGE_THEME_NAME) ?? 'null',
       );
 
-    this.setMode(isDark === null ? userPreference : isDark);
+      this.setMode(isDark === null ? userPreference : isDark);
+    });
   }
 
   public toggleDarkMode() {
@@ -32,14 +35,14 @@ export class ThemeService {
   }
 
   public setMode(isDark: boolean) {
-    // this._isDark.set(isDark);
-    //
-    // if (isDark) {
-    //   this.htmlElement?.classList.add(DARK_THEME_CLASS_NAME);
-    // } else {
-    //   this.htmlElement?.classList.remove(DARK_THEME_CLASS_NAME);
-    // }
-    //
-    // localStorage.setItem(LOCAL_STORAGE_THEME_NAME, JSON.stringify(isDark));
+    this._isDark.set(isDark);
+
+    if (isDark) {
+      this.htmlElement?.classList.add(DARK_THEME_CLASS_NAME);
+    } else {
+      this.htmlElement?.classList.remove(DARK_THEME_CLASS_NAME);
+    }
+
+    localStorage.setItem(LOCAL_STORAGE_THEME_NAME, JSON.stringify(isDark));
   }
 }

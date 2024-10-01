@@ -22,7 +22,6 @@ export class BookEffects {
         this.bookApi.getBook$(bookId).pipe(
           mapResponse({
             next: (book) => {
-              console.log(book);
               return bookActions.getBookSuccess({ book });
             },
             error: (error: ResponseError) => {
