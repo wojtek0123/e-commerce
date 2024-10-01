@@ -52,21 +52,21 @@ export class FiltersComponent {
   public selectedCategories = this.booksStore.selectedCategories;
   public selectedPrices = this.booksStore.enteredPrices;
 
-  @HostBinding('style.maxWidth') maximumWidth =
-    window.innerWidth >= 1280 ? '20rem' : 'fit-content';
-  @HostBinding('style.width') width =
-    window.innerWidth >= 1280 ? '100%' : 'fit-content';
-
-  @HostListener('window:resize')
-  onResize() {
-    if (window.innerWidth >= 1280) {
-      this.maximumWidth = '20rem';
-      this.width = '100%';
-    } else {
-      this.maximumWidth = 'fit-content';
-      this.width = 'fit-content';
-    }
-  }
+  // @HostBinding('style.maxWidth') maximumWidth =
+  //   window.innerWidth >= 1280 ? '20rem' : 'fit-content';
+  // @HostBinding('style.width') width =
+  //   window.innerWidth >= 1280 ? '100%' : 'fit-content';
+  //
+  // @HostListener('window:resize')
+  // onResize() {
+  //   if (window.innerWidth >= 1280) {
+  //     this.maximumWidth = '20rem';
+  //     this.width = '100%';
+  //   } else {
+  //     this.maximumWidth = 'fit-content';
+  //     this.width = 'fit-content';
+  //   }
+  // }
 
   sidebarVisible = signal(false);
 

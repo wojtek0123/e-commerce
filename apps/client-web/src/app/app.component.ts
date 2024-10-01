@@ -1,4 +1,5 @@
 import {
+  afterNextRender,
   ChangeDetectionStrategy,
   Component,
   effect,
@@ -22,31 +23,6 @@ import { jwtDecode } from 'jwt-decode';
 import { PrimeNGConfig } from 'primeng/api';
 import { Aura } from 'primeng/themes/aura';
 import { definePreset } from 'primeng/themes';
-
-const borderRadius = '1rem' as const;
-
-const MyPreset = definePreset(Aura, {
-  semantic: {
-    primary: {
-      50: '{blue.50}',
-      100: '{blue.100}',
-      200: '{blue.200}',
-      300: '{blue.300}',
-      400: '{blue.400}',
-      500: '{blue.500}',
-      600: '{blue.600}',
-      700: '{blue.700}',
-      800: '{blue.800}',
-      900: '{blue.900}',
-      950: '{blue.950}',
-    },
-  },
-  components: {
-    button: {
-      borderRadius,
-    },
-  },
-});
 
 @Component({
   standalone: true,
@@ -82,15 +58,40 @@ export class AppComponent implements OnInit {
       { allowSignalWrites: true },
     );
 
-    this.config.theme.set({
-      preset: MyPreset,
-      options: {
-        darkModeSelector: '.dark',
-        cssLayer: {
-          name: 'primeng',
-          order: 'tailwind-base, primeng, tailwind-utilities',
+    afterNextRender(() => {
+      const borderRadius = '1rem' as const;
+      const MyPreset = definePreset(Aura, {
+        semantic: {
+          primary: {
+            50: '{blue.50}',
+            100: '{blue.100}',
+            200: '{blue.200}',
+            300: '{blue.300}',
+            400: '{blue.400}',
+            500: '{blue.500}',
+            600: '{blue.600}',
+            700: '{blue.700}',
+            800: '{blue.800}',
+            900: '{blue.900}',
+            950: '{blue.950}',
+          },
         },
-      },
+        components: {
+          button: {
+            borderRadius,
+          },
+        },
+      });
+      this.config.theme.set({
+        preset: MyPreset,
+        options: {
+          darkModeSelector: '.dark',
+          cssLayer: {
+            name: 'primeng',
+            order: 'tailwind-base, primeng, tailwind-utilities',
+          },
+        },
+      });
     });
   }
 
