@@ -1,20 +1,15 @@
-<p-button
-  libNavButton
+<button
   (click)="visible.set(true)"
-  class="flex items-center gap-4 w-full"
+  class="text-muted-color w-full px-3 h-10 flex items-center gap-4 !rounded-base hover:bg-surface-200 hover:dark:bg-surface-600"
 >
-  <i
-    class="pi pi-shopping-cart"
-    pBadge
-    [value]="count().toString()"
-    severity="danger"
-  ></i>
+  <p-overlayBadge [value]="count()" badgeSize="small">
+    <i class="pi pi-shopping-cart"></i>
+  </p-overlayBadge>
   @if (isLabelShowed()) {
-    <span [style]="{ 'font-weight': '500' }">Cart</span>
+    <span>Cart</span>
   }
-</p-button>
+</button>
 
-<!-- styleClass="!w-[40rem] rounded-r-base fixed top-0 bottom-0 left-0 bg-surface-100 dark:bg-surface-950" -->
 <p-drawer [blockScroll]="true" [(visible)]="visible" header="Cart">
   <div class="flex flex-col justify-between gap-4 h-full">
     <div

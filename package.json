@@ -105,6 +105,16 @@
     "webpack-cli": "^5.1.4"
   },
   "trustedDependencies": [
-    "@nestjs/core"
+    "@nestjs/core",
+    "@prisma/client",
+    "@prisma/engines",
+    "@swc/core",
+    "bcrypt",
+    "cypress",
+    "esbuild",
+    "lmdb",
+    "msgpackr-extract",
+    "nx",
+    "prisma"
   ]
 }

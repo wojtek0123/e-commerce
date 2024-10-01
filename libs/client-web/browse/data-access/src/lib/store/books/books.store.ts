@@ -18,11 +18,13 @@ import {
   withState,
 } from '@ngrx/signals';
 import { ActiveFilter } from '../../models/active-filter.model';
-import { computed, inject } from '@angular/core';
+import { computed, DestroyRef, inject } from '@angular/core';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { pipe, retry, switchMap, tap } from 'rxjs';
+import { filter, pipe, switchMap, tap } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
 import { Filter } from '../../models/filter.model';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 const FILTER_PAGE = 1 as const;
 const FILTER_SIZE = 20 as const;
@@ -232,6 +234,11 @@ export const BooksStore = signalStore(
       filter: keyof BooksState['filters'],
       activeFilter: ActiveFilter,
     ) => {
+      // const activeFilter = {
+      //   id: `${filter}_${category.name}`,
+      //   name: category.name ?? '',
+      // };
+
       patchState(store, (state) => ({
         ...state,
         activeFilters: state.activeFilters.find(
@@ -256,19 +263,6 @@ export const BooksStore = signalStore(
       const activeFilters = store
         .activeFilters()
         .filter(({ id }) => id !== `price_${key}`);
-
-      console.log(
-        !value
-          ? activeFilters
-          : [
-              ...activeFilters,
-              {
-                id: `price_${key}`,
-                name: value.toString(),
-                label: `price ${key}`,
-              },
-            ],
-      );
 
       patchState(store, (state) => ({
         ...state,
@@ -329,6 +323,7 @@ export const BooksStore = signalStore(
       store.getBooks();
     },
     removeActiveFilter: (activeFilterId: ActiveFilter['id']) => {
+      console.log(activeFilterId);
       const [filter, itemId] = activeFilterId.split('_') as [
         keyof BooksState['filters'],
         string,
@@ -405,11 +400,44 @@ export const BooksStore = signalStore(
   })),
   withHooks({
     onInit(store) {
-      store.getBooks();
+      const router = inject(Router);
+      const route = inject(ActivatedRoute);
+      const destroyRef = inject(DestroyRef);
 
+      store.getBooks();
       store.getAuthors({ search: '' });
       store.getCategories({ search: '' });
       store.getTags('');
+
+      router.events
+        .pipe(
+          filter((events) => events instanceof NavigationEnd),
+          takeUntilDestroyed(destroyRef),
+        )
+        .subscribe(async () => {
+          const category: Category | null = history.state?.category
+            ? JSON.parse(history.state.category)
+            : null;
+
+          if (category) {
+            history.replaceState({}, '');
+
+            const activeFilter = {
+              id: `category_${category.id}`,
+              name: category.name ?? '',
+            };
+
+            store.removeActiveFilters();
+
+            store.setSelectedItems([category], 'category', activeFilter);
+
+            await router.navigate([], {
+              relativeTo: route,
+              queryParams: null,
+              replaceUrl: true,
+            });
+          }
+        });
     },
   }),
 );

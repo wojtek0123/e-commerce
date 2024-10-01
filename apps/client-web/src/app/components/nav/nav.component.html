@@ -1,6 +1,6 @@
 <div class="w-full flex items-center sticky bottom-0 left-0 right-0 xl:hidden">
-  <p-toolbar appNavToolbar>
-    <div class="mx-auto w-full flex items-center justify-center">
+  <p-toolbar class="w-full" appNavToolbar>
+    <div class="mx-auto max-w-lg w-full flex items-center justify-evenly gap-4">
       <p-button
         libNavButton
         size="large"
@@ -11,7 +11,7 @@
         libNavButton
         size="large"
         routerLink="/browse"
-        routerLinkActive="active"
+        routerLinkActive="bg-surface-100 dark:bg-surface-700 rounded-base"
         [queryParams]="null"
         [state]="{}"
         icon="pi pi-search"
@@ -20,7 +20,7 @@
         libNavButton
         size="large"
         routerLink="/"
-        routerLinkActive="active"
+        routerLinkActive="bg-surface-100 dark:bg-surface-700 rounded-base"
         [routerLinkActiveOptions]="{ exact: true }"
         [queryParams]="null"
         [state]="{}"
@@ -56,26 +56,29 @@
         @if (isLabelShowed()) {
           <ng-container [ngTemplateOutlet]="logo" />
         } @else {
-          <p-button
-            libNavButton
+          <a
             routerLink="/"
-            routerLinkActive=""
+            routerLinkActive="bg-surface-100 dark:bg-surface-700 rounded-base"
             [routerLinkActiveOptions]="{ exact: true }"
-            icon="pi pi-home"
-          />
+            class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-200 hover:dark:bg-surface-600"
+          >
+            <i class="pi pi-home"></i>
+          </a>
         }
       </div>
       <p-divider />
       <ul class="flex flex-col">
-        <p-button
-          libNavButton
+        <a
           routerLink="/browse"
+          routerLinkActive="bg-surface-100 dark:bg-surface-700"
+          class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-200 hover:dark:bg-surface-600"
           [queryParams]="null"
-          routerLinkActive="active"
-          [state]="{}"
-          icon="pi pi-search"
-          [label]="isLabelShowed() ? 'Browse' : ''"
-        />
+        >
+          <i class="pi pi-search"></i>
+          @if (isLabelShowed()) {
+            <span>Browse</span>
+          }
+        </a>
         <ng-container [ngTemplateOutlet]="links" />
       </ul>
     </div>
@@ -83,49 +86,75 @@
     <div class="flex flex-col">
       <lib-cart-sidebar [isLabelShowed]="isLabelShowed()" />
       @if (isAuthenticated()) {
-        <p-button
-          libNavButton
+        <a
           routerLink="/account"
-          icon="pi pi-user"
-          [label]="isLabelShowed() ? 'Account' : ''"
-        />
-        <p-button
-          libNavButton
-          (onClick)="logout()"
-          icon="pi pi-sign-out"
-          [label]="isLabelShowed() ? 'Log out' : ''"
-        />
+          routerLinkActive="bg-surface-100 dark:bg-surface-700"
+          class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-200 hover:dark:bg-surface-600"
+        >
+          <i class="pi pi-user"></i>
+          @if (isLabelShowed()) {
+            <span>Account</span>
+          }
+        </a>
+        <button
+          (click)="logout()"
+          class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-200 hover:dark:bg-surface-600"
+        >
+          <i class="pi pi-sign-in"></i>
+          @if (isLabelShowed()) {
+            <span>Log out</span>
+          }
+        </button>
       } @else {
-        <p-button
-          libNavButton
+        <a
           routerLink="/login"
-          icon="pi pi-sign-in"
-          [label]="isLabelShowed() ? 'Log in' : ''"
-        />
-        <p-button
-          libNavButton
+          routerLinkActive="bg-surface-100 dark:bg-surface-700"
+          class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-200 hover:dark:bg-surface-600"
+        >
+          <i class="pi pi-sign-in"></i>
+          @if (isLabelShowed()) {
+            <span>Log in</span>
+          }
+        </a>
+        <a
           routerLink="/register"
-          icon="pi pi-user-plus"
-          [label]="isLabelShowed() ? 'Register' : ''"
-        />
+          routerLinkActive="bg-surface-100 dark:bg-surface-700"
+          class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-200 hover:dark:bg-surface-600"
+        >
+          <i class="pi pi-user-plus"></i>
+          @if (isLabelShowed()) {
+            <span>Register</span>
+          }
+        </a>
       }
       <p-divider />
       <div class="flex flex-col gap-2">
-        <div class="flex items-center gap-4 mx-auto">
-          @if (isLabelShowed()) {
-            <span>Light</span>
+        <button
+          (click)="toggleDarkMode()"
+          class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-200 hover:dark:bg-surface-600"
+        >
+          @if (isDark()) {
+            <i class="pi pi-moon"></i>
+          } @else {
+            <i class="pi pi-sun"></i>
           }
-          <p-inputSwitch [ngModel]="isDark()" (onChange)="toggleDarkMode()" />
           @if (isLabelShowed()) {
-            <span>Dark</span>
+            <span>{{ isDark() ? 'Dark' : 'Light' }}</span>
           }
-        </div>
-        <p-button
-          libNavButton
-          (onClick)="expandCollapseNavigation()"
-          [icon]="isExpanded() ? 'pi pi-arrow-left' : 'pi pi-arrow-right'"
-          [label]="isLabelShowed() ? 'Collapse' : ''"
-        />
+        </button>
+        <button
+          (click)="expandCollapseNavigation()"
+          class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-200 hover:dark:bg-surface-600"
+        >
+          @if (isExpanded()) {
+            <i class="pi pi-arrow-left"></i>
+          } @else {
+            <i class="pi pi-arrow-right"></i>
+          }
+          @if (isLabelShowed()) {
+            <span>Collapse</span>
+          }
+        </button>
       </div>
     </div>
   </nav>
@@ -145,28 +174,31 @@
 <ng-template #links>
   @if (isAccountRouteActive()) {
     @for (menuItem of menuItems(); track menuItem.label) {
-      <p-button
-        libNavButton
+      <a
+        (click)="isOpen.set(false)"
         [routerLink]="menuItem.routerLink"
-        routerLinkActive="active"
-        [queryParams]="null"
-        [icon]="menuItem.icon"
-        [label]="isLabelShowed() ? menuItem.label : ''"
-        (onClick)="isOpen.set(false)"
-      />
+        routerLinkActive="bg-surface-100 dark:bg-surface-700"
+        class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-200 hover:dark:bg-surface-600"
+      >
+        <i [class]="menuItem.icon"></i>
+        @if (isLabelShowed()) {
+          <span>{{ menuItem.label }}</span>
+        }
+      </a>
     }
   } @else {
     @for (category of categories(); track category.id) {
-      <p-button
-        libNavButton
+      <a
+        (click)="isOpen.set(false)"
         routerLink="/browse"
-        [queryParams]="{
-          categories: category.name.toLowerCase().split(' ').join('_'),
-        }"
-        [label]="isLabelShowed() ? category.name : category.name.slice(0, 2)"
+        [queryParams]="{ categories: category.name }"
+        class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-200 hover:dark:bg-surface-600"
         [state]="{ category: stringifyCategory(category) }"
-        (onClick)="isOpen.set(false)"
-      />
+      >
+        <span>
+          {{ isLabelShowed() ? category.name : category.name.slice(0, 2) }}
+        </span>
+      </a>
     }
   }
 </ng-template>
