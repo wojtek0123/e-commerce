@@ -20,13 +20,14 @@ export class ThemeService {
       localStorage.getItem(LOCAL_STORAGE_THEME_NAME) ?? 'null',
     );
 
-    this.setMode(isDark || userPreference);
+    this.setMode(isDark === null ? userPreference : isDark);
   }
 
   public toggleDarkMode() {
     const isDark = this.htmlElement?.classList.toggle(DARK_THEME_CLASS_NAME);
 
-    localStorage.setItem(LOCAL_STORAGE_THEME_NAME, JSON.stringify(isDark));
+    this._isDark.set(!!isDark);
+    localStorage.setItem(LOCAL_STORAGE_THEME_NAME, JSON.stringify(!!isDark));
   }
 
   public setMode(isDark: boolean) {

@@ -2,7 +2,7 @@ import { Directive, inject } from '@angular/core';
 import { Button } from 'primeng/button';
 
 @Directive({
-  selector: 'p-button[libNavButton]',
+  selector: 'p-button,a[libNavButton]',
   standalone: true,
 })
 export class NavButtonDirective {

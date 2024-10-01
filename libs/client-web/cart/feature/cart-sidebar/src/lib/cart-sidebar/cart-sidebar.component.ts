@@ -22,7 +22,7 @@ import {
   cartSelectors,
 } from '@e-commerce/client-web/cart/data-access';
 import { Book } from '@e-commerce/client-web/shared/data-access';
-import { BadgeModule } from 'primeng/badge';
+import { OverlayBadgeModule } from 'primeng/overlaybadge';
 import { NavButtonDirective } from '@e-commerce/client-web/shared/utils';
 import { DrawerModule } from 'primeng/drawer';
 import { SidebarModule } from 'primeng/sidebar';
@@ -42,7 +42,7 @@ import { SidebarModule } from 'primeng/sidebar';
     ToastModule,
     CartItemComponent,
     CartItemSkeletonComponent,
-    BadgeModule,
+    OverlayBadgeModule,
     CurrencyPipe,
     NavButtonDirective,
     SidebarModule,

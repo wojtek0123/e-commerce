@@ -10,7 +10,6 @@ export class NavToolbarDirective {
 
   constructor() {
     this.toolbar.style = {
-      width: '100%',
       margin: '0 auto',
       'border-top-left-radius': 'var(--border-radius)',
       'border-top-right-radius': 'var(--border-radius)',
