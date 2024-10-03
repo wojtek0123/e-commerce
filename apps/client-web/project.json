@@ -23,15 +23,7 @@
           }
         ],
         "styles": ["apps/client-web/src/styles.scss"],
-        "scripts": [],
-        "server": "apps/client-web/src/main.server.ts",
-        "polyfills": ["zone.js"],
-        "prerender": {
-          "discoverRoutes": true
-        },
-        "ssr": {
-          "entry": "apps/client-web/server.ts"
-        }
+        "scripts": []
       },
       "configurations": {
         "production": {
