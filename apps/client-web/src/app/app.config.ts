@@ -2,7 +2,6 @@ import {
   ApplicationConfig,
   provideExperimentalZonelessChangeDetection,
   isDevMode,
-  provideZoneChangeDetection,
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { appRoutes } from './app.routes';
@@ -32,16 +31,10 @@ import {
   categoryFeature,
 } from '@e-commerce/client-web/shared/data-access';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
-import {
-  provideClientHydration,
-  withEventReplay,
-} from '@angular/platform-browser';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideClientHydration(withEventReplay()),
-    provideZoneChangeDetection(),
-    // provideExperimentalZonelessChangeDetection(),
+    provideExperimentalZonelessChangeDetection(),
     provideRouter(appRoutes),
     provideStore(),
     provideState(authFeature),

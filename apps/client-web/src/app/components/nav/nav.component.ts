@@ -5,8 +5,6 @@ import {
   OnDestroy,
   signal,
   OnInit,
-  afterNextRender,
-  Injector,
 } from '@angular/core';
 import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { DividerModule } from 'primeng/divider';
@@ -85,7 +83,6 @@ import { ThemeService } from '../../services/theme.service';
 export class NavComponent implements OnInit, OnDestroy {
   private readonly store = inject(Store);
   private readonly themeService = inject(ThemeService);
-  private readonly injector = inject(Injector);
 
   public isAuthenticated = this.store.selectSignal(selectIsAuthenticated);
   public categories = this.store.selectSignal(selectCategories);
@@ -99,37 +96,34 @@ export class NavComponent implements OnInit, OnDestroy {
   private shouldRestoreExpanded = signal(false);
 
   ngOnInit() {
-    afterNextRender(
-      () => {
-        const isExpanded = localStorage.getItem('isExpanded');
+    () => {
+      const isExpanded = localStorage.getItem('isExpanded');
 
-        if (isExpanded) {
-          this.isExpanded.set(JSON.parse(isExpanded));
-          this.isLabelShowed.set(JSON.parse(isExpanded));
+      if (isExpanded) {
+        this.isExpanded.set(JSON.parse(isExpanded));
+        this.isLabelShowed.set(JSON.parse(isExpanded));
+      }
+
+      const mediaQueryList = matchMedia('(min-width: 1280px)');
+
+      this.resizeObserver = new ResizeObserver(() => {
+        if (mediaQueryList.matches && this.shouldRestoreExpanded()) {
+          const isExpanded = JSON.parse(
+            localStorage.getItem('isExpanded') || '',
+          );
+
+          this.isExpanded.set(isExpanded);
+          this.isLabelShowed.set(isExpanded);
+          this.shouldRestoreExpanded.set(false);
+        } else if (!mediaQueryList.matches) {
+          this.isLabelShowed.set(true);
+          this.isExpanded.set(true);
+          this.shouldRestoreExpanded.set(true);
         }
+      });
 
-        const mediaQueryList = matchMedia('(min-width: 1280px)');
-
-        this.resizeObserver = new ResizeObserver(() => {
-          if (mediaQueryList.matches && this.shouldRestoreExpanded()) {
-            const isExpanded = JSON.parse(
-              localStorage.getItem('isExpanded') || '',
-            );
-
-            this.isExpanded.set(isExpanded);
-            this.isLabelShowed.set(isExpanded);
-            this.shouldRestoreExpanded.set(false);
-          } else if (!mediaQueryList.matches) {
-            this.isLabelShowed.set(true);
-            this.isExpanded.set(true);
-            this.shouldRestoreExpanded.set(true);
-          }
-        });
-
-        this.resizeObserver.observe(document.body);
-      },
-      { injector: this.injector },
-    );
+      this.resizeObserver.observe(document.body);
+    };
   }
 
   ngOnDestroy(): void {
