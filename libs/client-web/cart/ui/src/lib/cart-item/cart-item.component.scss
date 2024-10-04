@@ -1,14 +1,6 @@
 .cart-item {
   container-name: cart-item;
   container-type: inline-size;
-  min-height: 6rem;
-
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  background-color: var(--surface-hover);
-  padding: 1rem;
-  border-radius: var(--border-radius);
 }
 
 .cart-details {
@@ -115,6 +107,11 @@
     justify-content: center;
     align-items: center;
     gap: 1.5rem;
+    padding: 1rem;
+  }
+
+  .book-details {
+    padding: 1rem;
   }
 
   .book-details__image-wrapper {

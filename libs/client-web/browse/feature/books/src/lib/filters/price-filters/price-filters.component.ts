@@ -29,6 +29,9 @@ import { BooksStore } from '@e-commerce/client-web/browse/data-access';
     AsyncPipe,
     ReactiveFormsModule,
   ],
+  host: {
+    class: 'max-w-[20rem] w-full',
+  },
 })
 export class PriceFilterComponent {
   private readonly booksStore = inject(BooksStore);

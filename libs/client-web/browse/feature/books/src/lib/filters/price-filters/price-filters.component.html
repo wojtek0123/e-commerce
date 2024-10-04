@@ -1,6 +1,6 @@
 <div class="flex items-end gap-2 p-4">
   <lib-form-field label="Min">
-    <p-inputNumber
+    <p-inputnumber
       #minPriceInput
       slot="input"
       [min]="0"
@@ -9,6 +9,8 @@
       (onBlur)="setPrice('min')"
       mode="decimal"
       currency="USD"
+      class="w-full"
+      [fluid]="true"
     />
   </lib-form-field>
   <div class="mb-2 w-8">
@@ -16,7 +18,7 @@
   </div>
 
   <lib-form-field label="Max">
-    <p-inputNumber
+    <p-inputnumber
       #maxPriceInput
       slot="input"
       [min]="0"
@@ -25,6 +27,8 @@
       [maxFractionDigits]="2"
       mode="decimal"
       currency="USD"
+      class="w-full"
+      [fluid]="true"
     />
   </lib-form-field>
 </div>
