@@ -9,7 +9,7 @@ import { AsyncPipe, CurrencyPipe, NgClass } from '@angular/common';
 import { TooltipModule } from 'primeng/tooltip';
 import { ButtonModule } from 'primeng/button';
 import { InputNumberModule } from 'primeng/inputnumber';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ToastModule } from 'primeng/toast';
 import {
@@ -53,6 +53,7 @@ import { SidebarModule } from 'primeng/sidebar';
 })
 export class CartSidebarComponent {
   private readonly store = inject(Store);
+  private readonly router = inject(Router);
 
   public isLabelShowed = input<boolean>(false);
 
@@ -72,8 +73,9 @@ export class CartSidebarComponent {
     this.store.dispatch(cartActions.removeBookFromCart({ ...args }));
   }
 
-  checkout() {
+  async checkout() {
     this.visible.set(false);
-    this.store.dispatch(cartActions.checkout());
+    // this.store.dispatch(cartActions.checkout());
+    await this.router.navigate(['/order-process']);
   }
 }

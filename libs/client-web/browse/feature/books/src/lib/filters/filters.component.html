@@ -1,7 +1,7 @@
 <div
   class="hidden xl:block sticky top-8 h-content rounded-base overflow-y-auto w-full"
 >
-  <div class="min-h-min rounded-base overflow-hidden">
+  <div class="min-h-min max-w-96 w-full rounded-base overflow-hidden">
     <ng-container [ngTemplateOutlet]="filters" />
   </div>
 </div>
@@ -18,7 +18,6 @@
 <p-sidebar
   [(visible)]="sidebarVisible"
   appendTo="body"
-  position="right"
   [blockScroll]="true"
   class="xl:hidden"
 >
@@ -27,7 +26,7 @@
 
 <ng-template #filters>
   <p-accordion>
-    <p-accordionTab>
+    <p-accordion-tab>
       <ng-template pTemplate="header">
         <lib-accordion-filter-header
           header="Tags"
@@ -36,8 +35,8 @@
         />
       </ng-template>
       <lib-filter libTags />
-    </p-accordionTab>
-    <p-accordionTab>
+    </p-accordion-tab>
+    <p-accordion-tab>
       <ng-template pTemplate="header">
         <lib-accordion-filter-header
           header="Authors"
@@ -46,8 +45,8 @@
         />
       </ng-template>
       <lib-filter libAuthors />
-    </p-accordionTab>
-    <p-accordionTab>
+    </p-accordion-tab>
+    <p-accordion-tab>
       <ng-template pTemplate="header">
         <lib-accordion-filter-header
           header="Categories"
@@ -56,8 +55,8 @@
         />
       </ng-template>
       <lib-filter libCategories />
-    </p-accordionTab>
-    <p-accordionTab>
+    </p-accordion-tab>
+    <p-accordion-tab>
       <ng-template pTemplate="header">
         <lib-accordion-filter-header
           header="Price"
@@ -66,6 +65,6 @@
         />
       </ng-template>
       <lib-price-filter />
-    </p-accordionTab>
+    </p-accordion-tab>
   </p-accordion>
 </ng-template>

@@ -1,7 +1,6 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  HostBinding,
   input,
   output,
 } from '@angular/core';
@@ -24,14 +23,15 @@ import { CurrencyPipe, NgOptimizedImage } from '@angular/common';
   templateUrl: './book-card.component.html',
   styleUrl: './book-card.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'sm:max-w-book-card',
+  },
 })
 export class BookCardComponent {
   book = input.required<Book>();
   awaitingBookIdsToAddToCart = input<Book['id'][]>([]);
 
   onAddToCart = output<Book>();
-
-  @HostBinding('class') class = 'max-w-book-card';
 
   addToCart(event: Event, book: Book) {
     event.preventDefault();

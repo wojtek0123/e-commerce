@@ -1,67 +1,62 @@
-<div class="summary">
-  <div class="summary__section">
+<div class="flex flex-col gap-base">
+  <div class="flex flex-col gap-base">
     <lib-delivery-address (isUpdatingEvent)="setDeliveryAddressState($event)" />
     <lib-shipping-method />
     <lib-payment-method [submitted]="submitted()" />
   </div>
 
-  <div class="summary__section summary__section--smaller-gap">
-    <div class="summary__price-wrapper">
-      <span class="summary__price-wrapper__label">Books</span>
-      <span class="summary__price-wrapper__value">
+  <div class="bg-content-background p-4 rounded-base gap-4">
+    <div class="flex items-center justify-between gap-4">
+      <span class="text-muted-color font-semibold text-xl">Books</span>
+      <span class="text-xl text-end">
         {{ cartItemsTotal() | currency: 'USD' }}
       </span>
     </div>
     <div>
-      <div class="summary__price-wrapper">
-        <span class="summary__price-wrapper__label">Shipping</span>
-        <span class="summary__price-wrapper__value">
+      <div class="flex items-center justify-between gap-4">
+        <span class="text-muted-color font-semibold text-xl">Shipping</span>
+        <span class="text-xl text-end">
           {{ shippingMethodPrice() | currency: 'USD' }}
         </span>
       </div>
     </div>
     <p-divider layout="horizontal" />
-    <div class="summary__price-wrapper">
-      <span
-        class="summary__price-wrapper__label summary__price-wrapper__label--total"
-        >Total</span
-      >
-      <span
-        class="summary__price-wrapper__value summary__price-wrapper__value--total"
-      >
+    <div class="flex items-center justify-between gap-4">
+      <span class="text-muted-color font-semibold text-3xl">Total</span>
+      <span class="text-3xl text-end">
         {{ total() | currency: 'USD' }}
       </span>
     </div>
   </div>
 
   @if (submitted()) {
-    <div>
+    <div class="my-8">
       @if (!userAddress()) {
-        <div class="summary__error">
+        <div class="flex flex-col gap-4 text-red-300 text-xl">
           <span class="pi pi-exclamation-triangle"></span>
           <div>Fill in delivery address form!</div>
         </div>
       }
       @if (isDeliveryAddressUpdating()) {
-        <div class="summary__error">
+        <div class="flex flex-col gap-4 text-red-300 text-xl">
           <span class="pi pi-exclamation-triangle"></span>
           <span>Delivery address is updating. Save changes or cancel.</span>
         </div>
       }
       @if (!shippingMethod()) {
-        <div class="summary__error">
+        <div class="flex flex-col gap-4 text-red-300 text-xl">
           <span class="pi pi-exclamation-triangle"></span>
           <span>Select shipping method!</span>
         </div>
       }
       @if (!paymentMethod()) {
-        <div class="summary__error">
+        <div class="flex flex-col gap-4 text-red-300 text-xl">
           <span class="pi pi-exclamation-triangle"></span>
           <span>Select payment method!</span>
         </div>
       }
       @if (isSixDigitCodeInvalid()) {
-        <div class="summary__error">
+        <div class="flex flex-col gap-4 text-red-300 text-xl">
           <span class="pi pi-exclamation-triangle"></span>
           <span>Six digit code is invalid</span>
         </div>
@@ -70,7 +65,7 @@
   }
 
   <p-button
-    class="summary__button"
+    styleClass="w-full"
     (onClick)="submit()"
     [loading]="initialLoading() || checkoutLoading()"
     icon="pi pi-dollar"

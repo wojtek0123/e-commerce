@@ -10,7 +10,15 @@
   }
 </button>
 
-<p-drawer [blockScroll]="true" [(visible)]="visible" header="Cart">
+<p-sidebar
+  [(visible)]="visible"
+  header="Cart"
+  appendTo="body"
+  styleClass="max-w-[40rem] w-full rounded-r-base bg-surface-100 dark:bg-surface-950"
+>
+  <ng-template pTemplate="header">
+    <span class="font-bold">Cart</span>
+  </ng-template>
   <div class="flex flex-col justify-between gap-4 h-full">
     <div
       class="flex flex-col gap-4 overflow-y-auto"
@@ -36,13 +44,14 @@
 
     <div class="flex flex-col gap-4">
       <div class="text-4xl">Total: {{ total() | currency: 'USD' }}</div>
-      <p-button
-        styleClass="w-full"
+      <button
+        pButton
         label="Checkout"
+        routerLink="/order-process"
         icon="pi pi-shopping-bag"
-        (onClick)="checkout()"
+        (onClick)="visible.set(false)"
         [loading]="loading()"
-      />
+      ></button>
     </div>
   </div>
-</p-drawer>
+</p-sidebar>

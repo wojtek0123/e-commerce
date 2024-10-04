@@ -277,16 +277,16 @@ export class CartEffect {
     ),
   );
 
-  checkout = createEffect(
-    () =>
-      this.actions$.pipe(
-        ofType(cartActions.checkout),
-        tap(() => {
-          this.router.navigate(['/order-process']);
-        }),
-      ),
-    { dispatch: false },
-  );
+  // checkout = createEffect(
+  //   () =>
+  //     this.actions$.pipe(
+  //       ofType(cartActions.checkout),
+  //       tap(() => {
+  //         this.router.navigate(['/order-process']);
+  //       }),
+  //     ),
+  //   { dispatch: false },
+  // );
 
   clearCart = createEffect(() =>
     this.actions$.pipe(
