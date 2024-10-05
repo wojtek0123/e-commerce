@@ -26,7 +26,7 @@ export const bookFeature = createFeature({
     on(bookActions.getBookFailure, (state, { error }) => ({
       ...state,
       loading: false,
-      error: error.message,
+      error: error?.error?.message,
     })),
   ),
 });

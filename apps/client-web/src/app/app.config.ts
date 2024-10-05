@@ -5,7 +5,6 @@ import {
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { appRoutes } from './app.routes';
-import { authInterceptor } from '@e-commerce/client-web/auth/utils';
 import {
   provideHttpClient,
   withFetch,
@@ -20,12 +19,9 @@ import { provideEffects } from '@ngrx/effects';
 import {
   AuthEffects,
   authFeature,
+  authInterceptor,
 } from '@e-commerce/client-web/auth/data-access';
 import { provideServiceWorker } from '@angular/service-worker';
-import {
-  CartEffect,
-  cartFeature,
-} from '@e-commerce/client-web/cart/data-access';
 import {
   CategoryEffect,
   categoryFeature,
@@ -38,16 +34,15 @@ export const appConfig: ApplicationConfig = {
     provideRouter(appRoutes),
     provideStore(),
     provideState(authFeature),
-    provideState(cartFeature),
     provideState(categoryFeature),
-    provideEffects([AuthEffects, CartEffect, CategoryEffect]),
+    provideEffects([AuthEffects, CategoryEffect]),
     provideStoreDevtools({
-      maxAge: 25, // Retains last 25 states
-      logOnly: !isDevMode(), // Restrict extension to log-only mode
-      autoPause: true, // Pauses recording actions and state changes when the extension window is not open
-      trace: false, //  If set to true, will include stack trace for every dispatched action, so you can see it in trace tab jumping directly to that part of code
-      traceLimit: 75, // maximum stack trace frames to be stored (in case trace option was provided as true)
-      connectInZone: true, // If set to true, the connection is established within the Angular zone
+      maxAge: 25,
+      logOnly: !isDevMode(),
+      autoPause: true,
+      trace: false,
+      traceLimit: 75,
+      connectInZone: true,
     }),
     provideAnimationsAsync(),
     provideHttpClient(withFetch(), withInterceptors([authInterceptor])),

@@ -7,12 +7,10 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { bookActions } from './book.actions';
 import { switchMap } from 'rxjs';
 import { mapResponse } from '@ngrx/operators';
-import { Store } from '@ngrx/store';
 
 @Injectable()
 export class BookEffects {
   private actions$ = inject(Actions);
-  private store = inject(Store);
   private bookApi = inject(BooksApiService);
 
   getBook = createEffect(() =>

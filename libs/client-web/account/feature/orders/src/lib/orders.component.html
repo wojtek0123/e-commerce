@@ -34,9 +34,15 @@
       </tr>
     </ng-template>
     <ng-template pTemplate="emptymessage">
-      <tr>
-        <td colspan="3">No customers found.</td>
-      </tr>
+      @if (orders().length === 0 && !error) {
+        <tr>
+          <td colspan="3" class="text-center">No orders found.</td>
+        </tr>
+      } @else if (error()) {
+        <tr>
+          <td colspan="3" class="text-center">{{ error() }}</td>
+        </tr>
+      }
     </ng-template>
     <ng-template pTemplate="loadingbody">
       @for (_ of skeletons(); track $index) {

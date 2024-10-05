@@ -2,15 +2,12 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  DestroyRef,
   inject,
-  OnInit,
   signal,
 } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { SearchComponent } from './search/search.component';
-import { Store } from '@ngrx/store';
 import { Book } from '@e-commerce/client-web/shared/data-access';
 import {
   ActiveFilter,
@@ -22,8 +19,7 @@ import { ActiveFiltersComponent } from '@e-commerce/client-web/browse/ui';
 
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 import { FiltersComponent } from './filters/filters.component';
-import { ActivatedRoute, Router } from '@angular/router';
-import { cartActions } from '@e-commerce/client-web/cart/data-access';
+import { CartStore } from '@e-commerce/client-web/cart/data-access';
 
 @Component({
   selector: 'lib-books',
@@ -41,13 +37,10 @@ import { cartActions } from '@e-commerce/client-web/cart/data-access';
   styleUrl: './books.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BooksComponent implements OnInit {
+export class BooksComponent {
   private readonly booksStore = inject(BooksStore);
-  private store = inject(Store);
+  private readonly cartStore = inject(CartStore);
   private viewport = inject(ViewportScroller);
-  private route = inject(ActivatedRoute);
-  private router = inject(Router);
-  private destroyRef = inject(DestroyRef);
 
   public breadcrumbs = signal<MenuItem[]>([
     { label: 'home', routerLink: '/' },
@@ -67,61 +60,8 @@ export class BooksComponent implements OnInit {
   public sizes = signal([20, 40, 60]);
   public activeFilters = this.booksStore.activeFilters;
 
-  ngOnInit(): void {
-    // this.route.queryParams
-    //   .pipe(
-    //     map((queryParams) => ({
-    //       tag: queryParams['tags'],
-    //       category: queryParams['categories'],
-    //     })),
-    //     filter(({ category, tag }) => !!category || !!tag),
-    //     takeUntilDestroyed(this.destroyRef),
-    //   )
-    //   .subscribe(({ category, tag }) => {
-    //     this.store.dispatch(browseActions.removeActiveFilters());
-    //
-    //     if (tag) {
-    //       this.store.dispatch(
-    //         browseActions.setSelectedItems({
-    //           activeFitler: {
-    //             id: `tag_${tag?.toUpperCase()}`,
-    //             name: tag?.toUpperCase(),
-    //           },
-    //           selectedItems: [tag?.toUpperCase()],
-    //           filter: 'tag',
-    //         }),
-    //       );
-    //     }
-    //     if (category) {
-    //       const categoryItem = JSON.parse(history.state['category']);
-    //       history.replaceState({}, '');
-    //
-    //       if (!categoryItem) return;
-    //
-    //       this.store.dispatch(
-    //         browseActions.setSelectedItems({
-    //           activeFitler: {
-    //             id: `category_${categoryItem.id}`,
-    //             name: categoryItem.name,
-    //           },
-    //           selectedItems: [categoryItem],
-    //           filter: 'category',
-    //         }),
-    //       );
-    //     }
-    //
-    //     this.router.navigate([], {
-    //       relativeTo: this.route,
-    //       queryParams: null,
-    //       replaceUrl: true,
-    //     });
-    //   });
-    //
-    // this.store.dispatch(browseActions.getBooks());
-  }
-
   public addToCart(book: Book) {
-    this.store.dispatch(cartActions.addBookToCart({ book, quantity: 1 }));
+    this.cartStore.addBook({ book, quantity: 1 });
   }
 
   public onPageChange(event: PaginatorState, size: number | null) {

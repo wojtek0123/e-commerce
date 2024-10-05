@@ -1,8 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ButtonModule } from 'primeng/button';
-import { Store } from '@ngrx/store';
-import { cartActions } from '@e-commerce/client-web/cart/data-access';
+import { CartStore } from '@e-commerce/client-web/cart/data-access';
 
 @Component({
   selector: 'lib-payment-status',
@@ -12,13 +11,13 @@ import { cartActions } from '@e-commerce/client-web/cart/data-access';
   styleUrl: './payment-status.component.scss',
 })
 export class PaymentStatusComponent implements OnInit {
-  private store = inject(Store);
+  private readonly cartStore = inject(CartStore);
 
   paymentStatus = signal(null);
   loading = signal(true);
 
   ngOnInit(): void {
-    this.store.dispatch(cartActions.clearCart());
+    this.cartStore.clearCart();
 
     setTimeout(() => {
       this.loading.set(false);

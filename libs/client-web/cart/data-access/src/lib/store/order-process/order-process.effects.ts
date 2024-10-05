@@ -19,7 +19,6 @@ import {
   selectUserAddressData,
 } from './order-process.selectors';
 import { Router } from '@angular/router';
-import { cartActions } from '../cart/cart.actions';
 
 @Injectable()
 export class OrderProcessEffects {
@@ -83,7 +82,8 @@ export class OrderProcessEffects {
             error: (error: ResponseError) => {
               this.messageService.add({
                 detail: 'Error',
-                summary: error.message || 'Error occur while updating address',
+                summary:
+                  error?.error?.message || 'Error occur while updating address',
                 severity: 'danger',
               });
               return orderProcessActions.updateUserAddressFailure({ error });
@@ -199,7 +199,8 @@ export class OrderProcessEffects {
                 this.messageService.add({
                   detail: 'Error',
                   summary:
-                    error.message || 'Error occur while updating address',
+                    error?.error?.message ||
+                    'Error occur while updating address',
                   severity: 'danger',
                 });
                 return orderProcessActions.checkoutFailure({ error });
@@ -216,7 +217,6 @@ export class OrderProcessEffects {
         ofType(orderProcessActions.checkoutSuccess),
         tap(({ orderDetailsId }) => {
           this.router.navigate(['/payment-status', orderDetailsId]);
-          this.store.dispatch(cartActions.clearCart());
         }),
       ),
     { dispatch: false },

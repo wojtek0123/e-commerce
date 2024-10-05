@@ -10,7 +10,7 @@ import { CurrencyPipe } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { Store } from '@ngrx/store';
 import {
-  cartSelectors,
+  CartStore,
   orderProcessActions,
   orderProcessSelectors,
 } from '@e-commerce/client-web/cart/data-access';
@@ -36,8 +36,9 @@ import { DividerModule } from 'primeng/divider';
 })
 export class SummaryComponent implements OnInit {
   private readonly store = inject(Store);
+  private readonly cartStore = inject(CartStore);
 
-  public cartItemsTotal = this.store.selectSignal(cartSelectors.selectTotal);
+  public cartItemsTotal = this.cartStore.total;
   public shippingMethodPrice = this.store.selectSignal(
     orderProcessSelectors.selectSelectedShippingMethodPrice,
   );
@@ -97,7 +98,6 @@ export class SummaryComponent implements OnInit {
 
     if (this.errors().some((error) => error)) return;
 
-    console.log('pay');
     this.store.dispatch(orderProcessActions.checkout());
   }
 

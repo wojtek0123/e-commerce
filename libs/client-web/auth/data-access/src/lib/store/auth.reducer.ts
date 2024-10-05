@@ -45,7 +45,8 @@ export const authFeature = createFeature({
       authActions.registerFailure,
       (state, { error }): AuthState => ({
         ...state,
-        error: error.message,
+        error: error.error.message,
+        loading: false,
       }),
     ),
     on(

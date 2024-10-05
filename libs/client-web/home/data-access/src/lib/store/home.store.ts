@@ -69,7 +69,7 @@ export const HomeStore = signalStore(
                     [tag]: {
                       ...state[tag],
                       loading: false,
-                      error: error.message,
+                      error: error.error.message,
                     },
                   }));
                 },

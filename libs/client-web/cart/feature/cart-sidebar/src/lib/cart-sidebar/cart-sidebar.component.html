@@ -51,6 +51,10 @@
         icon="pi pi-shopping-bag"
         (onClick)="visible.set(false)"
         [loading]="loading()"
+        [pTooltip]="count() === 0 ? 'Add some items to cart to checkout' : ''"
+        tooltipPosition="top"
+        tooltipStyleClass="min-w-fit"
+        [disabled]="count() === 0"
       ></button>
     </div>
   </div>

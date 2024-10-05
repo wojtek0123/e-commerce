@@ -40,7 +40,11 @@ export const OrdersStore = signalStore(
                 patchState(store, { loading: false, orders });
               },
               error: (error: ResponseError) => {
-                patchState(store, { loading: false, error: error.message });
+                patchState(store, {
+                  loading: false,
+                  error:
+                    error?.error?.message || 'Error occur while getting orders',
+                });
               },
             }),
           ),

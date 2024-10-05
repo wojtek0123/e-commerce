@@ -1,6 +1,5 @@
 import {
   HttpEvent,
-  HttpHandler,
   HttpHandlerFn,
   HttpInterceptorFn,
   HttpRequest,
@@ -14,7 +13,10 @@ import {
 } from '@e-commerce/client-web/auth/data-access';
 import { Store } from '@ngrx/store';
 import { inject } from '@angular/core';
-import { AuthApiService } from '@e-commerce/client-web/shared/data-access';
+import {
+  AuthApiService,
+  ResponseError,
+} from '@e-commerce/client-web/shared/data-access';
 
 export const authInterceptor: HttpInterceptorFn = (
   request: HttpRequest<unknown>,
@@ -59,8 +61,16 @@ export const authInterceptor: HttpInterceptorFn = (
               }),
             );
           }),
-          catchError((error) => {
-            store.dispatch(authActions.logout());
+          catchError((error: ResponseError) => {
+            console.log(request.url);
+            if (
+              error?.error?.statusCode === 401 ||
+              (error?.error?.statusCode === 403 &&
+                request.url !== '/login' &&
+                request.url !== '/register')
+            ) {
+              store.dispatch(authActions.logout());
+            }
             return throwError(() => error);
           }),
         );

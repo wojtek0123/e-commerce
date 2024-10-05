@@ -4,6 +4,7 @@ import {
   effect,
   inject,
   OnInit,
+  untracked,
 } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NavComponent } from './components/nav/nav.component';
@@ -17,7 +18,7 @@ import {
   selectEvent,
   selectRefreshToken,
 } from '@e-commerce/client-web/auth/data-access';
-import { cartActions } from '@e-commerce/client-web/cart/data-access';
+import { CartStore } from '@e-commerce/client-web/cart/data-access';
 import { jwtDecode } from 'jwt-decode';
 import { PrimeNGConfig } from 'primeng/api';
 import { Aura } from 'primeng/themes/aura';
@@ -39,23 +40,25 @@ import { definePreset } from 'primeng/themes';
 })
 export class AppComponent implements OnInit {
   private store = inject(Store);
+  private readonly cartStore = inject(CartStore);
   private readonly config = inject(PrimeNGConfig);
 
   public event = this.store.selectSignal(selectEvent);
   public refreshToken = this.store.selectSignal(selectRefreshToken);
 
   constructor() {
-    effect(
-      () => {
-        if (this.event() === 'auth-success') {
-          this.store.dispatch(cartActions.getShoppingSession());
+    effect(() => {
+      const event = this.event();
+
+      untracked(() => {
+        if (event === 'auth-success') {
+          this.cartStore.syncCartsAndFetchSession();
         }
-        if (this.event() === 'logout-success') {
-          this.store.dispatch(cartActions.clearCart());
+        if (event === 'logout-success') {
+          this.cartStore.clearCart();
         }
-      },
-      { allowSignalWrites: true },
-    );
+      });
+    });
 
     const borderRadius = '1rem' as const;
     const MyPreset = definePreset(Aura, {

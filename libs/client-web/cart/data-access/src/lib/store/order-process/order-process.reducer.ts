@@ -76,7 +76,7 @@ export const orderProcessFeature = createFeature({
         ...state,
         address: {
           ...state.address,
-          error: error.message,
+          error: error?.error?.message ?? null,
           loading: false,
         },
       }),
@@ -110,7 +110,7 @@ export const orderProcessFeature = createFeature({
         shipping: {
           ...state.shipping,
           loading: false,
-          error: error.message,
+          error: error?.error?.message ?? null,
         },
       }),
     ),
@@ -154,7 +154,7 @@ export const orderProcessFeature = createFeature({
           creditCard: {
             ...state.payment.creditCard,
             loading: false,
-            error: error.message,
+            error: error?.error?.message ?? null,
           },
         },
       }),
@@ -194,7 +194,7 @@ export const orderProcessFeature = createFeature({
           ...state.address,
           countries: {
             ...state.address.countries,
-            error: error.message,
+            error: error?.error?.message ?? null,
             loading: false,
           },
         },
@@ -247,7 +247,7 @@ export const orderProcessFeature = createFeature({
         checkout: {
           ...state.checkout,
           loading: false,
-          error: error.message,
+          error: error?.error?.message ?? null,
         },
       }),
     ),

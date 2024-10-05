@@ -1,5 +1,7 @@
 export interface ResponseError {
-  error: string;
-  message: string;
-  statusCode: number;
+  error: {
+    error: string;
+    message: string;
+    statusCode: number;
+  };
 }
