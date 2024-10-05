@@ -58,9 +58,7 @@ export class AuthEffects {
             error: (error: ResponseError) => {
               this.messageService.add({
                 severity: 'error',
-                detail: Array.isArray(error.message)
-                  ? error.message.join('. ')
-                  : error.message || 'Error occur while logging in',
+                detail: error?.error?.message || 'Error occur while logging in',
                 summary: 'Error',
               });
               return authActions.loginFailure({ error });
@@ -88,9 +86,7 @@ export class AuthEffects {
             error: (error: ResponseError) => {
               this.messageService.add({
                 severity: 'error',
-                detail: Array.isArray(error.message)
-                  ? error.message.join('. ')
-                  : error.message || 'Error occur while signing in',
+                detail: error?.error?.message || 'Error occur while signing in',
                 summary: 'Error',
               });
               return authActions.registerFailure({ error });
@@ -109,11 +105,10 @@ export class AuthEffects {
           localStorage.setItem('refreshToken', tokens.refreshToken);
           localStorage.setItem('accessToken', tokens.accessToken);
           localStorage.setItem('userId', user.id.toString());
-          const url = this.route.snapshot.queryParams['returnToOrderProcess']
-            ? '/order'
-            : '/';
 
-          this.router.navigate([url]);
+          const url = this.route.snapshot.queryParams['redirect-to'];
+
+          this.router.navigate([url || '/']);
         }),
       ),
     { dispatch: false },
@@ -182,9 +177,8 @@ export class AuthEffects {
             error: (error: ResponseError) => {
               this.messageService.add({
                 severity: 'error',
-                detail: Array.isArray(error.message)
-                  ? error.message.join('. ')
-                  : error.message || 'Error occur while logging out',
+                detail:
+                  error?.error?.message || 'Error occur while logging out',
                 summary: 'Error',
               });
               return authActions.logoutFailure({ error });
@@ -203,6 +197,7 @@ export class AuthEffects {
           localStorage.removeItem('userId');
           localStorage.removeItem('refreshToken');
           localStorage.removeItem('accessToken');
+          this.router.navigate(['/']);
         }),
       ),
     { dispatch: false },

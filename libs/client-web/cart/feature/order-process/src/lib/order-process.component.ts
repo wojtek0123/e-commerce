@@ -10,11 +10,7 @@ import {
 import { Book, CartItem } from '@e-commerce/client-web/shared/data-access';
 import { CurrencyPipe, NgClass } from '@angular/common';
 import { SummaryComponent } from './summary/summary.component';
-import { Store } from '@ngrx/store';
-import {
-  cartActions,
-  cartSelectors,
-} from '@e-commerce/client-web/cart/data-access';
+import { CartStore } from '@e-commerce/client-web/cart/data-access';
 
 @Component({
   selector: 'lib-order-process',
@@ -35,17 +31,23 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OrderProcessComponent {
-  private readonly store = inject(Store);
+  private readonly cartStore = inject(CartStore);
 
-  cartItems = this.store.selectSignal(cartSelectors.selectCartItems);
-  cartItemsLoading = this.store.selectSignal(cartSelectors.selectLoading);
-  total = this.store.selectSignal(cartSelectors.selectTotal);
+  cartItems = this.cartStore.cartItemsEntities;
+  cartItemsLoading = this.cartStore.loading;
+  total = this.cartStore.total;
 
-  updateQuantity(cartItem: { quantity: CartItem['quantity']; book: Book }) {
-    this.store.dispatch(cartActions.updateQuantity({ ...cartItem }));
+  updateQuantity({
+    book,
+    quantity,
+  }: {
+    quantity: CartItem['quantity'];
+    book: Book;
+  }) {
+    this.cartStore.updateQuantity({ bookId: book.id, quantity });
   }
 
   remove(arg: { bookId: Book['id'] }) {
-    this.store.dispatch(cartActions.removeBookFromCart({ ...arg }));
+    this.cartStore.removeBook(arg);
   }
 }

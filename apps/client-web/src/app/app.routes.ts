@@ -12,6 +12,7 @@ import { provideEffects } from '@ngrx/effects';
 import { provideState } from '@ngrx/store';
 import { OrdersStore } from '@e-commerce/client-web/account/data-access';
 import { canMatchAuth } from './guards/auth.guard';
+import { cartItemsGuard } from './guards/cart-items.guard';
 
 export const appRoutes: Route[] = [
   {
@@ -64,6 +65,8 @@ export const appRoutes: Route[] = [
   },
   {
     path: 'order-process',
+    canMatch: [canMatchAuth],
+    canActivate: [cartItemsGuard],
     loadChildren: () =>
       import('@e-commerce/client-web/cart/feature/order-process').then(
         (r) => r.orderProcessRoutes,
@@ -75,6 +78,7 @@ export const appRoutes: Route[] = [
   },
   {
     path: 'payment-status/:order-details-id',
+    // TODO: canMatch guard to check if user ordered and pay
     loadChildren: () =>
       import('@e-commerce/client-web/cart/feature/payment-status').then(
         (r) => r.paymentStatusRoutes,

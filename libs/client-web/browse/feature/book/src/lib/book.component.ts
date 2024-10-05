@@ -20,7 +20,7 @@ import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { MenuItem } from 'primeng/api';
 import { DetailRowComponent } from '@e-commerce/client-web/browse/ui';
-import { cartActions } from '@e-commerce/client-web/cart/data-access';
+import { CartStore } from '@e-commerce/client-web/cart/data-access';
 
 @Component({
   selector: 'lib-book',
@@ -41,6 +41,7 @@ import { cartActions } from '@e-commerce/client-web/cart/data-access';
 })
 export class BookComponent implements OnInit {
   private readonly store = inject(Store);
+  private readonly cartStore = inject(CartStore);
   private readonly route = inject(ActivatedRoute);
 
   public book = this.store.selectSignal(bookSelector.selectBook);
@@ -83,13 +84,10 @@ export class BookComponent implements OnInit {
   }
 
   public addToCart() {
-    if (!this.book()) return;
+    const book = this.book();
 
-    this.store.dispatch(
-      cartActions.addBookToCart({
-        book: this.book()!,
-        quantity: this.amount.value,
-      }),
-    );
+    if (!book) return;
+
+    this.cartStore.addBook({ book, quantity: this.amount.value });
   }
 }

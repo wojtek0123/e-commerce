@@ -127,7 +127,12 @@ export const BooksStore = signalStore(
                     });
                   },
                   error: (error: ResponseError) => {
-                    patchState(store, { loading: false, error: error.message });
+                    patchState(store, {
+                      loading: false,
+                      error:
+                        error?.error?.message ||
+                        'Error occur while getting books',
+                    });
                   },
                 }),
               );
