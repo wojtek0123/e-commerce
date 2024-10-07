@@ -59,7 +59,7 @@ export class BooksController {
   findAll(
     @Query('page') page: string,
     @Query('size') size: string,
-    @Query('tagsIn') tagsIn: string,
+    @Query('tagIn') tagIn: string,
     @Query('categoryIdIn') categoryIdIn: string,
     @Query('authorIdIn') authorIdIn: string,
     @Query('titleLike') titleLike: string,
@@ -70,7 +70,7 @@ export class BooksController {
       page,
       size,
       categoryIdIn,
-      tagsIn,
+      tagIn,
       authorIdIn,
       titleLike,
       priceFrom,

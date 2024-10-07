@@ -10,10 +10,7 @@ import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { DividerModule } from 'primeng/divider';
 import { ButtonModule } from 'primeng/button';
 import { MenuModule } from 'primeng/menu';
-import {
-  Category,
-  selectCategories,
-} from '@e-commerce/client-web/shared/data-access';
+import { Category } from '@e-commerce/client-web/shared/data-access';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { FormsModule } from '@angular/forms';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -31,13 +28,10 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
-import { Store } from '@ngrx/store';
-import {
-  authActions,
-  selectIsAuthenticated,
-} from '@e-commerce/client-web/auth/data-access';
+import { AuthStore } from '@e-commerce/client-web/auth/data-access';
 import { CartSidebarComponent } from '@e-commerce/client-web/cart/feature/cart-sidebar';
 import { ThemeService } from '../../services/theme.service';
+import { CategoryStore } from '../../stores/category.store';
 
 @Component({
   selector: 'app-nav',
@@ -81,11 +75,12 @@ import { ThemeService } from '../../services/theme.service';
   ],
 })
 export class NavComponent implements OnInit, OnDestroy {
-  private readonly store = inject(Store);
   private readonly themeService = inject(ThemeService);
+  private readonly categoriesStore = inject(CategoryStore);
+  private readonly authStore = inject(AuthStore);
 
-  public isAuthenticated = this.store.selectSignal(selectIsAuthenticated);
-  public categories = this.store.selectSignal(selectCategories);
+  public isAuthenticated = this.authStore.isAuthenticated;
+  public categories = this.categoriesStore.categories;
   public isOpen = signal(false);
   public isExpanded = signal(true);
   public isLabelShowed = signal(computed(() => this.isExpanded())());
@@ -95,7 +90,7 @@ export class NavComponent implements OnInit, OnDestroy {
   private timer?: ReturnType<typeof setTimeout>;
   private shouldRestoreExpanded = signal(false);
 
-  ngOnInit() {
+  public ngOnInit() {
     () => {
       const isExpanded = localStorage.getItem('isExpanded');
 
@@ -126,7 +121,7 @@ export class NavComponent implements OnInit, OnDestroy {
     };
   }
 
-  ngOnDestroy(): void {
+  public ngOnDestroy(): void {
     this.resizeObserver?.unobserve(document.body);
   }
 
@@ -155,7 +150,7 @@ export class NavComponent implements OnInit, OnDestroy {
     },
   ]);
 
-  toggleDarkMode() {
+  public toggleDarkMode() {
     this.themeService.toggleDarkMode();
   }
 
@@ -179,6 +174,6 @@ export class NavComponent implements OnInit, OnDestroy {
   }
 
   public logout() {
-    this.store.dispatch(authActions.logout());
+    this.authStore.logout();
   }
 }

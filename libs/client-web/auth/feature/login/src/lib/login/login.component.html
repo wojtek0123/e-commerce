@@ -4,7 +4,6 @@
   header="Welcome back!"
   subtitle="Are you new here?"
 >
-  @let loading = loading$ | async;
   <form
     [formGroup]="loginForm"
     class="flex flex-col gap-2 w-full max-w-[30rem] xl:items-center"
@@ -64,7 +63,7 @@
     <p-button
       type="submit"
       label="Log in!"
-      [loading]="loading"
+      [loading]="loading()"
       loading-icon="pi pi-spin pi-spinner"
       iconPos="right"
       [style]="{ width: '100%' }"

@@ -34,7 +34,7 @@ export class AuthApiService {
     return this.http.post<User>(`${this.apiUrl}/auth/logout`, body);
   }
 
-  getRefreshToken$(id: User['id'], refreshToken: string) {
+  getRefreshToken$(id: User['id'], refreshToken: Tokens['refreshToken']) {
     const body = {
       id,
       refreshToken,

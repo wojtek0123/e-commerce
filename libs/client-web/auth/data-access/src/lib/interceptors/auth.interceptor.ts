@@ -5,13 +5,7 @@ import {
   HttpRequest,
 } from '@angular/common/http';
 import { catchError, Observable, switchMap, throwError } from 'rxjs';
-import {
-  authActions,
-  selectAccessToken,
-  selectRefreshToken,
-  selectUserId,
-} from '@e-commerce/client-web/auth/data-access';
-import { Store } from '@ngrx/store';
+import { AuthStore } from '../store/auth.store';
 import { inject } from '@angular/core';
 import {
   AuthApiService,
@@ -23,34 +17,30 @@ export const authInterceptor: HttpInterceptorFn = (
   next: HttpHandlerFn,
 ): Observable<HttpEvent<unknown>> => {
   const authApi = inject(AuthApiService);
-  const store = inject(Store);
-  const accessToken = store.selectSignal(selectAccessToken);
-  const refreshToken = store.selectSignal(selectRefreshToken);
+  const authStore = inject(AuthStore);
+  const refreshToken = authStore.refreshToken();
+  const accessToken = authStore.accessToken();
+  const userId = authStore.userId();
 
-  if (!accessToken()) return next(request);
+  if (!accessToken) return next(request);
 
   const clonedRequest = request.clone({
     headers: request.headers.set(
       'Authorization',
       `Bearer ${
-        request.url.includes('auth/refresh') ? refreshToken() : accessToken()
+        request.url.includes('auth/refresh') ? refreshToken : accessToken
       }`,
     ),
   });
 
   return next(clonedRequest).pipe(
     catchError((error) => {
-      if (error.status === 401 && accessToken()) {
-        const userId = store.selectSignal(selectUserId);
+      if (error.status === 401 && accessToken) {
+        if (!userId || !refreshToken) return throwError(() => error);
 
-        return authApi.getRefreshToken$(userId()!, refreshToken()!).pipe(
+        return authApi.getRefreshToken$(userId, refreshToken).pipe(
           switchMap((tokens) => {
-            store.dispatch(
-              authActions.refreshTokenSuccess({
-                accessToken: tokens.accessToken!,
-                refreshToken: tokens.refreshToken!,
-              }),
-            );
+            authStore.updateTokens(tokens);
 
             return next(
               request.clone({
@@ -62,14 +52,13 @@ export const authInterceptor: HttpInterceptorFn = (
             );
           }),
           catchError((error: ResponseError) => {
-            console.log(request.url);
             if (
               error?.error?.statusCode === 401 ||
               (error?.error?.statusCode === 403 &&
                 request.url !== '/login' &&
                 request.url !== '/register')
             ) {
-              store.dispatch(authActions.logout());
+              authStore.logout();
             }
             return throwError(() => error);
           }),
