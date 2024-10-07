@@ -4,14 +4,10 @@ import {
   computed,
   effect,
   inject,
-  OnInit,
+  input,
+  untracked,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Store } from '@ngrx/store';
-import {
-  bookActions,
-  bookSelector,
-} from '@e-commerce/client-web/browse/data-access';
+import { BookStore } from '@e-commerce/client-web/browse/data-access';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { ChipModule } from 'primeng/chip';
 import { CurrencyPipe, DatePipe } from '@angular/common';
@@ -21,6 +17,9 @@ import { ButtonModule } from 'primeng/button';
 import { MenuItem } from 'primeng/api';
 import { DetailRowComponent } from '@e-commerce/client-web/browse/ui';
 import { CartStore } from '@e-commerce/client-web/cart/data-access';
+import { BookDetails } from '@e-commerce/client-web/shared/data-access';
+import { SkeletonModule } from 'primeng/skeleton';
+import { SkeletonDirective } from './skeleton.directive';
 
 @Component({
   selector: 'lib-book',
@@ -34,23 +33,21 @@ import { CartStore } from '@e-commerce/client-web/cart/data-access';
     ButtonModule,
     DetailRowComponent,
     DatePipe,
+    SkeletonModule,
+    SkeletonDirective,
   ],
   templateUrl: './book.component.html',
   styleUrl: './book.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BookComponent implements OnInit {
-  private readonly store = inject(Store);
+export class BookComponent {
+  private readonly bookStore = inject(BookStore);
   private readonly cartStore = inject(CartStore);
-  private readonly route = inject(ActivatedRoute);
 
-  public book = this.store.selectSignal(bookSelector.selectBook);
-  public loading = this.store.selectSignal(bookSelector.selectLoading);
-  public error = this.store.selectSignal(bookSelector.selectError);
-  public availableQuantity = this.store.selectSignal(
-    bookSelector.selectAvailableQuantity,
-  );
-
+  public book = this.bookStore.book;
+  public loading = this.bookStore.loading;
+  public error = this.bookStore.error;
+  public availableQuantity = this.bookStore.availableQuantity;
   public breadcrumbs = computed<MenuItem[]>(() => [
     { label: 'Home', routerLink: '/' },
     { label: 'books', routerLink: '/browse' },
@@ -65,16 +62,24 @@ export class BookComponent implements OnInit {
     validators: [Validators.min(1)],
     nonNullable: true,
   });
+  public bookId = input.required<BookDetails['id']>();
 
   constructor() {
     effect(() => {
-      this.amount.setValidators(Validators.max(this.availableQuantity()));
-    });
-  }
+      const bookId = this.bookId();
 
-  public ngOnInit(): void {
-    const bookId = this.route.snapshot.params['bookId'];
-    this.store.dispatch(bookActions.getBook({ bookId }));
+      untracked(() => {
+        this.bookStore.getBook({ bookId });
+      });
+    });
+
+    effect(() => {
+      const availableQuantity = this.availableQuantity();
+
+      untracked(() => {
+        this.amount.setValidators(Validators.max(availableQuantity));
+      });
+    });
   }
 
   public onBlurInput() {

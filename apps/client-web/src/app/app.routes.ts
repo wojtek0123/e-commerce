@@ -1,10 +1,5 @@
 import { Route } from '@angular/router';
 import {
-  BookEffects,
-  bookFeature,
-  BooksStore,
-} from '@e-commerce/client-web/browse/data-access';
-import {
   OrderProcessEffects,
   orderProcessFeature,
 } from '@e-commerce/client-web/cart/data-access';
@@ -47,7 +42,6 @@ export const appRoutes: Route[] = [
           ),
       },
     ],
-    providers: [BooksStore],
   },
   {
     path: 'book/:bookId',
@@ -61,7 +55,6 @@ export const appRoutes: Route[] = [
           ),
       },
     ],
-    providers: [provideState(bookFeature), provideEffects(BookEffects)],
   },
   {
     path: 'order-process',
