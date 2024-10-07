@@ -4,7 +4,6 @@
   header="Create a new account"
   subtitle="Do you have already an account?"
 >
-  @let loading = loading$ | async;
   <form
     [formGroup]="registerForm"
     class="flex flex-col gap-2 w-full xl:items-center"
@@ -79,7 +78,7 @@
     <p-button
       type="submit"
       label="Register"
-      [loading]="loading"
+      [loading]="loading()"
       loading-icon="pi pi-spin pi-spinner"
       iconPos="right"
       [disabled]="registerForm.invalid"

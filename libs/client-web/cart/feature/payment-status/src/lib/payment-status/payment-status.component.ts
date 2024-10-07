@@ -17,7 +17,7 @@ export class PaymentStatusComponent implements OnInit {
   loading = signal(true);
 
   ngOnInit(): void {
-    this.cartStore.clearCart();
+    this.cartStore.deleteSession();
 
     setTimeout(() => {
       this.loading.set(false);

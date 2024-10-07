@@ -37,7 +37,7 @@ export class BooksService {
 
   async findMany({
     categoryIdIn,
-    tagsIn,
+    tagIn,
     titleLike,
     priceFrom,
     priceTo,
@@ -46,7 +46,7 @@ export class BooksService {
     authorIdIn,
   }: {
     categoryIdIn?: string;
-    tagsIn?: string;
+    tagIn?: string;
     titleLike?: string;
     priceFrom?: string;
     priceTo?: string;
@@ -59,7 +59,7 @@ export class BooksService {
       const sizeNumber = this.parseNumber(size, 20);
 
       const parsedCategories = this._parseQueryParams(categoryIdIn);
-      const parsedTags = this._parseQueryParams(tagsIn);
+      const parsedTags = this._parseQueryParams(tagIn);
       const parsedAuthors = this._parseQueryParams(authorIdIn);
 
       const whereClause: Prisma.BookWhereInput = {

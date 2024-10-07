@@ -11,6 +11,7 @@ import {
   patchState,
   signalStore,
   type,
+  watchState,
   withComputed,
   withHooks,
   withMethods,
@@ -30,6 +31,8 @@ import {
   updateEntity,
   withEntities,
 } from '@ngrx/signals/entities';
+
+const CART_STORAGE = 'cart' as const;
 
 interface CartState {
   shoppingSession: ShoppingSession | null;
@@ -118,7 +121,7 @@ export const CartStore = signalStore(
             shoppingSessionApi.getShoppingSession().pipe(
               tapResponse({
                 next: (shoppingSession) => {
-                  localStorage.removeItem('cart');
+                  localStorage.removeItem(CART_STORAGE);
                   patchState(
                     store,
                     {
@@ -164,14 +167,6 @@ export const CartStore = signalStore(
               detail: `${book.title} has been added to cart`,
               severity: 'success',
             });
-          }),
-          tap(() => {
-            if (!store.shoppingSessionId()) {
-              localStorage.setItem(
-                'cart',
-                JSON.stringify(store.cartItemsEntities()),
-              );
-            }
           }),
           filter(() => !!store.shoppingSessionId()),
           switchMap(({ book, quantity }) =>
@@ -238,14 +233,6 @@ export const CartStore = signalStore(
               severity: 'success',
             });
           }),
-          tap(() => {
-            if (!store.shoppingSessionId()) {
-              localStorage.setItem(
-                'cart',
-                JSON.stringify(store.cartItemsEntities()),
-              );
-            }
-          }),
           filter(() => !!store.shoppingSessionId()),
           switchMap(({ bookId, quantity }) =>
             cartItemApi
@@ -307,14 +294,6 @@ export const CartStore = signalStore(
               severity: 'success',
             });
           }),
-          tap(() => {
-            if (!store.shoppingSessionId()) {
-              localStorage.setItem(
-                'cart',
-                JSON.stringify(store.cartItemsEntities()),
-              );
-            }
-          }),
           filter(() => !!store.shoppingSessionId()),
           switchMap(({ bookId }) =>
             cartItemApi.deleteCartItem(store.shoppingSessionId()!, bookId).pipe(
@@ -354,14 +333,18 @@ export const CartStore = signalStore(
           ),
         ),
       ),
-      clearCart: rxMethod<void>(
+      deleteSession: rxMethod<void>(
         pipe(
           switchMap(() =>
             shoppingSessionApi.delete().pipe(
               tapResponse({
                 next: () => {
                   // return cartActions.clearCartSuccess();
-                  patchState(store, removeAllEntities(cartItemsConfig));
+                  patchState(
+                    store,
+                    { shoppingSession: null, shoppingSessionId: null },
+                    removeAllEntities(cartItemsConfig),
+                  );
                 },
                 error: (error: ResponseError) => {
                   // return cartActions.clearCartFailure({ error });
@@ -371,9 +354,16 @@ export const CartStore = signalStore(
           ),
         ),
       ),
+      clearCartAndSession: () => {
+        patchState(
+          store,
+          { shoppingSessionId: null, shoppingSession: null },
+          removeAllEntities(cartItemsConfig),
+        );
+      },
       getLocalCartItems: () => {
         const cartItems = JSON.parse(
-          localStorage.getItem('cart') || '[]',
+          localStorage.getItem(CART_STORAGE) || '[]',
         ) as CartItemBase[];
 
         patchState(store, addEntities([...cartItems], cartItemsConfig));
@@ -382,13 +372,14 @@ export const CartStore = signalStore(
   ),
   withHooks({
     onInit(store) {
-      const isAuth = localStorage.getItem('accessToken');
-
-      if (isAuth) {
-        store.syncCartsAndFetchSession();
-      } else {
-        store.getLocalCartItems();
-      }
+      watchState(store, (state) => {
+        if (!state.shoppingSessionId) {
+          localStorage.setItem(
+            CART_STORAGE,
+            JSON.stringify(Object.values(state.cartItemsEntityMap)),
+          );
+        }
+      });
     },
   }),
 );

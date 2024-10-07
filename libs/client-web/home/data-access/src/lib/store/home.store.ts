@@ -69,7 +69,9 @@ export const HomeStore = signalStore(
                     [tag]: {
                       ...state[tag],
                       loading: false,
-                      error: error.error.message,
+                      error:
+                        error?.error?.message ||
+                        'Error occur while getting books',
                     },
                   }));
                 },

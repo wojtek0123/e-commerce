@@ -1,10 +1,5 @@
 import { AsyncPipe, NgClass, NgIf } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -13,10 +8,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import {
-  authActions,
-  selectLoading,
-} from '@e-commerce/client-web/auth/data-access';
+import { AuthStore } from '@e-commerce/client-web/auth/data-access';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
@@ -50,11 +42,11 @@ import { ContainerComponent } from '@e-commerce/client-web/auth/ui';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RegisterComponent {
-  private readonly store = inject(Store);
+  private readonly authStore = inject(AuthStore);
   private readonly fb = inject(FormBuilder);
   protected readonly route = inject(ActivatedRoute);
 
-  public loading$ = this.store.select(selectLoading);
+  public loading = this.authStore.loading;
 
   public registerForm = this.fb.nonNullable.group(
     {
@@ -105,8 +97,6 @@ export class RegisterComponent {
 
     const { email, password } = this.registerForm.value;
 
-    this.store.dispatch(
-      authActions.register({ email: email ?? '', password: password ?? '' }),
-    );
+    this.authStore.register({ email: email ?? '', password: password ?? '' });
   }
 }
