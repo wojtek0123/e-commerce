@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  effect,
   input,
   output,
 } from '@angular/core';
@@ -23,4 +24,10 @@ export class OrderProcessDetailElementComponent<T> {
   isActive = input.required<boolean>();
 
   clickEvent = output<T>();
+
+  constructor() {
+    effect(() => {
+      console.log(this.isActive());
+    });
+  }
 }

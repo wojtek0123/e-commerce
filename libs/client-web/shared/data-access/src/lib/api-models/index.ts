@@ -2,7 +2,6 @@ export * from './book.model';
 export * from './user-address.model';
 export * from './pagination.model';
 export * from './api-status.model';
-export * from './credit-card.model';
 export * from './paginated.model';
 export * from './cart-item.model';
 export * from './category.model';

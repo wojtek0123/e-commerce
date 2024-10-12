@@ -1,41 +1,44 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsString } from 'class-validator';
+import { UserDto } from '../../users/dto/user.dto';
+import { Country } from '../../countries/entities/country.entity';
 
-export class UserAddressCreateDto {
+export class OrderAddress {
+  @ApiProperty({ readOnly: true, type: String })
+  id: string;
+
   @ApiProperty({ type: String })
-  @IsString()
   firstName: string;
 
   @ApiProperty({ type: String })
-  @IsString()
   lastName: string;
 
   @ApiProperty({ type: String })
-  @IsString()
   phone: string;
 
   @ApiProperty({ type: String })
-  @IsString()
   city: string;
 
   @ApiProperty({ type: String })
-  @IsString()
   street: string;
 
-  @ApiProperty({ type: String, required: false })
-  @IsString()
-  @IsOptional()
-  houseNumber: string;
-
   @ApiProperty({ type: String })
-  @IsString()
   homeNumber: string;
 
   @ApiProperty({ type: String })
-  @IsString()
-  postcode: string;
+  houseNumber: string;
 
   @ApiProperty({ type: String })
-  @IsString()
+  postcode: string;
+
+  @ApiProperty({ type: UserDto })
+  user: UserDto;
+
+  @ApiProperty({ type: String })
+  userId: string;
+
+  @ApiProperty({ type: String })
   countryId: string;
+
+  @ApiProperty({ type: Country })
+  country: { code: string; name: string };
 }

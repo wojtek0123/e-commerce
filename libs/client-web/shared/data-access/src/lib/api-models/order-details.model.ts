@@ -1,20 +1,17 @@
+import { OrderAddress, PaymentDetails } from '@prisma/client';
 import { Book } from './book.model';
 import { ShippingMethod } from './shipping-method.model';
-import { UserAddress } from './user-address.model';
 
 export interface OrderDetails {
   id: string;
   total: number;
+  status: OrderDetailsStatus;
   createdAt: string;
   updatedAt: string;
-  userAddress: UserAddress;
+  paymentDetails: PaymentDetails;
+  orderAddress: OrderAddress;
   paymentDetailsId: number;
   shippingMethod: ShippingMethod;
-  paymentDetails: {
-    provider: string;
-    status: string;
-  };
-  status: OrderDetailsStatus;
   orderItems: OrderDetailsItem[];
 }
 

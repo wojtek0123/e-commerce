@@ -8,11 +8,12 @@ import {
 } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
-import { Store } from '@ngrx/store';
 import {
+  AddressStore,
   CartStore,
-  orderProcessActions,
-  orderProcessSelectors,
+  OrderProcessStore,
+  PaymentStore,
+  ShippingStore,
 } from '@e-commerce/client-web/cart/data-access';
 import { DeliveryAddressComponent } from '../delivery-address/delivery-address.component';
 import { PaymentMethodComponent } from '../payment-method/payment-method.component';
@@ -34,53 +35,35 @@ import { DividerModule } from 'primeng/divider';
   styleUrl: './summary.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SummaryComponent implements OnInit {
-  private readonly store = inject(Store);
+export class SummaryComponent {
+  private readonly orderProcessStore = inject(OrderProcessStore);
   private readonly cartStore = inject(CartStore);
+  private readonly addressStore = inject(AddressStore);
+  private readonly shippingStore = inject(ShippingStore);
+  private readonly paymentStore = inject(PaymentStore);
 
   public cartItemsTotal = this.cartStore.total;
-  public shippingMethodPrice = this.store.selectSignal(
-    orderProcessSelectors.selectSelectedShippingMethodPrice,
+  public shippingMethodPrice = computed(
+    () => this.shippingStore.selectedShipping()?.price ?? 0,
   );
   public total = computed(
     () => this.cartItemsTotal() + this.shippingMethodPrice(),
   );
 
-  public userAddress = this.store.selectSignal(
-    orderProcessSelectors.selectUserAddressData,
-  );
-  public shippingMethod = this.store.selectSignal(
-    orderProcessSelectors.selectSelectedShippingMethod,
-  );
-  public paymentMethod = this.store.selectSignal(
-    orderProcessSelectors.selectSelectedPaymentMethod,
-  );
+  public userAddress = this.addressStore.selectedAddress;
+  public shippingMethod = this.shippingStore.selectedShipping;
+  public paymentMethod = this.paymentStore.selectedPayment;
   public initialLoading = computed(
     () =>
-      this.store.selectSignal(
-        orderProcessSelectors.selectCreditCardLoading,
-      )() ||
-      this.store.selectSignal(
-        orderProcessSelectors.selectUserAddressLoading,
-      )() ||
-      this.store.selectSignal(
-        orderProcessSelectors.selectShippingMethodsLoading,
-      )(),
+      this.addressStore.loading() ||
+      this.shippingStore.loading() ||
+      this.paymentStore.creditCard.loading(),
   );
-  public isSixDigitCodeInvalid = this.store.selectSignal(
-    orderProcessSelectors.selectIsSixDigitCodeInvalid,
-  );
+  public isSixDigitCodeInvalid = signal(false);
   public isDeliveryAddressUpdating = signal(false);
-  public creditCard = this.store.selectSignal(
-    orderProcessSelectors.selectCreditCardData,
-  );
-  public isPaymentInvalid = this.store.selectSignal(
-    orderProcessSelectors.selectIsPaymentInvalid,
-  );
-  public checkoutLoading = this.store.selectSignal(
-    orderProcessSelectors.selectCheckoutLoading,
-  );
-
+  public creditCard = this.paymentStore.creditCard.data;
+  public isPaymentInvalid = signal(false);
+  public checkoutLoading = this.orderProcessStore.loading;
   private errors = computed(() => [
     this.isPaymentInvalid(),
     !this.userAddress(),
@@ -89,16 +72,20 @@ export class SummaryComponent implements OnInit {
 
   protected submitted = signal(false);
 
-  ngOnInit(): void {
-    this.store.dispatch(orderProcessActions.getCreditCard());
-  }
-
   submit() {
     this.submitted.set(true);
+    const address = this.userAddress();
+    const selectedShippingMethod = this.shippingMethod();
+    const selectedPaymentMethod = this.paymentMethod();
+
+    if (!address || !selectedShippingMethod || !selectedPaymentMethod) return;
 
     if (this.errors().some((error) => error)) return;
-
-    this.store.dispatch(orderProcessActions.checkout());
+    this.orderProcessStore.checkout({
+      orderAddress: address,
+      shippingMethodId: selectedShippingMethod.id,
+      paymentMethod: selectedPaymentMethod,
+    });
   }
 
   setDeliveryAddressState(state: boolean) {

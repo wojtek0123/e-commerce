@@ -22,15 +22,19 @@ export class UserAddressApiService {
   private http = inject(HttpClient);
   private apiUrl = inject(API_URL);
 
-  createUserAddress$(body: CreateUserAddressBody) {
+  getAll$() {
+    return this.http.get<UserAddress[]>(`${this.apiUrl}/user-addresses`);
+  }
+
+  getOne$(body: CreateUserAddressBody) {
     return this.http.post<UserAddress>(`${this.apiUrl}/user-addresses`, body);
   }
 
-  getUserAddress$() {
-    return this.http.get<UserAddress>(`${this.apiUrl}/user-addresses`);
+  getUserAddress$(id: UserAddress['id']) {
+    return this.http.get<UserAddress>(`${this.apiUrl}/user-addresses/${id}`);
   }
 
-  updateUserAddress$(id: UserAddress['id'], body: UpdateUserAddressBody) {
+  update$(id: UserAddress['id'], body: UpdateUserAddressBody) {
     return this.http.patch<UserAddress>(
       `${this.apiUrl}/user-addresses/${id}`,
       body,
