@@ -1,12 +1,21 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import {
-  UserAddress,
-  OrderDetails,
-  Book,
-  ShoppingSession,
-} from '../api-models';
+import { ShoppingSession } from '../api-models';
 import { API_URL } from '@e-commerce/client-web/shared/utils';
+import { OrderDetails } from '../api-models/order-details.model';
+import { PaymentMethod } from '@prisma/client';
+
+export interface CreateOrderAddress {
+  firstName: string;
+  lastName: string;
+  phone: string;
+  city: string;
+  street: string;
+  houseNumber?: string;
+  homeNumber: string;
+  postcode: string;
+  countryId: string;
+}
 
 @Injectable({ providedIn: 'root' })
 export class OrderDetailsApiService {
@@ -14,9 +23,9 @@ export class OrderDetailsApiService {
   private apiUrl = inject(API_URL);
 
   create(body: {
-    userAddressId: UserAddress['id'];
     shippingMethodId: ShoppingSession['id'];
-    orderItems?: { bookId: Book['id'] };
+    orderAddress: CreateOrderAddress;
+    paymentMethod: PaymentMethod;
   }) {
     return this.http.post<OrderDetails>(`${this.apiUrl}/order-details`, body);
   }

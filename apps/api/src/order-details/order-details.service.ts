@@ -8,84 +8,10 @@ import { OrderDetail } from './entities/order-detail.entity';
 export class OrderDetailsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  // async create(
-  //   { userAddressId, shippingMethodId }: CreateOrderDetailDto,
-  //   authHeader: string,
-  // ) {
-  //   const userId = +decode(authHeader.split(' ')[1]).sub;
-  //
-  //   const shoppingSession = await this.prisma.shoppingSession.findUnique({
-  //     where: { userId },
-  //     include: {
-  //       cartItems: true,
-  //     },
-  //   });
-  //
-  //   // TODO: reduce number of available books in inventory
-  //
-  //   // this.prisma.productInventory.updateMany({
-  //   //   where: shoppingSession.cartItems.map(({bookId}) => bookId),
-  //   // })
-  //   const productInventories = [];
-  //   shoppingSession.cartItems.map(async (cartItem) => {
-  //     productInventories.push(
-  //       await this.prisma.productInventory.findFirst({
-  //         where: { book: { id: cartItem.bookId } },
-  //         select: { id: true, quantity: true, book: true },
-  //       }),
-  //     );
-  //   });
-  //
-  //   productInventories.map(async (pi) => {
-  //     console.log(pi);
-  //     await this.prisma.productInventory.update({
-  //       where: { id: pi.id },
-  //       data: {
-  //         quantity:
-  //           pi.quantity -
-  //           shoppingSession.cartItems.find((ci) => ci.bookId === pi.book.id)
-  //             .quantity,
-  //       },
-  //     });
-  //   });
-  //
-  //   return this.prisma.orderDetails.create({
-  //     data: {
-  //       userAddress: {
-  //         connect: { id: userAddressId },
-  //       },
-  //       shippingMethod: {
-  //         connect: { id: shippingMethodId },
-  //       },
-  //       user: {
-  //         connect: {
-  //           id: userId,
-  //         },
-  //       },
-  //       total: shoppingSession.total,
-  //       paymentDetails: {
-  //         create: {
-  //           status: 'PROCESSING',
-  //           provider: 'debit-card',
-  //           amount: shoppingSession.total,
-  //         },
-  //       },
-  //       orderItems: {
-  //         createMany: {
-  //           data: shoppingSession.cartItems.map(({ bookId, quantity }) => ({
-  //             bookId,
-  //             quantity,
-  //           })),
-  //         },
-  //       },
-  //     },
-  //   });
-  // }
   async create(
-    { userAddressId, shippingMethodId }: CreateOrderDetailDto,
+    { shippingMethodId, paymentMethod, orderAddress }: CreateOrderDetailDto,
     authHeader: string,
   ) {
-    // Decode and get the userId from the auth token
     let userId: string;
     try {
       userId = String(decode(authHeader.split(' ')[1]).sub);
@@ -93,7 +19,6 @@ export class OrderDetailsService {
       throw new UnauthorizedException('Invalid authentication token');
     }
 
-    // Retrieve the shopping session and related cart items
     const shoppingSession = await this.prisma.shoppingSession.findUnique({
       where: { userId },
       include: { cartItems: true },
@@ -103,7 +28,6 @@ export class OrderDetailsService {
       throw new Error('No active shopping session found for the user');
     }
 
-    // Retrieve all related product inventories
     const productInventories = await Promise.all(
       shoppingSession.cartItems.map((cartItem) =>
         this.prisma.productInventory.findFirst({
@@ -113,7 +37,6 @@ export class OrderDetailsService {
       ),
     );
 
-    // Update the inventory quantities
     await Promise.all(
       productInventories.map((pi) => {
         const cartItem = shoppingSession.cartItems.find(
@@ -134,14 +57,39 @@ export class OrderDetailsService {
       }),
     );
 
-    // Create the order with related entities
+    const {
+      firstName,
+      lastName,
+      postcode,
+      phone,
+      city,
+      countryId,
+      homeNumber,
+      houseNumber,
+      street,
+    } = orderAddress;
+
     return this.prisma.orderDetails.create({
       data: {
-        userAddress: {
-          connect: { id: userAddressId },
-        },
         shippingMethod: {
           connect: { id: shippingMethodId },
+        },
+        orderAddress: {
+          create: {
+            firstName,
+            lastName,
+            phone,
+            city,
+            postcode,
+            street,
+            houseNumber,
+            homeNumber,
+            country: {
+              connect: {
+                id: countryId,
+              },
+            },
+          },
         },
         user: {
           connect: { id: userId },
@@ -149,8 +97,8 @@ export class OrderDetailsService {
         total: shoppingSession.total,
         paymentDetails: {
           create: {
-            status: 'PROCESSING',
-            provider: 'debit-card', // Customize as needed
+            status: 'SUCCEEDED',
+            method: paymentMethod,
             amount: shoppingSession.total,
           },
         },
@@ -176,7 +124,7 @@ export class OrderDetailsService {
             book: true,
           },
         },
-        userAddress: {
+        orderAddress: {
           include: {
             country: true,
           },
@@ -193,7 +141,7 @@ export class OrderDetailsService {
     return this.prisma.orderDetails.findUnique({
       where: { id, userId },
       include: {
-        userAddress: {
+        orderAddress: {
           include: {
             country: true,
           },

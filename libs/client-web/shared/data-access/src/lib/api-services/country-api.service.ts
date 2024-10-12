@@ -8,7 +8,7 @@ export class CountryApiService {
   private http = inject(HttpClient);
   private apiUrl = inject(API_URL);
 
-  getCountries() {
+  getAll() {
     return this.http.get<Country[]>(`${this.apiUrl}/countries`);
   }
 }

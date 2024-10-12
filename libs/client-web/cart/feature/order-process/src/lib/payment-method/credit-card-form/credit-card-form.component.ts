@@ -19,11 +19,7 @@ import {
 } from '@e-commerce/client-web/shared/ui';
 import { NgClass } from '@angular/common';
 import { InputMaskModule } from 'primeng/inputmask';
-import { Store } from '@ngrx/store';
-import {
-  orderProcessActions,
-  orderProcessSelectors,
-} from '@e-commerce/client-web/cart/data-access';
+import { PaymentStore } from '@e-commerce/client-web/cart/data-access';
 
 @Component({
   selector: 'lib-credit-card-form',
@@ -42,7 +38,7 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreditCardFormComponent {
-  private readonly store = inject(Store);
+  private readonly paymentStore = inject(PaymentStore);
 
   public form = new FormGroup({
     cardNumber: new FormControl<string | null>(null, Validators.required),
@@ -51,20 +47,14 @@ export class CreditCardFormComponent {
   });
 
   public submitted = signal(false);
-  public creditCard = this.store.selectSignal(
-    orderProcessSelectors.selectCreditCardData,
-  );
-  public loading = this.store.selectSignal(
-    orderProcessSelectors.selectCreditCardLoading,
-  );
-  public error = this.store.selectSignal(
-    orderProcessSelectors.selectCreditCardError,
-  );
-  changeCreditCard = signal(false);
+  public creditCard = this.paymentStore.creditCard;
+  public loading = this.paymentStore.creditCard.loading;
+  public error = this.paymentStore.creditCard.error;
+  public changeCreditCard = signal(false);
 
-  changeCreditCardUpdated = output<boolean>();
+  public changeCreditCardUpdated = output<boolean>();
 
-  submit() {
+  public submit() {
     this.submitted.set(true);
 
     if (this.form.invalid) return;
@@ -75,14 +65,16 @@ export class CreditCardFormComponent {
 
     const { cardNumber, expirationDate, securityCode } = this.form.value;
 
-    this.store.dispatch(
-      orderProcessActions.addCreditCard({
-        data: {
-          number: cardNumber!,
-          expirationDate: expirationDate!,
-          securityCode: securityCode!,
-        },
-      }),
-    );
+    // this.paymentStore.
+
+    // this.paymentStore.dispatch(
+    //   orderProcessActions.addCreditCard({
+    //     data: {
+    //       number: cardNumber!,
+    //       expirationDate: expirationDate!,
+    //       securityCode: securityCode!,
+    //     },
+    //   }),
+    // );
   }
 }

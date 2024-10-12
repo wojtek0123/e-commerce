@@ -4,6 +4,7 @@ import { UserAddressCreateDto } from './dto/user-address-create.dto';
 import { UserAddress } from './entities/user-addresses.entity';
 import { UserAddressUpdateDto } from './dto/user-address-update.dto';
 import { getUserIdFromAccessToken } from '../common/utils/get-user-id-from-access-token';
+import { retry } from 'rxjs';
 
 @Injectable()
 export class UserAddressesService {
@@ -25,7 +26,22 @@ export class UserAddressesService {
     });
   }
 
-  find(authHeader: string) {
+  findAll(authHeader: string) {
+    const userId = getUserIdFromAccessToken(authHeader);
+
+    if (!userId) {
+      throw new UnauthorizedException('You are unauthorized to get this data');
+    }
+
+    return this.prisma.userAddress.findMany({
+      where: { userId },
+      include: {
+        country: true,
+      },
+    });
+  }
+
+  findOne(authHeader: string, id: UserAddress['id']) {
     const userId = getUserIdFromAccessToken(authHeader);
 
     if (!userId) {
@@ -33,7 +49,7 @@ export class UserAddressesService {
     }
 
     return this.prisma.userAddress.findUnique({
-      where: { userId },
+      where: { id, userId },
       include: {
         country: true,
       },

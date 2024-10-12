@@ -14,16 +14,12 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import {
-  orderProcessActions,
-  orderProcessSelectors,
-} from '@e-commerce/client-web/cart/data-access';
+import { AddressStore } from '@e-commerce/client-web/cart/data-access';
 import { Country } from '@e-commerce/client-web/shared/data-access';
 import {
   ErrorMessageComponent,
   FormFieldComponent,
 } from '@e-commerce/client-web/shared/ui';
-import { Store } from '@ngrx/store';
 import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
@@ -45,7 +41,7 @@ import { InputTextModule } from 'primeng/inputtext';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserAddressFormComponent implements OnInit {
-  private readonly store = inject(Store);
+  private readonly addressStore = inject(AddressStore);
 
   public formType = model<'add' | 'update' | null>();
 
@@ -61,20 +57,12 @@ export class UserAddressFormComponent implements OnInit {
     country: new FormControl<Country | null>(null, Validators.required),
   });
 
-  public loading = this.store.selectSignal(
-    orderProcessSelectors.selectUserAddressLoading,
-  );
-  public userAddress = this.store.selectSignal(
-    orderProcessSelectors.selectUserAddressData,
-  );
-  public error = this.store.selectSignal(
-    orderProcessSelectors.selectUserAddressError,
-  );
+  public loading = this.addressStore.loading;
+  public userAddress = this.addressStore.selectedAddress;
+  public error = this.addressStore.error;
   public submitted = signal(false);
 
-  public countries = this.store.selectSignal(
-    orderProcessSelectors.selectCountriesData,
-  );
+  public countries = this.addressStore.countries;
 
   constructor() {
     effect(
@@ -110,7 +98,7 @@ export class UserAddressFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.store.dispatch(orderProcessActions.getCountries());
+    this.addressStore.getCountries({ name: '' });
   }
 
   public submit() {
@@ -132,41 +120,41 @@ export class UserAddressFormComponent implements OnInit {
       country,
     } = this.form.value;
 
-    if (this.formType() === 'update') {
-      this.store.dispatch(
-        orderProcessActions.updateUserAddress({
-          id: this.userAddress()!.id,
-          data: {
-            firstName: firstName!,
-            lastName: lastName!,
-            city: city!,
-            street: street!,
-            homeNumber: homeNumber!,
-            postcode: postcode!,
-            phone: phone!,
-            country: country!,
-            countryId: country!.id,
-            ...(houseNumber && { houseNumber: houseNumber! }),
-          },
-        }),
-      );
-      this.formType.set(null);
-    } else {
-      this.store.dispatch(
-        orderProcessActions.addUserAddress({
-          data: {
-            firstName: firstName!,
-            lastName: lastName!,
-            city: city!,
-            street: street!,
-            homeNumber: homeNumber!,
-            postcode: postcode!,
-            phone: phone!,
-            countryId: country!.id,
-            ...(houseNumber && { houseNumber: houseNumber! }),
-          },
-        }),
-      );
-    }
+    // if (this.formType() === 'update') {
+    //   this.addressStore.dispatch(
+    //     orderProcessActions.updateUserAddress({
+    //       id: this.userAddress()!.id,
+    //       data: {
+    //         firstName: firstName!,
+    //         lastName: lastName!,
+    //         city: city!,
+    //         street: street!,
+    //         homeNumber: homeNumber!,
+    //         postcode: postcode!,
+    //         phone: phone!,
+    //         country: country!,
+    //         countryId: country!.id,
+    //         ...(houseNumber && { houseNumber: houseNumber! }),
+    //       },
+    //     }),
+    //   );
+    //   this.formType.set(null);
+    // } else {
+    //   this.addressStore.dispatch(
+    //     orderProcessActions.addUserAddress({
+    //       data: {
+    //         firstName: firstName!,
+    //         lastName: lastName!,
+    //         city: city!,
+    //         street: street!,
+    //         homeNumber: homeNumber!,
+    //         postcode: postcode!,
+    //         phone: phone!,
+    //         countryId: country!.id,
+    //         ...(houseNumber && { houseNumber: houseNumber! }),
+    //       },
+    //     }),
+    //   );
+    // }
   }
 }

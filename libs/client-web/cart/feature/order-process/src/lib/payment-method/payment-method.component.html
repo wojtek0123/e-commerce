@@ -13,7 +13,7 @@
       <span class="pi pi-credit-card"></span>
     </lib-order-process-detail-element>
 
-    @if (selectedPaymentMethod() === 'credit-card') {
+    @if (selectedPaymentMethod() === debitCard) {
       <lib-credit-card-form />
     }
 
@@ -25,7 +25,7 @@
     >
       <span class="pi pi-wallet"></span>
     </lib-order-process-detail-element>
-    @if (selectedPaymentMethod() === '6-digit-code') {
+    @if (selectedPaymentMethod() === sixDigitCode) {
       <lib-six-digit-code-form />
     }
   }

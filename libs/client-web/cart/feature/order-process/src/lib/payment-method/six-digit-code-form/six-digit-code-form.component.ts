@@ -1,16 +1,9 @@
-import {
-  Component,
-  DestroyRef,
-  HostBinding,
-  inject,
-  OnInit,
-} from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ErrorMessageComponent } from '@e-commerce/client-web/shared/ui';
 import { InputOtpModule } from 'primeng/inputotp';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { orderProcessActions } from '@e-commerce/client-web/cart/data-access';
-import { Store } from '@ngrx/store';
+import { PaymentStore } from '@e-commerce/client-web/cart/data-access';
 
 @Component({
   selector: 'lib-six-digit-code-form',
@@ -18,9 +11,12 @@ import { Store } from '@ngrx/store';
   imports: [InputOtpModule, ReactiveFormsModule, ErrorMessageComponent],
   templateUrl: './six-digit-code-form.component.html',
   styleUrl: './six-digit-code-form.component.scss',
+  host: {
+    class: 'mx-auto',
+  },
 })
 export class SixDigitCodeFormComponent implements OnInit {
-  private readonly store = inject(Store);
+  private readonly paymentStore = inject(PaymentStore);
   private readonly destroyRef = inject(DestroyRef);
 
   protected sixDigitNumberControl = new FormControl<string | null>(null, [
@@ -28,15 +24,11 @@ export class SixDigitCodeFormComponent implements OnInit {
     Validators.minLength(6),
   ]);
 
-  @HostBinding('style.margin') margin = '0 auto';
-
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.sixDigitNumberControl.valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((value) => {
-        this.store.dispatch(
-          orderProcessActions.setSixDigitCode({ code: value }),
-        );
+      .subscribe((code) => {
+        this.paymentStore.enterSixDigitCode(code);
       });
   }
 }

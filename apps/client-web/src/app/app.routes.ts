@@ -1,8 +1,4 @@
 import { Route } from '@angular/router';
-import {
-  OrderProcessEffects,
-  orderProcessFeature,
-} from '@e-commerce/client-web/cart/data-access';
 import { provideEffects } from '@ngrx/effects';
 import { provideState } from '@ngrx/store';
 import { OrdersStore } from '@e-commerce/client-web/account/data-access';
@@ -64,10 +60,6 @@ export const appRoutes: Route[] = [
       import('@e-commerce/client-web/cart/feature/order-process').then(
         (r) => r.orderProcessRoutes,
       ),
-    providers: [
-      provideState(orderProcessFeature),
-      provideEffects(OrderProcessEffects),
-    ],
   },
   {
     path: 'payment-status/:order-details-id',

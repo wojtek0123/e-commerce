@@ -1,23 +1,21 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  effect,
   inject,
   OnInit,
 } from '@angular/core';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { Store } from '@ngrx/store';
-import {
-  orderProcessActions,
-  orderProcessSelectors,
-} from '@e-commerce/client-web/cart/data-access';
+import { ShippingStore } from '@e-commerce/client-web/cart/data-access';
 import { ReactiveFormsModule } from '@angular/forms';
-import { ShippingMethod } from '@e-commerce/client-web/shared/data-access';
 import { CurrencyPipe } from '@angular/common';
 import {
   OrderProcessDetailElementComponent,
   SectionWrapperComponent,
 } from '@e-commerce/client-web/cart/ui';
 import { SkeletonModule } from 'primeng/skeleton';
+import { ShippingMethod } from '@prisma/client';
 
 @Component({
   selector: 'lib-shipping-method',
@@ -34,29 +32,15 @@ import { SkeletonModule } from 'primeng/skeleton';
   styleUrl: './shipping-method.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ShippingMethodComponent implements OnInit {
-  private readonly store = inject(Store);
+export class ShippingMethodComponent {
+  private readonly shippingStore = inject(ShippingStore);
 
-  public selectedShippingMethod = this.store.selectSignal(
-    orderProcessSelectors.selectSelectedShippingMethod,
-  );
-  public shippingMethods = this.store.selectSignal(
-    orderProcessSelectors.selectShippingMethods,
-  );
-  public loading = this.store.selectSignal(
-    orderProcessSelectors.selectShippingMethodsLoading,
-  );
-  public error = this.store.selectSignal(
-    orderProcessSelectors.selectShippingMethodsError,
-  );
+  public selectedShipping = this.shippingStore.selectedShipping;
+  public shippings = this.shippingStore.shippings;
+  public loading = this.shippingStore.loading;
+  public error = this.shippingStore.error;
 
-  public ngOnInit(): void {
-    this.store.dispatch(orderProcessActions.getShippingMethods());
-  }
-
-  public selectShippingMethod(shippingMethod: ShippingMethod) {
-    this.store.dispatch(
-      orderProcessActions.selectShippingMethod({ shippingMethod }),
-    );
+  public selectShipping(shipping: ShippingMethod) {
+    this.shippingStore.selectShipping(shipping);
   }
 }

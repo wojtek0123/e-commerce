@@ -4,7 +4,7 @@
 @if (error()) {
   <div>{{ error() }}</div>
 }
-@if ((!creditCard() || changeCreditCard()) && !loading()) {
+@if ((!creditCard().data || changeCreditCard()) && !loading()) {
   <form [formGroup]="form" (ngSubmit)="submit()" class="credit-card-form">
     <lib-form-field label="Card number" [isRequired]="true">
       <p-inputMask
@@ -79,7 +79,7 @@
   </form>
 }
 
-@if (!!creditCard() && !changeCreditCard() && !loading()) {
+@if (!!creditCard().data && !changeCreditCard() && !loading()) {
   <div class="change-credit-card">
     <div class="change-credit-card__text">
       <img
@@ -90,7 +90,7 @@
         class="change-credit-card__master-card"
         src="assets/icons/mastercard.svg"
       />
-      <span> {{ creditCard()?.number }}</span>
+      <span> {{ creditCard().data?.number }}</span>
     </div>
     <p-button
       [text]="true"

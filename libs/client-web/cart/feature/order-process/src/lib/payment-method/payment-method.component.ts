@@ -17,15 +17,11 @@ import {
   SectionWrapperComponent,
 } from '@e-commerce/client-web/cart/ui';
 import { CreditCardFormComponent } from './credit-card-form/credit-card-form.component';
-import { Store } from '@ngrx/store';
-import {
-  orderProcessActions,
-  orderProcessSelectors,
-  PaymentMethod,
-} from '@e-commerce/client-web/cart/data-access';
+import { PaymentStore } from '@e-commerce/client-web/cart/data-access';
 import { InputOtpModule } from 'primeng/inputotp';
 import { SkeletonModule } from 'primeng/skeleton';
 import { SixDigitCodeFormComponent } from './six-digit-code-form/six-digit-code-form.component';
+import { PaymentMethod } from '@prisma/client';
 
 @Component({
   selector: 'lib-payment-method',
@@ -48,23 +44,20 @@ import { SixDigitCodeFormComponent } from './six-digit-code-form/six-digit-code-
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PaymentMethodComponent {
-  private readonly store = inject(Store);
+  private readonly paymentStore = inject(PaymentStore);
 
-  public selectedPaymentMethod = this.store.selectSignal(
-    orderProcessSelectors.selectSelectedPaymentMethod,
-  );
-  public creditCard = this.store.selectSignal(
-    orderProcessSelectors.selectCreditCardData,
-  );
   public submitted = input.required<boolean>();
-  public payments = signal<PaymentMethod[]>(['credit-card', '6-digit-code']);
-  public loading = this.store.selectSignal(
-    orderProcessSelectors.selectCreditCardLoading,
-  );
+
+  public readonly debitCard: Extract<PaymentMethod, 'DEBIT_CARD'> =
+    'DEBIT_CARD';
+  public readonly sixDigitCode: Extract<PaymentMethod, 'SIX_DIGIT_NUMBER'> =
+    'SIX_DIGIT_NUMBER';
+  public selectedPaymentMethod = this.paymentStore.selectedPayment;
+  public creditCard = this.paymentStore.creditCard;
+  public loading = this.paymentStore.creditCard.loading;
+  public payments = signal<PaymentMethod[]>(['DEBIT_CARD', 'SIX_DIGIT_NUMBER']);
 
   public selectPaymentMethod(paymentMethod: PaymentMethod) {
-    this.store.dispatch(
-      orderProcessActions.selectPaymentMethod({ paymentMethod }),
-    );
+    this.paymentStore.selectPaymentMethod(paymentMethod);
   }
 }

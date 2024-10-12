@@ -5,14 +5,14 @@
       <p-skeleton width="100%" height="3rem" />
     } @else if (error()) {
       <div>{{ error() }}</div>
-    } @else if (shippingMethods().length > 0) {
-      @for (sm of shippingMethods(); track sm.id) {
+    } @else if (shippings().length > 0) {
+      @for (shipping of shippings(); track shipping.id) {
         <lib-order-process-detail-element
-          [price]="sm.price"
-          [value]="sm"
-          [label]="sm.name"
-          [isActive]="selectedShippingMethod()?.id === sm.id"
-          (clickEvent)="selectShippingMethod($event)"
+          [price]="shipping.price"
+          [value]="shipping"
+          [label]="shipping.name"
+          [isActive]="selectedShipping()?.id === shipping.id"
+          (clickEvent)="selectShipping($event)"
         >
           <span class="pi pi-truck"></span>
         </lib-order-process-detail-element>

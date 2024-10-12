@@ -3,11 +3,7 @@
   class="six-digit-code-form"
   [length]="6"
 />
-@if (
-  (sixDigitNumberControl.getError('minlength') ||
-    sixDigitNumberControl.getError('required')) &&
-  sixDigitNumberControl.dirty
-) {
+@if (sixDigitNumberControl.invalid && sixDigitNumberControl.dirty) {
   <lib-error-message
     class="six-digit-code-form__error"
     message="Invalid code"

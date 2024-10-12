@@ -44,19 +44,22 @@ export class UserAddressesController {
   @UseGuards(AccessTokenGuard)
   @ApiBearerAuth()
   @ApiOkResponse({ type: UserAddressDto })
-  @ApiOperation({ summary: 'get user addrress of specific user' })
+  @ApiOperation({ summary: 'get user addrresses of specific user' })
   find(@Headers('authorization') authHeader: string) {
-    return this.userAddressesService.find(authHeader);
+    return this.userAddressesService.findAll(authHeader);
   }
 
-  // @Get(':id')
-  // @UseGuards(AccessTokenGuard)
-  // @ApiOkResponse({ type: UserAddressDto })
-  // @ApiBearerAuth()
-  // @ApiOperation({ summary: 'get specific user address' })
-  // findOne(@Param('id') id: number) {
-  //   return this.userAddressesService.findOne(id);
-  // }
+  @Get(':id')
+  @UseGuards(AccessTokenGuard)
+  @ApiOkResponse({ type: UserAddressDto })
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'get specific user address' })
+  findOne(
+    @Headers('authorization') authHeader: string,
+    @Param('id') id: string,
+  ) {
+    return this.userAddressesService.findOne(authHeader, id);
+  }
 
   @Patch(':id')
   @UseGuards(AccessTokenGuard)

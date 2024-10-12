@@ -8,6 +8,9 @@ export class ShippingMethod {
   name: string;
 
   @ApiProperty({ type: String })
+  deliveryTime: string;
+
+  @ApiProperty({ type: String })
   createdAt: Date;
 
   @ApiProperty({ type: String })
