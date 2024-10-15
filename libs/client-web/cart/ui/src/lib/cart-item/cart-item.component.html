@@ -4,7 +4,9 @@
   <div
     class="flex w-full gap-4 @container/book-details @3xl/cart-item:p-4 @2xl/cart-item:gap-8 @4xl/cart-item:gap-16"
   >
-    <div class="relative aspect-[3/4] w-20 @3xl/cart-item:w-32">
+    <div
+      class="relative aspect-[3/4] w-20 h-28 @3xl/cart-item:w-32 @3xl/cart-item:h-40"
+    >
       <img
         class="object-cover"
         [ngSrc]="item().book.coverImage ?? 'assets/images/not-found.png'"
@@ -37,7 +39,7 @@
     </div>
   </div>
   <div
-    class="flex flex-col items-end justify-between @3xl/cart-item:flex-row @3xl/cart-item:justify-center @3xl/cart-item:items-center @3xl/cart-item:gap-10 @3xl/cart-item:p-4"
+    class="flex flex-col items-end justify-between @3xl/cart-item:flex-row @3xl/cart-item:items-center @3xl/cart-item:gap-10 @3xl/cart-item:p-4 @4xl/cart-item:gap-16 @6xl/cart-item:gap-28"
   >
     <span
       class="@md/cart-item:font-bold @lg/cart-item:text-xl @4xl/cart-item:text-3xl"
