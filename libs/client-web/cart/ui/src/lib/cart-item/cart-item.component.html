@@ -1,41 +1,96 @@
 <div
-  class="cart-item min-h-24 flex justify-between w-full p-4 rounded-base !bg-content-background"
+  class="@container/cart-item min-h-24 flex justify-between w-full p-4 rounded-base bg-content-background"
 >
-  <div class="book-details">
-    <div class="book-details__image-wrapper">
+  <div
+    class="flex w-full gap-4 @container/book-details @3xl/cart-item:p-4 @2xl/cart-item:gap-8 @4xl/cart-item:gap-16"
+  >
+    <div class="relative aspect-[3/4] w-20 @3xl/cart-item:w-32">
       <img
-        class="book-details__image"
+        class="object-cover"
         [ngSrc]="item().book.coverImage ?? 'assets/images/not-found.png'"
         [alt]="item().book.title + ' cover image'"
         fill
       />
     </div>
-    <div class="book-details__header">
-      <span class="book-details__header-title">
+    <div
+      class="w-full flex flex-col justify-center @4xl/book-details:grid @4xl/book-details:grid-cols-2 @4xl/book-details:items-center"
+    >
+      <span
+        class="text-base @md/cart-item:font-bold @lg/cart-item:text-2xl @4xl/book-details:text-3xl"
+      >
         {{ item().book.title }}
       </span>
 
-      <div clas="book-details__header-authors">
-        @for (author of item().book.authors; track author.id) {
-          <span class="book-details__header-authors-item">
-            {{ author.name }}
+      <div clas="flex flex-wrap gap-4">
+        @for (
+          author of item().book.authors;
+          track author.id;
+          let last = $last
+        ) {
+          <span
+            class="text-muted-color text-xs @3xl/cart-item:text-base @4xl/book-details:text-xl"
+          >
+            {{ author.name }} {{ !last ? '|' : '' }}
           </span>
         }
       </div>
     </div>
   </div>
-  <div class="cart-details">
-    <span class="cart-details__price">
+  <div
+    class="flex flex-col items-end justify-between @3xl/cart-item:flex-row @3xl/cart-item:justify-center @3xl/cart-item:items-center @3xl/cart-item:gap-10 @3xl/cart-item:p-4"
+  >
+    <span
+      class="@md/cart-item:font-bold @lg/cart-item:text-xl @4xl/cart-item:text-3xl"
+    >
       {{ item().book.price | currency: 'USD' }}
     </span>
-    <div class="cart-details__quantity">
+    <div class="flex items-center @lg/cart-item:gap-3">
       @if (item().quantity === 1) {
-        <p-button (onClick)="remove()" [text]="true" icon="pi pi-trash" />
+        <p-button
+          (onClick)="remove()"
+          [text]="true"
+          icon="pi pi-trash"
+          size="small"
+          class="@xl/cart-item:hidden"
+        />
+        <p-button
+          (onClick)="remove()"
+          [text]="true"
+          icon="pi pi-trash"
+          size="large"
+          class="hidden @xl/cart-item:block"
+        />
       } @else {
-        <p-button (onClick)="decrease()" [text]="true" icon="pi pi-minus" />
+        <p-button
+          (onClick)="decrease()"
+          [text]="true"
+          icon="pi pi-minus"
+          size="small"
+          class="@xl/cart-item:hidden"
+        />
+        <p-button
+          (onClick)="decrease()"
+          [text]="true"
+          icon="pi pi-minus"
+          size="large"
+          class="hidden @xl/cart-item:block"
+        />
       }
       <span>{{ item().quantity }}</span>
-      <p-button (onClick)="increase()" [text]="true" icon="pi pi-plus" />
+      <p-button
+        (onClick)="increase()"
+        [text]="true"
+        icon="pi pi-plus"
+        size="small"
+        class="@xl/cart-item:hidden"
+      />
+      <p-button
+        (onClick)="increase()"
+        [text]="true"
+        icon="pi pi-plus"
+        size="large"
+        class="hidden @xl/cart-item:block"
+      />
     </div>
   </div>
 </div>
