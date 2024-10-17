@@ -1,6 +1,7 @@
-import { OrderAddress, PaymentDetails } from '@prisma/client';
+import { PaymentDetails } from '@prisma/client';
 import { Book } from './book.model';
 import { ShippingMethod } from './shipping-method.model';
+import { OrderAddress } from './order-address.model';
 
 export interface OrderDetails {
   id: string;

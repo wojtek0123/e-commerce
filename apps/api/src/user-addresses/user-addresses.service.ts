@@ -4,7 +4,6 @@ import { UserAddressCreateDto } from './dto/user-address-create.dto';
 import { UserAddress } from './entities/user-addresses.entity';
 import { UserAddressUpdateDto } from './dto/user-address-update.dto';
 import { getUserIdFromAccessToken } from '../common/utils/get-user-id-from-access-token';
-import { retry } from 'rxjs';
 
 @Injectable()
 export class UserAddressesService {
@@ -14,7 +13,7 @@ export class UserAddressesService {
     const userId = getUserIdFromAccessToken(authHeader);
 
     if (!userId) {
-      throw new UnauthorizedException('You are not log in');
+      throw new UnauthorizedException(`You don't have an access`);
     }
 
     return this.prisma.userAddress.create({
@@ -56,7 +55,17 @@ export class UserAddressesService {
     });
   }
 
-  update(id: UserAddress['id'], data: UserAddressUpdateDto) {
+  update(
+    authHeader: string,
+    id: UserAddress['id'],
+    data: UserAddressUpdateDto,
+  ) {
+    const userId = getUserIdFromAccessToken(authHeader);
+
+    if (!userId) {
+      throw new UnauthorizedException(`You don't have an access`);
+    }
+
     return this.prisma.userAddress.update({
       where: { id },
       data,

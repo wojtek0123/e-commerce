@@ -24,7 +24,7 @@ module.exports = {
         'content-background': 'var(--p-content-background)',
       },
       screens: {
-        '3xl': '1920px',
+        '3xl': '1924px',
         '4xl': '2380px',
         '5xl': '2600px',
         '6xl': '2840px',

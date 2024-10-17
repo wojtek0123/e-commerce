@@ -40,7 +40,11 @@ export const ShippingStore = signalStore(
             shippingMethodApi.getAll$().pipe(
               tapResponse({
                 next: (shippings) => {
-                  patchState(store, { shippings, loading: false });
+                  patchState(store, {
+                    shippings,
+                    loading: false,
+                    selectedShipping: shippings.at(0) ?? null,
+                  });
                 },
                 error: (error: ResponseError) => {
                   patchState(store, {

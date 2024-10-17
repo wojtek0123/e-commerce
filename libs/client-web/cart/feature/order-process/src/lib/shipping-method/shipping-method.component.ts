@@ -1,12 +1,5 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  effect,
-  inject,
-  OnInit,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RadioButtonModule } from 'primeng/radiobutton';
-import { Store } from '@ngrx/store';
 import { ShippingStore } from '@e-commerce/client-web/cart/data-access';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CurrencyPipe } from '@angular/common';
@@ -16,6 +9,7 @@ import {
 } from '@e-commerce/client-web/cart/ui';
 import { SkeletonModule } from 'primeng/skeleton';
 import { ShippingMethod } from '@prisma/client';
+import { OrderProcessItemDirective } from '../directives/order-process-item.directive';
 
 @Component({
   selector: 'lib-shipping-method',
@@ -27,6 +21,7 @@ import { ShippingMethod } from '@prisma/client';
     OrderProcessDetailElementComponent,
     SectionWrapperComponent,
     SkeletonModule,
+    OrderProcessItemDirective,
   ],
   templateUrl: './shipping-method.component.html',
   styleUrl: './shipping-method.component.scss',

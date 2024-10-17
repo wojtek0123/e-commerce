@@ -29,24 +29,24 @@
       <span class="text-xl">Order address</span>
       <div class="flex flex-col">
         <div class="text-muted-color">
-          <span>{{ orderDetails()?.userAddress?.street }}</span>
+          <span>{{ orderDetails()?.orderAddress?.street }}</span>
           <span
-            >{{ orderDetails()?.userAddress?.homeNumber }}
-            @if (orderDetails()?.userAddress?.houseNumber) {
-              /{{ orderDetails()?.userAddress?.houseNumber }}
+            >{{ orderDetails()?.orderAddress?.homeNumber }}
+            @if (orderDetails()?.orderAddress?.houseNumber) {
+              /{{ orderDetails()?.orderAddress?.houseNumber }}
             }
           </span>
         </div>
         <div>
           <span class="text-muted-color"
-            >{{ orderDetails()?.userAddress?.postcode }},
+            >{{ orderDetails()?.orderAddress?.postcode }},
           </span>
           <span class="text-muted-color">{{
-            orderDetails()?.userAddress?.city
+            orderDetails()?.orderAddress?.city
           }}</span>
         </div>
         <div class="text-muted-color">
-          {{ orderDetails()?.userAddress?.country?.name }}
+          {{ orderDetails()?.orderAddress?.country }}
         </div>
       </div>
     </div>
@@ -54,11 +54,11 @@
       <span class="text-xl">Personal information</span>
       <div class="flex flex-col lg:text-end">
         <span class="text-muted-color">
-          {{ orderDetails()?.userAddress?.firstName }}
-          {{ orderDetails()?.userAddress?.lastName }}
+          {{ orderDetails()?.orderAddress?.firstName }}
+          {{ orderDetails()?.orderAddress?.lastName }}
         </span>
         <span class="text-muted-color">
-          phone {{ orderDetails()?.userAddress?.phone }}
+          phone {{ orderDetails()?.orderAddress?.phone }}
         </span>
       </div>
     </div>

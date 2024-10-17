@@ -7,15 +7,21 @@
       <div>{{ error() }}</div>
     } @else if (shippings().length > 0) {
       @for (shipping of shippings(); track shipping.id) {
-        <lib-order-process-detail-element
-          [price]="shipping.price"
-          [value]="shipping"
-          [label]="shipping.name"
+        <button
+          libOrderProccessItem
           [isActive]="selectedShipping()?.id === shipping.id"
-          (clickEvent)="selectShipping($event)"
+          (click)="selectShipping(shipping)"
         >
-          <span class="pi pi-truck"></span>
-        </lib-order-process-detail-element>
+          <span class="flex items-center text-lg gap-4">
+            <span class="pi pi-truck"></span>
+            <span>{{ shipping.name }}</span>
+          </span>
+          <span class="">
+            {{
+              shipping.price === 0 ? 'Free' : (shipping.price | currency: 'USD')
+            }}
+          </span>
+        </button>
       }
     }
   </div>

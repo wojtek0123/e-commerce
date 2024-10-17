@@ -7,7 +7,7 @@
 @if ((!creditCard().data || changeCreditCard()) && !loading()) {
   <form [formGroup]="form" (ngSubmit)="submit()" class="credit-card-form">
     <lib-form-field label="Card number" [isRequired]="true">
-      <p-inputMask
+      <p-inputmask
         slot="input"
         mask="9999 9999 9999 9999"
         id="card-number"
@@ -15,6 +15,7 @@
           'ng-invalid ng-dirty':
             form.controls.cardNumber.invalid && submitted(),
         }"
+        styleClass="w-full"
         formControlName="cardNumber"
         placeholder="Type your card number"
       />
@@ -28,7 +29,7 @@
 
     <div class="credit-card-form__row">
       <lib-form-field label="Expiration date" [isRequired]="true">
-        <p-inputMask
+        <p-inputmask
           slot="input"
           mask="99/9999"
           id="expiration-date"
@@ -36,6 +37,7 @@
             'ng-invalid ng-dirty':
               form.controls.expirationDate.invalid && submitted(),
           }"
+          styleClass="w-full"
           formControlName="expirationDate"
           placeholder="Type expiration date"
         />
@@ -48,7 +50,7 @@
       </lib-form-field>
 
       <lib-form-field label="Security code" [isRequired]="true">
-        <p-inputMask
+        <p-inputmask
           slot="input"
           mask="999"
           id="security-code"
@@ -56,6 +58,7 @@
             'ng-invalid ng-dirty':
               form.controls.securityCode.invalid && submitted(),
           }"
+          styleClass="w-full"
           formControlName="securityCode"
           placeholder="Type security code"
         />
@@ -73,8 +76,14 @@
         [outlined]="true"
         (onClick)="changeCreditCard.set(false)"
         label="Cancel"
+        styleClass="w-full"
       />
-      <p-button severity="secondary" label="Add credit card" type="submit" />
+      <p-button
+        severity="secondary"
+        styleClass="w-full"
+        label="Add credit card"
+        type="submit"
+      />
     </div>
   </form>
 }

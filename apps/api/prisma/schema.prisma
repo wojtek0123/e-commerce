@@ -237,6 +237,6 @@ enum PaymentStatus {
 }
 
 enum PaymentMethod {
-  DEBIT_CARD
-  SIX_DIGIT_NUMBER
+  CREDIT_CARD
+  SIX_DIGIT_CODE
 }

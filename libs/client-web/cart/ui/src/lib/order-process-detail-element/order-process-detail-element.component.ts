@@ -1,7 +1,6 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  effect,
   input,
   output,
 } from '@angular/core';
@@ -16,18 +15,14 @@ import { CheckboxModule } from 'primeng/checkbox';
   templateUrl: './order-process-detail-element.component.html',
   styleUrl: './order-process-detail-element.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    '[class.border-primary-400]': 'isActive()',
+    class:
+      'border border-transparent flex items-center justify-between p-4 rounded-base bg-surface-100 dark:bg-surface-950 w-full cursor-pointer',
+  },
 })
 export class OrderProcessDetailElementComponent<T> {
-  label = input<string>();
-  price = input.required<number>();
-  value = input.required<T>();
   isActive = input.required<boolean>();
 
   clickEvent = output<T>();
-
-  constructor() {
-    effect(() => {
-      console.log(this.isActive());
-    });
-  }
 }

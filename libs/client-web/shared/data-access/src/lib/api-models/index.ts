@@ -16,3 +16,4 @@ export * from './response-error.model';
 export * from './shipping-method.model';
 export * from './shopping-session.model';
 export * from './product-inventory.model';
+export * from './payment-method.model';

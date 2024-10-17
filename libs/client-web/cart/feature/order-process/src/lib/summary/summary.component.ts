@@ -3,7 +3,6 @@ import {
   Component,
   computed,
   inject,
-  OnInit,
   signal,
 } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';

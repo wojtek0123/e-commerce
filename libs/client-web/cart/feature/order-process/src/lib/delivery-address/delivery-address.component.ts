@@ -1,16 +1,11 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  effect,
-  inject,
-  output,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { AddressStore } from '@e-commerce/client-web/cart/data-access';
 import { UserAddressFormComponent } from './user-address-form/user-address-form.component';
 import { SectionWrapperComponent } from '@e-commerce/client-web/cart/ui';
 import { ButtonModule } from 'primeng/button';
 import { SkeletonModule } from 'primeng/skeleton';
+import { OrderProcessItemDirective } from '../directives/order-process-item.directive';
+import { UserAddress } from '@e-commerce/client-web/shared/data-access';
 
 @Component({
   selector: 'lib-delivery-address',
@@ -20,6 +15,7 @@ import { SkeletonModule } from 'primeng/skeleton';
     SectionWrapperComponent,
     ButtonModule,
     SkeletonModule,
+    OrderProcessItemDirective,
   ],
   templateUrl: './delivery-address.component.html',
   styleUrl: './delivery-address.component.scss',
@@ -32,16 +28,15 @@ export class DeliveryAddressComponent {
   public error = this.addressStore.error;
   public addresses = this.addressStore.addresses;
 
-  public formType = signal<'add' | 'update' | null>('add');
-  public isUpdatingEvent = output<boolean>();
+  public updatingAddress = this.addressStore.updatingAddress;
+  public formType = this.addressStore.formType;
+  public formVisibility = this.addressStore.formVisibility;
 
-  constructor() {
-    effect(() => {
-      this.isUpdatingEvent.emit(this.formType() === 'update');
-    });
+  public showForm(address?: UserAddress) {
+    this.addressStore.showForm(address);
   }
 
-  public updateDeliveryAddress() {
-    this.formType.set('update');
+  public hideForm() {
+    this.addressStore.hideForm();
   }
 }
