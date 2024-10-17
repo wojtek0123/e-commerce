@@ -3,7 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { ShoppingSession } from '../api-models';
 import { API_URL } from '@e-commerce/client-web/shared/utils';
 import { OrderDetails } from '../api-models/order-details.model';
-import { PaymentMethod } from '@prisma/client';
+import { PaymentMethod } from '../api-models/payment-method.model';
 
 export interface CreateOrderAddress {
   firstName: string;

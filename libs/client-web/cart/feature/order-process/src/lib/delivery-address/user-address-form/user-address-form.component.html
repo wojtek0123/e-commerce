@@ -1,22 +1,22 @@
-<form [formGroup]="form" (ngSubmit)="submit()" class="user-address-form">
-  <div class="user-address-form__row">
+<form
+  [formGroup]="form"
+  (ngSubmit)="submit()"
+  class="flex flex-col gap-2 @container"
+>
+  <div class="user-address-form__row flex flex-col gap-4 @3xl:flex-row">
     <lib-form-field label="First name" [isRequired]="true">
       <input
+        pInputText
         slot="input"
         class="w-full"
-        pInputText
         id="firstname"
         [ngClass]="{
           'ng-invalid ng-dirty':
-            form.controls.firstName.invalid &&
-            (form.controls.firstName.dirty || submitted()),
+            form.controls.firstName.invalid && form.controls.firstName.dirty,
         }"
         formControlName="firstName"
       />
-      @if (
-        form.controls.firstName.invalid &&
-        (form.controls.firstName.dirty || submitted())
-      ) {
+      @if (form.controls.firstName.invalid && form.controls.firstName.dirty) {
         <lib-error-message />
       }
     </lib-form-field>
@@ -28,20 +28,16 @@
         id="lastname"
         [ngClass]="{
           'ng-invalid ng-dirty':
-            form.controls.lastName.invalid &&
-            (form.controls.lastName.dirty || submitted()),
+            form.controls.lastName.invalid && form.controls.lastName.dirty,
         }"
         formControlName="lastName"
       />
-      @if (
-        form.controls.lastName.invalid &&
-        (form.controls.lastName.dirty || submitted())
-      ) {
+      @if (form.controls.lastName.invalid && form.controls.lastName.dirty) {
         <lib-error-message />
       }
     </lib-form-field>
   </div>
-  <div class="user-address-form__row">
+  <div class="flex flex-wrap gap-4 w-full @lg:grid @lg:grid-cols-[1fr_1fr]">
     <lib-form-field label="Street" [isRequired]="true">
       <input
         slot="input"
@@ -49,62 +45,72 @@
         id="street"
         [ngClass]="{
           'ng-invalid ng-dirty':
-            form.controls.street.invalid &&
-            (form.controls.street.dirty || submitted()),
+            form.controls.street.invalid && form.controls.street.dirty,
         }"
         formControlName="street"
       />
-      @if (
-        form.controls.street.invalid &&
-        (form.controls.street.dirty || submitted())
-      ) {
+      @if (form.controls.street.invalid && form.controls.street.dirty) {
         <lib-error-message />
       }
     </lib-form-field>
-    <lib-form-field
-      label="Home number"
-      [isRequired]="true"
-      class="user-address-form__row__number"
-    >
-      <input
-        slot="input"
-        pInputText
-        id="home-number"
-        [ngClass]="{
-          'ng-invalid ng-dirty':
-            form.controls.homeNumber.invalid &&
-            (form.controls.homeNumber.dirty || submitted()),
-        }"
-        formControlName="homeNumber"
-      />
-      @if (
-        form.controls.homeNumber.invalid &&
-        (form.controls.homeNumber.dirty || submitted())
-      ) {
-        <lib-error-message />
-      }
-    </lib-form-field>
-    <lib-form-field label="House number" class="user-address-form__row__number">
-      <input
-        slot="input"
-        pInputText
-        id="house-number"
-        [ngClass]="{
-          'ng-invalid ng-dirty':
-            form.controls.houseNumber.invalid &&
-            (form.controls.houseNumber.dirty || submitted()),
-        }"
-        formControlName="houseNumber"
-      />
-      @if (
-        form.controls.houseNumber.invalid &&
-        (form.controls.houseNumber.dirty || submitted())
-      ) {
-        <lib-error-message />
-      }
-    </lib-form-field>
+    <div class="grid grid-cols-2 gap-4">
+      <lib-form-field label="Home number" [isRequired]="true">
+        <input
+          slot="input"
+          pInputText
+          id="home-number"
+          [ngClass]="{
+            'ng-invalid ng-dirty':
+              form.controls.homeNumber.invalid &&
+              form.controls.homeNumber.dirty,
+          }"
+          formControlName="homeNumber"
+        />
+        @if (
+          form.controls.homeNumber.invalid && form.controls.homeNumber.dirty
+        ) {
+          <lib-error-message />
+        }
+      </lib-form-field>
+      <lib-form-field label="House number">
+        <input
+          slot="input"
+          pInputText
+          id="house-number"
+          [ngClass]="{
+            'ng-invalid ng-dirty':
+              form.controls.houseNumber.invalid &&
+              form.controls.houseNumber.dirty,
+          }"
+          formControlName="houseNumber"
+        />
+        @if (
+          form.controls.houseNumber.invalid && form.controls.houseNumber.dirty
+        ) {
+          <lib-error-message />
+        }
+      </lib-form-field>
+    </div>
   </div>
-  <div class="user-address-form__row">
+  <lib-form-field label="Country" [isRequired]="true" class="max-w-64">
+    <p-select
+      slot="input"
+      styleClass="w-full"
+      (onFocus)="getCountries()"
+      formControlName="country"
+      [options]="countries()"
+      [ngClass]="{
+        'ng-dirty ng-invalid':
+          form.controls.country.invalid && form.controls.country.dirty,
+      }"
+      optionLabel="name"
+      [showClear]="true"
+    />
+    @if (form.controls.country.invalid && form.controls.country.dirty) {
+      <lib-error-message />
+    }
+  </lib-form-field>
+  <div class="grid grid-cols-1 gap-4 @md:grid-cols-[9rem_1fr]">
     <lib-form-field
       label="Post code"
       [isRequired]="true"
@@ -116,18 +122,13 @@
         slot="input"
         pInputText
         id="postcode"
-        class="w-20rem"
         [ngClass]="{
           'ng-invalid ng-dirty':
-            form.controls.postcode.invalid &&
-            (form.controls.postcode.dirty || submitted()),
+            form.controls.postcode.invalid && form.controls.postcode.dirty,
         }"
         formControlName="postcode"
       />
-      @if (
-        form.controls.postcode.invalid &&
-        (form.controls.postcode.dirty || submitted())
-      ) {
+      @if (form.controls.postcode.invalid && form.controls.postcode.dirty) {
         <lib-error-message />
       }
     </lib-form-field>
@@ -143,44 +144,15 @@
         id="city"
         [ngClass]="{
           'ng-invalid ng-dirty':
-            form.controls.city.invalid &&
-            (form.controls.city.dirty || submitted()),
+            form.controls.city.invalid && form.controls.city.dirty,
         }"
         formControlName="city"
       />
-      @if (
-        form.controls.city.invalid && (form.controls.city.dirty || submitted())
-      ) {
+      @if (form.controls.city.invalid && form.controls.city.dirty) {
         <lib-error-message />
       }
     </lib-form-field>
   </div>
-  <lib-form-field
-    label="Country"
-    [isRequired]="true"
-    class="user-address-form__country"
-  >
-    <p-dropdown
-      slot="input"
-      class="w-full"
-      formControlName="country"
-      class="user-address-form__country"
-      [options]="countries()"
-      [ngClass]="{
-        'ng-invalid ng-dirty':
-          form.controls.country.invalid &&
-          (form.controls.country.dirty || submitted()),
-      }"
-      optionLabel="name"
-      [showClear]="true"
-    />
-    @if (
-      form.controls.country.invalid &&
-      (form.controls.country.dirty || submitted())
-    ) {
-      <lib-error-message />
-    }
-  </lib-form-field>
   <lib-form-field
     label="Phone"
     [isRequired]="true"
@@ -195,29 +167,28 @@
       class="w-20rem"
       [ngClass]="{
         'ng-invalid ng-dirty':
-          form.controls.phone.invalid &&
-          (form.controls.phone.dirty || submitted()),
+          form.controls.phone.invalid && form.controls.phone.dirty,
       }"
       formControlName="phone"
     />
-    @if (
-      form.controls.phone.invalid && (form.controls.phone.dirty || submitted())
-    ) {
+    @if (form.controls.phone.invalid && form.controls.phone.dirty) {
       <lib-error-message />
     }
   </lib-form-field>
 
-  <div class="user-address-form__buttons">
+  <div class="grid grid-cols-2 gap-4 mt-4">
     <p-button
       [outlined]="true"
       label="Cancel"
-      (onClick)="this.formType.set(null)"
+      (onClick)="hideForm()"
+      styleClass="w-full"
     />
     <p-button
       severity="secondary"
       [loading]="loading()"
       label="Save"
       type="submit"
+      styleClass="w-full"
     />
   </div>
 </form>

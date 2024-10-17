@@ -1,53 +1,73 @@
 <lib-section-wrapper header="Address information">
-  @if (loading() && !addresses().length) {
-    <div class="loading">
-      <div class="loading__row">
-        <p-skeleton width="10rem" height="2rem" />
-        <p-skeleton width="12rem" height="2rem" />
-      </div>
-      <div class="loading__row">
-        <p-skeleton width="8rem" height="2rem" />
-        <p-skeleton width="15rem" height="2rem" />
-      </div>
-      <div class="loading__row">
-        <p-skeleton width="12rem" height="2rem" />
-        <p-skeleton width="20rem" height="2rem" />
-      </div>
-    </div>
-  } @else if (error()) {
-    <div>{{ error() }}</div>
+  @if (formVisibility()) {
+    @if (formType() === 'update') {
+      <lib-user-address-form
+        [updatingUserAddress]="updatingAddress()"
+        (onHideForm)="hideForm()"
+      />
+    } @else if (formType() === 'add') {
+      <lib-user-address-form (onHideForm)="hideForm()" />
+    }
   } @else {
-    @for (address of addresses(); track address.id) {
-      <div class="delivery-address__wrapper">
-        <span class="delivery-address__wrapper__title">Phone</span>
-        <span class="delivery-address__wrapper__content">{{
-          address?.phone
-        }}</span>
-      </div>
-      <div class="delivery-address__wrapper">
-        <span class="delivery-address__wrapper__title">Name</span>
-        <span class="delivery-address__wrapper__content">
-          {{ address?.firstName }}
-          {{ address?.lastName }}
-        </span>
-      </div>
-      <div class="delivery-address__wrapper">
-        <span class="delivery-address__wrapper__title">Address</span>
-        <div class="container">
-          <span class="delivery-address__wrapper__content">
-            {{ address?.street }}
-            {{ address?.homeNumber }}
-            {{ address?.houseNumber ? '/ ' + address?.houseNumber : '' }},
-            {{ address?.postcode }}, {{ address?.city }},
-            {{ address?.country?.name }}
-          </span>
+    @if (loading() && !addresses().length) {
+      <div class="flex flex-col gap-4">
+        <div class="loading__row">
+          <p-skeleton width="10rem" height="2rem" />
+          <p-skeleton width="12rem" height="2rem" />
+        </div>
+        <div class="flex items-center gap-4">
+          <p-skeleton width="8rem" height="2rem" />
+          <p-skeleton width="15rem" height="2rem" />
+        </div>
+        <div class="flex items-center gap-4">
+          <p-skeleton width="12rem" height="2rem" />
+          <p-skeleton width="20rem" height="2rem" />
         </div>
       </div>
+    } @else if (error()) {
+      <div>{{ error() }}</div>
+    } @else {
+      @for (address of addresses(); track address.id) {
+        <div libOrderProccessItem [isActive]="true">
+          <button class="flex flex-col gap-4">
+            <div class="flex gap-4">
+              <span class="text-sm text-muted-color font-semi w-24 text-start">
+                Phone
+              </span>
+              <span class="text-base">{{ address?.phone }}</span>
+            </div>
+            <div class="flex gap-4">
+              <span class="text-sm text-muted-color font-semi w-24 text-start">
+                Name
+              </span>
+              <span class="text-base">
+                {{ address?.firstName }}
+                {{ address?.lastName }}
+              </span>
+            </div>
+            <div class="flex gap-4">
+              <span class="text-sm text-muted-color font-semi w-24 text-start">
+                Address
+              </span>
+              <div class="flex flex-col">
+                <span class="text-base">
+                  {{ address?.street }}
+                  {{ address?.homeNumber }}
+                  {{ address?.houseNumber ? '/ ' + address?.houseNumber : '' }},
+                  {{ address?.postcode }}, {{ address?.city }},
+                  {{ address?.country?.name }}
+                </span>
+              </div>
+            </div>
+          </button>
+          <p-button icon="pi pi-pencil" (onClick)="showForm(address)" />
+        </div>
+      }
       <p-button
-        [outlined]="true"
-        class="delivery-address__update-button"
-        label="Update"
-        (onClick)="updateDeliveryAddress()"
+        severity="secondary"
+        label="Add"
+        styleClass="w-full"
+        (onClick)="showForm()"
       />
     }
   }

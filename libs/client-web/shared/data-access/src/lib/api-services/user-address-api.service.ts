@@ -26,11 +26,11 @@ export class UserAddressApiService {
     return this.http.get<UserAddress[]>(`${this.apiUrl}/user-addresses`);
   }
 
-  getOne$(body: CreateUserAddressBody) {
+  create$(body: CreateUserAddressBody) {
     return this.http.post<UserAddress>(`${this.apiUrl}/user-addresses`, body);
   }
 
-  getUserAddress$(id: UserAddress['id']) {
+  getOne$(id: UserAddress['id']) {
     return this.http.get<UserAddress>(`${this.apiUrl}/user-addresses/${id}`);
   }
 

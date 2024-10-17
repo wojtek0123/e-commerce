@@ -33,9 +33,9 @@ import { CartStore } from '@e-commerce/client-web/cart/data-access';
 export class OrderProcessComponent {
   private readonly cartStore = inject(CartStore);
 
-  cartItems = this.cartStore.cartItemsEntities;
-  cartItemsLoading = this.cartStore.loading;
-  total = this.cartStore.total;
+  public cartItems = this.cartStore.cartItemsEntities;
+  public cartItemsLoading = this.cartStore.loading;
+  public total = this.cartStore.total;
 
   updateQuantity({
     book,

@@ -3,11 +3,11 @@ import {
   CreditCardApiService,
   CreditCardBase,
   ResponseError,
+  PaymentMethod,
 } from '@e-commerce/client-web/shared/data-access';
 import { tapResponse } from '@ngrx/operators';
 import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { PaymentMethod } from '@prisma/client';
 import { pipe, switchMap, tap } from 'rxjs';
 
 interface PaymentState {
@@ -29,7 +29,7 @@ const initialPaymentState: PaymentState = {
     isEditing: false,
   },
   sixDigitCode: null,
-  selectedPayment: null,
+  selectedPayment: 'CREDIT_CARD',
 };
 
 export const PaymentStore = signalStore(
@@ -47,6 +47,7 @@ export const PaymentStore = signalStore(
             tapResponse({
               next: (creditCard) => {
                 patchState(store, (state) => ({
+                  ...state,
                   creditCard: {
                     ...state.creditCard,
                     data: creditCard,

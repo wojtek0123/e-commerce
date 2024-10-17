@@ -4,9 +4,9 @@ import {
   Component,
   effect,
   inject,
-  model,
-  OnInit,
-  signal,
+  input,
+  output,
+  untracked,
 } from '@angular/core';
 import {
   FormControl,
@@ -15,14 +15,18 @@ import {
   Validators,
 } from '@angular/forms';
 import { AddressStore } from '@e-commerce/client-web/cart/data-access';
-import { Country } from '@e-commerce/client-web/shared/data-access';
+import {
+  Country,
+  CreateUserAddressBody,
+  UserAddress,
+} from '@e-commerce/client-web/shared/data-access';
 import {
   ErrorMessageComponent,
   FormFieldComponent,
 } from '@e-commerce/client-web/shared/ui';
 import { ButtonModule } from 'primeng/button';
-import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
+import { SelectModule } from 'primeng/select';
 
 @Component({
   selector: 'lib-user-address-form',
@@ -32,7 +36,7 @@ import { InputTextModule } from 'primeng/inputtext';
     NgClass,
     FormFieldComponent,
     ErrorMessageComponent,
-    DropdownModule,
+    SelectModule,
     ButtonModule,
     InputTextModule,
   ],
@@ -40,10 +44,10 @@ import { InputTextModule } from 'primeng/inputtext';
   styleUrl: './user-address-form.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserAddressFormComponent implements OnInit {
+export class UserAddressFormComponent {
   private readonly addressStore = inject(AddressStore);
 
-  public formType = model<'add' | 'update' | null>();
+  public updatingUserAddress = input<UserAddress | null>();
 
   protected form = new FormGroup({
     firstName: new FormControl<string | null>(null, Validators.required),
@@ -58,52 +62,43 @@ export class UserAddressFormComponent implements OnInit {
   });
 
   public loading = this.addressStore.loading;
-  public userAddress = this.addressStore.selectedAddress;
-  public error = this.addressStore.error;
-  public submitted = signal(false);
-
   public countries = this.addressStore.countries;
 
-  constructor() {
-    effect(
-      () => {
-        if (this.formType() === 'update' && this.userAddress()) {
-          const {
-            firstName,
-            lastName,
-            country,
-            city,
-            street,
-            houseNumber,
-            homeNumber,
-            postcode,
-            phone,
-          } = this.userAddress()!;
+  public formType = this.addressStore.formType;
+  public updatingAddress = this.addressStore.updatingAddress;
 
-          this.form.setValue({
-            firstName,
-            lastName,
-            country,
-            street,
-            homeNumber,
-            houseNumber: houseNumber ?? null,
-            postcode,
-            phone,
-            city,
-          });
-        }
-      },
-      { allowSignalWrites: true },
-    );
+  constructor() {
+    effect(() => {
+      const userAddress = this.updatingUserAddress();
+
+      untracked(() => {
+        this.form.setValue(
+          {
+            firstName: userAddress?.firstName ?? null,
+            lastName: userAddress?.lastName ?? null,
+            country: userAddress?.country ?? null,
+            street: userAddress?.street ?? null,
+            homeNumber: userAddress?.homeNumber ?? null,
+            houseNumber: userAddress?.houseNumber ?? null,
+            postcode: userAddress?.postcode ?? null,
+            phone: userAddress?.phone ?? null,
+            city: userAddress?.city ?? null,
+          },
+          { emitEvent: false },
+        );
+      });
+    });
   }
 
-  ngOnInit(): void {
+  public getCountries() {
     this.addressStore.getCountries({ name: '' });
   }
 
-  public submit() {
-    this.submitted.set(true);
+  public hideForm() {
+    this.addressStore.hideForm();
+  }
 
+  public submit() {
     if (this.form.invalid) {
       return;
     }
@@ -120,41 +115,22 @@ export class UserAddressFormComponent implements OnInit {
       country,
     } = this.form.value;
 
-    // if (this.formType() === 'update') {
-    //   this.addressStore.dispatch(
-    //     orderProcessActions.updateUserAddress({
-    //       id: this.userAddress()!.id,
-    //       data: {
-    //         firstName: firstName!,
-    //         lastName: lastName!,
-    //         city: city!,
-    //         street: street!,
-    //         homeNumber: homeNumber!,
-    //         postcode: postcode!,
-    //         phone: phone!,
-    //         country: country!,
-    //         countryId: country!.id,
-    //         ...(houseNumber && { houseNumber: houseNumber! }),
-    //       },
-    //     }),
-    //   );
-    //   this.formType.set(null);
-    // } else {
-    //   this.addressStore.dispatch(
-    //     orderProcessActions.addUserAddress({
-    //       data: {
-    //         firstName: firstName!,
-    //         lastName: lastName!,
-    //         city: city!,
-    //         street: street!,
-    //         homeNumber: homeNumber!,
-    //         postcode: postcode!,
-    //         phone: phone!,
-    //         countryId: country!.id,
-    //         ...(houseNumber && { houseNumber: houseNumber! }),
-    //       },
-    //     }),
-    //   );
-    // }
+    const formValues: CreateUserAddressBody = {
+      firstName: firstName ?? '',
+      lastName: lastName ?? '',
+      city: city ?? '',
+      street: street ?? '',
+      homeNumber: homeNumber ?? '',
+      houseNumber: houseNumber ?? '',
+      postcode: postcode ?? '',
+      phone: phone ?? '',
+      countryId: country?.id ?? '',
+    };
+
+    if (this.formType() === 'add') {
+      this.addressStore.addAddress$({ data: formValues });
+    } else if (this.formType() === 'update') {
+      this.addressStore.updateAddress$({ data: formValues });
+    }
   }
 }
