@@ -207,10 +207,14 @@ export const AddressStore = signalStore(
               );
             },
           }),
-          map(({ data }) => ({
-            data,
-            id: store.updatingAddress()?.id ?? '',
-          })),
+          map(({ data }) => {
+            const id = store.updatingAddress()?.id;
+            if (!id) {
+              // Handle the absence of `id` appropriately
+              throw new Error('No address ID available for update.');
+            }
+            return { data, id };
+          }),
           switchMap(({ data, id }) =>
             userAddressApi.update$(id, { ...data }).pipe(
               tapResponse({
