@@ -114,6 +114,9 @@ export const PaymentStore = signalStore(
                         ...state.creditCard,
                         data: null,
                         loading: false,
+                        error:
+                          error?.error?.message ??
+                          'An error occurred while adding credit card',
                       },
                     }));
                     messageService.add({
