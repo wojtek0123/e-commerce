@@ -123,7 +123,7 @@ export const PaymentStore = signalStore(
                       summary: 'Error',
                       detail:
                         error?.error?.message ??
-                        'Error occur while adding credit card',
+                        'An error occurred while adding credit card',
                       severity: 'error',
                     });
                   },
