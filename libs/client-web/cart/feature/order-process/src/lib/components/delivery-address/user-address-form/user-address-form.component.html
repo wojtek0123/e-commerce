@@ -3,7 +3,7 @@
   (ngSubmit)="submit()"
   class="flex flex-col gap-2 @container"
 >
-  <div class="user-address-form__row flex flex-col gap-4 @3xl:flex-row">
+  <div class="flex flex-col gap-4 @3xl:flex-row">
     <lib-form-field label="First name" [isRequired]="true">
       <input
         pInputText
@@ -93,12 +93,13 @@
     </div>
   </div>
   <lib-form-field label="Country" [isRequired]="true" class="max-w-64">
-    <p-select
+    <p-autocomplete
       slot="input"
       styleClass="w-full"
-      (onFocus)="getCountries()"
       formControlName="country"
-      [options]="countries()"
+      [suggestions]="countries()"
+      (completeMethod)="filterCountries($event)"
+      [dropdown]="true"
       [ngClass]="{
         'ng-dirty ng-invalid':
           form.controls.country.invalid && form.controls.country.dirty,

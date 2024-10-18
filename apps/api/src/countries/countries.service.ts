@@ -12,8 +12,10 @@ export class CountriesService {
     return this.prisma.country.create({ data });
   }
 
-  findAll() {
-    return this.prisma.country.findMany();
+  findAll(query: { nameLike: string | undefined }) {
+    return this.prisma.country.findMany({
+      where: { name: { contains: query.nameLike, mode: 'insensitive' } },
+    });
   }
 
   findOne(id: Country['id']) {

@@ -6,11 +6,12 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { CountriesService } from './countries.service';
 import { CreateCountryDto } from './dto/create-country.dto';
 import { UpdateCountryDto } from './dto/update-country.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiQuery, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('countries')
 @Controller('countries')
@@ -23,8 +24,9 @@ export class CountriesController {
   }
 
   @Get()
-  findAll() {
-    return this.countriesService.findAll();
+  @ApiQuery({ type: String, name: 'nameLike', required: false })
+  findAll(@Query('nameLike') nameLike?: string) {
+    return this.countriesService.findAll({ nameLike });
   }
 
   @Get(':id')

@@ -4,7 +4,7 @@
 @if (error()) {
   <div>{{ error() }}</div>
 }
-@if ((!creditCard().data || changeCreditCard()) && !loading()) {
+@if ((!creditCard() || isEditing()) && !loading()) {
   <form [formGroup]="form" (ngSubmit)="submit()" class="credit-card-form">
     <lib-form-field label="Card number" [isRequired]="true">
       <p-inputmask
@@ -71,13 +71,18 @@
       </lib-form-field>
     </div>
 
-    <div class="credit-card-form__buttons">
-      <p-button
-        [outlined]="true"
-        (onClick)="changeCreditCard.set(false)"
-        label="Cancel"
-        styleClass="w-full"
-      />
+    <div
+      class="grid gap-4 mt-4"
+      [ngClass]="{ 'grid-cols-2': isEditing(), 'grid-cols-1': !isEditing() }"
+    >
+      @if (isEditing()) {
+        <p-button
+          [outlined]="true"
+          (onClick)="toggleCreditCardEdit(false)"
+          label="Cancel"
+          styleClass="w-full"
+        />
+      }
       <p-button
         severity="secondary"
         styleClass="w-full"
@@ -86,9 +91,7 @@
       />
     </div>
   </form>
-}
-
-@if (!!creditCard().data && !changeCreditCard() && !loading()) {
+} @else {
   <div class="change-credit-card">
     <div class="change-credit-card__text">
       <img
@@ -99,12 +102,12 @@
         class="change-credit-card__master-card"
         src="assets/icons/mastercard.svg"
       />
-      <span> {{ creditCard().data?.number }}</span>
+      <span> {{ creditCard()?.number ?? '-' }}</span>
     </div>
     <p-button
       [text]="true"
       label="change"
-      (onClick)="changeCreditCard.set(true)"
+      (onClick)="toggleCreditCardEdit(true)"
     />
   </div>
 }

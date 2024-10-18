@@ -19,7 +19,7 @@ import { InputOtpModule } from 'primeng/inputotp';
 import { SkeletonModule } from 'primeng/skeleton';
 import { SixDigitCodeFormComponent } from './six-digit-code-form/six-digit-code-form.component';
 import { PaymentMethod } from '@e-commerce/client-web/shared/data-access';
-import { OrderProcessItemDirective } from '../directives/order-process-item.directive';
+import { OrderProcessItemDirective } from '../../directives/order-process-item.directive';
 
 @Component({
   selector: 'lib-payment-method',
@@ -43,8 +43,6 @@ import { OrderProcessItemDirective } from '../directives/order-process-item.dire
 })
 export class PaymentMethodComponent {
   private readonly paymentStore = inject(PaymentStore);
-
-  public submitted = input.required<boolean>();
 
   public readonly debitCard: Extract<PaymentMethod, 'CREDIT_CARD'> =
     'CREDIT_CARD';

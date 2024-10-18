@@ -8,7 +8,7 @@ export class CountryApiService {
   private http = inject(HttpClient);
   private apiUrl = inject(API_URL);
 
-  getAll() {
-    return this.http.get<Country[]>(`${this.apiUrl}/countries`);
+  getAll$(params: { nameLike?: string }) {
+    return this.http.get<Country[]>(`${this.apiUrl}/countries`, { params });
   }
 }
