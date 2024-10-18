@@ -73,7 +73,7 @@ export const PaymentStore = signalStore(
                       ...state.creditCard,
                       error:
                         error?.error?.message ||
-                        'Error occur while getting credit card information',
+                        'An error occurred while getting credit card information',
                       loading: false,
                     },
                   }));
