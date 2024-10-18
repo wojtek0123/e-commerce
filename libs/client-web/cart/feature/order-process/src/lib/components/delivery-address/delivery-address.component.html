@@ -1,17 +1,10 @@
 <lib-section-wrapper header="Address information">
   @if (formVisibility()) {
-    @if (formType() === 'update') {
-      <lib-user-address-form
-        [updatingUserAddress]="updatingAddress()"
-        (onHideForm)="hideForm()"
-      />
-    } @else if (formType() === 'add') {
-      <lib-user-address-form (onHideForm)="hideForm()" />
-    }
+    <lib-user-address-form />
   } @else {
     @if (loading() && !addresses().length) {
-      <div class="flex flex-col gap-4">
-        <div class="loading__row">
+      <div libOrderProccessItem class="flex flex-col gap-4">
+        <div class="flex items-center gap-4">
           <p-skeleton width="10rem" height="2rem" />
           <p-skeleton width="12rem" height="2rem" />
         </div>
@@ -28,8 +21,13 @@
       <div>{{ error() }}</div>
     } @else {
       @for (address of addresses(); track address.id) {
-        <div libOrderProccessItem [isActive]="true">
-          <button class="flex flex-col gap-4">
+        <div class="relative">
+          <button
+            libOrderProccessItem
+            [isActive]="selectedAddressId() === address.id"
+            class="flex flex-col items-start !justify-start gap-4"
+            (click)="selectAddress(address)"
+          >
             <div class="flex gap-4">
               <span class="text-sm text-muted-color font-semi w-24 text-start">
                 Phone
@@ -60,7 +58,11 @@
               </div>
             </div>
           </button>
-          <p-button icon="pi pi-pencil" (onClick)="showForm(address)" />
+          <p-button
+            class="absolute top-1/2 right-4 -translate-y-1/2"
+            icon="pi pi-pencil"
+            (onClick)="showForm(address)"
+          />
         </div>
       }
       <p-button

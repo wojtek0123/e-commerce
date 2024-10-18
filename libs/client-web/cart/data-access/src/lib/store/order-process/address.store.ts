@@ -27,7 +27,7 @@ import {
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { Country } from '@prisma/client';
 import { MessageService } from 'primeng/api';
-import { pipe, switchMap, tap } from 'rxjs';
+import { map, pipe, switchMap, tap } from 'rxjs';
 
 interface AddressState {
   selectedAddress: UserAddress | null;
@@ -64,11 +64,12 @@ const addressesConfig = entityConfig({
 export const AddressStore = signalStore(
   withState(initialAddressState),
   withEntities(addressesConfig),
-  withComputed(({ _addressesEntities, formInfo }) => ({
+  withComputed(({ _addressesEntities, formInfo, selectedAddress }) => ({
     addresses: computed(() => _addressesEntities()),
     updatingAddress: computed(() => formInfo().updatingAddress),
     formType: computed(() => formInfo().type),
     formVisibility: computed(() => formInfo().visibility),
+    selectedAddressId: computed(() => selectedAddress()?.id ?? null),
   })),
   withMethods(
     (
@@ -93,6 +94,7 @@ export const AddressStore = signalStore(
                         type: 'add',
                         visibility: addresses.length === 0,
                       },
+                      selectedAddress: addresses.at(0) ?? null,
                     },
                     addEntities(addresses, addressesConfig),
                   );
@@ -113,7 +115,7 @@ export const AddressStore = signalStore(
       getCountries: rxMethod<{ name: string }>(
         pipe(
           switchMap(({ name }) =>
-            countryApi.getAll().pipe(
+            countryApi.getAll$({ nameLike: name }).pipe(
               tapResponse({
                 next: (countries) => {
                   patchState(store, { countries });
@@ -190,7 +192,6 @@ export const AddressStore = signalStore(
                   cachedAddress: state._addressesEntityMap[id],
                   formInfo: {
                     ...state.formInfo,
-                    updatingAddress: null,
                     visibility: false,
                   },
                 }),
@@ -206,36 +207,48 @@ export const AddressStore = signalStore(
               );
             },
           }),
-          switchMap(({ data }) =>
-            userAddressApi
-              .update$(store.updatingAddress()?.id ?? '', { ...data })
-              .pipe(
-                tapResponse({
-                  next: () => {
-                    patchState(store, {
-                      cachedAddress: null,
-                    });
-                  },
-                  error: (error: ResponseError) => {
-                    const cachedAddress = store.cachedAddress();
+          map(({ data }) => ({
+            data,
+            id: store.updatingAddress()?.id ?? '',
+          })),
+          switchMap(({ data, id }) =>
+            userAddressApi.update$(id, { ...data }).pipe(
+              tapResponse({
+                next: () => {
+                  patchState(store, (state) => ({
+                    cachedAddress: null,
+                    formInfo: {
+                      ...state.formInfo,
+                      updatingAddress: null,
+                    },
+                  }));
 
-                    if (cachedAddress) {
-                      patchState(
-                        store,
-                        { cachedAddress: null },
-                        setEntity(cachedAddress, addressesConfig),
-                      );
-                    }
+                  messageService.add({
+                    summary: 'Success',
+                    detail: 'Updated address',
+                    severity: 'success',
+                  });
+                },
+                error: (error: ResponseError) => {
+                  const cachedAddress = store.cachedAddress();
 
-                    messageService.add({
-                      summary: 'Error',
-                      detail:
-                        error?.error?.message || 'Error occur while updating',
-                      severity: 'error',
-                    });
-                  },
-                }),
-              ),
+                  if (cachedAddress) {
+                    patchState(
+                      store,
+                      { cachedAddress: null },
+                      setEntity(cachedAddress, addressesConfig),
+                    );
+                  }
+
+                  messageService.add({
+                    summary: 'Error',
+                    detail:
+                      error?.error?.message || 'Error occur while updating',
+                    severity: 'error',
+                  });
+                },
+              }),
+            ),
           ),
         ),
       ),

@@ -4,8 +4,6 @@ import {
   Component,
   effect,
   inject,
-  input,
-  output,
   untracked,
 } from '@angular/core';
 import {
@@ -18,7 +16,6 @@ import { AddressStore } from '@e-commerce/client-web/cart/data-access';
 import {
   Country,
   CreateUserAddressBody,
-  UserAddress,
 } from '@e-commerce/client-web/shared/data-access';
 import {
   ErrorMessageComponent,
@@ -26,7 +23,10 @@ import {
 } from '@e-commerce/client-web/shared/ui';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import { SelectModule } from 'primeng/select';
+import {
+  AutoCompleteCompleteEvent,
+  AutoCompleteModule,
+} from 'primeng/autocomplete';
 
 @Component({
   selector: 'lib-user-address-form',
@@ -36,18 +36,15 @@ import { SelectModule } from 'primeng/select';
     NgClass,
     FormFieldComponent,
     ErrorMessageComponent,
-    SelectModule,
+    AutoCompleteModule,
     ButtonModule,
     InputTextModule,
   ],
   templateUrl: './user-address-form.component.html',
-  styleUrl: './user-address-form.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserAddressFormComponent {
   private readonly addressStore = inject(AddressStore);
-
-  public updatingUserAddress = input<UserAddress | null>();
 
   protected form = new FormGroup({
     firstName: new FormControl<string | null>(null, Validators.required),
@@ -69,20 +66,20 @@ export class UserAddressFormComponent {
 
   constructor() {
     effect(() => {
-      const userAddress = this.updatingUserAddress();
+      const address = this.updatingAddress();
 
       untracked(() => {
         this.form.setValue(
           {
-            firstName: userAddress?.firstName ?? null,
-            lastName: userAddress?.lastName ?? null,
-            country: userAddress?.country ?? null,
-            street: userAddress?.street ?? null,
-            homeNumber: userAddress?.homeNumber ?? null,
-            houseNumber: userAddress?.houseNumber ?? null,
-            postcode: userAddress?.postcode ?? null,
-            phone: userAddress?.phone ?? null,
-            city: userAddress?.city ?? null,
+            firstName: address?.firstName ?? null,
+            lastName: address?.lastName ?? null,
+            country: address?.country ?? null,
+            street: address?.street ?? null,
+            homeNumber: address?.homeNumber ?? null,
+            houseNumber: address?.houseNumber ?? null,
+            postcode: address?.postcode ?? null,
+            phone: address?.phone ?? null,
+            city: address?.city ?? null,
           },
           { emitEvent: false },
         );
@@ -96,6 +93,10 @@ export class UserAddressFormComponent {
 
   public hideForm() {
     this.addressStore.hideForm();
+  }
+
+  public filterCountries(event: AutoCompleteCompleteEvent) {
+    this.addressStore.getCountries({ name: event.query });
   }
 
   public submit() {
