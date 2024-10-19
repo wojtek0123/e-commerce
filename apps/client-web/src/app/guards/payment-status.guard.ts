@@ -11,7 +11,7 @@ export const paymentStatusGuard: CanMatchFn = (
   const router = inject(Router);
   const orderDetailsId = segments.at(1)?.path;
 
-  if (orderDetailsId) {
+  if (!orderDetailsId) {
     return router.createUrlTree(['/']);
   }
 
