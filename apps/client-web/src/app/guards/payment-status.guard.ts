@@ -9,7 +9,11 @@ export const paymentStatusGuard: CanMatchFn = (
 ) => {
   const orderDetailsApi = inject(OrderDetailsApiService);
   const router = inject(Router);
-  const orderDetailsId = segments[1].path;
+  const orderDetailsId = segments.at(1)?.path;
+
+  if (orderDetailsId) {
+    return router.createUrlTree(['/']);
+  }
 
   return orderDetailsApi.getUnique(orderDetailsId).pipe(
     map(

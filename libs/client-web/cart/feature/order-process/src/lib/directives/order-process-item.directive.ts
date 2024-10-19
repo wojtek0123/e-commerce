@@ -1,7 +1,7 @@
 import { Directive, input } from '@angular/core';
 
 @Directive({
-  selector: '[libOrderProccessItem]',
+  selector: '[libOrderProcessItem]',
   standalone: true,
   host: {
     '[class.!border-primary]': 'isActive()',
