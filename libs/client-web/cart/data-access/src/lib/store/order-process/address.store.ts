@@ -5,6 +5,7 @@ import {
   ResponseError,
   UserAddress,
   UserAddressApiService,
+  Country,
 } from '@e-commerce/client-web/shared/data-access';
 import { tapResponse } from '@ngrx/operators';
 import {
@@ -25,9 +26,8 @@ import {
   withEntities,
 } from '@ngrx/signals/entities';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { Country } from '@prisma/client';
 import { MessageService } from 'primeng/api';
-import { map, pipe, switchMap, tap } from 'rxjs';
+import { debounce, map, of, pipe, switchMap, tap, timer } from 'rxjs';
 
 interface AddressState {
   selectedAddress: UserAddress | null;
@@ -76,9 +76,9 @@ export const AddressStore = signalStore(
       store,
       userAddressApi = inject(UserAddressApiService),
       countryApi = inject(CountryApiService),
-      messageService = inject(MessageService),
+      messageService = inject(MessageService)
     ) => ({
-      getAddresses: rxMethod<void>(
+      getAddresses$: rxMethod<void>(
         pipe(
           tap(() => patchState(store, { loading: true })),
           switchMap(() =>
@@ -96,7 +96,7 @@ export const AddressStore = signalStore(
                       },
                       selectedAddress: addresses.at(0) ?? null,
                     },
-                    addEntities(addresses, addressesConfig),
+                    addEntities(addresses, addressesConfig)
                   );
                 },
                 error: (error: ResponseError) => {
@@ -107,13 +107,14 @@ export const AddressStore = signalStore(
                     loading: false,
                   });
                 },
-              }),
-            ),
-          ),
-        ),
+              })
+            )
+          )
+        )
       ),
-      getCountries: rxMethod<{ name: string }>(
+      getCountries$: rxMethod<{ name: string }>(
         pipe(
+          debounce(({ name }) => (name.length === 0 ? of({}) : timer(300))),
           switchMap(({ name }) =>
             countryApi.getAll$({ nameLike: name }).pipe(
               tapResponse({
@@ -129,10 +130,10 @@ export const AddressStore = signalStore(
                     severity: 'error',
                   });
                 },
-              }),
-            ),
-          ),
-        ),
+              })
+            )
+          )
+        )
       ),
       addAddress$: rxMethod<{ data: CreateUserAddressBody }>(
         pipe(
@@ -153,7 +154,7 @@ export const AddressStore = signalStore(
                         visibility: false,
                       },
                     }),
-                    addEntity(userAddress, addressesConfig),
+                    addEntity(userAddress, addressesConfig)
                   );
                   messageService.add({
                     summary: 'Success',
@@ -173,10 +174,10 @@ export const AddressStore = signalStore(
                     severity: 'error',
                   });
                 },
-              }),
-            ),
-          ),
-        ),
+              })
+            )
+          )
+        )
       ),
       updateAddress$: rxMethod<{
         data: CreateUserAddressBody;
@@ -202,8 +203,8 @@ export const AddressStore = signalStore(
                       ...data,
                     },
                   },
-                  addressesConfig,
-                ),
+                  addressesConfig
+                )
               );
             },
           }),
@@ -240,7 +241,7 @@ export const AddressStore = signalStore(
                     patchState(
                       store,
                       { cachedAddress: null },
-                      setEntity(cachedAddress, addressesConfig),
+                      setEntity(cachedAddress, addressesConfig)
                     );
                   }
 
@@ -251,10 +252,10 @@ export const AddressStore = signalStore(
                     severity: 'error',
                   });
                 },
-              }),
-            ),
-          ),
-        ),
+              })
+            )
+          )
+        )
       ),
       selectAddress: (selectedAddress: UserAddress) => {
         patchState(store, { selectedAddress });
@@ -277,11 +278,11 @@ export const AddressStore = signalStore(
           },
         }));
       },
-    }),
+    })
   ),
   withHooks({
     onInit: (store) => {
-      store.getAddresses();
+      store.getAddresses$();
     },
-  }),
+  })
 );

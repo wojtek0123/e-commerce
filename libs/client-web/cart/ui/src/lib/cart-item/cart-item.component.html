@@ -17,23 +17,21 @@
     <div
       class="w-full flex flex-col justify-center @4xl/book-details:grid @4xl/book-details:grid-cols-2 @4xl/book-details:items-center"
     >
-      <span
+      <a
         class="text-base @md/cart-item:font-bold @lg/cart-item:text-2xl @4xl/book-details:text-3xl"
+        [routerLink]="['/book', item().book.id]"
       >
         {{ item().book.title }}
-      </span>
+      </a>
 
       <div clas="flex flex-wrap gap-4">
-        @for (
-          author of item().book.authors;
-          track author.id;
-          let last = $last
+        @for ( author of item().book.authors; track author.id; let last = $last
         ) {
-          <span
-            class="text-muted-color text-xs @3xl/cart-item:text-base @4xl/book-details:text-xl"
-          >
-            {{ author.name }} {{ !last ? '|' : '' }}
-          </span>
+        <span
+          class="text-muted-color text-xs @3xl/cart-item:text-base @4xl/book-details:text-xl"
+        >
+          {{ author.name }} {{ !last ? '|' : '' }}
+        </span>
         }
       </div>
     </div>
@@ -44,39 +42,39 @@
     <span
       class="@md/cart-item:font-bold @lg/cart-item:text-xl @4xl/cart-item:text-3xl"
     >
-      {{ item().book.price | currency: 'USD' }}
+      {{ item().book.price | currency : 'USD' }}
     </span>
     <div class="flex items-center @lg/cart-item:gap-3">
       @if (item().quantity === 1) {
-        <p-button
-          (onClick)="remove()"
-          [text]="true"
-          icon="pi pi-trash"
-          size="small"
-          class="@xl/cart-item:hidden"
-        />
-        <p-button
-          (onClick)="remove()"
-          [text]="true"
-          icon="pi pi-trash"
-          size="large"
-          class="hidden @xl/cart-item:block"
-        />
+      <p-button
+        (onClick)="remove()"
+        [text]="true"
+        icon="pi pi-trash"
+        size="small"
+        class="@xl/cart-item:hidden"
+      />
+      <p-button
+        (onClick)="remove()"
+        [text]="true"
+        icon="pi pi-trash"
+        size="large"
+        class="hidden @xl/cart-item:block"
+      />
       } @else {
-        <p-button
-          (onClick)="decrease()"
-          [text]="true"
-          icon="pi pi-minus"
-          size="small"
-          class="@xl/cart-item:hidden"
-        />
-        <p-button
-          (onClick)="decrease()"
-          [text]="true"
-          icon="pi pi-minus"
-          size="large"
-          class="hidden @xl/cart-item:block"
-        />
+      <p-button
+        (onClick)="decrease()"
+        [text]="true"
+        icon="pi pi-minus"
+        size="small"
+        class="@xl/cart-item:hidden"
+      />
+      <p-button
+        (onClick)="decrease()"
+        [text]="true"
+        icon="pi pi-minus"
+        size="large"
+        class="hidden @xl/cart-item:block"
+      />
       }
       <span>{{ item().quantity }}</span>
       <p-button

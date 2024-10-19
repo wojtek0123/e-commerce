@@ -81,14 +81,10 @@ export class UserAddressFormComponent {
             phone: address?.phone ?? null,
             city: address?.city ?? null,
           },
-          { emitEvent: false },
+          { emitEvent: false }
         );
       });
     });
-  }
-
-  public getCountries() {
-    this.addressStore.getCountries({ name: '' });
   }
 
   public hideForm() {
@@ -96,7 +92,7 @@ export class UserAddressFormComponent {
   }
 
   public filterCountries(event: AutoCompleteCompleteEvent) {
-    this.addressStore.getCountries({ name: event.query });
+    this.addressStore.getCountries$({ name: event.query });
   }
 
   public submit() {

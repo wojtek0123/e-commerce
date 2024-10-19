@@ -1,5 +1,5 @@
 .payment-status {
-  min-height: calc(100svh - 8.5rem);
+  height: theme('height.content');
   width: 100%;
   display: flex;
   align-items: center;
@@ -23,7 +23,7 @@
   stroke-dashoffset: 166;
   stroke-width: 2;
   stroke-miterlimit: 10;
-  stroke: #7ac142;
+  stroke: theme('colors.green.500');
   fill: none;
   animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
 }
@@ -34,12 +34,11 @@
   border-radius: 50%;
   display: block;
   stroke-width: 2;
-  stroke: var(--text-color);
+  stroke: theme('colors.green.500');
   stroke-miterlimit: 10;
   margin: 0 auto;
-  box-shadow: inset 0px 0px 0px #7ac142;
-  animation:
-    fill 0.4s ease-in-out 0.4s forwards,
+  box-shadow: inset 0px 0px 0px theme('colors.green.500');
+  animation: fill 0.4s ease-in-out 0.4s forwards,
     scale 0.3s ease-in-out 0.9s both;
 }
 
@@ -66,6 +65,6 @@
 }
 @keyframes fill {
   100% {
-    box-shadow: inset 0px 0px 0px 30px #7ac142;
+    box-shadow: inset 0px 0px 0px 30px theme('colors.green.500');
   }
 }
