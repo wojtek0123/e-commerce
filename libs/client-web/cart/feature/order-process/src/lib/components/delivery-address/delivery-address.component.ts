@@ -44,4 +44,8 @@ export class DeliveryAddressComponent {
   public selectAddress(address: UserAddress) {
     this.addressStore.selectAddress(address);
   }
+
+  public removeAddress(id: UserAddress['id']) {
+    this.addressStore.deleteAddress$({ id });
+  }
 }
