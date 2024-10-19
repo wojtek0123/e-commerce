@@ -9,7 +9,7 @@ import {
 } from '@e-commerce/client-web/cart/ui';
 import { Book, CartItem } from '@e-commerce/client-web/shared/data-access';
 import { CurrencyPipe, NgClass } from '@angular/common';
-import { SummaryComponent } from './summary/summary.component';
+import { SummaryComponent } from './components/summary/summary.component';
 import { CartStore } from '@e-commerce/client-web/cart/data-access';
 
 @Component({

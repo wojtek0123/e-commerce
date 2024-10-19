@@ -2,11 +2,12 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ButtonModule } from 'primeng/button';
 import { CartStore } from '@e-commerce/client-web/cart/data-access';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'lib-payment-status',
   standalone: true,
-  imports: [ProgressSpinnerModule, ButtonModule],
+  imports: [ProgressSpinnerModule, ButtonModule, RouterLink],
   templateUrl: './payment-status.component.html',
   styleUrl: './payment-status.component.scss',
 })

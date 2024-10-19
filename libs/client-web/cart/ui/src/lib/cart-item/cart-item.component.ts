@@ -13,6 +13,7 @@ import { CurrencyPipe, NgOptimizedImage } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'lib-cart-item',
@@ -23,6 +24,7 @@ import { FormsModule } from '@angular/forms';
     InputNumberModule,
     FormsModule,
     NgOptimizedImage,
+    RouterLink,
   ],
   templateUrl: './cart-item.component.html',
   styleUrl: './cart-item.component.scss',

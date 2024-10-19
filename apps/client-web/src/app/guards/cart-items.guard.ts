@@ -11,13 +11,7 @@ export const cartItemsGuard = () => {
   const loading$ = toObservable(cartStore.loading);
 
   return loading$.pipe(
-    skipUntil(
-      loading$.pipe(filter((loading) => loading || itemsCount() !== 0)),
-    ),
-    map(() =>
-      itemsCount() === 0 && !cartStore.loading()
-        ? router.createUrlTree(['/browse'])
-        : true,
-    ),
+    skipUntil(loading$.pipe(filter((loading) => !loading))),
+    map(() => (itemsCount() === 0 ? router.createUrlTree(['/browse']) : true))
   );
 };
