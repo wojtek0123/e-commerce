@@ -47,34 +47,26 @@ export class CreditCardFormComponent {
   });
 
   public submitted = signal(false);
-  public creditCard = this.paymentStore.creditCard;
+  public creditCard = this.paymentStore.creditCard.data;
   public loading = this.paymentStore.creditCard.loading;
   public error = this.paymentStore.creditCard.error;
-  public changeCreditCard = signal(false);
+  public isEditing = this.paymentStore.creditCard.isEditing;
 
-  public changeCreditCardUpdated = output<boolean>();
+  public toggleCreditCardEdit(isEditing: boolean) {
+    this.paymentStore.toggleCreditCardEdit(isEditing);
+  }
 
   public submit() {
     this.submitted.set(true);
 
     if (this.form.invalid) return;
 
-    if (this.changeCreditCard) {
-      this.changeCreditCard.set(false);
-    }
-
     const { cardNumber, expirationDate, securityCode } = this.form.value;
 
-    // this.paymentStore.
-
-    // this.paymentStore.dispatch(
-    //   orderProcessActions.addCreditCard({
-    //     data: {
-    //       number: cardNumber!,
-    //       expirationDate: expirationDate!,
-    //       securityCode: securityCode!,
-    //     },
-    //   }),
-    // );
+    this.paymentStore.addCreditCard$({
+      number: cardNumber ?? '',
+      expirationDate: expirationDate ?? '',
+      securityCode: securityCode ?? '',
+    });
   }
 }

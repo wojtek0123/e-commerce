@@ -1,0 +1,73 @@
+<lib-section-wrapper header="Address information">
+  @if (formVisibility()) {
+  <lib-user-address-form />
+  } @else { @if (loading() && !addresses().length) {
+  <div libOrderProcessItem class="flex flex-col gap-4">
+    <div class="flex items-center gap-4">
+      <p-skeleton width="10rem" height="2rem" />
+      <p-skeleton width="12rem" height="2rem" />
+    </div>
+    <div class="flex items-center gap-4">
+      <p-skeleton width="8rem" height="2rem" />
+      <p-skeleton width="15rem" height="2rem" />
+    </div>
+    <div class="flex items-center gap-4">
+      <p-skeleton width="12rem" height="2rem" />
+      <p-skeleton width="20rem" height="2rem" />
+    </div>
+  </div>
+  } @else if (error()) {
+  <div>{{ error() }}</div>
+  } @else { @for (address of addresses(); track address.id) {
+  <div class="relative">
+    <button
+      libOrderProcessItem
+      [isActive]="selectedAddressId() === address.id"
+      class="flex flex-col items-start !justify-start gap-4"
+      (click)="selectAddress(address)"
+    >
+      <div class="flex gap-4">
+        <span class="text-sm text-muted-color font-semi w-24 text-start">
+          Phone
+        </span>
+        <span class="text-base">{{ address?.phone }}</span>
+      </div>
+      <div class="flex gap-4">
+        <span class="text-sm text-muted-color font-semi w-24 text-start">
+          Name
+        </span>
+        <span class="text-base">
+          {{ address?.firstName }}
+          {{ address?.lastName }}
+        </span>
+      </div>
+      <div class="flex gap-4">
+        <span class="text-sm text-muted-color font-semi w-24 text-start">
+          Address
+        </span>
+        <div class="flex flex-col">
+          <span class="text-base">
+            {{ address?.street }}
+            {{ address?.homeNumber }}
+            {{ address?.houseNumber ? '/ ' + address?.houseNumber : '' }},
+            {{ address?.postcode }}, {{ address?.city }},
+            {{ address?.country?.name }}
+          </span>
+        </div>
+      </div>
+    </button>
+    <p-button
+      class="absolute top-1/2 right-4 -translate-y-1/2"
+      icon="pi pi-pencil"
+      (onClick)="showForm(address)"
+    />
+  </div>
+  }
+  <p-button
+    severity="secondary"
+    label="Add"
+    styleClass="w-full"
+    (onClick)="showForm()"
+  />
+  } }
+</lib-section-wrapper>

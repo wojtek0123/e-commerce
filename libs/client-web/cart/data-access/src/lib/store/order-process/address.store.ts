@@ -5,6 +5,7 @@ import {
   ResponseError,
   UserAddress,
   UserAddressApiService,
+  Country,
 } from '@e-commerce/client-web/shared/data-access';
 import { tapResponse } from '@ngrx/operators';
 import {
@@ -25,9 +26,8 @@ import {
   withEntities,
 } from '@ngrx/signals/entities';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { Country } from '@prisma/client';
 import { MessageService } from 'primeng/api';
-import { pipe, switchMap, tap } from 'rxjs';
+import { debounce, map, of, pipe, switchMap, tap, timer } from 'rxjs';
 
 interface AddressState {
   selectedAddress: UserAddress | null;
@@ -64,20 +64,21 @@ const addressesConfig = entityConfig({
 export const AddressStore = signalStore(
   withState(initialAddressState),
   withEntities(addressesConfig),
-  withComputed(({ _addressesEntities, formInfo }) => ({
+  withComputed(({ _addressesEntities, formInfo, selectedAddress }) => ({
     addresses: computed(() => _addressesEntities()),
     updatingAddress: computed(() => formInfo().updatingAddress),
     formType: computed(() => formInfo().type),
     formVisibility: computed(() => formInfo().visibility),
+    selectedAddressId: computed(() => selectedAddress()?.id ?? null),
   })),
   withMethods(
     (
       store,
       userAddressApi = inject(UserAddressApiService),
       countryApi = inject(CountryApiService),
-      messageService = inject(MessageService),
+      messageService = inject(MessageService)
     ) => ({
-      getAddresses: rxMethod<void>(
+      getAddresses$: rxMethod<void>(
         pipe(
           tap(() => patchState(store, { loading: true })),
           switchMap(() =>
@@ -93,8 +94,9 @@ export const AddressStore = signalStore(
                         type: 'add',
                         visibility: addresses.length === 0,
                       },
+                      selectedAddress: addresses.at(0) ?? null,
                     },
-                    addEntities(addresses, addressesConfig),
+                    addEntities(addresses, addressesConfig)
                   );
                 },
                 error: (error: ResponseError) => {
@@ -105,15 +107,16 @@ export const AddressStore = signalStore(
                     loading: false,
                   });
                 },
-              }),
-            ),
-          ),
-        ),
+              })
+            )
+          )
+        )
       ),
-      getCountries: rxMethod<{ name: string }>(
+      getCountries$: rxMethod<{ name: string }>(
         pipe(
+          debounce(({ name }) => (name.length === 0 ? of({}) : timer(300))),
           switchMap(({ name }) =>
-            countryApi.getAll().pipe(
+            countryApi.getAll$({ nameLike: name }).pipe(
               tapResponse({
                 next: (countries) => {
                   patchState(store, { countries });
@@ -127,10 +130,10 @@ export const AddressStore = signalStore(
                     severity: 'error',
                   });
                 },
-              }),
-            ),
-          ),
-        ),
+              })
+            )
+          )
+        )
       ),
       addAddress$: rxMethod<{ data: CreateUserAddressBody }>(
         pipe(
@@ -151,7 +154,7 @@ export const AddressStore = signalStore(
                         visibility: false,
                       },
                     }),
-                    addEntity(userAddress, addressesConfig),
+                    addEntity(userAddress, addressesConfig)
                   );
                   messageService.add({
                     summary: 'Success',
@@ -171,10 +174,10 @@ export const AddressStore = signalStore(
                     severity: 'error',
                   });
                 },
-              }),
-            ),
-          ),
-        ),
+              })
+            )
+          )
+        )
       ),
       updateAddress$: rxMethod<{
         data: CreateUserAddressBody;
@@ -190,7 +193,6 @@ export const AddressStore = signalStore(
                   cachedAddress: state._addressesEntityMap[id],
                   formInfo: {
                     ...state.formInfo,
-                    updatingAddress: null,
                     visibility: false,
                   },
                 }),
@@ -201,43 +203,59 @@ export const AddressStore = signalStore(
                       ...data,
                     },
                   },
-                  addressesConfig,
-                ),
+                  addressesConfig
+                )
               );
             },
           }),
-          switchMap(({ data }) =>
-            userAddressApi
-              .update$(store.updatingAddress()?.id ?? '', { ...data })
-              .pipe(
-                tapResponse({
-                  next: () => {
-                    patchState(store, {
-                      cachedAddress: null,
-                    });
-                  },
-                  error: (error: ResponseError) => {
-                    const cachedAddress = store.cachedAddress();
+          map(({ data }) => {
+            const id = store.updatingAddress()?.id;
+            if (!id) {
+              // Handle the absence of `id` appropriately
+              throw new Error('No address ID available for update.');
+            }
+            return { data, id };
+          }),
+          switchMap(({ data, id }) =>
+            userAddressApi.update$(id, { ...data }).pipe(
+              tapResponse({
+                next: () => {
+                  patchState(store, (state) => ({
+                    cachedAddress: null,
+                    formInfo: {
+                      ...state.formInfo,
+                      updatingAddress: null,
+                    },
+                  }));
 
-                    if (cachedAddress) {
-                      patchState(
-                        store,
-                        { cachedAddress: null },
-                        setEntity(cachedAddress, addressesConfig),
-                      );
-                    }
+                  messageService.add({
+                    summary: 'Success',
+                    detail: 'Updated address',
+                    severity: 'success',
+                  });
+                },
+                error: (error: ResponseError) => {
+                  const cachedAddress = store.cachedAddress();
 
-                    messageService.add({
-                      summary: 'Error',
-                      detail:
-                        error?.error?.message || 'Error occur while updating',
-                      severity: 'error',
-                    });
-                  },
-                }),
-              ),
-          ),
-        ),
+                  if (cachedAddress) {
+                    patchState(
+                      store,
+                      { cachedAddress: null },
+                      setEntity(cachedAddress, addressesConfig)
+                    );
+                  }
+
+                  messageService.add({
+                    summary: 'Error',
+                    detail:
+                      error?.error?.message || 'Error occur while updating',
+                    severity: 'error',
+                  });
+                },
+              })
+            )
+          )
+        )
       ),
       selectAddress: (selectedAddress: UserAddress) => {
         patchState(store, { selectedAddress });
@@ -260,11 +278,11 @@ export const AddressStore = signalStore(
           },
         }));
       },
-    }),
+    })
   ),
   withHooks({
     onInit: (store) => {
-      store.getAddresses();
+      store.getAddresses$();
     },
-  }),
+  })
 );

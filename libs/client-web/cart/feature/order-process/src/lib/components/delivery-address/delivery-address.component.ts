@@ -4,7 +4,7 @@ import { UserAddressFormComponent } from './user-address-form/user-address-form.
 import { SectionWrapperComponent } from '@e-commerce/client-web/cart/ui';
 import { ButtonModule } from 'primeng/button';
 import { SkeletonModule } from 'primeng/skeleton';
-import { OrderProcessItemDirective } from '../directives/order-process-item.directive';
+import { OrderProcessItemDirective } from '../../directives/order-process-item.directive';
 import { UserAddress } from '@e-commerce/client-web/shared/data-access';
 
 @Component({
@@ -27,6 +27,7 @@ export class DeliveryAddressComponent {
   public loading = this.addressStore.loading;
   public error = this.addressStore.error;
   public addresses = this.addressStore.addresses;
+  public selectedAddressId = this.addressStore.selectedAddressId;
 
   public updatingAddress = this.addressStore.updatingAddress;
   public formType = this.addressStore.formType;
@@ -38,5 +39,9 @@ export class DeliveryAddressComponent {
 
   public hideForm() {
     this.addressStore.hideForm();
+  }
+
+  public selectAddress(address: UserAddress) {
+    this.addressStore.selectAddress(address);
   }
 }
