@@ -144,9 +144,9 @@ export class NavComponent implements OnInit, OnDestroy {
       routerLink: '/account/orders',
     },
     {
-      label: 'Settings',
-      icon: 'pi pi-cog',
-      routerLink: '/account/settings',
+      label: 'Information',
+      icon: 'pi pi-address-book',
+      routerLink: '/account/information',
     },
   ]);
 

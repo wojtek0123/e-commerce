@@ -53,7 +53,7 @@ const initialCartState: CartState = {
 
 const cartItemsConfig = entityConfig({
   entity: type<CartItemBase>(),
-  collection: 'cartItems',
+  collection: '_cartItems',
   selectId: (cartItem) => cartItem.book.id,
 });
 
@@ -61,10 +61,11 @@ export const CartStore = signalStore(
   { providedIn: 'root' },
   withState(initialCartState),
   withEntities(cartItemsConfig),
-  withComputed(({ cartItemsEntities }) => ({
-    itemsCount: computed(() => cartItemsEntities().length),
+  withComputed(({ _cartItemsEntities }) => ({
+    itemsCount: computed(() => _cartItemsEntities().length),
+    cartItems: computed(() => _cartItemsEntities()),
     total: computed(() =>
-      cartItemsEntities().reduce(
+      _cartItemsEntities().reduce(
         (acc, ct) => acc + ct.book.price * ct.quantity,
         0,
       ),
@@ -82,7 +83,7 @@ export const CartStore = signalStore(
           tap(() => patchState(store, { loading: true })),
           map(() => ({
             shoppingSessionId: store.shoppingSessionId(),
-            cartItems: store.cartItemsEntities(),
+            cartItems: store._cartItemsEntities(),
           })),
           switchMap(({ shoppingSessionId, cartItems }) => {
             if (!shoppingSessionId || cartItems.length === 0) {
@@ -157,7 +158,7 @@ export const CartStore = signalStore(
             patchState(
               store,
               (state) => ({
-                cartItemsCached: Object.values(state.cartItemsEntityMap) ?? [],
+                cartItemsCached: Object.values(state._cartItemsEntityMap) ?? [],
               }),
               setEntity({ book, quantity }, cartItemsConfig),
             );
@@ -175,7 +176,7 @@ export const CartStore = signalStore(
                 next: () => {
                   patchState(store, (state) => ({
                     cartItemsCached:
-                      Object.values(state.cartItemsEntityMap) ?? [],
+                      Object.values(state._cartItemsEntityMap) ?? [],
                   }));
                 },
                 error: (error: ResponseError) => {
@@ -219,7 +220,7 @@ export const CartStore = signalStore(
             patchState(
               store,
               (state) => ({
-                cartItemsCached: Object.values(state.cartItemsEntityMap) ?? [],
+                cartItemsCached: Object.values(state._cartItemsEntityMap) ?? [],
               }),
               updateEntity(
                 { id: bookId, changes: { quantity } },
@@ -245,7 +246,7 @@ export const CartStore = signalStore(
                     patchState(store, (state) => ({
                       ...state,
                       cartItemsCached:
-                        Object.values(state.cartItemsEntityMap) ?? [],
+                        Object.values(state._cartItemsEntityMap) ?? [],
                     }));
                   },
                   error: () => {
@@ -283,7 +284,7 @@ export const CartStore = signalStore(
             patchState(
               store,
               (state) => ({
-                cartItemsCached: Object.values(state.cartItemsEntityMap) ?? [],
+                cartItemsCached: Object.values(state._cartItemsEntityMap) ?? [],
               }),
               removeEntity(bookId, cartItemsConfig),
             );
@@ -302,7 +303,7 @@ export const CartStore = signalStore(
                   patchState(store, (state) => ({
                     ...state,
                     cartItemsCached:
-                      Object.values(state.cartItemsEntityMap) ?? [],
+                      Object.values(state._cartItemsEntityMap) ?? [],
                   }));
                 },
                 error: () => {
@@ -376,7 +377,7 @@ export const CartStore = signalStore(
         if (!state.shoppingSessionId) {
           localStorage.setItem(
             CART_STORAGE,
-            JSON.stringify(Object.values(state.cartItemsEntityMap)),
+            JSON.stringify(Object.values(state._cartItemsEntityMap)),
           );
         }
       });

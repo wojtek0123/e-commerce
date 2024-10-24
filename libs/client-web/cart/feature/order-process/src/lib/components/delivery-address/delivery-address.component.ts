@@ -4,8 +4,9 @@ import { UserAddressFormComponent } from './user-address-form/user-address-form.
 import { SectionWrapperComponent } from '@e-commerce/client-web/cart/ui';
 import { ButtonModule } from 'primeng/button';
 import { SkeletonModule } from 'primeng/skeleton';
-import { OrderProcessItemDirective } from '../../directives/order-process-item.directive';
 import { UserAddress } from '@e-commerce/client-web/shared/data-access';
+import { OrderProcessItemDirective } from '@e-commerce/client-web/shared/utils';
+import { AddressInformationComponent } from '@e-commerce/client-web/shared/ui';
 
 @Component({
   selector: 'lib-delivery-address',
@@ -16,6 +17,7 @@ import { UserAddress } from '@e-commerce/client-web/shared/data-access';
     ButtonModule,
     SkeletonModule,
     OrderProcessItemDirective,
+    AddressInformationComponent,
   ],
   templateUrl: './delivery-address.component.html',
   styleUrl: './delivery-address.component.scss',
@@ -45,7 +47,7 @@ export class DeliveryAddressComponent {
     this.addressStore.selectAddress(address);
   }
 
-  public removeAddress(id: UserAddress['id']) {
+  public deleteAddress(id: UserAddress['id']) {
     this.addressStore.deleteAddress$({ id });
   }
 }
