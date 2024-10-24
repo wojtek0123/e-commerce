@@ -2,7 +2,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   inject,
-  input,
   signal,
 } from '@angular/core';
 import { RadioButtonModule } from 'primeng/radiobutton';
@@ -19,7 +18,7 @@ import { InputOtpModule } from 'primeng/inputotp';
 import { SkeletonModule } from 'primeng/skeleton';
 import { SixDigitCodeFormComponent } from './six-digit-code-form/six-digit-code-form.component';
 import { PaymentMethod } from '@e-commerce/client-web/shared/data-access';
-import { OrderProcessItemDirective } from '../../directives/order-process-item.directive';
+import { OrderProcessItemDirective } from '@e-commerce/client-web/shared/utils';
 
 @Component({
   selector: 'lib-payment-method',

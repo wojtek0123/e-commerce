@@ -1,6 +1,4 @@
 import { Route } from '@angular/router';
-import { provideEffects } from '@ngrx/effects';
-import { provideState } from '@ngrx/store';
 import { OrdersStore } from '@e-commerce/client-web/account/data-access';
 import { canMatchAuth } from './guards/auth.guard';
 import { cartItemsGuard } from './guards/cart-items.guard';
@@ -17,14 +15,14 @@ export const appRoutes: Route[] = [
     path: 'login',
     loadChildren: () =>
       import('@e-commerce/client-web/auth/feature/login').then(
-        (r) => r.loginRoutes
+        (r) => r.loginRoutes,
       ),
   },
   {
     path: 'register',
     loadChildren: () =>
       import('@e-commerce/client-web/auth/feature/register').then(
-        (r) => r.registerRoutes
+        (r) => r.registerRoutes,
       ),
   },
   {
@@ -35,7 +33,7 @@ export const appRoutes: Route[] = [
         pathMatch: 'full',
         loadChildren: () =>
           import('@e-commerce/client-web/browse/feature/books').then(
-            (r) => r.booksRoutes
+            (r) => r.booksRoutes,
           ),
       },
     ],
@@ -48,7 +46,7 @@ export const appRoutes: Route[] = [
         pathMatch: 'full',
         loadChildren: () =>
           import('@e-commerce/client-web/browse/feature/book').then(
-            (r) => r.bookRoutes
+            (r) => r.bookRoutes,
           ),
       },
     ],
@@ -59,7 +57,7 @@ export const appRoutes: Route[] = [
     canActivate: [cartItemsGuard],
     loadChildren: () =>
       import('@e-commerce/client-web/cart/feature/order-process').then(
-        (r) => r.orderProcessRoutes
+        (r) => r.orderProcessRoutes,
       ),
   },
   {
@@ -68,7 +66,7 @@ export const appRoutes: Route[] = [
     canMatch: [paymentStatusGuard],
     loadChildren: () =>
       import('@e-commerce/client-web/cart/feature/payment-status').then(
-        (r) => r.paymentStatusRoutes
+        (r) => r.paymentStatusRoutes,
       ),
   },
   {
@@ -79,15 +77,15 @@ export const appRoutes: Route[] = [
         path: 'orders',
         loadChildren: () =>
           import('@e-commerce/client-web/account/feature/orders').then(
-            (r) => r.ordersRoutes
+            (r) => r.ordersRoutes,
           ),
         providers: [OrdersStore],
       },
       {
-        path: 'settings',
+        path: 'information',
         loadChildren: () =>
-          import('@e-commerce/client-web/account/feature/settings').then(
-            (r) => r.settingsRoutes
+          import('@e-commerce/client-web/account/feature/information').then(
+            (r) => r.informationRoutes,
           ),
       },
       {

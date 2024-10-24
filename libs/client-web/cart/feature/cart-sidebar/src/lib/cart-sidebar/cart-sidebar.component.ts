@@ -52,7 +52,7 @@ export class CartSidebarComponent {
 
   public isLabelShowed = input<boolean>(false);
 
-  public cartItems = this.cartStore.cartItemsEntities;
+  public cartItems = this.cartStore.cartItems;
   public count = this.cartStore.itemsCount;
   public total = this.cartStore.total;
   public loading = this.cartStore.loading;

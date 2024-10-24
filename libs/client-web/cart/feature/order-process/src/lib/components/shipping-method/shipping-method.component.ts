@@ -9,7 +9,7 @@ import {
 } from '@e-commerce/client-web/cart/ui';
 import { SkeletonModule } from 'primeng/skeleton';
 import { ShippingMethod } from '@prisma/client';
-import { OrderProcessItemDirective } from '../../directives/order-process-item.directive';
+import { OrderProcessItemDirective } from '@e-commerce/client-web/shared/utils';
 
 @Component({
   selector: 'lib-shipping-method',
