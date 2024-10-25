@@ -10,7 +10,10 @@
     "importHelpers": true,
     "target": "es2022",
     "module": "esnext",
-    "lib": ["es2022", "dom"],
+    "lib": [
+      "es2022",
+      "dom"
+    ],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
@@ -32,6 +35,9 @@
       ],
       "@e-commerce/client-web/account/ui": [
         "libs/client-web/account/ui/src/index.ts"
+      ],
+      "@e-commerce/client-web/auth/api": [
+        "libs/client-web/auth/api/src/index.ts"
       ],
       "@e-commerce/client-web/auth/data-access": [
         "libs/client-web/auth/data-access/src/index.ts"
@@ -98,5 +104,8 @@
       ]
     }
   },
-  "exclude": ["node_modules", "tmp"]
+  "exclude": [
+    "node_modules",
+    "tmp"
+  ]
 }

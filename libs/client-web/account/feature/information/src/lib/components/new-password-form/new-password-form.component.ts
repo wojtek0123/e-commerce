@@ -33,6 +33,7 @@ import { TooltipModule } from 'primeng/tooltip';
     PasswordModule,
     NgClass,
     FormsModule,
+    TooltipModule,
   ],
   templateUrl: './new-password-form.component.html',
 })

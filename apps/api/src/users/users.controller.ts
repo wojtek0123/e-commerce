@@ -1,15 +1,14 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
-  UseGuards,
+  Get,
   Headers,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
 } from '@nestjs/common';
-import { UsersService } from './users.service';
 import {
   ApiBearerAuth,
   ApiCreatedResponse,
@@ -18,10 +17,11 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { UserDto } from './dto/user.dto';
 import { AccessTokenGuard } from '../common/guards/access-token.guard';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { User } from './entities/user.entity';
+import { UsersService } from './users.service';
 
 @ApiTags('users')
 @Controller('users')
@@ -30,14 +30,14 @@ export class UsersController {
 
   @Post()
   @ApiOperation({ summary: 'Create user' })
-  @ApiCreatedResponse({ type: UserDto })
+  @ApiCreatedResponse({ type: User })
   create(@Body() body: CreateUserDto) {
     return this.usersService.create(body);
   }
 
   @Get()
   @ApiOperation({ summary: 'Get users' })
-  @ApiOkResponse({ type: UserDto, isArray: true })
+  @ApiOkResponse({ type: User, isArray: true })
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   findAll() {
@@ -46,7 +46,7 @@ export class UsersController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Get unique user' })
-  @ApiOkResponse({ type: UserDto })
+  @ApiOkResponse({ type: User })
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   findOne(@Param('id') id: string) {
@@ -55,7 +55,7 @@ export class UsersController {
 
   @Patch(':id')
   @ApiOperation({ summary: 'Update user' })
-  @ApiCreatedResponse({ type: UserDto })
+  @ApiCreatedResponse({ type: User })
   @UseGuards(AccessTokenGuard)
   @ApiBearerAuth()
   update(
@@ -68,7 +68,7 @@ export class UsersController {
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete user' })
-  @ApiOkResponse({ type: UserDto })
+  @ApiOkResponse({ type: User })
   @UseGuards(AccessTokenGuard)
   @ApiBearerAuth()
   remove(@Param('id') id: string) {

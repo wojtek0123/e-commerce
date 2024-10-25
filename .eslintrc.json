@@ -82,6 +82,7 @@
                 "sourceTag": "type:shell",
                 "onlyDependOnLibsWithTags": [
                   "type:feature",
+                  "type:api",
                   "type:data-access",
                   "type:util",
                   "type:shared-data-access",
@@ -95,6 +96,10 @@
               {
                 "sourceTag": "scope:api",
                 "onlyDependOnLibsWithTags": ["scope:api"]
+              },
+              {
+                "sourceTag": "type:api",
+                "onlyDependOnLibsWithTags": ["type:data-access", "type:util"]
               }
             ]
           }

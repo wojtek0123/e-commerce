@@ -70,7 +70,10 @@ export class UsersService {
       throw new UnauthorizedException();
     }
 
-    const isPasswordCorrect = await compare(body.password, user.password);
+    let isPasswordCorrect = true;
+    if (body.password && user.password) {
+      isPasswordCorrect = await compare(body.password, user.password);
+    }
 
     if (!isPasswordCorrect) {
       throw new BadRequestException('Incorrect password');
@@ -81,13 +84,11 @@ export class UsersService {
       hashedPassword = await hash(body.newPassword.toString(), roundsOfHashing);
     }
 
-    console.log(hashedPassword);
-
     return this.prisma.user.update({
       where: { id: userId },
       data: {
-        password: hashedPassword,
-        email: body.email,
+        ...(hashedPassword && { password: hashedPassword }),
+        ...(body.email && { email: body.email }),
       },
       select: {
         password: false,
