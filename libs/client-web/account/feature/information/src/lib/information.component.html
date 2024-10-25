@@ -19,6 +19,7 @@
             <span>{{ user()?.email }}</span>
           </div>
           <p-button
+            (onClick)="setEditingField('email')"
             pTooltip="Edit email"
             tooltipPosition="left"
             showDelay="300"
@@ -70,6 +71,7 @@
   @if (editingField() === 'password') {
     <lib-new-password-form class="w-full" />
   } @else if (editingField() === 'email') {
+    <lib-new-email-form class="w-full" />
   } @else {
     <div
       class="p-4 h-full rounded-base bg-content-background flex items-center justify-center w-full"

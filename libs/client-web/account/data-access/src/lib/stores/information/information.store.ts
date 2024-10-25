@@ -73,7 +73,7 @@ export const InformationStore = signalStore(
                       ...state.account,
                       error:
                         error?.error?.message ??
-                        'An error occur while getting account information',
+                        'An error occurred while getting account information',
                       loading: false,
                     },
                   }));
@@ -126,7 +126,7 @@ export const InformationStore = signalStore(
                     summary: 'Error',
                     detail:
                       error?.error?.message ??
-                      'An error occur while updating user information',
+                      'An error occurred while updating user information',
                     severity: 'error',
                   });
                 },
@@ -142,12 +142,4 @@ export const InformationStore = signalStore(
       },
     }),
   ),
-  withHooks({
-    onInit: (store) => {
-      const userId = localStorage.getItem('userId') ?? null;
-      if (userId) {
-        store.getUser$({ id: userId });
-      }
-    },
-  }),
 );

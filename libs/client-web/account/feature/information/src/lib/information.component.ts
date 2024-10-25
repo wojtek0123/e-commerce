@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject } from '@angular/core';
+import { Component, computed, effect, inject, untracked } from '@angular/core';
 import {
   EditingField,
   InformationStore,
@@ -14,6 +14,8 @@ import { SidebarModule } from 'primeng/sidebar';
 import { NgTemplateOutlet } from '@angular/common';
 import { SidebarLeftDirective } from '@e-commerce/client-web/shared/utils';
 import { DialogModule } from 'primeng/dialog';
+import { NewEmailFormComponent } from './components/new-email-form/new-email-form.component';
+import { AuthService } from '@e-commerce/client-web/auth/api';
 
 @Component({
   selector: 'lib-information',
@@ -30,16 +32,30 @@ import { DialogModule } from 'primeng/dialog';
     SidebarModule,
     SidebarLeftDirective,
     DialogModule,
+    NewEmailFormComponent,
   ],
   templateUrl: './information.component.html',
 })
 export class InformationComponent {
   private readonly informationStore = inject(InformationStore);
+  private readonly authService = inject(AuthService);
 
   public user = this.informationStore.user;
   public loading = this.informationStore.userLoading;
   public error = this.informationStore.userError;
   public editingField = this.informationStore.userEditingField;
+
+  public userId = this.authService.userId;
+
+  protected getUserEffect = effect(() => {
+    const userId = this.userId();
+
+    untracked(() => {
+      if (userId) {
+        this.informationStore.getUser$({ id: userId });
+      }
+    });
+  });
 
   public isSidebarVisible = computed(() => !!this.editingField());
 
