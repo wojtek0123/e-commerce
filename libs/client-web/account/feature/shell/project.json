@@ -4,7 +4,7 @@
   "sourceRoot": "libs/client-web/account/feature/shell/src",
   "prefix": "lib",
   "projectType": "library",
-  "tags": ["scope:client-web", "domain:account", "type:feature"],
+  "tags": ["scope:client-web", "domain:account", "type:shell"],
   "targets": {
     "test": {
       "executor": "@nx/jest:jest",

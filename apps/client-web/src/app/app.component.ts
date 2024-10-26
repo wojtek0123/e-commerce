@@ -14,8 +14,8 @@ import { AsyncPipe } from '@angular/common';
 import { PrimeNGConfig } from 'primeng/api';
 import { Aura } from 'primeng/themes/aura';
 import { definePreset } from 'primeng/themes';
-// import { AuthService } from '@e-commerce/client-web/auth/api';
-// import { CartService } from '@e-commerce/client-web/cart/api';
+import { AuthService } from '@e-commerce/client-web/auth/api';
+import { CartService } from '@e-commerce/client-web/cart/api';
 
 const borderRadius = '1rem' as const;
 const MyPreset = definePreset(Aura, {
@@ -56,29 +56,29 @@ const MyPreset = definePreset(Aura, {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent implements OnInit {
-  // private readonly authService = inject(AuthService);
-  // private readonly cartService = inject(CartService);
+  private readonly authService = inject(AuthService);
+  private readonly cartService = inject(CartService);
   private readonly config = inject(PrimeNGConfig);
 
-  // public event = this.authService.event;
-  //
-  // constructor() {
-  //   effect(() => {
-  //     const event = this.event();
-  //
-  //     untracked(() => {
-  //       if (event === 'auth-success' || event === 'init-database') {
-  //         this.cartService.syncCartAndFetchSession();
-  //       }
-  //       if (event === 'logout-success') {
-  //         this.cartService.clearCartAndSession();
-  //       }
-  //       if (event === 'init-local') {
-  //         this.cartService.getLocalCartItems();
-  //       }
-  //     });
-  //   });
-  // }
+  public event = this.authService.event;
+
+  constructor() {
+    effect(() => {
+      const event = this.event();
+
+      untracked(() => {
+        if (event === 'auth-success' || event === 'init-database') {
+          this.cartService.syncCartAndFetchSession();
+        }
+        if (event === 'logout-success') {
+          this.cartService.clearCartAndSession();
+        }
+        if (event === 'init-local') {
+          this.cartService.getLocalCartItems();
+        }
+      });
+    });
+  }
 
   ngOnInit(): void {
     this.config.theme.set({

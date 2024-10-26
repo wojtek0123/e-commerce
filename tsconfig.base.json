@@ -10,10 +10,7 @@
     "importHelpers": true,
     "target": "es2022",
     "module": "esnext",
-    "lib": [
-      "es2022",
-      "dom"
-    ],
+    "lib": ["es2022", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
@@ -87,6 +84,9 @@
       "@e-commerce/client-web/cart/feature/payment-status": [
         "libs/client-web/cart/feature/payment-status/src/index.ts"
       ],
+      "@e-commerce/client-web/cart/feature/shell": [
+        "libs/client-web/cart/feature/shell/src/index.ts"
+      ],
       "@e-commerce/client-web/cart/ui": [
         "libs/client-web/cart/ui/src/index.ts"
       ],
@@ -110,8 +110,5 @@
       ]
     }
   },
-  "exclude": [
-    "node_modules",
-    "tmp"
-  ]
+  "exclude": ["node_modules", "tmp"]
 }

@@ -10,12 +10,12 @@ module.exports = {
   darkMode: 'selector',
   theme: {
     extend: {
-      padding: { gap: '2rem', base: '2rem' },
-      gap: { base: '2rem' },
+      padding: { gap: '1rem', base: '1rem' },
+      gap: { base: '1rem' },
       borderRadius: { base: '1rem' },
       maxWidth: { 'book-card': '22rem' },
-      height: { content: 'calc(100svh - 2 * 2rem)' },
-      maxheight: { content: 'calc(100svh - 2 * 2rem)' },
+      height: { content: 'calc(100svh - 2 * 1rem)' },
+      maxheight: { content: 'calc(100svh - 2 * 1rem)' },
       boxShadow: {
         base: '0px 3px 5px rgba(0, 0, 0, 0.02), 0px 0px 2px rgba(0, 0, 0, 0.05), 0px 1px 4px rgba(0,0,0,0.08)',
       },

@@ -73,7 +73,6 @@ import { AuthService } from '@e-commerce/client-web/auth/api';
       transition('out => in', [animate('300ms ease-in-out')]),
     ]),
   ],
-  providers: [AuthService],
 })
 export class NavComponent implements OnInit, OnDestroy {
   private readonly themeService = inject(ThemeService);

@@ -1,10 +1,9 @@
-/* eslint-disable */
 export default {
-  displayName: 'settings',
+  displayName: 'client-web-cart-feature-shell',
   preset: '../../../../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
   coverageDirectory:
-    '../../../../../coverage/libs/client-web/account/feature/settings',
+    '../../../../../coverage/libs/client-web/cart/feature/shell',
   transform: {
     '^.+\\.(ts|mjs|js|html)$': [
       'jest-preset-angular',

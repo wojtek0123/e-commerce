@@ -2,7 +2,7 @@ import { computed, inject, Injectable } from '@angular/core';
 import { CartStore } from '@e-commerce/client-web/cart/data-access';
 import { Book } from '@e-commerce/client-web/shared/data-access';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class CartService {
   private readonly cartStore = inject(CartStore);
 
