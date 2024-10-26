@@ -11,11 +11,11 @@ import { NavComponent } from './components/nav/nav.component';
 import { ToastModule } from 'primeng/toast';
 import { CartSidebarComponent } from '@e-commerce/client-web/cart/feature/cart-sidebar';
 import { AsyncPipe } from '@angular/common';
-import { AuthStore } from '@e-commerce/client-web/auth/data-access';
-import { CartStore } from '@e-commerce/client-web/cart/data-access';
 import { PrimeNGConfig } from 'primeng/api';
 import { Aura } from 'primeng/themes/aura';
 import { definePreset } from 'primeng/themes';
+// import { AuthService } from '@e-commerce/client-web/auth/api';
+// import { CartService } from '@e-commerce/client-web/cart/api';
 
 const borderRadius = '1rem' as const;
 const MyPreset = definePreset(Aura, {
@@ -56,32 +56,29 @@ const MyPreset = definePreset(Aura, {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent implements OnInit {
-  private readonly cartStore = inject(CartStore);
-  private readonly authStore = inject(AuthStore);
+  // private readonly authService = inject(AuthService);
+  // private readonly cartService = inject(CartService);
   private readonly config = inject(PrimeNGConfig);
 
-  public event = this.authStore.event;
-
-  constructor() {
-    effect(() => {
-      const event = this.event();
-
-      untracked(() => {
-        if (event === 'auth-success') {
-          this.cartStore.syncCartsAndFetchSession();
-        }
-        if (event === 'logout-success') {
-          this.cartStore.clearCartAndSession();
-        }
-        if (event === 'init-local') {
-          this.cartStore.getLocalCartItems();
-        }
-        if (event === 'init-database') {
-          this.cartStore.syncCartsAndFetchSession();
-        }
-      });
-    });
-  }
+  // public event = this.authService.event;
+  //
+  // constructor() {
+  //   effect(() => {
+  //     const event = this.event();
+  //
+  //     untracked(() => {
+  //       if (event === 'auth-success' || event === 'init-database') {
+  //         this.cartService.syncCartAndFetchSession();
+  //       }
+  //       if (event === 'logout-success') {
+  //         this.cartService.clearCartAndSession();
+  //       }
+  //       if (event === 'init-local') {
+  //         this.cartService.getLocalCartItems();
+  //       }
+  //     });
+  //   });
+  // }
 
   ngOnInit(): void {
     this.config.theme.set({

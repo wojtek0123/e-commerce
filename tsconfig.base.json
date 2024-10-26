@@ -48,6 +48,9 @@
       "@e-commerce/client-web/auth/feature/register": [
         "libs/client-web/auth/feature/register/src/index.ts"
       ],
+      "@e-commerce/client-web/auth/feature/shell": [
+        "libs/client-web/auth/feature/shell/src/index.ts"
+      ],
       "@e-commerce/client-web/auth/ui": [
         "libs/client-web/auth/ui/src/index.ts"
       ],
@@ -68,6 +71,9 @@
       ],
       "@e-commerce/client-web/browse/utils": [
         "libs/client-web/browse/utils/src/index.ts"
+      ],
+      "@e-commerce/client-web/cart/api": [
+        "libs/client-web/cart/api/src/index.ts"
       ],
       "@e-commerce/client-web/cart/data-access": [
         "libs/client-web/cart/data-access/src/index.ts"

@@ -18,6 +18,7 @@
                   "type:feature",
                   "type:ui",
                   "type:util",
+                  "type:shell",
                   "type:data-access",
                   "type:shared-data-access",
                   "type:shared-util",
@@ -30,6 +31,7 @@
                   "type:ui",
                   "type:data-access",
                   "type:util",
+                  "type:api",
                   "type:shared-data-access",
                   "type:shared-util",
                   "type:shared-ui"
@@ -99,7 +101,12 @@
               },
               {
                 "sourceTag": "type:api",
-                "onlyDependOnLibsWithTags": ["type:data-access", "type:util"]
+                "onlyDependOnLibsWithTags": [
+                  "type:data-access",
+                  "type:util",
+                  "type:shared-data-access",
+                  "type:shared-util"
+                ]
               }
             ]
           }
