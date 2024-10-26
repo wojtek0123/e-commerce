@@ -5,7 +5,7 @@ import {
   HttpRequest,
 } from '@angular/common/http';
 import { catchError, Observable, switchMap, throwError } from 'rxjs';
-import { AuthStore } from '../store/auth.store';
+import { AuthService } from '@e-commerce/client-web/auth/api';
 import { inject } from '@angular/core';
 import {
   AuthApiService,
@@ -14,13 +14,13 @@ import {
 
 export const authInterceptor: HttpInterceptorFn = (
   request: HttpRequest<unknown>,
-  next: HttpHandlerFn,
+  next: HttpHandlerFn
 ): Observable<HttpEvent<unknown>> => {
   const authApi = inject(AuthApiService);
-  const authStore = inject(AuthStore);
-  const refreshToken = authStore.refreshToken();
-  const accessToken = authStore.accessToken();
-  const userId = authStore.userId();
+  const authService = inject(AuthService);
+  const refreshToken = authService.refreshToken();
+  const accessToken = authService.accessToken();
+  const userId = authService.userId();
 
   if (!accessToken) return next(request);
 
@@ -29,7 +29,7 @@ export const authInterceptor: HttpInterceptorFn = (
       'Authorization',
       `Bearer ${
         request.url.includes('auth/refresh') ? refreshToken : accessToken
-      }`,
+      }`
     ),
   });
 
@@ -40,15 +40,15 @@ export const authInterceptor: HttpInterceptorFn = (
 
         return authApi.getRefreshToken$(userId, refreshToken).pipe(
           switchMap((tokens) => {
-            authStore.updateTokens(tokens);
+            authService.updateTokens(tokens);
 
             return next(
               request.clone({
                 headers: request.headers.set(
                   'Authorization',
-                  `Bearer ${tokens.accessToken}`,
+                  `Bearer ${tokens.accessToken}`
                 ),
-              }),
+              })
             );
           }),
           catchError((error: ResponseError) => {
@@ -58,14 +58,14 @@ export const authInterceptor: HttpInterceptorFn = (
                 request.url !== '/login' &&
                 request.url !== '/register')
             ) {
-              authStore.logout();
+              authService.logout();
             }
             return throwError(() => error);
-          }),
+          })
         );
       }
 
       return throwError(() => error);
-    }),
+    })
   );
 };

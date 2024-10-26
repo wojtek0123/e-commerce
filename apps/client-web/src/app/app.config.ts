@@ -12,7 +12,6 @@ import { MessageService } from 'primeng/api';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import {
   authInterceptor,
-  AuthStore,
 } from '@e-commerce/client-web/auth/data-access';
 import { provideServiceWorker } from '@angular/service-worker';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
@@ -37,7 +36,6 @@ export const appConfig: ApplicationConfig = {
       useValue: 'http://localhost:3000',
     },
     MessageService,
-    AuthStore,
     provideServiceWorker('ngsw-worker.js', {
       enabled: !isDevMode(),
       registrationStrategy: 'registerWhenStable:30000',

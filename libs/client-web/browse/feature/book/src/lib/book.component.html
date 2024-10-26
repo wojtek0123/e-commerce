@@ -1,141 +1,67 @@
 @if (loading()) {
-  <div
-    class="grid gap-base grid-cols-1 w-full xl:grid-cols-2 4xl:grid-cols-[1fr_1fr_0.4fr]"
-  >
-    <div class="rounded-base xl:h-content overflow-hidden xl:sticky xl:top-8">
-      <p-skeleton width="100%" height="100%" />
-    </div>
-    <div class="flex flex-col gap-base">
-      <p-skeleton width="100%" height="3rem" />
-      <p-skeleton width="70%" height="6rem" />
-      <p-skeleton width="15rem" height="10rem" />
-      <p-skeleton height="3rem" />
-      <p-skeleton width="50%" height="3rem" />
-      <p-skeleton width="16rem" height="3rem" />
-      <p-skeleton width="80%" height="3rem" />
-      <p-skeleton height="20rem" />
-    </div>
-    <div>
-      <p-skeleton width="100%" height="24rem" />
-    </div>
+<div
+  class="grid gap-base grid-cols-1 w-full xl:grid-cols-2 4xl:grid-cols-[1fr_1fr_0.4fr]"
+>
+  <div class="rounded-base xl:h-content overflow-hidden xl:sticky xl:top-4">
+    <p-skeleton width="100%" height="100%" />
   </div>
+  <div class="flex flex-col gap-base">
+    <p-skeleton width="100%" height="3rem" />
+    <p-skeleton width="70%" height="6rem" />
+    <p-skeleton width="15rem" height="10rem" />
+    <p-skeleton height="3rem" />
+    <p-skeleton width="50%" height="3rem" />
+    <p-skeleton width="16rem" height="3rem" />
+    <p-skeleton width="80%" height="3rem" />
+    <p-skeleton height="20rem" />
+  </div>
+  <div>
+    <p-skeleton width="100%" height="24rem" />
+  </div>
+</div>
 } @else if (error()) {
-  <div class="text-5xl text-center mt-10">{{ error() }}</div>
+<div class="text-5xl text-center mt-10">{{ error() }}</div>
 } @else if (book()) {
+<div
+  class="grid gap-base grid-cols-1 w-full xl:grid-cols-2 4xl:grid-cols-[1fr_1fr_0.4fr]"
+>
   <div
-    class="grid gap-base grid-cols-1 w-full xl:grid-cols-2 4xl:grid-cols-[1fr_1fr_0.4fr]"
+    class="rounded-base w-full flex items-center justify-center xl:h-content overflow-hidden xl:sticky xl:top-4"
   >
-    <div
-      class="rounded-base w-full flex items-center justify-center xl:h-content overflow-hidden xl:sticky xl:top-8"
-    >
-      <img
-        class="rounded-base w-full h-full"
-        [src]="book()?.coverImage"
-        [alt]="book()?.title + ' cover image'"
-      />
-    </div>
-    <div class="flex flex-col gap-base">
-      <div class="flex flex-col gap-base w-full">
-        <p-breadcrumb [model]="breadcrumbs()" />
-        <h3 class="text-3xl md:text-4xl lg:text-5xl xl:text-8xl">
-          {{ book()?.title }}
-        </h3>
-        <div class="flex flex-wrap gap-4 mb-8">
-          @for (author of book()?.authors; track author.id) {
-            <div class="text-xl text-muted-color">
-              {{ author.name }}
-            </div>
-          }
+    <img
+      class="rounded-base w-full h-full"
+      [src]="book()?.coverImage"
+      [alt]="book()?.title + ' cover image'"
+    />
+  </div>
+  <div class="flex flex-col gap-base">
+    <div class="flex flex-col gap-base w-full">
+      <p-breadcrumb [model]="breadcrumbs()" />
+      <h3 class="text-3xl md:text-4xl lg:text-5xl xl:text-8xl">
+        {{ book()?.title }}
+      </h3>
+      <div class="flex flex-wrap gap-4 mb-8">
+        @for (author of book()?.authors; track author.id) {
+        <div class="text-xl text-muted-color">
+          {{ author.name }}
         </div>
-        @if (book()?.tag) {
-          <p-chip [label]="book()?.tag" />
         }
-        <div
-          class="flex flex-col my-8 gap-4 bg-content-background p-4 rounded-base 4xl:hidden"
-        >
-          <h4 class="text-3xl font-bold md:text-4xl lg:text-5xl xl:text-6xl">
-            {{ book()?.price | currency: 'USD' }}
-          </h4>
-          <div class="flex justify-start flex-row items-center gap-4">
-            <p-inputNumber
-              [showButtons]="true"
-              [formControl]="amount"
-              [size]="6"
-              [min]="1"
-              (onBlur)="onBlurInput()"
-              buttonLayout="horizontal"
-              spinnerMode="horizontal"
-              inputId="integeronly"
-              decrementButtonClass="p-button-text p-button-secondary"
-              incrementButtonClass="p-button-text p-button-secondary"
-              incrementButtonIcon="pi pi-plus"
-              decrementButtonIcon="pi pi-minus"
-            />
-            <p-button
-              [pTooltip]="
-                amount.invalid ? 'Make sure that amount is correct' : ''
-              "
-              tooltipPosition="top"
-              tooltipStyleClass="min-w-max"
-              styleClass="w-full"
-              class="w-full"
-              label="Add to cart"
-              icon="pi pi-cart-plus"
-              size="large"
-              [disabled]="amount.invalid"
-              [loading]="loading()"
-              (onClick)="addToCart()"
-            />
-          </div>
-          <span class="text-sm font-semibold text-muted-color">
-            {{
-              availableQuantity() !== 1
-                ? 'There are ' + availableQuantity() + ' pieces left'
-                : 'Hurry up! Only one piece left'
-            }}
-          </span>
-        </div>
-        <div class="flex flex-col gap-2">
-          <lib-detail-row
-            label="Category"
-            [value]="book()?.category?.name ?? ''"
-          />
-          @if (book()?.pages) {
-            <lib-detail-row label="Pages" [value]="book()?.pages ?? 0" />
-          }
-          @if (book()?.language) {
-            <lib-detail-row label="Language" [value]="book()?.language ?? ''" />
-          }
-          @if (book()?.publishedDate) {
-            <lib-detail-row
-              label="Publish date"
-              [value]="book()?.publishedDate | date"
-            />
-          }
-        </div>
       </div>
-      <div class="flex flex-col gap-4">
-        <span class="font-semibold text-xl">Description</span>
-        <p>
-          {{ book()?.description }}
-        </p>
-      </div>
-    </div>
-
-    <div class="hidden 4xl:flex h-content justify-center w-full">
+      @if (book()?.tag) {
+      <p-chip [label]="book()?.tag" />
+      }
       <div
-        class="4xl:sticky 4xl:top-8 flex flex-col items-center gap-12 overflow-y-auto h-fit w-full p-16 bg-content-background rounded-base"
+        class="flex flex-col my-8 gap-4 bg-content-background p-4 rounded-base 4xl:hidden"
       >
-        <span class="text-6xl font-bold">
-          {{ book()?.price | currency: 'USD' }}
-        </span>
-        <div class="flex flex-col items-center gap-4">
+        <h4 class="text-3xl font-bold md:text-4xl lg:text-5xl xl:text-6xl">
+          {{ book()?.price | currency : 'USD' }}
+        </h4>
+        <div class="flex justify-start flex-row items-center gap-4">
           <p-inputNumber
             [showButtons]="true"
             [formControl]="amount"
             [size]="6"
             [min]="1"
-            [max]="availableQuantity()"
             (onBlur)="onBlurInput()"
             buttonLayout="horizontal"
             spinnerMode="horizontal"
@@ -145,20 +71,14 @@
             incrementButtonIcon="pi pi-plus"
             decrementButtonIcon="pi pi-minus"
           />
-          <span class="text-sm font-semibold text-muted-color">
-            {{
-              availableQuantity() !== 1
-                ? 'There are ' + availableQuantity() + ' pieces left'
-                : 'Hurry up! Only one piece left'
-            }}
-          </span>
-        </div>
-        <div
-          [pTooltip]="amount.invalid ? 'Make sure that amount is correct' : ''"
-          tooltipPosition="top"
-          tooltipStyleClass="min-w-max"
-        >
           <p-button
+            [pTooltip]="
+              amount.invalid ? 'Make sure that amount is correct' : ''
+            "
+            tooltipPosition="top"
+            tooltipStyleClass="min-w-max"
+            styleClass="w-full"
+            class="w-full"
             label="Add to cart"
             icon="pi pi-cart-plus"
             size="large"
@@ -167,7 +87,85 @@
             (onClick)="addToCart()"
           />
         </div>
+        <span class="text-sm font-semibold text-muted-color">
+          {{
+            availableQuantity() !== 1
+              ? 'There are ' + availableQuantity() + ' pieces left'
+              : 'Hurry up! Only one piece left'
+          }}
+        </span>
+      </div>
+      <div class="flex flex-col gap-2">
+        <lib-detail-row
+          label="Category"
+          [value]="book()?.category?.name ?? ''"
+        />
+        @if (book()?.pages) {
+        <lib-detail-row label="Pages" [value]="book()?.pages ?? 0" />
+        } @if (book()?.language) {
+        <lib-detail-row label="Language" [value]="book()?.language ?? ''" />
+        } @if (book()?.publishedDate) {
+        <lib-detail-row
+          label="Publish date"
+          [value]="book()?.publishedDate | date"
+        />
+        }
+      </div>
+    </div>
+    <div class="flex flex-col gap-4">
+      <span class="font-semibold text-xl">Description</span>
+      <p>
+        {{ book()?.description }}
+      </p>
+    </div>
+  </div>
+
+  <div class="hidden 4xl:flex h-content justify-center w-full">
+    <div
+      class="4xl:sticky 4xl:top-4 flex flex-col items-center gap-12 overflow-y-auto h-fit w-full p-16 bg-content-background rounded-base"
+    >
+      <span class="text-6xl font-bold">
+        {{ book()?.price | currency : 'USD' }}
+      </span>
+      <div class="flex flex-col items-center gap-4">
+        <p-inputNumber
+          [showButtons]="true"
+          [formControl]="amount"
+          [size]="6"
+          [min]="1"
+          [max]="availableQuantity()"
+          (onBlur)="onBlurInput()"
+          buttonLayout="horizontal"
+          spinnerMode="horizontal"
+          inputId="integeronly"
+          decrementButtonClass="p-button-text p-button-secondary"
+          incrementButtonClass="p-button-text p-button-secondary"
+          incrementButtonIcon="pi pi-plus"
+          decrementButtonIcon="pi pi-minus"
+        />
+        <span class="text-sm font-semibold text-muted-color">
+          {{
+            availableQuantity() !== 1
+              ? 'There are ' + availableQuantity() + ' pieces left'
+              : 'Hurry up! Only one piece left'
+          }}
+        </span>
+      </div>
+      <div
+        [pTooltip]="amount.invalid ? 'Make sure that amount is correct' : ''"
+        tooltipPosition="top"
+        tooltipStyleClass="min-w-max"
+      >
+        <p-button
+          label="Add to cart"
+          icon="pi pi-cart-plus"
+          size="large"
+          [disabled]="amount.invalid"
+          [loading]="loading()"
+          (onClick)="addToCart()"
+        />
       </div>
     </div>
   </div>
+</div>
 }
