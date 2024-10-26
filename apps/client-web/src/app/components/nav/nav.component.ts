@@ -28,10 +28,10 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
-import { AuthStore } from '@e-commerce/client-web/auth/data-access';
 import { CartSidebarComponent } from '@e-commerce/client-web/cart/feature/cart-sidebar';
 import { ThemeService } from '../../services/theme.service';
 import { CategoryStore } from '../../stores/category.store';
+import { AuthService } from '@e-commerce/client-web/auth/api';
 
 @Component({
   selector: 'app-nav',
@@ -73,13 +73,14 @@ import { CategoryStore } from '../../stores/category.store';
       transition('out => in', [animate('300ms ease-in-out')]),
     ]),
   ],
+  providers: [AuthService],
 })
 export class NavComponent implements OnInit, OnDestroy {
   private readonly themeService = inject(ThemeService);
   private readonly categoriesStore = inject(CategoryStore);
-  private readonly authStore = inject(AuthStore);
+  private readonly authService = inject(AuthService);
 
-  public isAuthenticated = this.authStore.isAuthenticated;
+  public isAuthenticated = this.authService.isAuthenticated;
   public categories = this.categoriesStore.categories;
   public isOpen = signal(false);
   public isExpanded = signal(true);
@@ -174,6 +175,6 @@ export class NavComponent implements OnInit, OnDestroy {
   }
 
   public logout() {
-    this.authStore.logout();
+    this.authService.logout();
   }
 }

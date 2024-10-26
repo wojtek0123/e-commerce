@@ -1,20 +1,14 @@
 {
-  "name": "api-auth",
+  "name": "client-web-auth-api",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/client-web/auth/api/src",
   "prefix": "lib",
   "projectType": "library",
-  "tags": [
-    "scope:client-web",
-    "type:api",
-    "domain:auth"
-  ],
+  "tags": ["scope:client-web", "type:api", "domain:auth"],
   "targets": {
     "test": {
       "executor": "@nx/jest:jest",
-      "outputs": [
-        "{workspaceRoot}/coverage/{projectRoot}"
-      ],
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
         "jestConfig": "libs/client-web/auth/api/jest.config.ts"
       }

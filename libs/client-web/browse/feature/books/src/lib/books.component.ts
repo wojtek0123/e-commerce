@@ -19,7 +19,7 @@ import { ActiveFiltersComponent } from '@e-commerce/client-web/browse/ui';
 
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 import { FiltersComponent } from './filters/filters.component';
-import { CartStore } from '@e-commerce/client-web/cart/data-access';
+import { CartService } from '@e-commerce/client-web/cart/api';
 
 @Component({
   selector: 'lib-books',
@@ -39,7 +39,7 @@ import { CartStore } from '@e-commerce/client-web/cart/data-access';
 })
 export class BooksComponent {
   private readonly booksStore = inject(BooksStore);
-  private readonly cartStore = inject(CartStore);
+  private readonly cartService = inject(CartService);
   private viewport = inject(ViewportScroller);
 
   public breadcrumbs = signal<MenuItem[]>([
@@ -61,7 +61,7 @@ export class BooksComponent {
   public activeFilters = this.booksStore.activeFilters;
 
   public addToCart(book: Book) {
-    this.cartStore.addBook({ book, quantity: 1 });
+    this.cartService.addBook(book, 1);
   }
 
   public onPageChange(event: PaginatorState, size: number | null) {

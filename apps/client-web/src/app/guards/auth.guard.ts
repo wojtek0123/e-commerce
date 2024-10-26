@@ -1,12 +1,12 @@
 import { inject } from '@angular/core';
 import { CanMatchFn, Router } from '@angular/router';
-import { AuthStore } from '@e-commerce/client-web/auth/data-access';
+import { AuthService } from '@e-commerce/client-web/auth/api';
 
 export const canMatchAuth: CanMatchFn = () => {
   const router = inject(Router);
-  const authStore = inject(AuthStore);
+  const authService = inject(AuthService);
 
-  const isAuth = authStore.isAuthenticated();
+  const isAuth = authService.isAuthenticated();
 
   return (
     isAuth ||

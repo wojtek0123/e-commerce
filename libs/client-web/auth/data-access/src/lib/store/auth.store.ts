@@ -49,7 +49,6 @@ export const initialAuthState: AuthState = {
 };
 
 export const AuthStore = signalStore(
-  { providedIn: 'root' },
   withState(initialAuthState),
   withComputed(({ userId, accessToken, refreshToken }) => ({
     isAuthenticated: computed(
