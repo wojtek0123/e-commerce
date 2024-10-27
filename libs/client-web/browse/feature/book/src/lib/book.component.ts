@@ -69,7 +69,7 @@ export class BookComponent {
       const bookId = this.bookId();
 
       untracked(() => {
-        this.bookStore.getBook({ bookId });
+        this.bookStore.getBook$({ bookId });
       });
     });
 
@@ -94,5 +94,11 @@ export class BookComponent {
     if (!book) return;
 
     this.cartService.addBook(book, this.amount.value);
+  }
+
+  public getBook() {
+    const bookId = this.bookId();
+
+    this.bookStore.getBook$({ bookId });
   }
 }
