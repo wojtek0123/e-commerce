@@ -13,8 +13,8 @@ import { MenuModule } from 'primeng/menu';
 import { Category } from '@e-commerce/client-web/shared/data-access';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { FormsModule } from '@angular/forms';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { filter, map } from 'rxjs';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { debounce, debounceTime, filter, map, of, timer } from 'rxjs';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { SidebarModule } from 'primeng/sidebar';
 import { ToolbarModule } from 'primeng/toolbar';
@@ -83,42 +83,44 @@ export class NavComponent implements OnInit, OnDestroy {
   public categories = this.categoriesStore.categories;
   public isOpen = signal(false);
   public isExpanded = signal(true);
-  public isLabelShowed = signal(computed(() => this.isExpanded())());
+  public isLabelShowed = toSignal(
+    toObservable(this.isExpanded).pipe(
+      debounce((isExpanded) => (isExpanded ? timer(150) : of({}))),
+      map((isExpanded) => isExpanded),
+    ),
+    { initialValue: false },
+  );
   public isDark = this.themeService.isDark;
 
   private resizeObserver?: ResizeObserver;
-  private timer?: ReturnType<typeof setTimeout>;
   private shouldRestoreExpanded = signal(false);
 
   public ngOnInit() {
-    () => {
-      const isExpanded = localStorage.getItem('isExpanded');
+    const isExpanded = localStorage.getItem('isExpanded');
 
-      if (isExpanded) {
-        this.isExpanded.set(JSON.parse(isExpanded));
-        this.isLabelShowed.set(JSON.parse(isExpanded));
+    if (isExpanded) {
+      this.isExpanded.set(JSON.parse(isExpanded));
+    }
+
+    const mediaQueryList = matchMedia('(min-width: 1280px)');
+
+    this.resizeObserver = new ResizeObserver(() => {
+      if (mediaQueryList.matches && this.shouldRestoreExpanded()) {
+        const isExpanded = JSON.parse(
+          localStorage.getItem('isExpanded') || 'false',
+        );
+
+        this.isExpanded.set(isExpanded);
+        // this.isLabelShowed.set(isExpanded);
+        this.shouldRestoreExpanded.set(false);
+      } else if (!mediaQueryList.matches) {
+        // this.isLabelShowed.set(true);
+        this.isExpanded.set(true);
+        this.shouldRestoreExpanded.set(true);
       }
+    });
 
-      const mediaQueryList = matchMedia('(min-width: 1280px)');
-
-      this.resizeObserver = new ResizeObserver(() => {
-        if (mediaQueryList.matches && this.shouldRestoreExpanded()) {
-          const isExpanded = JSON.parse(
-            localStorage.getItem('isExpanded') || '',
-          );
-
-          this.isExpanded.set(isExpanded);
-          this.isLabelShowed.set(isExpanded);
-          this.shouldRestoreExpanded.set(false);
-        } else if (!mediaQueryList.matches) {
-          this.isLabelShowed.set(true);
-          this.isExpanded.set(true);
-          this.shouldRestoreExpanded.set(true);
-        }
-      });
-
-      this.resizeObserver.observe(document.body);
-    };
+    this.resizeObserver.observe(document.body);
   }
 
   public ngOnDestroy(): void {
@@ -161,16 +163,6 @@ export class NavComponent implements OnInit, OnDestroy {
   public expandCollapseNavigation() {
     this.isExpanded.update((isExpanded) => !isExpanded);
     localStorage.setItem('isExpanded', JSON.stringify(this.isExpanded()));
-
-    if (this.isExpanded()) {
-      this.timer = setTimeout(() => {
-        this.isLabelShowed.set(true);
-      }, 150);
-    } else {
-      this.isLabelShowed.set(false);
-
-      if (this.timer) clearTimeout(this.timer);
-    }
   }
 
   public logout() {

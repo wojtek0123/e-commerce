@@ -30,6 +30,7 @@ import { DividerModule } from 'primeng/divider';
     CurrencyPipe,
     SkeletonModule,
     DividerModule,
+    CurrencyPipe,
   ],
 })
 export class OrderComponent {
