@@ -4,7 +4,7 @@ import { CartService } from '@e-commerce/client-web/cart/api';
 
 export const bookRoutes: Route[] = [
   {
-    path: '',
+    path: ':bookId',
     loadComponent: () =>
       import('./book.component').then((c) => c.BookComponent),
     providers: [BookStore, CartService],

@@ -1,5 +1,5 @@
 {
-  "name": "shell",
+  "name": "client-web-account-feature-shell",
   "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/client-web/account/feature/shell/src",
   "prefix": "lib",

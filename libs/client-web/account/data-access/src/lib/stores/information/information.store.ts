@@ -4,7 +4,13 @@ import {
   User,
   UserApiService,
 } from '@e-commerce/client-web/shared/data-access';
-import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
+import {
+  getState,
+  patchState,
+  signalStore,
+  withMethods,
+  withState,
+} from '@ngrx/signals';
 import { inject } from '@angular/core';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { filter, map, pipe, switchMap, tap } from 'rxjs';
@@ -68,12 +74,12 @@ export const InformationStore = signalStore(
         body: UpdateUserBody;
       }>(
         pipe(
-          tap(() => patchState(store, { loading: true })),
           map(({ body }) => ({
             body,
-            id: store.user()?.id ?? '',
+            id: getState(store).user?.id ?? '',
           })),
           filter(({ id }) => !!id),
+          tap(() => patchState(store, { loading: true })),
           switchMap(({ id, body }) =>
             userApi.update$(id, body).pipe(
               tapResponse({

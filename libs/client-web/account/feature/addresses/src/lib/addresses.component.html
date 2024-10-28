@@ -31,7 +31,12 @@
           </div>
         </div>
       } @else if (error()) {
-        <div>{{ error() }}</div>
+        <div
+          role="alert"
+          class="text-red-500 p-4 rounded-base border border-red-300 bg-red-50"
+        >
+          {{ error() }}
+        </div>
       } @else {
         @for (address of addresses(); track address.id) {
           <lib-address-information
@@ -56,11 +61,14 @@
 
 <p-dialog
   libSidebarLeft
-  header="Form"
+  header="Address form"
   [visible]="isFormVisible()"
   [modal]="true"
   class="2xl:hidden"
   styleClass="w-full max-w-[48rem] mx-4 w-full"
+  [closeOnEscape]="true"
+  [dismissableMask]="true"
+  aria-labelledby="address-form-dialog-header"
   (visibleChange)="hideForm()"
 >
   <ng-container [ngTemplateOutlet]="forms" />

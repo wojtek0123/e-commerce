@@ -79,7 +79,6 @@ export class NavComponent implements OnInit, OnDestroy {
   public isLabelShowed = toSignal(
     toObservable(this.isExpanded).pipe(
       debounce((isExpanded) => (isExpanded ? timer(150) : of({}))),
-      map((isExpanded) => isExpanded),
     ),
     { initialValue: false },
   );
@@ -89,6 +88,7 @@ export class NavComponent implements OnInit, OnDestroy {
   private shouldRestoreExpanded = signal(false);
 
   public ngOnInit() {
+    // TODO: Create shared config to all routes and local storage keys
     const isExpanded = localStorage.getItem('isExpanded');
 
     if (isExpanded) {
