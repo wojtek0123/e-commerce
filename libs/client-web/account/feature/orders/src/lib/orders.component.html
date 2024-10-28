@@ -2,7 +2,7 @@
   class="grid grid-cols-1 relative 2xl:grid-cols-2 gap-base [2800px]:grid-cols-[1fr_0.7fr]"
 >
   <p-table
-    class="h-content overflow-y-auto 2xl:sticky 2xl:top-8"
+    class="h-content overflow-y-auto 2xl:sticky 2xl:top-4"
     [value]="orders()"
     selectionMode="single"
     [selection]="selectedOrder()"
@@ -36,11 +36,15 @@
     <ng-template pTemplate="emptymessage">
       @if (orders().length === 0 && !error) {
         <tr>
-          <td colspan="3" class="text-center">No orders found.</td>
+          <td [attr.colspan]="columns().length" class="text-center">
+            No orders found.
+          </td>
         </tr>
       } @else if (error()) {
         <tr>
-          <td colspan="3" class="text-center">{{ error() }}</td>
+          <td [attr.colspan]="columns().length" class="text-center">
+            {{ error() }}
+          </td>
         </tr>
       }
     </ng-template>
@@ -59,21 +63,26 @@
 
   <p-sidebar
     (onHide)="selectedOrder.set(null)"
-    class="2xl:hidden w-[20rem]"
+    class="2xl:hidden"
     [(visible)]="sidebarVisible"
     position="right"
+    [blockScroll]="true"
+    appendTo="body"
+    styleClass="max-w-[40rem] w-full rounded-r-base bg-surface-100 dark:bg-surface-950"
   >
     <ng-template pTemplate="header">
       <span class="font-bold"> Order details </span>
     </ng-template>
-    <lib-order [orderDetails]="selectedOrder()" />
+    <lib-order class="w-full" [orderDetails]="selectedOrder()" />
   </p-sidebar>
 
-  @if (selectedOrder()) {
-    <lib-order class="flex w-full" [orderDetails]="selectedOrder()" />
-  } @else {
-    <div class="block text-center mt-12 text-3xl">
-      Select order to see details
-    </div>
-  }
+  <div class="hidden 2xl:flex w-full">
+    @if (selectedOrder()) {
+      <lib-order class="w-full" [orderDetails]="selectedOrder()" />
+    } @else {
+      <div class="text-center mt-12 text-3xl w-full">
+        Select order to see details
+      </div>
+    }
+  </div>
 </div>

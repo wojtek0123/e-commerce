@@ -21,6 +21,7 @@ import {
   addEntities,
   addEntity,
   entityConfig,
+  removeEntity,
   setEntity,
   updateEntity,
   withEntities,
@@ -76,7 +77,7 @@ export const AddressStore = signalStore(
       store,
       userAddressApi = inject(UserAddressApiService),
       countryApi = inject(CountryApiService),
-      messageService = inject(MessageService)
+      messageService = inject(MessageService),
     ) => ({
       getAddresses$: rxMethod<void>(
         pipe(
@@ -96,7 +97,7 @@ export const AddressStore = signalStore(
                       },
                       selectedAddress: addresses.at(0) ?? null,
                     },
-                    addEntities(addresses, addressesConfig)
+                    addEntities(addresses, addressesConfig),
                   );
                 },
                 error: (error: ResponseError) => {
@@ -107,10 +108,10 @@ export const AddressStore = signalStore(
                     loading: false,
                   });
                 },
-              })
-            )
-          )
-        )
+              }),
+            ),
+          ),
+        ),
       ),
       getCountries$: rxMethod<{ name: string }>(
         pipe(
@@ -130,10 +131,10 @@ export const AddressStore = signalStore(
                     severity: 'error',
                   });
                 },
-              })
-            )
-          )
-        )
+              }),
+            ),
+          ),
+        ),
       ),
       addAddress$: rxMethod<{ data: CreateUserAddressBody }>(
         pipe(
@@ -154,7 +155,7 @@ export const AddressStore = signalStore(
                         visibility: false,
                       },
                     }),
-                    addEntity(userAddress, addressesConfig)
+                    addEntity(userAddress, addressesConfig),
                   );
                   messageService.add({
                     summary: 'Success',
@@ -174,10 +175,10 @@ export const AddressStore = signalStore(
                     severity: 'error',
                   });
                 },
-              })
-            )
-          )
-        )
+              }),
+            ),
+          ),
+        ),
       ),
       updateAddress$: rxMethod<{
         data: CreateUserAddressBody;
@@ -203,8 +204,8 @@ export const AddressStore = signalStore(
                       ...data,
                     },
                   },
-                  addressesConfig
-                )
+                  addressesConfig,
+                ),
               );
             },
           }),
@@ -241,7 +242,7 @@ export const AddressStore = signalStore(
                     patchState(
                       store,
                       { cachedAddress: null },
-                      setEntity(cachedAddress, addressesConfig)
+                      setEntity(cachedAddress, addressesConfig),
                     );
                   }
 
@@ -252,10 +253,47 @@ export const AddressStore = signalStore(
                     severity: 'error',
                   });
                 },
-              })
-            )
-          )
-        )
+              }),
+            ),
+          ),
+        ),
+      ),
+      deleteAddress$: rxMethod<{ id: UserAddress['id'] }>(
+        pipe(
+          tap(({ id }) => {
+            const address = store._addressesEntityMap()[id];
+
+            patchState(store, removeEntity(id, addressesConfig), {
+              cachedAddress: address,
+            });
+          }),
+          switchMap(({ id }) =>
+            userAddressApi.delete$(id).pipe(
+              tapResponse({
+                next: () => {
+                  patchState(store, { cachedAddress: null });
+                },
+                error: (error: ResponseError) => {
+                  const cachedAddress = store.cachedAddress();
+
+                  if (cachedAddress) {
+                    patchState(
+                      store,
+                      addEntity(cachedAddress, addressesConfig),
+                    );
+                  }
+                  messageService.add({
+                    summary: 'Error',
+                    detail:
+                      error?.error?.message ??
+                      'An error occur while deleting address',
+                    severity: 'error',
+                  });
+                },
+              }),
+            ),
+          ),
+        ),
       ),
       selectAddress: (selectedAddress: UserAddress) => {
         patchState(store, { selectedAddress });
@@ -278,11 +316,11 @@ export const AddressStore = signalStore(
           },
         }));
       },
-    })
+    }),
   ),
   withHooks({
     onInit: (store) => {
       store.getAddresses$();
     },
-  })
+  }),
 );

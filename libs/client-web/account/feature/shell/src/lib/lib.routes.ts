@@ -1,4 +1,40 @@
 import { Route } from '@angular/router';
-import { ShellComponent } from './shell/shell.component';
+import { canMatchAuth } from '@e-commerce/client-web/shared/utils';
 
-export const shellRoutes: Route[] = [{ path: '', component: ShellComponent }];
+export const accountShellRoutes: Route[] = [
+  {
+    path: '',
+    canMatch: [canMatchAuth],
+    children: [
+      {
+        path: 'orders',
+        loadChildren: () =>
+          import('@e-commerce/client-web/account/feature/orders').then(
+            (r) => r.ordersRoutes,
+          ),
+      },
+      {
+        path: 'information',
+        loadChildren: () =>
+          import('@e-commerce/client-web/account/feature/information').then(
+            (r) => r.informationRoutes,
+          ),
+      },
+      {
+        path: 'addresses',
+        loadChildren: () =>
+          import('@e-commerce/client-web/account/feature/addresses').then(
+            (r) => r.addressesRoutes,
+          ),
+      },
+      {
+        path: '**',
+        redirectTo: 'orders',
+      },
+    ],
+  },
+  {
+    path: '**',
+    redirectTo: 'orders',
+  },
+];

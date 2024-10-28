@@ -3,7 +3,7 @@ import { RouterLink } from '@angular/router';
 import { HomeStore, HomeState } from '@e-commerce/client-web/home/data-acess';
 import { Book, BookTag } from '@e-commerce/client-web/shared/data-access';
 import { BooksGridComponent } from '@e-commerce/client-web/shared/ui';
-import { CartStore } from '@e-commerce/client-web/cart/data-access';
+import { CartService } from '@e-commerce/client-web/cart/api';
 
 @Component({
   selector: 'lib-books-section',
@@ -13,7 +13,7 @@ import { CartStore } from '@e-commerce/client-web/cart/data-access';
   styleUrl: './books-section.component.scss',
 })
 export class BooksSectionComponent implements OnInit {
-  private readonly cartStore = inject(CartStore);
+  private readonly cartService = inject(CartService);
   private readonly homeStore = inject(HomeStore);
 
   public tag = input.required<keyof HomeState>();
@@ -28,6 +28,6 @@ export class BooksSectionComponent implements OnInit {
   }
 
   addToCart(book: Book) {
-    this.cartStore.addBook({ book, quantity: 1 });
+    this.cartService.addBook(book, 1);
   }
 }

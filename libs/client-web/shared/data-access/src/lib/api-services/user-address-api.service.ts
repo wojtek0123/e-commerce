@@ -40,4 +40,8 @@ export class UserAddressApiService {
       body,
     );
   }
+
+  delete$(id: UserAddress['id']) {
+    return this.http.delete<UserAddress>(`${this.apiUrl}/user-addresses/${id}`);
+  }
 }

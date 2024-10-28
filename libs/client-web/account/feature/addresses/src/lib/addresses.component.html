@@ -1,0 +1,87 @@
+<div
+  class="grid grid-cols-1 relative 2xl:grid-cols-2 gap-base 4xl:grid-cols-[1fr_1100px]"
+>
+  <div>
+    <div
+      class="flex h-min max-h-fit flex-col gap-4 bg-content-background p-4 rounded-base"
+    >
+      <div class="flex items-center gap-4">
+        <h3 class="text-lg">Addresses</h3>
+        <p-button
+          label="Add"
+          icon="pi pi-plus"
+          size="small"
+          severity="secondary"
+          (onClick)="add()"
+        />
+      </div>
+      @if (loading() && !addresses().length) {
+        <div libOrderProcessItem class="flex flex-col gap-4">
+          <div class="flex items-center gap-4">
+            <p-skeleton width="10rem" height="2rem" />
+            <p-skeleton width="12rem" height="2rem" />
+          </div>
+          <div class="flex items-center gap-4">
+            <p-skeleton width="8rem" height="2rem" />
+            <p-skeleton width="15rem" height="2rem" />
+          </div>
+          <div class="flex items-center gap-4">
+            <p-skeleton width="12rem" height="2rem" />
+            <p-skeleton width="20rem" height="2rem" />
+          </div>
+        </div>
+      } @else if (error()) {
+        <div
+          role="alert"
+          class="text-red-500 p-4 rounded-base border border-red-300 bg-red-50"
+        >
+          {{ error() }}
+        </div>
+      } @else {
+        @for (address of addresses(); track address.id) {
+          <lib-address-information
+            [address]="address"
+            (onEdit)="update($event)"
+            (onDelete)="delete($event)"
+          />
+        } @empty {
+          <div class="flex items-center flex-col text-center">
+            <span> No addresses found! </span>
+            <span class="text-sm text-muted-color"> Add some :) </span>
+          </div>
+        }
+      }
+    </div>
+  </div>
+
+  <div class="hidden 2xl:flex">
+    <ng-container [ngTemplateOutlet]="forms" />
+  </div>
+</div>
+
+<p-dialog
+  libSidebarLeft
+  header="Address form"
+  [visible]="isFormVisible()"
+  [modal]="true"
+  class="2xl:hidden"
+  styleClass="w-full max-w-[48rem] mx-4 w-full"
+  [closeOnEscape]="true"
+  [dismissableMask]="true"
+  aria-labelledby="address-form-dialog-header"
+  (visibleChange)="hideForm()"
+>
+  <ng-container [ngTemplateOutlet]="forms" />
+</p-dialog>
+
+<ng-template #forms>
+  @if (isFormVisible()) {
+    <lib-address-form class="w-full" />
+  } @else {
+    <div
+      class="p-4 h-full rounded-base bg-content-background flex items-center justify-center w-full"
+    >
+      Form placeholder
+    </div>
+  }
+</ng-template>

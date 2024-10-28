@@ -57,6 +57,12 @@ export class OrderDetailsService {
       }),
     );
 
+    const shippingMethod = await this.prisma.shippingMethod.findUnique({
+      where: { id: shippingMethodId },
+    });
+
+    const total = shoppingSession.total + shippingMethod.price;
+
     const {
       firstName,
       lastName,
@@ -94,12 +100,12 @@ export class OrderDetailsService {
         user: {
           connect: { id: userId },
         },
-        total: shoppingSession.total,
+        total,
         paymentDetails: {
           create: {
             status: 'SUCCEEDED',
             method: paymentMethod,
-            amount: shoppingSession.total,
+            amount: total,
           },
         },
         orderItems: {

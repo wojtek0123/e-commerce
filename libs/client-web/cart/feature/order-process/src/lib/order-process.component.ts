@@ -1,16 +1,16 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { StepsModule } from 'primeng/steps';
-import { ToastModule } from 'primeng/toast';
-import { ButtonModule } from 'primeng/button';
+import { CartStore } from '@e-commerce/client-web/cart/data-access';
 import {
   CartItemComponent,
   CartItemSkeletonComponent,
 } from '@e-commerce/client-web/cart/ui';
 import { Book, CartItem } from '@e-commerce/client-web/shared/data-access';
-import { CurrencyPipe, NgClass } from '@angular/common';
+import { ButtonModule } from 'primeng/button';
+import { StepsModule } from 'primeng/steps';
+import { ToastModule } from 'primeng/toast';
 import { SummaryComponent } from './components/summary/summary.component';
-import { CartStore } from '@e-commerce/client-web/cart/data-access';
+import { CurrencyPipe, NgClass } from '@angular/common';
 
 @Component({
   selector: 'lib-order-process',
@@ -33,7 +33,7 @@ import { CartStore } from '@e-commerce/client-web/cart/data-access';
 export class OrderProcessComponent {
   private readonly cartStore = inject(CartStore);
 
-  public cartItems = this.cartStore.cartItemsEntities;
+  public cartItems = this.cartStore.cartItems;
   public cartItemsLoading = this.cartStore.loading;
   public total = this.cartStore.total;
 
