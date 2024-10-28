@@ -16,6 +16,7 @@ import { SidebarLeftDirective } from '@e-commerce/client-web/shared/utils';
 import { DialogModule } from 'primeng/dialog';
 import { NewEmailFormComponent } from './components/new-email-form/new-email-form.component';
 import { AuthService } from '@e-commerce/client-web/auth/api';
+import { AddressInformationComponent } from '@e-commerce/client-web/shared/ui';
 
 @Component({
   selector: 'lib-information',
@@ -33,6 +34,7 @@ import { AuthService } from '@e-commerce/client-web/auth/api';
     SidebarLeftDirective,
     DialogModule,
     NewEmailFormComponent,
+    AddressInformationComponent,
   ],
   templateUrl: './information.component.html',
 })
@@ -40,10 +42,10 @@ export class InformationComponent {
   private readonly informationStore = inject(InformationStore);
   private readonly authService = inject(AuthService);
 
+  public loading = this.informationStore.loading;
+  public error = this.informationStore.error;
   public user = this.informationStore.user;
-  public loading = this.informationStore.userLoading;
-  public error = this.informationStore.userError;
-  public editingField = this.informationStore.userEditingField;
+  public editingField = this.informationStore.editingField;
 
   public userId = this.authService.userId;
 

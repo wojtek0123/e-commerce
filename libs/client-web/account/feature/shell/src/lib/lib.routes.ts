@@ -10,14 +10,21 @@ export const accountShellRoutes: Route[] = [
         path: 'orders',
         loadChildren: () =>
           import('@e-commerce/client-web/account/feature/orders').then(
-            (r) => r.ordersRoutes
+            (r) => r.ordersRoutes,
           ),
       },
       {
         path: 'information',
         loadChildren: () =>
           import('@e-commerce/client-web/account/feature/information').then(
-            (r) => r.informationRoutes
+            (r) => r.informationRoutes,
+          ),
+      },
+      {
+        path: 'addresses',
+        loadChildren: () =>
+          import('@e-commerce/client-web/account/feature/addresses').then(
+            (r) => r.addressesRoutes,
           ),
       },
       {

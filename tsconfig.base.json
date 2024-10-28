@@ -15,6 +15,9 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@e-commerce/client-web/account/feature/addresses": [
+        "libs/client-web/account/feature/addresses/src/index.ts"
+      ],
       "@e-commerce/client-web/account/data-access": [
         "libs/client-web/account/data-access/src/index.ts"
       ],
