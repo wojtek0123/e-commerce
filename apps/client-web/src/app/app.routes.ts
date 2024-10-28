@@ -17,25 +17,23 @@ export const appRoutes: Route[] = [
     path: 'browse',
     children: [
       {
-        path: '',
+        path: 'books',
         pathMatch: 'full',
         loadChildren: () =>
           import('@e-commerce/client-web/browse/feature/books').then(
             (r) => r.booksRoutes,
           ),
       },
-    ],
-  },
-  {
-    path: 'book/:bookId',
-    children: [
       {
-        path: '',
-        pathMatch: 'full',
+        path: 'book',
         loadChildren: () =>
           import('@e-commerce/client-web/browse/feature/book').then(
             (r) => r.bookRoutes,
           ),
+      },
+      {
+        path: '**',
+        redirectTo: '/browse/books',
       },
     ],
   },

@@ -1,5 +1,5 @@
 {
-  "name": "client-web-feature-orders",
+  "name": "client-web-account-feature-orders",
   "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/client-web/account/feature/orders/src",
   "prefix": "lib",

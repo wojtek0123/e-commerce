@@ -1,5 +1,5 @@
 {
-  "name": "addresses",
+  "name": "client-web-account-feature-addresses",
   "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/client-web/account/feature/addresses/src",
   "prefix": "lib",
