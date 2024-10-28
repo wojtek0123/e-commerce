@@ -1,7 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { compare, hash } from 'bcrypt';
+import { getUserIdFromAccessToken } from '../common/utils/get-user-id-from-access-token';
 import { PrismaService } from '../prisma/prisma.service';
-import { hash } from 'bcrypt';
-import { Prisma } from '@prisma/client';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 export const roundsOfHashing = 10;
 
@@ -9,11 +16,11 @@ export const roundsOfHashing = 10;
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
-  async create(data: Prisma.UserCreateInput) {
-    const hashedPassword = await hash(data.password, roundsOfHashing);
+  async create(body: CreateUserDto) {
+    const hashedPassword = await hash(body.password, roundsOfHashing);
 
     return this.prisma.user.create({
-      data: { ...data, password: hashedPassword },
+      data: { ...body, password: hashedPassword },
     });
   }
 
@@ -30,9 +37,9 @@ export class UsersService {
     });
   }
 
-  findOne(where: Prisma.UserWhereUniqueInput) {
-    return this.prisma.user.findUnique({
-      where,
+  async findOne(id: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id },
       select: {
         password: false,
         id: true,
@@ -42,24 +49,49 @@ export class UsersService {
         updatedAt: true,
       },
     });
+
+    if (!user) {
+      throw new NotFoundException();
+    }
+
+    return user;
   }
 
-  async update(
-    where: Prisma.UserWhereUniqueInput,
-    data: Prisma.UserUpdateInput,
-  ) {
-    if (data.password) {
-      const hashedPassword = await hash(
-        data.password.toString(),
-        roundsOfHashing,
-      );
+  async update(authHeader: string, id: string, body: UpdateUserDto) {
+    const user = await this.prisma.user.findUnique({ where: { id } });
 
-      data = { ...data, password: hashedPassword };
+    if (!user) {
+      throw new NotFoundException();
+    }
+
+    const userId = getUserIdFromAccessToken(authHeader);
+
+    if (userId !== id) {
+      throw new UnauthorizedException();
+    }
+
+    let hashedPassword: string | undefined;
+
+    if (body.newPassword) {
+      if (!body.password) {
+        throw new BadRequestException('Current password is required');
+      }
+
+      const isPasswordCorrect = await compare(body.password, user.password);
+
+      if (!isPasswordCorrect) {
+        throw new BadRequestException('Incorrect password');
+      }
+
+      hashedPassword = await hash(body.newPassword.toString(), roundsOfHashing);
     }
 
     return this.prisma.user.update({
-      where,
-      data,
+      where: { id: userId },
+      data: {
+        ...(hashedPassword && { password: hashedPassword }),
+        ...(body.email && { email: body.email }),
+      },
       select: {
         password: false,
         id: true,
@@ -71,9 +103,9 @@ export class UsersService {
     });
   }
 
-  remove(where: Prisma.UserWhereUniqueInput) {
+  remove(id: string) {
     return this.prisma.user.delete({
-      where,
+      where: { id },
       select: {
         password: false,
         id: true,

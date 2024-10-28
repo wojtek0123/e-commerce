@@ -6,10 +6,9 @@ import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { AccessTokenGuard } from '../common/guards/access-token.guard';
 import { RefreshTokenGuard } from '../common/guards/refresh-token.guard';
-import { UserDto } from '../users/dto/user.dto';
+import { User } from '../users/entities/user.entity';
 import { TokenDto } from './dto/token.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
-import { User } from '@prisma/client';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -32,7 +31,7 @@ export class AuthController {
 
   @UseGuards(AccessTokenGuard)
   @Post('logout')
-  @ApiCreatedResponse({ type: UserDto })
+  @ApiCreatedResponse({ type: User })
   @ApiOperation({ summary: 'Log out from the user account' })
   logout(@Body() { id }: { id: User['id'] }) {
     return this.authService.logout(id);

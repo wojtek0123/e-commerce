@@ -10,3 +10,4 @@ export * from './order-details-api.service';
 export * from './shipping-method-api.service';
 export * from './shopping-session-api.service';
 export * from './product-inventory-api.service';
+export * from './user-api.service';

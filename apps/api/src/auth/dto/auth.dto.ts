@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { UserDto } from '../../users/dto/user.dto';
+import { User } from '../../users/entities/user.entity';
 import { TokenDto } from './token.dto';
 
 export class AuthDto {
@@ -7,5 +7,5 @@ export class AuthDto {
   tokens: TokenDto;
 
   @ApiProperty()
-  user: UserDto;
+  user: User;
 }

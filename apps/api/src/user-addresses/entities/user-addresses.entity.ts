@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { UserDto } from '../../users/dto/user.dto';
+import { User } from '../../users/entities/user.entity';
 import { Country } from '../../countries/entities/country.entity';
 
 export class UserAddress {
@@ -30,8 +30,8 @@ export class UserAddress {
   @ApiProperty({ type: String })
   postcode: string;
 
-  @ApiProperty({ type: UserDto })
-  user: UserDto;
+  @ApiProperty({ type: User })
+  user: User;
 
   @ApiProperty({ type: String })
   userId: string;

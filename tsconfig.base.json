@@ -15,8 +15,14 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@e-commerce/client-web/account/feature/addresses": [
+        "libs/client-web/account/feature/addresses/src/index.ts"
+      ],
       "@e-commerce/client-web/account/data-access": [
         "libs/client-web/account/data-access/src/index.ts"
+      ],
+      "@e-commerce/client-web/account/feature/information": [
+        "libs/client-web/account/feature/information/src/index.ts"
       ],
       "@e-commerce/client-web/account/feature/orders": [
         "libs/client-web/account/feature/orders/src/index.ts"
@@ -30,6 +36,9 @@
       "@e-commerce/client-web/account/ui": [
         "libs/client-web/account/ui/src/index.ts"
       ],
+      "@e-commerce/client-web/auth/api": [
+        "libs/client-web/auth/api/src/index.ts"
+      ],
       "@e-commerce/client-web/auth/data-access": [
         "libs/client-web/auth/data-access/src/index.ts"
       ],
@@ -38,6 +47,9 @@
       ],
       "@e-commerce/client-web/auth/feature/register": [
         "libs/client-web/auth/feature/register/src/index.ts"
+      ],
+      "@e-commerce/client-web/auth/feature/shell": [
+        "libs/client-web/auth/feature/shell/src/index.ts"
       ],
       "@e-commerce/client-web/auth/ui": [
         "libs/client-web/auth/ui/src/index.ts"
@@ -60,6 +72,9 @@
       "@e-commerce/client-web/browse/utils": [
         "libs/client-web/browse/utils/src/index.ts"
       ],
+      "@e-commerce/client-web/cart/api": [
+        "libs/client-web/cart/api/src/index.ts"
+      ],
       "@e-commerce/client-web/cart/data-access": [
         "libs/client-web/cart/data-access/src/index.ts"
       ],
@@ -71,6 +86,9 @@
       ],
       "@e-commerce/client-web/cart/feature/payment-status": [
         "libs/client-web/cart/feature/payment-status/src/index.ts"
+      ],
+      "@e-commerce/client-web/cart/feature/shell": [
+        "libs/client-web/cart/feature/shell/src/index.ts"
       ],
       "@e-commerce/client-web/cart/ui": [
         "libs/client-web/cart/ui/src/index.ts"

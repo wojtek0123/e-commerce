@@ -1,5 +1,4 @@
 import { computed, inject } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import {
   BookDetails,
   BooksApiService,
@@ -10,7 +9,6 @@ import {
   patchState,
   signalStore,
   withComputed,
-  withHooks,
   withMethods,
   withState,
 } from '@ngrx/signals';
@@ -35,18 +33,19 @@ export const BookStore = signalStore(
     availableQuantity: computed(() => book()?.productInventory.quantity ?? 0),
   })),
   withMethods((store, bookApi = inject(BooksApiService)) => ({
-    getBook: rxMethod<{ bookId: BookDetails['id'] }>(
+    getBook$: rxMethod<{ bookId: BookDetails['id'] }>(
       pipe(
         tap(() => patchState(store, { loading: true })),
         switchMap(({ bookId }) =>
           bookApi.getBook$(bookId).pipe(
             tapResponse({
               next: (book) => {
-                patchState(store, { book, loading: false });
+                patchState(store, { book, loading: false, error: null });
               },
               error: (error: ResponseError) => {
                 patchState(store, {
                   loading: false,
+                  book: null,
                   error:
                     error?.error?.message ||
                     'Error occur while getting book details',

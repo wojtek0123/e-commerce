@@ -10,7 +10,9 @@ import { API_URL } from '@e-commerce/client-web/shared/utils';
 import { provideStore } from '@ngrx/store';
 import { MessageService } from 'primeng/api';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { authInterceptor } from '@e-commerce/client-web/auth/data-access';
+import {
+  authInterceptor,
+} from '@e-commerce/client-web/auth/data-access';
 import { provideServiceWorker } from '@angular/service-worker';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 

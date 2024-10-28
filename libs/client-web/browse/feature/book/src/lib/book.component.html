@@ -2,7 +2,7 @@
   <div
     class="grid gap-base grid-cols-1 w-full xl:grid-cols-2 4xl:grid-cols-[1fr_1fr_0.4fr]"
   >
-    <div class="rounded-base xl:h-content overflow-hidden xl:sticky xl:top-8">
+    <div class="rounded-base xl:h-content overflow-hidden xl:sticky xl:top-4">
       <p-skeleton width="100%" height="100%" />
     </div>
     <div class="flex flex-col gap-base">
@@ -20,13 +20,24 @@
     </div>
   </div>
 } @else if (error()) {
-  <div class="text-5xl text-center mt-10">{{ error() }}</div>
+  <div class="flex flex-col items-center gap-4 mt-10">
+    <p class="text-5xl text-center">{{ error() }}</p>
+    <p class="text-xl text-muted-color">
+      Unable to load book details. Please try again.
+    </p>
+    <p-button
+      label="Retry"
+      icon="pi pi-refresh"
+      (onClick)="getBook()"
+      severity="secondary"
+    ></p-button>
+  </div>
 } @else if (book()) {
   <div
     class="grid gap-base grid-cols-1 w-full xl:grid-cols-2 4xl:grid-cols-[1fr_1fr_0.4fr]"
   >
     <div
-      class="rounded-base w-full flex items-center justify-center xl:h-content overflow-hidden xl:sticky xl:top-8"
+      class="rounded-base w-full flex items-center justify-center xl:h-content overflow-hidden xl:sticky xl:top-4"
     >
       <img
         class="rounded-base w-full h-full"
@@ -124,7 +135,7 @@
 
     <div class="hidden 4xl:flex h-content justify-center w-full">
       <div
-        class="4xl:sticky 4xl:top-8 flex flex-col items-center gap-12 overflow-y-auto h-fit w-full p-16 bg-content-background rounded-base"
+        class="4xl:sticky 4xl:top-4 flex flex-col items-center gap-12 overflow-y-auto h-fit w-full p-16 bg-content-background rounded-base"
       >
         <span class="text-6xl font-bold">
           {{ book()?.price | currency: 'USD' }}

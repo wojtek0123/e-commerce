@@ -16,7 +16,7 @@ import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { MenuItem } from 'primeng/api';
 import { DetailRowComponent } from '@e-commerce/client-web/browse/ui';
-import { CartStore } from '@e-commerce/client-web/cart/data-access';
+import { CartService } from '@e-commerce/client-web/cart/api';
 import { BookDetails } from '@e-commerce/client-web/shared/data-access';
 import { SkeletonModule } from 'primeng/skeleton';
 import { SkeletonDirective } from './skeleton.directive';
@@ -42,7 +42,7 @@ import { SkeletonDirective } from './skeleton.directive';
 })
 export class BookComponent {
   private readonly bookStore = inject(BookStore);
-  private readonly cartStore = inject(CartStore);
+  private readonly cartService = inject(CartService);
 
   public book = this.bookStore.book;
   public loading = this.bookStore.loading;
@@ -69,7 +69,7 @@ export class BookComponent {
       const bookId = this.bookId();
 
       untracked(() => {
-        this.bookStore.getBook({ bookId });
+        this.bookStore.getBook$({ bookId });
       });
     });
 
@@ -93,6 +93,12 @@ export class BookComponent {
 
     if (!book) return;
 
-    this.cartStore.addBook({ book, quantity: this.amount.value });
+    this.cartService.addBook(book, this.amount.value);
+  }
+
+  public getBook() {
+    const bookId = this.bookId();
+
+    this.bookStore.getBook$({ bookId });
   }
 }

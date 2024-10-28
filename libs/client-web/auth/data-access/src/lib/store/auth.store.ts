@@ -53,7 +53,7 @@ export const AuthStore = signalStore(
   withState(initialAuthState),
   withComputed(({ userId, accessToken, refreshToken }) => ({
     isAuthenticated: computed(
-      () => !!userId() && !!accessToken() && !!refreshToken(),
+      () => !!userId() && !!accessToken() && !!refreshToken()
     ),
   })),
   withMethods(
@@ -76,14 +76,14 @@ export const AuthStore = signalStore(
           refreshToken: tokens.refreshToken,
         });
       },
-    }),
+    })
   ),
   withMethods(
     (
       store,
       authApi = inject(AuthApiService),
       messageService = inject(MessageService),
-      router = inject(Router),
+      router = inject(Router)
     ) => ({
       init: () => {
         const accessToken = localStorage.getItem(ACCESS_TOKEN_STORAGE) ?? null;
@@ -134,10 +134,10 @@ export const AuthStore = signalStore(
                   });
                   patchState(store, { error: errorMessage, loading: false });
                 },
-              }),
-            ),
-          ),
-        ),
+              })
+            )
+          )
+        )
       ),
       register: rxMethod<{ email: string; password: string }>(
         pipe(
@@ -171,10 +171,10 @@ export const AuthStore = signalStore(
                   });
                   patchState(store, { error: errorMessage, loading: false });
                 },
-              }),
-            ),
-          ),
-        ),
+              })
+            )
+          )
+        )
       ),
       getNewTokens: rxMethod<void>(
         pipe(
@@ -202,10 +202,10 @@ export const AuthStore = signalStore(
 
                   patchState(store, { error: errorMessage });
                 },
-              }),
-            ),
-          ),
-        ),
+              })
+            )
+          )
+        )
       ),
       logout: rxMethod<void>(
         pipe(
@@ -244,12 +244,12 @@ export const AuthStore = signalStore(
 
                   await router.navigate(['/']);
                 },
-              }),
-            ),
-          ),
-        ),
+              })
+            )
+          )
+        )
       ),
-    }),
+    })
   ),
   withHooks({
     onInit(store) {
@@ -282,5 +282,5 @@ export const AuthStore = signalStore(
         }
       }
     },
-  }),
+  })
 );

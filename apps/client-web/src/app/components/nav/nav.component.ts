@@ -1,11 +1,4 @@
-import {
-  Component,
-  computed,
-  inject,
-  OnDestroy,
-  signal,
-  OnInit,
-} from '@angular/core';
+import { Component, inject, OnDestroy, signal, OnInit } from '@angular/core';
 import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { DividerModule } from 'primeng/divider';
 import { ButtonModule } from 'primeng/button';
@@ -13,8 +6,8 @@ import { MenuModule } from 'primeng/menu';
 import { Category } from '@e-commerce/client-web/shared/data-access';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { FormsModule } from '@angular/forms';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { filter, map } from 'rxjs';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { debounce, filter, map, of, timer } from 'rxjs';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { SidebarModule } from 'primeng/sidebar';
 import { ToolbarModule } from 'primeng/toolbar';
@@ -28,10 +21,10 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
-import { AuthStore } from '@e-commerce/client-web/auth/data-access';
 import { CartSidebarComponent } from '@e-commerce/client-web/cart/feature/cart-sidebar';
 import { ThemeService } from '../../services/theme.service';
 import { CategoryStore } from '../../stores/category.store';
+import { AuthService } from '@e-commerce/client-web/auth/api';
 
 @Component({
   selector: 'app-nav',
@@ -77,48 +70,50 @@ import { CategoryStore } from '../../stores/category.store';
 export class NavComponent implements OnInit, OnDestroy {
   private readonly themeService = inject(ThemeService);
   private readonly categoriesStore = inject(CategoryStore);
-  private readonly authStore = inject(AuthStore);
+  private readonly authService = inject(AuthService);
 
-  public isAuthenticated = this.authStore.isAuthenticated;
+  public isAuthenticated = this.authService.isAuthenticated;
   public categories = this.categoriesStore.categories;
   public isOpen = signal(false);
   public isExpanded = signal(true);
-  public isLabelShowed = signal(computed(() => this.isExpanded())());
+  public isLabelShowed = toSignal(
+    toObservable(this.isExpanded).pipe(
+      debounce((isExpanded) => (isExpanded ? timer(150) : of({}))),
+    ),
+    { initialValue: false },
+  );
   public isDark = this.themeService.isDark;
 
   private resizeObserver?: ResizeObserver;
-  private timer?: ReturnType<typeof setTimeout>;
   private shouldRestoreExpanded = signal(false);
 
   public ngOnInit() {
-    () => {
-      const isExpanded = localStorage.getItem('isExpanded');
+    // TODO: Create shared config to all routes and local storage keys
+    const isExpanded = localStorage.getItem('isExpanded');
 
-      if (isExpanded) {
-        this.isExpanded.set(JSON.parse(isExpanded));
-        this.isLabelShowed.set(JSON.parse(isExpanded));
+    if (isExpanded) {
+      this.isExpanded.set(JSON.parse(isExpanded));
+    }
+
+    const mediaQueryList = matchMedia('(min-width: 1280px)');
+
+    this.resizeObserver = new ResizeObserver(() => {
+      if (mediaQueryList.matches && this.shouldRestoreExpanded()) {
+        const isExpanded = JSON.parse(
+          localStorage.getItem('isExpanded') || 'false',
+        );
+
+        this.isExpanded.set(isExpanded);
+        // this.isLabelShowed.set(isExpanded);
+        this.shouldRestoreExpanded.set(false);
+      } else if (!mediaQueryList.matches) {
+        // this.isLabelShowed.set(true);
+        this.isExpanded.set(true);
+        this.shouldRestoreExpanded.set(true);
       }
+    });
 
-      const mediaQueryList = matchMedia('(min-width: 1280px)');
-
-      this.resizeObserver = new ResizeObserver(() => {
-        if (mediaQueryList.matches && this.shouldRestoreExpanded()) {
-          const isExpanded = JSON.parse(
-            localStorage.getItem('isExpanded') || '',
-          );
-
-          this.isExpanded.set(isExpanded);
-          this.isLabelShowed.set(isExpanded);
-          this.shouldRestoreExpanded.set(false);
-        } else if (!mediaQueryList.matches) {
-          this.isLabelShowed.set(true);
-          this.isExpanded.set(true);
-          this.shouldRestoreExpanded.set(true);
-        }
-      });
-
-      this.resizeObserver.observe(document.body);
-    };
+    this.resizeObserver.observe(document.body);
   }
 
   public ngOnDestroy(): void {
@@ -144,9 +139,14 @@ export class NavComponent implements OnInit, OnDestroy {
       routerLink: '/account/orders',
     },
     {
-      label: 'Settings',
+      label: 'Information',
       icon: 'pi pi-cog',
-      routerLink: '/account/settings',
+      routerLink: '/account/information',
+    },
+    {
+      label: 'Addresses',
+      icon: 'pi pi-address-book',
+      routerLink: '/account/addresses',
     },
   ]);
 
@@ -161,19 +161,9 @@ export class NavComponent implements OnInit, OnDestroy {
   public expandCollapseNavigation() {
     this.isExpanded.update((isExpanded) => !isExpanded);
     localStorage.setItem('isExpanded', JSON.stringify(this.isExpanded()));
-
-    if (this.isExpanded()) {
-      this.timer = setTimeout(() => {
-        this.isLabelShowed.set(true);
-      }, 150);
-    } else {
-      this.isLabelShowed.set(false);
-
-      if (this.timer) clearTimeout(this.timer);
-    }
   }
 
   public logout() {
-    this.authStore.logout();
+    this.authService.logout();
   }
 }
