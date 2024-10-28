@@ -1,11 +1,4 @@
-import {
-  Component,
-  computed,
-  inject,
-  OnDestroy,
-  signal,
-  OnInit,
-} from '@angular/core';
+import { Component, inject, OnDestroy, signal, OnInit } from '@angular/core';
 import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { DividerModule } from 'primeng/divider';
 import { ButtonModule } from 'primeng/button';
@@ -14,7 +7,7 @@ import { Category } from '@e-commerce/client-web/shared/data-access';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { FormsModule } from '@angular/forms';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { debounce, debounceTime, filter, map, of, timer } from 'rxjs';
+import { debounce, filter, map, of, timer } from 'rxjs';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { SidebarModule } from 'primeng/sidebar';
 import { ToolbarModule } from 'primeng/toolbar';
@@ -147,8 +140,13 @@ export class NavComponent implements OnInit, OnDestroy {
     },
     {
       label: 'Information',
-      icon: 'pi pi-address-book',
+      icon: 'pi pi-cog',
       routerLink: '/account/information',
+    },
+    {
+      label: 'Addresses',
+      icon: 'pi pi-address-book',
+      routerLink: '/account/addresses',
     },
   ]);
 

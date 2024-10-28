@@ -1,7 +1,4 @@
 import { Route } from '@angular/router';
-import { canMatchAuth } from './guards/auth.guard';
-import { cartItemsGuard } from './guards/cart-items.guard';
-import { paymentStatusGuard } from './guards/payment-status.guard';
 
 export const appRoutes: Route[] = [
   {
@@ -13,7 +10,7 @@ export const appRoutes: Route[] = [
     path: 'auth',
     loadChildren: () =>
       import('@e-commerce/client-web/auth/feature/shell').then(
-        (r) => r.authShellRoutes
+        (r) => r.authShellRoutes,
       ),
   },
   {
@@ -24,7 +21,7 @@ export const appRoutes: Route[] = [
         pathMatch: 'full',
         loadChildren: () =>
           import('@e-commerce/client-web/browse/feature/books').then(
-            (r) => r.booksRoutes
+            (r) => r.booksRoutes,
           ),
       },
     ],
@@ -37,7 +34,7 @@ export const appRoutes: Route[] = [
         pathMatch: 'full',
         loadChildren: () =>
           import('@e-commerce/client-web/browse/feature/book').then(
-            (r) => r.bookRoutes
+            (r) => r.bookRoutes,
           ),
       },
     ],
@@ -46,7 +43,7 @@ export const appRoutes: Route[] = [
     path: 'account',
     loadChildren: () =>
       import('@e-commerce/client-web/account/feature/shell').then(
-        (r) => r.accountShellRoutes
+        (r) => r.accountShellRoutes,
       ),
   },
   {
