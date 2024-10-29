@@ -1,14 +1,16 @@
 import {
-  allBookTags,
-  Author,
   AuthorApiService,
-  Book,
   BooksApiService,
+  CategoryApiService,
+} from '@e-commerce/client-web/shared/data-access/api-services';
+import {
+  Author,
+  allBookTags,
+  Book,
   BookTag,
   Category,
-  CategoryApiService,
   ResponseError,
-} from '@e-commerce/client-web/shared/data-access';
+} from '@e-commerce/client-web/shared/data-access/api-models';
 import {
   patchState,
   signalStore,

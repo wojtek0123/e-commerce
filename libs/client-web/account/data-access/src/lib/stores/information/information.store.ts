@@ -1,9 +1,11 @@
 import {
   ResponseError,
-  UpdateUserBody,
   User,
+} from '@e-commerce/client-web/shared/data-access/api-models';
+import {
   UserApiService,
-} from '@e-commerce/client-web/shared/data-access';
+  UpdateUserBody,
+} from '@e-commerce/client-web/shared/data-access/api-services';
 import {
   getState,
   patchState,

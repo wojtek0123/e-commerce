@@ -12,11 +12,8 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import {
-  AddressStore,
-  EditingField,
-} from '@e-commerce/client-web/account/data-access';
-import { CreateUserAddressBody } from '@e-commerce/client-web/shared/data-access';
+import { AddressStore } from '@e-commerce/client-web/account/data-access';
+import { CreateUserAddressBody } from '@e-commerce/client-web/shared/data-access/api-services';
 import {
   ErrorMessageComponent,
   FormFieldComponent,

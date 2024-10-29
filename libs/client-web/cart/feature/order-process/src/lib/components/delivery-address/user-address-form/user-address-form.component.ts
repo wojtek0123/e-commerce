@@ -13,10 +13,8 @@ import {
   Validators,
 } from '@angular/forms';
 import { AddressStore } from '@e-commerce/client-web/cart/data-access';
-import {
-  Country,
-  CreateUserAddressBody,
-} from '@e-commerce/client-web/shared/data-access';
+import { Country } from '@e-commerce/client-web/shared/data-access/api-models';
+import { CreateUserAddressBody } from '@e-commerce/client-web/shared/data-access/api-services';
 import {
   ErrorMessageComponent,
   FormFieldComponent,
@@ -81,7 +79,7 @@ export class UserAddressFormComponent {
             phone: address?.phone ?? null,
             city: address?.city ?? null,
           },
-          { emitEvent: false }
+          { emitEvent: false },
         );
       });
     });

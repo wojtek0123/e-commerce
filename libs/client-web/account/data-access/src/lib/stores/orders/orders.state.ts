@@ -1,4 +1,4 @@
-import { OrderDetails } from '@e-commerce/client-web/shared/data-access';
+import { OrderDetails } from '@e-commerce/client-web/shared/data-access/api-models';
 
 export interface OrdersState {
   loading: boolean;

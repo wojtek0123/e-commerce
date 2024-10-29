@@ -1,1 +1,1 @@
-export * from './lib/cart-sidebar/cart-sidebar.component';
+export * from './lib/cart-sidebar.component';

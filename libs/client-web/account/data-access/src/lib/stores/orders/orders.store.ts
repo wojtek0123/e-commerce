@@ -1,9 +1,9 @@
 import { inject } from '@angular/core';
 import {
   OrderDetails,
-  OrderDetailsApiService,
   ResponseError,
-} from '@e-commerce/client-web/shared/data-access';
+} from '@e-commerce/client-web/shared/data-access/api-models';
+import { OrderDetailsApiService } from '@e-commerce/client-web/shared/data-access/api-services';
 import { tapResponse } from '@ngrx/operators';
 import {
   patchState,
