@@ -15,11 +15,11 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@e-commerce/client-web/account/feature/addresses": [
-        "libs/client-web/account/feature/addresses/src/index.ts"
-      ],
       "@e-commerce/client-web/account/data-access": [
         "libs/client-web/account/data-access/src/index.ts"
+      ],
+      "@e-commerce/client-web/account/feature/addresses": [
+        "libs/client-web/account/feature/addresses/src/index.ts"
       ],
       "@e-commerce/client-web/account/feature/information": [
         "libs/client-web/account/feature/information/src/index.ts"
@@ -66,6 +66,9 @@
       "@e-commerce/client-web/browse/feature/books": [
         "libs/client-web/browse/feature/books/src/index.ts"
       ],
+      "@e-commerce/client-web/browse/feature/shell": [
+        "libs/client-web/browse/feature/shell/src/index.ts"
+      ],
       "@e-commerce/client-web/browse/ui": [
         "libs/client-web/browse/ui/src/index.ts"
       ],
@@ -102,8 +105,17 @@
       "@e-commerce/client-web/home/ui": [
         "libs/client-web/home/ui/src/index.ts"
       ],
+      "@e-commerce/client-web/shared/app-config": [
+        "libs/client-web/shared/app-config/src/index.ts"
+      ],
       "@e-commerce/client-web/shared/data-access": [
         "libs/client-web/shared/data-access/src/index.ts"
+      ],
+      "@e-commerce/client-web/shared/data-access/api-models": [
+        "libs/client-web/shared/data-access/api-models/src/index.ts"
+      ],
+      "@e-commerce/client-web/shared/data-access/api-services": [
+        "libs/client-web/shared/data-access/api-services/src/index.ts"
       ],
       "@e-commerce/client-web/shared/ui": [
         "libs/client-web/shared/ui/src/index.ts"

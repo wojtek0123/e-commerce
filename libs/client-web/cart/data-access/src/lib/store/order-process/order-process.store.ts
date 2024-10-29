@@ -1,13 +1,16 @@
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
+import { APP_ROUTE_PATHS_TOKEN } from '@e-commerce/client-web/shared/app-config';
 import {
-  OrderDetailsApiService,
   ResponseError,
   ShippingMethod,
   OrderDetails,
-  CreateOrderAddress,
   PaymentMethod,
-} from '@e-commerce/client-web/shared/data-access';
+} from '@e-commerce/client-web/shared/data-access/api-models';
+import {
+  OrderDetailsApiService,
+  CreateOrderAddress,
+} from '@e-commerce/client-web/shared/data-access/api-services';
 import { tapResponse } from '@ngrx/operators';
 import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
@@ -31,7 +34,8 @@ export const OrderProcessStore = signalStore(
     (
       store,
       orderDetailsApi = inject(OrderDetailsApiService),
-      router = inject(Router)
+      router = inject(Router),
+      appRoutePaths = inject(APP_ROUTE_PATHS_TOKEN),
     ) => ({
       checkout: rxMethod<{
         orderAddress: CreateOrderAddress;
@@ -52,7 +56,9 @@ export const OrderProcessStore = signalStore(
                   next: async (orderDetails) => {
                     patchState(store, { orderDetails, loading: false });
 
-                    await router.navigate(['/payment-status', orderDetails.id]);
+                    await router.navigate([
+                      appRoutePaths.PAYMENT_STATUS(orderDetails.id),
+                    ]);
                   },
                   error: (error: ResponseError) => {
                     patchState(store, {
@@ -62,11 +68,11 @@ export const OrderProcessStore = signalStore(
                         'Error occur while checking out',
                     });
                   },
-                })
-              )
-          )
-        )
+                }),
+              ),
+          ),
+        ),
       ),
-    })
-  )
+    }),
+  ),
 );

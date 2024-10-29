@@ -6,7 +6,7 @@ export class RefreshTokenDto {
   @IsNotEmpty()
   @IsString()
   @IsUUID()
-  id: string;
+  userId: string;
 
   @ApiProperty()
   @IsNotEmpty()

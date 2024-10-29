@@ -1,14 +1,16 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  inject,
   input,
   output,
 } from '@angular/core';
-import { Book } from '@e-commerce/client-web/shared/data-access';
+import { Book } from '@e-commerce/client-web/shared/data-access/api-models';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { RouterLink } from '@angular/router';
 import { CurrencyPipe, NgOptimizedImage } from '@angular/common';
+import { APP_ROUTE_PATHS_TOKEN } from '@e-commerce/client-web/shared/app-config';
 
 @Component({
   selector: 'lib-book-card',
@@ -28,12 +30,14 @@ import { CurrencyPipe, NgOptimizedImage } from '@angular/common';
   },
 })
 export class BookCardComponent {
-  book = input.required<Book>();
-  awaitingBookIdsToAddToCart = input<Book['id'][]>([]);
+  protected readonly appRoutePaths = inject(APP_ROUTE_PATHS_TOKEN);
 
-  onAddToCart = output<Book>();
+  public book = input.required<Book>();
+  public awaitingBookIdsToAddToCart = input<Book['id'][]>([]);
 
-  addToCart(event: Event, book: Book) {
+  public onAddToCart = output<Book>();
+
+  public addToCart(event: Event, book: Book) {
     event.preventDefault();
     event.stopImmediatePropagation();
 

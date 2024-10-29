@@ -1,3 +1,1 @@
-export * from './lib/lib.routes';
-
-export * from './lib/payment-status/payment-status.component';
+export * from './lib/payment.routes';

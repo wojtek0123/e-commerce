@@ -8,8 +8,8 @@ import {
   SectionWrapperComponent,
 } from '@e-commerce/client-web/cart/ui';
 import { SkeletonModule } from 'primeng/skeleton';
-import { ShippingMethod } from '@prisma/client';
 import { OrderProcessItemDirective } from '@e-commerce/client-web/shared/utils';
+import { ShippingMethod } from '@e-commerce/client-web/shared/data-access/api-models';
 
 @Component({
   selector: 'lib-shipping-method',

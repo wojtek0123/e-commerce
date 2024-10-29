@@ -5,22 +5,22 @@ import {
   HttpRequest,
 } from '@angular/common/http';
 import { catchError, Observable, switchMap, throwError } from 'rxjs';
-import { AuthService } from '@e-commerce/client-web/auth/api';
+import { AuthStore } from '../store/auth.store';
 import { inject } from '@angular/core';
-import {
-  AuthApiService,
-  ResponseError,
-} from '@e-commerce/client-web/shared/data-access';
+import { AuthApiService } from '@e-commerce/client-web/shared/data-access/api-services';
+import { ResponseError } from '@e-commerce/client-web/shared/data-access/api-models';
+import { APP_ROUTE_PATHS_TOKEN } from '@e-commerce/client-web/shared/app-config';
 
 export const authInterceptor: HttpInterceptorFn = (
   request: HttpRequest<unknown>,
-  next: HttpHandlerFn
+  next: HttpHandlerFn,
 ): Observable<HttpEvent<unknown>> => {
   const authApi = inject(AuthApiService);
-  const authService = inject(AuthService);
-  const refreshToken = authService.refreshToken();
-  const accessToken = authService.accessToken();
-  const userId = authService.userId();
+  const authStore = inject(AuthStore);
+  const refreshToken = authStore.refreshToken();
+  const accessToken = authStore.accessToken();
+  const userId = authStore.userId();
+  const appRoutePaths = inject(APP_ROUTE_PATHS_TOKEN);
 
   if (!accessToken) return next(request);
 
@@ -29,7 +29,7 @@ export const authInterceptor: HttpInterceptorFn = (
       'Authorization',
       `Bearer ${
         request.url.includes('auth/refresh') ? refreshToken : accessToken
-      }`
+      }`,
     ),
   });
 
@@ -40,32 +40,32 @@ export const authInterceptor: HttpInterceptorFn = (
 
         return authApi.getRefreshToken$(userId, refreshToken).pipe(
           switchMap((tokens) => {
-            authService.updateTokens(tokens);
+            authStore.updateTokens(tokens);
 
             return next(
               request.clone({
                 headers: request.headers.set(
                   'Authorization',
-                  `Bearer ${tokens.accessToken}`
+                  `Bearer ${tokens.accessToken}`,
                 ),
-              })
+              }),
             );
           }),
           catchError((error: ResponseError) => {
             if (
               error?.error?.statusCode === 401 ||
               (error?.error?.statusCode === 403 &&
-                request.url !== '/login' &&
-                request.url !== '/register')
+                request.url !== appRoutePaths.LOGIN() &&
+                request.url !== appRoutePaths.REGISTER())
             ) {
-              authService.logout();
+              authStore.logout();
             }
             return throwError(() => error);
-          })
+          }),
         );
       }
 
       return throwError(() => error);
-    })
+    }),
   );
 };

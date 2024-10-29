@@ -2,7 +2,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   inject,
-  output,
   signal,
 } from '@angular/core';
 import {

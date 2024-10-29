@@ -8,7 +8,7 @@
       Unleash the power of your imagination with our books.
     </h2>
     <a
-      routerLink="/browse"
+      [routerLink]="appRoutePaths.BOOKS()"
       class="p-button-large max-w-fit 2xl:text-4xl md:px-6 md:py-4 md:text-2xl lg:px-8 lg:py-5 lg:text-4xl"
       pButton
       [raised]="true"
@@ -27,23 +27,79 @@
 </header>
 <main class="flex gap-8 xl:gap-16 mt-16 flex-col">
   @defer (on viewport) {
-    <lib-books-section
-      class="w-full"
-      tag="incoming"
-      [bookTag]="bookTag.INCOMING"
-    />
+    <section
+      class="flex flex-col items-center w-full mx-auto max-w-[120rem] gap-base"
+    >
+      <div class="flex items-center justify-between w-full capitalize">
+        <h2 class="text-4xl">{{ bookTag.INCOMING }}</h2>
+        <a
+          [routerLink]="appRoutePaths.BOOKS()"
+          [queryParams]="{ tags: bookTag.INCOMING }"
+        >
+          See more
+        </a>
+      </div>
+      <lib-books-grid
+        (addToCartEvent)="addToCart($event)"
+        class="w-full"
+        [books]="incomingBooks()"
+        [loading]="loading()"
+        [error]="error()"
+        [skeletonsCount]="6"
+      />
+    </section>
   } @placeholder {
     <lib-skeleton-books-section />
   }
 
   @defer (on viewport) {
-    <lib-books-section tag="bestsellers" [bookTag]="bookTag.BESTSELLER" />
+    <section
+      class="flex flex-col items-center w-full mx-auto max-w-[120rem] gap-base"
+    >
+      <div class="flex items-center justify-between w-full capitalize">
+        <h2 class="text-4xl">{{ bookTag.BESTSELLER }}</h2>
+        <a
+          [routerLink]="appRoutePaths.BOOKS()"
+          [queryParams]="{ tags: bookTag.BESTSELLER }"
+        >
+          See more
+        </a>
+      </div>
+      <lib-books-grid
+        (addToCartEvent)="addToCart($event)"
+        class="w-full"
+        [books]="bestsellerBooks()"
+        [loading]="loading()"
+        [error]="error()"
+        [skeletonsCount]="6"
+      />
+    </section>
   } @placeholder {
     <lib-skeleton-books-section />
   }
 
   @defer (on viewport) {
-    <lib-books-section tag="new" [bookTag]="bookTag.NEW" />
+    <section
+      class="flex flex-col items-center w-full mx-auto max-w-[120rem] gap-base"
+    >
+      <div class="flex items-center justify-between w-full capitalize">
+        <h2 class="text-4xl">{{ bookTag.NEW }}</h2>
+        <a
+          [routerLink]="appRoutePaths.BOOKS()"
+          [queryParams]="{ tags: bookTag.NEW }"
+        >
+          See more
+        </a>
+      </div>
+      <lib-books-grid
+        (addToCartEvent)="addToCart($event)"
+        class="w-full"
+        [books]="newBooks()"
+        [loading]="loading()"
+        [error]="error()"
+        [skeletonsCount]="6"
+      />
+    </section>
   } @placeholder {
     <lib-skeleton-books-section />
   }

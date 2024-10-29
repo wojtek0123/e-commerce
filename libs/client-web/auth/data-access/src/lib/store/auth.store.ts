@@ -8,22 +8,22 @@ import {
   watchState,
 } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
+import { AuthApiService } from '@e-commerce/client-web/shared/data-access/api-services';
 import {
-  AuthApiService,
   ResponseError,
   Tokens,
   User,
-} from '@e-commerce/client-web/shared/data-access';
+} from '@e-commerce/client-web/shared/data-access/api-models';
 import { computed, inject } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { filter, map, pipe, switchMap, tap } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
-
-const ACCESS_TOKEN_STORAGE = 'accessToken' as const;
-const REFRESH_TOKEN_STORAGE = 'refreshToken' as const;
-const USER_ID_STORAGE = 'userId' as const;
+import {
+  APP_ROUTE_PATHS_TOKEN,
+  APP_LOCAL_STORAGE_KEYS_TOKEN,
+} from '@e-commerce/client-web/shared/app-config';
 
 export interface AuthState {
   userId: User['id'] | null;
@@ -53,15 +53,20 @@ export const AuthStore = signalStore(
   withState(initialAuthState),
   withComputed(({ userId, accessToken, refreshToken }) => ({
     isAuthenticated: computed(
-      () => !!userId() && !!accessToken() && !!refreshToken()
+      () => !!userId() && !!accessToken() && !!refreshToken(),
     ),
   })),
   withMethods(
-    (store, route = inject(ActivatedRoute), router = inject(Router)) => ({
+    (
+      store,
+      route = inject(ActivatedRoute),
+      router = inject(Router),
+      appRoutePaths = inject(APP_ROUTE_PATHS_TOKEN),
+    ) => ({
       redirect: async () => {
         const url = route.snapshot.queryParams['redirect-to'];
 
-        await router.navigate([url || '/']);
+        await router.navigate([url || appRoutePaths.HOME()]);
       },
       removeSession: () => {
         patchState(store, {
@@ -76,20 +81,24 @@ export const AuthStore = signalStore(
           refreshToken: tokens.refreshToken,
         });
       },
-    })
+    }),
   ),
   withMethods(
     (
       store,
       authApi = inject(AuthApiService),
       messageService = inject(MessageService),
-      router = inject(Router)
+      router = inject(Router),
+      appRoutePaths = inject(APP_ROUTE_PATHS_TOKEN),
+      appLocalStorageKeys = inject(APP_LOCAL_STORAGE_KEYS_TOKEN),
     ) => ({
       init: () => {
-        const accessToken = localStorage.getItem(ACCESS_TOKEN_STORAGE) ?? null;
+        const accessToken =
+          localStorage.getItem(appLocalStorageKeys.ACCESS_TOKEN) ?? null;
         const refreshToken =
-          localStorage.getItem(REFRESH_TOKEN_STORAGE) ?? null;
-        const userId = localStorage.getItem(USER_ID_STORAGE) ?? null;
+          localStorage.getItem(appLocalStorageKeys.REFRESH_TOKEN) ?? null;
+        const userId =
+          localStorage.getItem(appLocalStorageKeys.USER_ID) ?? null;
 
         if (accessToken && refreshToken && userId) {
           patchState(store, {
@@ -134,10 +143,10 @@ export const AuthStore = signalStore(
                   });
                   patchState(store, { error: errorMessage, loading: false });
                 },
-              })
-            )
-          )
-        )
+              }),
+            ),
+          ),
+        ),
       ),
       register: rxMethod<{ email: string; password: string }>(
         pipe(
@@ -171,10 +180,10 @@ export const AuthStore = signalStore(
                   });
                   patchState(store, { error: errorMessage, loading: false });
                 },
-              })
-            )
-          )
-        )
+              }),
+            ),
+          ),
+        ),
       ),
       getNewTokens: rxMethod<void>(
         pipe(
@@ -202,10 +211,10 @@ export const AuthStore = signalStore(
 
                   patchState(store, { error: errorMessage });
                 },
-              })
-            )
-          )
-        )
+              }),
+            ),
+          ),
+        ),
       ),
       logout: rxMethod<void>(
         pipe(
@@ -229,7 +238,7 @@ export const AuthStore = signalStore(
                   });
 
                   // TODO: redirect only if user is on protected route
-                  await router.navigate(['/']);
+                  await router.navigate([appRoutePaths.HOME()]);
                 },
                 error: async (error: ResponseError) => {
                   const errorMessage =
@@ -242,24 +251,24 @@ export const AuthStore = signalStore(
 
                   patchState(store, { loading: false, error: errorMessage });
 
-                  await router.navigate(['/']);
+                  await router.navigate([appRoutePaths.HOME()]);
                 },
-              })
-            )
-          )
-        )
+              }),
+            ),
+          ),
+        ),
       ),
-    })
+    }),
   ),
   withHooks({
-    onInit(store) {
+    onInit(store, appLocalStorageKeys = inject(APP_LOCAL_STORAGE_KEYS_TOKEN)) {
       store.init();
 
       watchState(store, (state) => {
         const storageItems = {
-          [REFRESH_TOKEN_STORAGE]: state.refreshToken,
-          [ACCESS_TOKEN_STORAGE]: state.accessToken,
-          [USER_ID_STORAGE]: state.userId,
+          [appLocalStorageKeys.REFRESH_TOKEN]: state.refreshToken,
+          [appLocalStorageKeys.ACCESS_TOKEN]: state.accessToken,
+          [appLocalStorageKeys.USER_ID]: state.userId,
         };
 
         for (const [key, value] of Object.entries(storageItems)) {
@@ -271,7 +280,9 @@ export const AuthStore = signalStore(
         }
       });
 
-      const refreshToken = localStorage.getItem(REFRESH_TOKEN_STORAGE);
+      const refreshToken = localStorage.getItem(
+        appLocalStorageKeys.REFRESH_TOKEN,
+      );
 
       if (refreshToken) {
         const { exp } = jwtDecode(refreshToken ?? '');
@@ -282,5 +293,5 @@ export const AuthStore = signalStore(
         }
       }
     },
-  })
+  }),
 );

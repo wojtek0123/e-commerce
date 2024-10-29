@@ -1,8 +1,9 @@
 import { inject } from '@angular/core';
 import {
   ResponseError,
-  ShippingMethodApiService,
-} from '@e-commerce/client-web/shared/data-access';
+  ShippingMethod,
+} from '@e-commerce/client-web/shared/data-access/api-models';
+import { ShippingMethodApiService } from '@e-commerce/client-web/shared/data-access/api-services';
 import { tapResponse } from '@ngrx/operators';
 import {
   patchState,
@@ -12,7 +13,6 @@ import {
   withState,
 } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { ShippingMethod } from '@prisma/client';
 import { pipe, switchMap, tap } from 'rxjs';
 
 interface ShippingState {

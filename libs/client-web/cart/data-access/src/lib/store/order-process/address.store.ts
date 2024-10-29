@@ -1,12 +1,14 @@
 import { computed, inject } from '@angular/core';
 import {
-  CountryApiService,
-  CreateUserAddressBody,
   ResponseError,
   UserAddress,
-  UserAddressApiService,
   Country,
-} from '@e-commerce/client-web/shared/data-access';
+} from '@e-commerce/client-web/shared/data-access/api-models';
+import {
+  CountryApiService,
+  CreateUserAddressBody,
+  UserAddressApiService,
+} from '@e-commerce/client-web/shared/data-access/api-services';
 import { tapResponse } from '@ngrx/operators';
 import {
   patchState,

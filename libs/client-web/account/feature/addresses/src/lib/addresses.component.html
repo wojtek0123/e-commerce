@@ -60,7 +60,6 @@
 </div>
 
 <p-dialog
-  libSidebarLeft
   header="Address form"
   [visible]="isFormVisible()"
   [modal]="true"
@@ -68,7 +67,6 @@
   styleClass="w-full max-w-[48rem] mx-4 w-full"
   [closeOnEscape]="true"
   [dismissableMask]="true"
-  aria-labelledby="address-form-dialog-header"
   (visibleChange)="hideForm()"
 >
   <ng-container [ngTemplateOutlet]="forms" />
