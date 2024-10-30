@@ -21,6 +21,10 @@ export const authShellRoutes: Route[] = [
             (r) => r.registerRoutes,
           ),
       },
+      {
+        path: '**',
+        redirectTo: APP_ROUTES_FEATURE.AUTH.LOGIN,
+      },
     ],
   },
 ];
