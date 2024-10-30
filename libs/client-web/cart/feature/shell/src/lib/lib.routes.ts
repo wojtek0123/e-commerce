@@ -1,31 +1,24 @@
 import { Route } from '@angular/router';
-import { CartStore } from '@e-commerce/client-web/cart/data-access';
-import { paymentStatusGuard } from './guards/payment-status.guard';
-import { cartItemsGuard } from './guards/cart-items.guard';
-import { canMatchAuth } from '@e-commerce/client-web/shared/utils';
+import { APP_ROUTES_FEATURE } from '@e-commerce/client-web/shared/app-config';
 
-export const clientWebCartFeatureShellRoutes: Route[] = [
+export const cartShellRoutes: Route[] = [
   {
     path: '',
     children: [
       {
-        path: 'order-process',
-        canMatch: [canMatchAuth],
-        canActivate: [cartItemsGuard],
+        path: APP_ROUTES_FEATURE.CART.ORDER_PROCESS,
         loadChildren: () =>
           import('@e-commerce/client-web/cart/feature/order-process').then(
-            (r) => r.orderProcessRoutes
+            (r) => r.orderProcessRoutes,
           ),
       },
       {
-        path: 'payment-status/:order-details-id',
-        canMatch: [paymentStatusGuard],
+        path: APP_ROUTES_FEATURE.CART.PAYMENT_STATUS,
         loadChildren: () =>
           import('@e-commerce/client-web/cart/feature/payment-status').then(
-            (r) => r.paymentStatusRoutes
+            (r) => r.paymentStatusRoutes,
           ),
       },
     ],
-    providers: [CartStore],
   },
 ];

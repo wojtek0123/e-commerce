@@ -5,7 +5,10 @@ import {
   CartItemComponent,
   CartItemSkeletonComponent,
 } from '@e-commerce/client-web/cart/ui';
-import { Book, CartItem } from '@e-commerce/client-web/shared/data-access';
+import {
+  Book,
+  CartItem,
+} from '@e-commerce/client-web/shared/data-access/api-models';
 import { ButtonModule } from 'primeng/button';
 import { StepsModule } from 'primeng/steps';
 import { ToastModule } from 'primeng/toast';
@@ -37,7 +40,7 @@ export class OrderProcessComponent {
   public cartItemsLoading = this.cartStore.loading;
   public total = this.cartStore.total;
 
-  updateQuantity({
+  public updateQuantity({
     book,
     quantity,
   }: {
@@ -47,7 +50,7 @@ export class OrderProcessComponent {
     this.cartStore.updateQuantity({ bookId: book.id, quantity });
   }
 
-  remove(arg: { bookId: Book['id'] }) {
+  public remove(arg: { bookId: Book['id'] }) {
     this.cartStore.removeBook(arg);
   }
 }

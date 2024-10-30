@@ -4,7 +4,7 @@ import {
   input,
   output,
 } from '@angular/core';
-import { UserAddress } from '@e-commerce/client-web/shared/data-access';
+import { UserAddress } from '@e-commerce/client-web/shared/data-access/api-models';
 import { OrderProcessItemDirective } from '@e-commerce/client-web/shared/utils';
 import { ButtonModule } from 'primeng/button';
 

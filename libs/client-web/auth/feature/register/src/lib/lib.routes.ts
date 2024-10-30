@@ -1,6 +1,9 @@
 import { Route } from '@angular/router';
-import { RegisterComponent } from './register/register.component';
 
 export const registerRoutes: Route[] = [
-  { path: '', component: RegisterComponent },
+  {
+    path: '',
+    loadComponent: () =>
+      import('./register/register.component').then((c) => c.RegisterComponent),
+  },
 ];

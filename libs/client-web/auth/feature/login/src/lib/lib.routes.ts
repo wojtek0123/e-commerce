@@ -1,4 +1,9 @@
 import { Route } from '@angular/router';
-import { LoginComponent } from './login/login.component';
 
-export const loginRoutes: Route[] = [{ path: '', component: LoginComponent }];
+export const loginRoutes: Route[] = [
+  {
+    path: '',
+    loadComponent: () =>
+      import('./login/login.component').then((c) => c.LoginComponent),
+  },
+];

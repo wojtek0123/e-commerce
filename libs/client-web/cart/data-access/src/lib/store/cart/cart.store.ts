@@ -2,11 +2,13 @@ import { computed, inject } from '@angular/core';
 import {
   Book,
   CartItemBase,
-  CartItemsApiService,
   ResponseError,
   ShoppingSession,
+} from '@e-commerce/client-web/shared/data-access/api-models';
+import {
+  CartItemsApiService,
   ShoppingSessionApiService,
-} from '@e-commerce/client-web/shared/data-access';
+} from '@e-commerce/client-web/shared/data-access/api-services';
 import {
   patchState,
   signalStore,
@@ -31,8 +33,7 @@ import {
   updateEntity,
   withEntities,
 } from '@ngrx/signals/entities';
-
-const CART_STORAGE = 'cart' as const;
+import { APP_LOCAL_STORAGE_KEYS_TOKEN } from '@e-commerce/client-web/shared/app-config';
 
 interface CartState {
   shoppingSession: ShoppingSession | null;
@@ -77,8 +78,9 @@ export const CartStore = signalStore(
       shoppingSessionApi = inject(ShoppingSessionApiService),
       cartItemApi = inject(CartItemsApiService),
       messageService = inject(MessageService),
+      appLocalStorageKeys = inject(APP_LOCAL_STORAGE_KEYS_TOKEN),
     ) => ({
-      syncCartsAndFetchSession: rxMethod<void>(
+      syncCartAndFetchSession: rxMethod<void>(
         pipe(
           tap(() => patchState(store, { loading: true })),
           map(() => ({
@@ -122,7 +124,8 @@ export const CartStore = signalStore(
             shoppingSessionApi.getShoppingSession().pipe(
               tapResponse({
                 next: (shoppingSession) => {
-                  localStorage.removeItem(CART_STORAGE);
+                  localStorage.removeItem(appLocalStorageKeys.CART);
+                  console.log(shoppingSession.cartItems);
                   patchState(
                     store,
                     {
@@ -364,7 +367,7 @@ export const CartStore = signalStore(
       },
       getLocalCartItems: () => {
         const cartItems = JSON.parse(
-          localStorage.getItem(CART_STORAGE) || '[]',
+          localStorage.getItem(appLocalStorageKeys.CART) || '[]',
         ) as CartItemBase[];
 
         patchState(store, addEntities([...cartItems], cartItemsConfig));
@@ -372,11 +375,11 @@ export const CartStore = signalStore(
     }),
   ),
   withHooks({
-    onInit(store) {
+    onInit(store, appLocalStorageKeys = inject(APP_LOCAL_STORAGE_KEYS_TOKEN)) {
       watchState(store, (state) => {
         if (!state.shoppingSessionId) {
           localStorage.setItem(
-            CART_STORAGE,
+            appLocalStorageKeys.CART,
             JSON.stringify(Object.values(state._cartItemsEntityMap)),
           );
         }

@@ -11,7 +11,7 @@ import { FormFieldComponent } from '@e-commerce/client-web/shared/ui';
 import { TableModule } from 'primeng/table';
 import { SkeletonModule } from 'primeng/skeleton';
 import { CurrencyPipe } from '@angular/common';
-import { OrderDetails } from '@e-commerce/client-web/shared/data-access';
+import { OrderDetails } from '@e-commerce/client-web/shared/data-access/api-models';
 import { DividerModule } from 'primeng/divider';
 
 @Component({
@@ -34,13 +34,13 @@ import { DividerModule } from 'primeng/divider';
   ],
 })
 export class OrderComponent {
-  orderDetails = input.required<OrderDetails | null>();
+  public orderDetails = input.required<OrderDetails | null>();
 
-  tableTotalSummary = computed(() =>
+  public bookCostTotal = computed(() =>
     this.orderDetails()?.orderItems.reduce(
       (acc, orderItem) => ({
         quantity: acc.quantity + orderItem.quantity,
-        price: acc.price + orderItem.book.price,
+        price: acc.price + orderItem.book.price * orderItem.quantity,
       }),
       { quantity: 0, price: 0 },
     ),

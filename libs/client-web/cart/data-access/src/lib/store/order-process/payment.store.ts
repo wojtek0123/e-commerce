@@ -1,10 +1,12 @@
 import { inject } from '@angular/core';
 import {
-  CreditCardApiService,
-  CreditCardBase,
   ResponseError,
   PaymentMethod,
-} from '@e-commerce/client-web/shared/data-access';
+} from '@e-commerce/client-web/shared/data-access/api-models';
+import {
+  CreditCardApiService,
+  CreditCardBase,
+} from '@e-commerce/client-web/shared/data-access/api-services';
 import { tapResponse } from '@ngrx/operators';
 import {
   patchState,
