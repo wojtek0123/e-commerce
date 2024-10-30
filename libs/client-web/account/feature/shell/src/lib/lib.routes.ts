@@ -28,6 +28,10 @@ export const accountShellRoutes: Route[] = [
             (r) => r.addressesRoutes,
           ),
       },
+      {
+        path: '**',
+        redirectTo: APP_ROUTES_FEATURE.ACCOUNT.ORDERS,
+      },
     ],
   },
 ];

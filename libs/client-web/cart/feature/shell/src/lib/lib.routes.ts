@@ -19,6 +19,10 @@ export const cartShellRoutes: Route[] = [
             (r) => r.paymentStatusRoutes,
           ),
       },
+      {
+        path: '**',
+        redirectTo: APP_ROUTES_FEATURE.CART.ORDER_PROCESS,
+      },
     ],
   },
 ];
