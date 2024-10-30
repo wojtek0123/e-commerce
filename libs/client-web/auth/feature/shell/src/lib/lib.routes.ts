@@ -1,11 +1,13 @@
 import { Route } from '@angular/router';
 import { canMatchAuth } from './guards/auth.guard';
 import { APP_ROUTES_FEATURE } from '@e-commerce/client-web/shared/app-config';
+import { AuthShellComponent } from './auth-shell.component';
 
 export const authShellRoutes: Route[] = [
   {
     path: '',
     canMatch: [canMatchAuth],
+    component: AuthShellComponent,
     children: [
       {
         path: APP_ROUTES_FEATURE.AUTH.LOGIN,

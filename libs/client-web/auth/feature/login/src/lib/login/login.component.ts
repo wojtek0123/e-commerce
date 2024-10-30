@@ -1,4 +1,4 @@
-import { AsyncPipe, NgClass } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthStore } from '@e-commerce/client-web/auth/data-access';
@@ -11,6 +11,7 @@ import {
 } from '@e-commerce/client-web/shared/ui';
 import { ActivatedRoute } from '@angular/router';
 import { ContainerComponent } from '@e-commerce/client-web/auth/ui';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'lib-login',
@@ -24,11 +25,13 @@ import { ContainerComponent } from '@e-commerce/client-web/auth/ui';
     FormFieldComponent,
     ErrorMessageComponent,
     ContainerComponent,
-    AsyncPipe,
+    TooltipModule,
   ],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'max-w-[30rem] w-full',
+  },
 })
 export class LoginComponent {
   private readonly authStore = inject(AuthStore);
