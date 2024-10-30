@@ -1,6 +1,6 @@
 import {
   Component,
-  effect,
+  computed,
   HostListener,
   inject,
   Pipe,
@@ -12,12 +12,13 @@ import { OrdersStore } from '@e-commerce/client-web/account/data-access';
 import {
   OrderDetails,
   OrderDetailsStatus,
-} from '@e-commerce/client-web/shared/data-access';
+} from '@e-commerce/client-web/shared/data-access/api-models';
 import { CurrencyPipe, DatePipe, NgStyle } from '@angular/common';
 import { SkeletonModule } from 'primeng/skeleton';
 import { SidebarModule } from 'primeng/sidebar';
 import { OrderComponent } from '@e-commerce/client-web/account/ui';
 import { TagModule } from 'primeng/tag';
+import { DialogModule } from 'primeng/dialog';
 
 interface Column {
   header: string;
@@ -53,6 +54,7 @@ export class StatusToServerityPipe implements PipeTransform {
     OrderComponent,
     TagModule,
     StatusToServerityPipe,
+    DialogModule,
   ],
   templateUrl: './orders.component.html',
   styleUrl: './orders.component.scss',
@@ -71,7 +73,7 @@ export class OrdersComponent {
     { header: 'Total', field: 'total' },
   ]);
   public skeletons = signal(new Array(10));
-  protected sidebarVisible = signal(false);
+  protected sidebarVisible = computed(() => !!this.selectedOrder());
   protected isWidthHigherThan1280 = signal(window.innerWidth > 1536);
 
   @HostListener('window:resize')
@@ -79,27 +81,7 @@ export class OrdersComponent {
     this.isWidthHigherThan1280.set(window.innerWidth > 1536);
   }
 
-  // TODO: To change
-  constructor() {
-    effect(
-      () => {
-        if (this.isWidthHigherThan1280()) {
-          this.sidebarVisible.set(false);
-        }
-
-        if (!this.isWidthHigherThan1280() && this.selectedOrder()) {
-          this.sidebarVisible.set(true);
-        }
-      },
-      { allowSignalWrites: true },
-    );
-  }
-
   public selectOrder(order: OrderDetails | null) {
-    if (window.innerWidth <= 1536) {
-      this.sidebarVisible.set(!!order);
-    }
-    console.log(order);
     this.selectedOrder.set(order);
   }
 }

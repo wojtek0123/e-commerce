@@ -41,7 +41,7 @@ export class AuthController {
   @Post('refresh')
   @ApiCreatedResponse({ type: TokenDto })
   @ApiOperation({ summary: 'Get refresh token' })
-  refreshToken(@Body() { id, refreshToken }: RefreshTokenDto) {
-    return this.authService.refreshTokens(id, refreshToken);
+  refreshToken(@Body() { userId, refreshToken }: RefreshTokenDto) {
+    return this.authService.refreshTokens(userId, refreshToken);
   }
 }

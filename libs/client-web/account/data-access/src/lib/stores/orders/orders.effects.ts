@@ -1,8 +1,6 @@
 import { inject, Injectable } from '@angular/core';
-import {
-  OrderDetailsApiService,
-  ResponseError,
-} from '@e-commerce/client-web/shared/data-access';
+import { ResponseError } from '@e-commerce/client-web/shared/data-access/api-models';
+import { OrderDetailsApiService } from '@e-commerce/client-web/shared/data-access/api-services';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { ordersActions } from './orders.actions';

@@ -122,17 +122,15 @@
           </td>
         </tr>
       </ng-template>
-      <ng-template pTemplate="footer">
+      <ng-template pTemplate="footer" let-item>
         <tr>
           <td colspan="3" class="text-right">Totals</td>
           <td>
-            {{ tableTotalSummary()?.quantity }}
+            {{ bookCostTotal()?.quantity }}
           </td>
+          <td></td>
           <td>
-            {{ tableTotalSummary()?.price ?? 0 | currency: 'USD' }}
-          </td>
-          <td>
-            {{ orderDetails()?.total ?? 0 | currency: 'USD' }}
+            {{ bookCostTotal()?.price ?? 0 | currency: 'USD' }}
           </td>
         </tr>
       </ng-template>
@@ -144,7 +142,7 @@
       <div class="flex items-center gap-6 justify-end">
         <span class="text-xl">Books</span>
         <span class="text-muted-color w-48 text-end text-xl">
-          {{ orderDetails()?.total ?? 0 | currency: 'USD' }}
+          {{ bookCostTotal()?.price ?? 0 | currency: 'USD' }}
         </span>
       </div>
       <div class="flex items-center gap-6 justify-end">
@@ -157,10 +155,7 @@
       <div class="flex items-center gap-6 justify-end">
         <span class="text-3xl">Total cost</span>
         <span class="text-muted-color w-48 text-end text-3xl">
-          {{
-            (orderDetails()?.shippingMethod?.price ?? 0) +
-              (orderDetails()?.total ?? 0) | currency: 'USD'
-          }}
+          {{ orderDetails()?.total ?? 0 | currency: 'USD' }}
         </span>
       </div>
     </div>

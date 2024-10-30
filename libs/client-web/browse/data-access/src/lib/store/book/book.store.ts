@@ -1,9 +1,9 @@
 import { computed, inject } from '@angular/core';
 import {
   BookDetails,
-  BooksApiService,
   ResponseError,
-} from '@e-commerce/client-web/shared/data-access';
+} from '@e-commerce/client-web/shared/data-access/api-models';
+import { BooksApiService } from '@e-commerce/client-web/shared/data-access/api-services';
 import { tapResponse } from '@ngrx/operators';
 import {
   patchState,

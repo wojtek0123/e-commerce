@@ -63,12 +63,13 @@
 
   <p-sidebar
     (onHide)="selectedOrder.set(null)"
-    class="2xl:hidden"
-    [(visible)]="sidebarVisible"
-    position="right"
+    class="2xl:!hidden"
+    [visible]="sidebarVisible()"
+    position="left"
     [blockScroll]="true"
     appendTo="body"
     styleClass="max-w-[40rem] w-full rounded-r-base bg-surface-100 dark:bg-surface-950"
+    [maskStyle]="{ display: 'none' }"
   >
     <ng-template pTemplate="header">
       <span class="font-bold"> Order details </span>

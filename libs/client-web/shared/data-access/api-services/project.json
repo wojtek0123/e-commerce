@@ -1,0 +1,20 @@
+{
+  "name": "client-web-shared-data-access-api-services",
+  "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/client-web/shared/data-access/api-services/src",
+  "prefix": "lib",
+  "projectType": "library",
+  "tags": ["scope:client-web", "domain:shared", "type:shared-data-access"],
+  "targets": {
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "libs/client-web/shared/data-access/api-services/jest.config.ts"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

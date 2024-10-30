@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  inject,
   input,
   output,
 } from '@angular/core';
@@ -8,12 +9,13 @@ import {
   Book,
   CartItem,
   CartItemBase,
-} from '@e-commerce/client-web/shared/data-access';
+} from '@e-commerce/client-web/shared/data-access/api-models';
 import { CurrencyPipe, NgOptimizedImage } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { APP_ROUTE_PATHS_TOKEN } from '@e-commerce/client-web/shared/app-config';
 
 @Component({
   selector: 'lib-cart-item',
@@ -31,26 +33,27 @@ import { RouterLink } from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CartItemComponent {
-  item = input.required<CartItemBase>();
+  public item = input.required<CartItemBase>();
+  protected readonly appRoutePaths = inject(APP_ROUTE_PATHS_TOKEN);
 
-  onUpdateQuantity = output<{
+  public onUpdateQuantity = output<{
     quantity: CartItem['quantity'];
     book: Book;
   }>();
-  onDelete = output<{ bookId: Book['id'] }>();
+  public onDelete = output<{ bookId: Book['id'] }>();
 
-  remove() {
+  public remove() {
     this.onDelete.emit({ bookId: this.item().book.id });
   }
 
-  increase() {
+  public increase() {
     this.onUpdateQuantity.emit({
       quantity: this.item().quantity + 1,
       book: this.item().book,
     });
   }
 
-  decrease() {
+  public decrease() {
     const quantity = this.item().quantity - 1;
 
     if (quantity < 1) {

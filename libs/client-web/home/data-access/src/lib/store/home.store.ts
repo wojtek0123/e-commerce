@@ -1,79 +1,99 @@
-import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
+import {
+  patchState,
+  signalStore,
+  withComputed,
+  withHooks,
+  withMethods,
+  withState,
+} from '@ngrx/signals';
 import {
   Book,
-  BooksApiService,
   BookTag,
   ResponseError,
-} from '@e-commerce/client-web/shared/data-access';
-import { inject } from '@angular/core';
+} from '@e-commerce/client-web/shared/data-access/api-models';
+import { BooksApiService } from '@e-commerce/client-web/shared/data-access/api-services';
+import { computed, inject } from '@angular/core';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { mergeMap, pipe, tap } from 'rxjs';
+import { pipe, switchMap, tap } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
 
 type BookState = {
   loading: boolean;
   error: string | null;
-  books: Book[];
+  books: {
+    [BookTag.BESTSELLER]: Book[];
+    [BookTag.INCOMING]: Book[];
+    [BookTag.NEW]: Book[];
+  };
 };
 
-const initialBookState: BookState = {
+const initialHomeState: BookState = {
   loading: false,
   error: null,
-  books: [],
-};
-
-export type HomeState = {
-  bestsellers: BookState;
-  incoming: BookState;
-  new: BookState;
-};
-
-const initialHomeState: HomeState = {
-  bestsellers: initialBookState,
-  incoming: initialBookState,
-  new: initialBookState,
+  books: {
+    [BookTag.BESTSELLER]: [],
+    [BookTag.INCOMING]: [],
+    [BookTag.NEW]: [],
+  },
 };
 
 export const HomeStore = signalStore(
   withState(initialHomeState),
+  withComputed(({ books }) => ({
+    bestsellersBooks: computed(() => books()[BookTag.BESTSELLER]),
+    incomingBooks: computed(() => books()[BookTag.INCOMING]),
+    newBooks: computed(() => books()[BookTag.NEW]),
+  })),
   withMethods((store, booksApi = inject(BooksApiService)) => ({
-    getBooks: rxMethod<[keyof HomeState, BookTag]>(
+    getBooks$: rxMethod<void>(
       pipe(
-        tap(([tag]) =>
-          patchState(store, (state) => ({
-            ...state,
-            [tag]: { ...state[tag], loading: true },
-          })),
-        ),
-        mergeMap(([tag, bookTag]) =>
+        tap(() => patchState(store, { loading: true })),
+        switchMap(() =>
           booksApi
             .getBooks$({
-              tagIn: [bookTag],
-              size: 5,
+              tagIn: [BookTag.BESTSELLER, BookTag.INCOMING, BookTag.NEW],
+              size: 6,
             })
             .pipe(
               tapResponse({
                 next: ({ items }) => {
-                  patchState(store, (state) => ({
-                    ...state,
-                    [tag]: {
-                      ...state[tag],
-                      loading: false,
-                      books: items,
+                  const books = items.reduce(
+                    (acc, book) => {
+                      switch (book.tag) {
+                        case BookTag.BESTSELLER:
+                          acc[BookTag.BESTSELLER].push(book);
+                          break;
+                        case BookTag.INCOMING:
+                          acc[BookTag.INCOMING].push(book);
+                          break;
+                        case BookTag.NEW:
+                          acc[BookTag.NEW].push(book);
+                          break;
+                      }
+
+                      return acc;
                     },
-                  }));
+                    {
+                      [BookTag.BESTSELLER]: [] as Book[],
+                      [BookTag.INCOMING]: [] as Book[],
+                      [BookTag.NEW]: [] as Book[],
+                    },
+                  );
+
+                  patchState(store, {
+                    books,
+                    loading: false,
+                    error: null,
+                  });
                 },
                 error: (error: ResponseError) => {
-                  patchState(store, (state) => ({
-                    ...state,
-                    [tag]: {
-                      ...state[tag],
-                      loading: false,
-                      error:
-                        error?.error?.message ||
-                        'Error occur while getting books',
-                    },
-                  }));
+                  patchState(store, {
+                    books: initialHomeState.books,
+                    loading: false,
+                    error:
+                      error?.error?.message ||
+                      'Error occur while getting books',
+                  });
                 },
               }),
             ),
@@ -81,4 +101,9 @@ export const HomeStore = signalStore(
       ),
     ),
   })),
+  withHooks({
+    onInit: (store) => {
+      store.getBooks$();
+    },
+  }),
 );

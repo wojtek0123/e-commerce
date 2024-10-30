@@ -1,5 +1,5 @@
 import { Directive } from '@angular/core';
-import { BookTag } from '@e-commerce/client-web/shared/data-access';
+import { BookTag } from '@e-commerce/client-web/shared/data-access/api-models';
 import { AbstractSelectItemsFilterDirective } from './select-item-filter.directive';
 
 @Directive({
