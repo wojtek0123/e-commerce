@@ -11,7 +11,6 @@ import { Params, RouterLink } from '@angular/router';
   standalone: true,
   imports: [RouterLink],
   templateUrl: './container.component.html',
-  styleUrl: './container.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContainerComponent {
