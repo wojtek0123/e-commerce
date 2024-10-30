@@ -6,7 +6,7 @@
 >
   <form
     [formGroup]="loginForm"
-    class="flex flex-col gap-2 w-full max-w-[30rem] xl:items-center"
+    class="flex flex-col gap-2 w-full xl:items-center"
     (submit)="onSubmit()"
   >
     <lib-form-field label="Email" [isRequired]="true">
@@ -60,15 +60,21 @@
       }
     </lib-form-field>
 
-    <p-button
-      type="submit"
-      label="Log in!"
-      [loading]="loading()"
-      loading-icon="pi pi-spin pi-spinner"
-      iconPos="right"
-      [style]="{ width: '100%' }"
-      [disabled]="loginForm.invalid"
+    <div
+      [pTooltip]="loginForm.invalid ? 'Form is invalid' : ''"
+      tooltipPosition="top"
       class="w-full mt-5"
-    />
+    >
+      <p-button
+        type="submit"
+        label="Log in!"
+        [loading]="loading()"
+        loading-icon="pi pi-spin pi-spinner"
+        iconPos="right"
+        [style]="{ width: '100%' }"
+        [disabled]="loginForm.invalid"
+        styleClass="w-full"
+      />
+    </div>
   </form>
 </lib-container>

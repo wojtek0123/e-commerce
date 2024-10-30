@@ -17,8 +17,8 @@ import {
   FormFieldComponent,
   ErrorMessageComponent,
 } from '@e-commerce/client-web/shared/ui';
-import { Store } from '@ngrx/store';
 import { ContainerComponent } from '@e-commerce/client-web/auth/ui';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'lib-register',
@@ -36,10 +36,14 @@ import { ContainerComponent } from '@e-commerce/client-web/auth/ui';
     FormFieldComponent,
     ErrorMessageComponent,
     ContainerComponent,
+    TooltipModule,
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'max-w-[30rem] w-full',
+  },
 })
 export class RegisterComponent {
   private readonly authStore = inject(AuthStore);
