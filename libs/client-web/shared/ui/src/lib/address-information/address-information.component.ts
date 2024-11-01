@@ -21,7 +21,7 @@ export class AddressInformationComponent {
 
   public onSelect = output<UserAddress>();
   public onEdit = output<UserAddress>();
-  public onDelete = output<UserAddress['id']>();
+  public onDelete = output<UserAddress>();
 
   public select() {
     const address = this.address();
@@ -44,6 +44,6 @@ export class AddressInformationComponent {
 
     if (!address) return;
 
-    this.onDelete.emit(address.id);
+    this.onDelete.emit(address);
   }
 }

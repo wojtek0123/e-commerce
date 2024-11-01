@@ -11,6 +11,7 @@ import {
 } from '@e-commerce/client-web/shared/data-access/api-models';
 import { tapResponse } from '@ngrx/operators';
 import {
+  getState,
   patchState,
   signalStore,
   type,
@@ -30,7 +31,8 @@ import {
 } from '@ngrx/signals/entities';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { MessageService } from 'primeng/api';
-import { debounce, map, of, pipe, switchMap, tap, timer } from 'rxjs';
+import { debounce, filter, map, of, pipe, switchMap, tap, timer } from 'rxjs';
+import { User } from '@prisma/client';
 
 interface AddressState {
   selectedAddress: UserAddress | null;
@@ -39,11 +41,13 @@ interface AddressState {
   cachedAddress: UserAddress | null;
   countries: Country[];
   formInfo: {
-    updatingAddress: UserAddress | null;
-    type: 'add' | 'update';
-    visibility: boolean;
+    selectedAddress: UserAddress | null;
+    type: 'add' | 'update' | 'delete';
+    isVisible: boolean;
   };
 }
+
+type FormType = 'add' | 'update' | 'delete';
 
 const initialAddressState: AddressState = {
   selectedAddress: null,
@@ -52,9 +56,9 @@ const initialAddressState: AddressState = {
   cachedAddress: null,
   countries: [],
   formInfo: {
-    updatingAddress: null,
+    selectedAddress: null,
     type: 'add',
-    visibility: false,
+    isVisible: false,
   },
 };
 
@@ -70,9 +74,9 @@ export const AddressStore = signalStore(
   withEntities(addressesConfig),
   withComputed(({ _addressesEntities, formInfo, selectedAddress }) => ({
     addresses: computed(() => _addressesEntities()),
-    updatingAddress: computed(() => formInfo().updatingAddress),
+    updatingAddress: computed(() => formInfo().selectedAddress),
     formType: computed(() => formInfo().type),
-    formVisibility: computed(() => formInfo().visibility),
+    formVisibility: computed(() => formInfo().isVisible),
     selectedAddressId: computed(() => selectedAddress()?.id ?? null),
   })),
   withMethods(
@@ -94,9 +98,9 @@ export const AddressStore = signalStore(
                     {
                       loading: false,
                       formInfo: {
-                        updatingAddress: null,
+                        selectedAddress: null,
                         type: 'add',
-                        visibility: false,
+                        isVisible: false,
                       },
                     },
                     addEntities(addresses, addressesConfig),
@@ -153,8 +157,8 @@ export const AddressStore = signalStore(
                       loading: false,
                       formInfo: {
                         ...state.formInfo,
-                        updatingAddress: null,
-                        visibility: false,
+                        selectedAddress: null,
+                        isVisible: false,
                       },
                     }),
                     addEntity(userAddress, addressesConfig),
@@ -196,7 +200,7 @@ export const AddressStore = signalStore(
                   cachedAddress: state._addressesEntityMap[id],
                   formInfo: {
                     ...state.formInfo,
-                    visibility: false,
+                    isVisible: false,
                   },
                 }),
                 updateEntity(
@@ -227,7 +231,7 @@ export const AddressStore = signalStore(
                     cachedAddress: null,
                     formInfo: {
                       ...state.formInfo,
-                      updatingAddress: null,
+                      selectedAddress: null,
                     },
                   }));
 
@@ -260,20 +264,29 @@ export const AddressStore = signalStore(
           ),
         ),
       ),
-      deleteAddress$: rxMethod<{ id: UserAddress['id'] }>(
+      deleteAddress$: rxMethod<void>(
         pipe(
-          tap(({ id }) => {
+          map(() => getState(store).formInfo.selectedAddress?.id),
+          filter((id): id is UserAddress['id'] => !!id),
+          tap((id) => {
             const address = store._addressesEntityMap()[id];
 
             patchState(store, removeEntity(id, addressesConfig), {
               cachedAddress: address,
             });
           }),
-          switchMap(({ id }) =>
+          switchMap((id) =>
             userAddressApi.delete$(id).pipe(
               tapResponse({
                 next: () => {
-                  patchState(store, { cachedAddress: null });
+                  patchState(store, (state) => ({
+                    cachedAddress: null,
+                    formInfo: {
+                      ...state.formInfo,
+                      selectedAddress: null,
+                      isVisible: false,
+                    },
+                  }));
                 },
                 error: (error: ResponseError) => {
                   const cachedAddress = store.cachedAddress();
@@ -281,6 +294,13 @@ export const AddressStore = signalStore(
                   if (cachedAddress) {
                     patchState(
                       store,
+                      (state) => ({
+                        formInfo: {
+                          ...state.formInfo,
+                          selectedAddress: null,
+                          isVisible: false,
+                        },
+                      }),
                       addEntity(cachedAddress, addressesConfig),
                     );
                   }
@@ -300,12 +320,12 @@ export const AddressStore = signalStore(
       selectAddress: (selectedAddress: UserAddress) => {
         patchState(store, { selectedAddress });
       },
-      showForm: (address?: UserAddress) => {
+      showForm: (type: FormType, selectedAddress?: UserAddress) => {
         patchState(store, {
           formInfo: {
-            updatingAddress: address ?? null,
-            type: address ? 'update' : 'add',
-            visibility: true,
+            selectedAddress: selectedAddress ?? null,
+            type,
+            isVisible: true,
           },
         });
       },
@@ -313,8 +333,8 @@ export const AddressStore = signalStore(
         patchState(store, (state) => ({
           formInfo: {
             ...state.formInfo,
-            updatingAddress: null,
-            visibility: false,
+            selectedAddress: null,
+            isVisible: false,
           },
         }));
       },

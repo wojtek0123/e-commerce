@@ -1,0 +1,27 @@
+<p-dialog
+  [visible]="isVisible()"
+  (visibleChange)="onHide.emit()"
+  [modal]="true"
+  [closeOnEscape]="true"
+  header="Delete confirmation"
+>
+  <div>
+    Are you sure you want to <strong>pernamently</strong> delete this address?
+  </div>
+  <div class="grid grid-cols-2 gap-4 mt-4">
+    <p-button
+      [outlined]="true"
+      label="Cancel"
+      (onClick)="onHide.emit()"
+      styleClass="w-full"
+    />
+    <p-button
+      severity="danger"
+      [loading]="loading()"
+      label="Delete"
+      type="submit"
+      styleClass="w-full"
+      (onClick)="onDelete.emit()"
+    />
+  </div>
+</p-dialog>

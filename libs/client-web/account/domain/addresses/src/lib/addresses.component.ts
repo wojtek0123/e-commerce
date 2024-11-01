@@ -5,13 +5,17 @@ import {
   inject,
 } from '@angular/core';
 import { AddressStore } from '@e-commerce/client-web/account/data-access';
-import { AddressInformationComponent } from '@e-commerce/client-web/shared/ui';
+import {
+  AddressInformationComponent,
+  DeleteConfirmationDialogComponent,
+} from '@e-commerce/client-web/shared/ui';
 import { SkeletonModule } from 'primeng/skeleton';
 import { UserAddress } from '@e-commerce/client-web/shared/data-access/api-models';
 import { DialogModule } from 'primeng/dialog';
-import { NgTemplateOutlet } from '@angular/common';
 import { AddressFormComponent } from './components/address-form/address-form.component';
 import { ButtonModule } from 'primeng/button';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'lib-addresses',
@@ -20,9 +24,11 @@ import { ButtonModule } from 'primeng/button';
     SkeletonModule,
     AddressInformationComponent,
     DialogModule,
-    NgTemplateOutlet,
     AddressFormComponent,
     ButtonModule,
+    ConfirmDialogModule,
+    NgClass,
+    DeleteConfirmationDialogComponent,
   ],
   templateUrl: './addresses.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -35,19 +41,17 @@ export class AddressesComponent {
   public addresses = this.addressesStore.addresses;
 
   public isFormVisible = computed(
-    () => this.addressesStore.formInfo().visibility,
+    () => this.addressesStore.formInfo().isVisible,
   );
+  public formType = this.addressesStore.formType;
+  public isFormTypeDelete = computed(() => this.formType() === 'delete');
 
-  public update(address: UserAddress) {
-    this.addressesStore.showForm(address);
+  public delete() {
+    this.addressesStore.deleteAddress$();
   }
 
-  public delete(id: UserAddress['id']) {
-    this.addressesStore.deleteAddress$({ id });
-  }
-
-  public add() {
-    this.addressesStore.showForm();
+  public showForm(type: 'add' | 'update' | 'delete', address?: UserAddress) {
+    this.addressesStore.showForm(type, address);
   }
 
   public hideForm() {

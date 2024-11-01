@@ -22,13 +22,6 @@ export const accountShellRoutes: Route[] = [
           ),
       },
       {
-        path: APP_ROUTES_FEATURE.ACCOUNT.ADDRESSES,
-        loadChildren: () =>
-          import('@e-commerce/client-web/account/feature/addresses').then(
-            (r) => r.addressesRoutes,
-          ),
-      },
-      {
         path: '**',
         redirectTo: APP_ROUTES_FEATURE.ACCOUNT.ORDERS,
       },

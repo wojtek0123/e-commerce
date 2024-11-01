@@ -29,7 +29,6 @@ export const APP_ROUTES_FEATURE = {
     BASE: 'account',
     ORDERS: 'orders',
     INFORMATION: 'information',
-    ADDRESSES: 'addresses',
   } as const,
   CART: {
     BASE: 'cart',
@@ -57,8 +56,6 @@ const ACCOUNT_FEATURE_PATHS = {
     `/${APP_ROUTES_FEATURE.ACCOUNT.BASE}/${APP_ROUTES_FEATURE.ACCOUNT.INFORMATION}`,
   ORDERS: () =>
     `/${APP_ROUTES_FEATURE.ACCOUNT.BASE}/${APP_ROUTES_FEATURE.ACCOUNT.ORDERS}`,
-  ADDRESSES: () =>
-    `/${APP_ROUTES_FEATURE.ACCOUNT.BASE}/${APP_ROUTES_FEATURE.ACCOUNT.ADDRESSES}`,
 } as const;
 
 const CART_FEATURE_PATHS = {

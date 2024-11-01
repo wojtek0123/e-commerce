@@ -1,0 +1,68 @@
+<div
+  class="flex h-min max-h-fit flex-col gap-4 bg-content-background p-4 rounded-base"
+>
+  <div class="flex items-center gap-4">
+    <h3 class="text-lg">Addresses</h3>
+    <p-button
+      label="Add"
+      icon="pi pi-plus"
+      size="small"
+      severity="secondary"
+      (onClick)="showForm('add')"
+    />
+  </div>
+  @if (loading() && !addresses().length) {
+    <div libOrderProcessItem class="flex flex-col gap-4">
+      <div class="flex items-center gap-4">
+        <p-skeleton width="10rem" height="2rem" />
+        <p-skeleton width="12rem" height="2rem" />
+      </div>
+      <div class="flex items-center gap-4">
+        <p-skeleton width="8rem" height="2rem" />
+        <p-skeleton width="15rem" height="2rem" />
+      </div>
+      <div class="flex items-center gap-4">
+        <p-skeleton width="12rem" height="2rem" />
+        <p-skeleton width="20rem" height="2rem" />
+      </div>
+    </div>
+  } @else if (error()) {
+    <div
+      role="alert"
+      class="text-red-500 p-4 rounded-base border border-red-300 bg-red-50"
+    >
+      {{ error() }}
+    </div>
+  } @else {
+    @for (address of addresses(); track address.id) {
+      <lib-address-information
+        [address]="address"
+        (onEdit)="showForm('update', $event)"
+        (onDelete)="showForm('delete', $event)"
+      />
+    } @empty {
+      <div class="flex items-center flex-col text-center">
+        <span> No addresses found! </span>
+        <span class="text-sm text-muted-color"> Add some :) </span>
+      </div>
+    }
+  }
+</div>
+
+<p-dialog
+  header="Address form"
+  [visible]="isFormVisible() && !isFormTypeDelete()"
+  [modal]="true"
+  styleClass="w-full max-w-[48rem] mx-4 w-full"
+  [closeOnEscape]="true"
+  [dismissableMask]="true"
+  (visibleChange)="hideForm()"
+>
+  <lib-address-form class="w-full" />
+</p-dialog>
+
+<lib-delete-confirmation-dialog
+  [isVisible]="isFormVisible() && isFormTypeDelete()"
+  (onHide)="hideForm()"
+  (onDelete)="delete()"
+/>

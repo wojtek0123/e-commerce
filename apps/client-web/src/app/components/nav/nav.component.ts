@@ -7,7 +7,14 @@ import { Category } from '@e-commerce/client-web/shared/data-access/api-models';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { FormsModule } from '@angular/forms';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { debounce, filter, map, of, timer } from 'rxjs';
+import {
+  ArgumentOutOfRangeError,
+  debounce,
+  filter,
+  map,
+  of,
+  timer,
+} from 'rxjs';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { SidebarModule } from 'primeng/sidebar';
 import { ToolbarModule } from 'primeng/toolbar';
@@ -25,6 +32,7 @@ import { CartSidebarComponent } from '@e-commerce/client-web/cart/feature/cart-s
 import { ThemeService } from '../../services/theme.service';
 import { CategoryStore } from '../../stores/category.store';
 import { AuthService } from '@e-commerce/client-web/auth/api';
+import { APP_LOCAL_STORAGE_KEYS_TOKEN } from '@e-commerce/client-web/shared/app-config';
 
 @Component({
   selector: 'app-nav',
@@ -71,6 +79,7 @@ export class NavComponent implements OnInit, OnDestroy {
   private readonly themeService = inject(ThemeService);
   private readonly categoriesStore = inject(CategoryStore);
   private readonly authService = inject(AuthService);
+  private readonly appLocalStorageKeys = inject(APP_LOCAL_STORAGE_KEYS_TOKEN);
 
   public isAuthenticated = this.authService.isAuthenticated;
   public categories = this.categoriesStore.categories;
@@ -89,7 +98,9 @@ export class NavComponent implements OnInit, OnDestroy {
 
   public ngOnInit() {
     // TODO: Create shared config to all routes and local storage keys
-    const isExpanded = localStorage.getItem('isExpanded');
+    const isExpanded = localStorage.getItem(
+      this.appLocalStorageKeys.IS_EXPANDED,
+    );
 
     if (isExpanded) {
       this.isExpanded.set(JSON.parse(isExpanded));
@@ -100,7 +111,7 @@ export class NavComponent implements OnInit, OnDestroy {
     this.resizeObserver = new ResizeObserver(() => {
       if (mediaQueryList.matches && this.shouldRestoreExpanded()) {
         const isExpanded = JSON.parse(
-          localStorage.getItem('isExpanded') || 'false',
+          localStorage.getItem(this.appLocalStorageKeys.IS_EXPANDED) || 'false',
         );
 
         this.isExpanded.set(isExpanded);
@@ -143,11 +154,6 @@ export class NavComponent implements OnInit, OnDestroy {
       icon: 'pi pi-cog',
       routerLink: '/account/information',
     },
-    {
-      label: 'Addresses',
-      icon: 'pi pi-address-book',
-      routerLink: '/account/addresses',
-    },
   ]);
 
   public toggleDarkMode() {
@@ -160,7 +166,10 @@ export class NavComponent implements OnInit, OnDestroy {
 
   public expandCollapseNavigation() {
     this.isExpanded.update((isExpanded) => !isExpanded);
-    localStorage.setItem('isExpanded', JSON.stringify(this.isExpanded()));
+    localStorage.setItem(
+      this.appLocalStorageKeys.IS_EXPANDED,
+      JSON.stringify(this.isExpanded()),
+    );
   }
 
   public logout() {
