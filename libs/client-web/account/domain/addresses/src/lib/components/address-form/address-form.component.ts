@@ -60,8 +60,15 @@ export class AddressFormComponent {
   public formType = this.addressStore.formType;
   public loading = this.addressStore.loading;
   public updatingAddress = this.addressStore.updatingAddress;
+  public isFormVisible = this.addressStore.formVisibility;
 
   constructor() {
+    effect(() => {
+      this.isFormVisible();
+
+      untracked(() => this.form.reset());
+    });
+
     effect(() => {
       const address = this.updatingAddress();
 
