@@ -10,7 +10,7 @@
       <p-button
         libNavButton
         size="large"
-        routerLink="/browse"
+        [routerLink]="appRoutePaths.BOOKS()"
         routerLinkActive="bg-surface-100 dark:bg-surface-700 rounded-base"
         [queryParams]="null"
         [state]="{}"
@@ -19,16 +19,14 @@
       <p-button
         libNavButton
         size="large"
-        routerLink="/home"
+        [routerLink]="appRoutePaths.HOME()"
         routerLinkActive="bg-surface-100 dark:bg-surface-700 rounded-base"
-        [queryParams]="null"
-        [state]="{}"
         icon="pi pi-home"
       />
       <p-button
         libNavButton
         size="large"
-        routerLink="/account"
+        [routerLink]="appRoutePaths.ORDERS()"
         icon="pi pi-user"
       />
       <lib-cart-sidebar />
@@ -56,7 +54,7 @@
           <ng-container [ngTemplateOutlet]="logo" />
         } @else {
           <a
-            routerLink="/home"
+            [routerLink]="appRoutePaths.HOME()"
             routerLinkActive="bg-surface-100 dark:bg-surface-700 rounded-base"
             class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-200 hover:dark:bg-surface-600"
           >
@@ -67,7 +65,7 @@
       <p-divider />
       <ul class="flex flex-col">
         <a
-          routerLink="/browse"
+          [routerLink]="appRoutePaths.BOOKS()"
           routerLinkActive="bg-surface-100 dark:bg-surface-700"
           class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-200 hover:dark:bg-surface-600"
           [queryParams]="null"
@@ -85,7 +83,7 @@
       <lib-cart-sidebar [isLabelShowed]="isLabelShowed()" />
       @if (isAuthenticated()) {
         <a
-          routerLink="/account"
+          [routerLink]="appRoutePaths.ORDERS()"
           class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-200 hover:dark:bg-surface-600"
         >
           <i class="pi pi-user"></i>
@@ -104,7 +102,7 @@
         </button>
       } @else {
         <a
-          routerLink="/auth/login"
+          [routerLink]="appRoutePaths.LOGIN()"
           routerLinkActive="bg-surface-100 dark:bg-surface-700"
           class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-200 hover:dark:bg-surface-600"
         >
@@ -114,7 +112,7 @@
           }
         </a>
         <a
-          routerLink="/auth/register"
+          [routerLink]="appRoutePaths.REGISTER()"
           routerLinkActive="bg-surface-100 dark:bg-surface-700"
           class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-200 hover:dark:bg-surface-600"
         >
@@ -159,7 +157,7 @@
 
 <ng-template #logo>
   <a
-    routerLink="/"
+    [routerLink]="appRoutePaths.HOME()"
     [queryParams]="null"
     class="text-xl no-underline flex items-center justify-center"
   >
@@ -187,7 +185,7 @@
     @for (category of categories(); track category.id) {
       <a
         (click)="isOpen.set(false)"
-        routerLink="/browse"
+        [routerLink]="appRoutePaths.BOOKS()"
         [queryParams]="{ categories: category.name }"
         class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-200 hover:dark:bg-surface-600"
         [state]="{ category: stringifyCategory(category) }"
