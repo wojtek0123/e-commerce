@@ -21,61 +21,12 @@
       <div>{{ error() }}</div>
     } @else {
       @for (address of addresses(); track address.id) {
-        <!-- <div class="relative"> -->
-        <!--   <button -->
-        <!--     libOrderProcessItem -->
-        <!--     [isActive]="selectedAddressId() === address.id" -->
-        <!--     class="flex flex-col items-start !justify-start gap-4 pr-14" -->
-        <!--     (click)="selectAddress(address)" -->
-        <!--   > -->
-        <!--     <div class="flex gap-4 justify-start"> -->
-        <!--       <span class="text-sm text-muted-color font-semi w-24 text-start"> -->
-        <!--         Phone -->
-        <!--       </span> -->
-        <!--       <span class="text-base !text-start">{{ address?.phone }}</span> -->
-        <!--     </div> -->
-        <!--     <div class="flex gap-4 justify-start"> -->
-        <!--       <span class="text-sm text-muted-color font-semi w-24 text-start"> -->
-        <!--         Name -->
-        <!--       </span> -->
-        <!--       <span class="text-base flex justify-start"> -->
-        <!--         {{ address?.firstName }} -->
-        <!--         {{ address?.lastName }} -->
-        <!--       </span> -->
-        <!--     </div> -->
-        <!--     <div class="flex gap-4"> -->
-        <!--       <span -->
-        <!--         class="text-sm text-muted-color font-semi min-w-24 text-start" -->
-        <!--       > -->
-        <!--         Address -->
-        <!--       </span> -->
-        <!--       <div class="flex flex-col items-start"> -->
-        <!--         <span class="text-base !text-start"> -->
-        <!--           {{ address?.street }} -->
-        <!--           {{ address?.homeNumber }} -->
-        <!--           {{ address?.houseNumber ? '/ ' + address?.houseNumber : '' }}, -->
-        <!--           {{ address?.postcode }}, {{ address?.city }}, -->
-        <!--           {{ address?.country?.name }} -->
-        <!--         </span> -->
-        <!--       </div> -->
-        <!--     </div> -->
-        <!--   </button> -->
-        <!--   <div -->
-        <!--     class="flex flex-col gap-4 absolute top-1/2 right-2 -translate-y-1/2" -->
-        <!--   > -->
-        <!--     <p-button icon="pi pi-pencil" (onClick)="showForm(address)" /> -->
-        <!--     <p-button -->
-        <!--       icon="pi pi-trash" -->
-        <!--       (onClick)="removeAddress(address.id)" -->
-        <!--     /> -->
-        <!--   </div> -->
-        <!-- </div> -->
         <lib-address-information
           [address]="address"
           [isActive]="address.id === selectedAddressId()"
           (onEdit)="showForm($event)"
           (onSelect)="selectAddress($event)"
-          (onDelete)="deleteAddress($event)"
+          (onDelete)="showDeleteDialog($event)"
         />
       }
       <p-button
@@ -87,3 +38,9 @@
     }
   }
 </lib-section-wrapper>
+
+<lib-delete-address-confirmation-dialog
+  [isVisible]="isDeleteDialogVisible()"
+  (onHide)="hideDeleteDialog()"
+  (onDelete)="delete()"
+/>

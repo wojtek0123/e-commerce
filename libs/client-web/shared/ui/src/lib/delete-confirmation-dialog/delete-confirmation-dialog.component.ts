@@ -8,13 +8,13 @@ import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 
 @Component({
-  selector: 'lib-delete-confirmation-dialog',
+  selector: 'lib-delete-address-confirmation-dialog',
   standalone: true,
   imports: [DialogModule, ButtonModule],
   templateUrl: './delete-confirmation-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DeleteConfirmationDialogComponent {
+export class DeleteAddressConfirmationDialogComponent {
   public isVisible = input.required<boolean>();
   public loading = input<boolean>();
 

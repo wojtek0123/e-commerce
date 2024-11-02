@@ -25,6 +25,7 @@ import {
 } from 'primeng/autocomplete';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'lib-address-form',
@@ -38,6 +39,7 @@ import { InputTextModule } from 'primeng/inputtext';
     AutoCompleteModule,
     ButtonModule,
     InputTextModule,
+    TooltipModule,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

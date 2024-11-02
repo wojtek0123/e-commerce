@@ -184,12 +184,19 @@
       (onClick)="hideForm()"
       styleClass="w-full"
     />
-    <p-button
-      severity="secondary"
-      [loading]="loading()"
-      label="Save"
-      type="submit"
-      styleClass="w-full"
-    />
+    <div
+      [pTooltip]="form.invalid ? 'Form has validation errors' : ''"
+      tooltipPosition="top"
+      tooltipStyleClass="min-w-max"
+    >
+      <p-button
+        severity="secondary"
+        [loading]="loading()"
+        [disabled]="form.invalid"
+        label="Save"
+        type="submit"
+        styleClass="w-full"
+      />
+    </div>
   </div>
 </form>
