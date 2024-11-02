@@ -7,14 +7,7 @@ import { Category } from '@e-commerce/client-web/shared/data-access/api-models';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { FormsModule } from '@angular/forms';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import {
-  ArgumentOutOfRangeError,
-  debounce,
-  filter,
-  map,
-  of,
-  timer,
-} from 'rxjs';
+import { debounce, filter, map, of, timer } from 'rxjs';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { SidebarModule } from 'primeng/sidebar';
 import { ToolbarModule } from 'primeng/toolbar';
@@ -32,7 +25,10 @@ import { CartSidebarComponent } from '@e-commerce/client-web/cart/feature/cart-s
 import { ThemeService } from '../../services/theme.service';
 import { CategoryStore } from '../../stores/category.store';
 import { AuthService } from '@e-commerce/client-web/auth/api';
-import { APP_LOCAL_STORAGE_KEYS_TOKEN } from '@e-commerce/client-web/shared/app-config';
+import {
+  APP_LOCAL_STORAGE_KEYS_TOKEN,
+  APP_ROUTE_PATHS_TOKEN,
+} from '@e-commerce/client-web/shared/app-config';
 
 @Component({
   selector: 'app-nav',
@@ -80,6 +76,7 @@ export class NavComponent implements OnInit, OnDestroy {
   private readonly categoriesStore = inject(CategoryStore);
   private readonly authService = inject(AuthService);
   private readonly appLocalStorageKeys = inject(APP_LOCAL_STORAGE_KEYS_TOKEN);
+  protected readonly appRoutePaths = inject(APP_ROUTE_PATHS_TOKEN);
 
   public isAuthenticated = this.authService.isAuthenticated;
   public categories = this.categoriesStore.categories;
