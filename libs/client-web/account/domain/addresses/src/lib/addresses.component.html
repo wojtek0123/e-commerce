@@ -8,7 +8,7 @@
       icon="pi pi-plus"
       size="small"
       severity="secondary"
-      (onClick)="showForm('add')"
+      (onClick)="showForm()"
     />
   </div>
   @if (loading() && !addresses().length) {
@@ -37,8 +37,8 @@
     @for (address of addresses(); track address.id) {
       <lib-address-information
         [address]="address"
-        (onEdit)="showForm('update', $event)"
-        (onDelete)="showForm('delete', $event)"
+        (onEdit)="showForm($event)"
+        (onDelete)="showDeleteDialog($event)"
       />
     } @empty {
       <div class="flex items-center flex-col text-center">
@@ -51,7 +51,7 @@
 
 <p-dialog
   header="Address form"
-  [visible]="isFormVisible() && !isFormTypeDelete()"
+  [visible]="isFormVisible()"
   [modal]="true"
   styleClass="w-full max-w-[48rem] mx-4 w-full"
   [closeOnEscape]="true"
@@ -61,8 +61,8 @@
   <lib-address-form class="w-full" />
 </p-dialog>
 
-<lib-delete-confirmation-dialog
-  [isVisible]="isFormVisible() && isFormTypeDelete()"
-  (onHide)="hideForm()"
+<lib-delete-address-confirmation-dialog
+  [isVisible]="isDeleteDialogVisible()"
+  (onHide)="hideDeleteDialog()"
   (onDelete)="delete()"
 />

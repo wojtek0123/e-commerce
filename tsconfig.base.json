@@ -18,8 +18,11 @@
       "@e-commerce/client-web/account/data-access": [
         "libs/client-web/account/data-access/src/index.ts"
       ],
-      "@e-commerce/client-web/account/feature/addresses": [
-        "libs/client-web/account/feature/addresses/src/index.ts"
+      "@e-commerce/client-web/account/domain/account-data": [
+        "libs/client-web/account/domain/account-data/src/index.ts"
+      ],
+      "@e-commerce/client-web/account/domain/addresses": [
+        "libs/client-web/account/domain/addresses/src/index.ts"
       ],
       "@e-commerce/client-web/account/feature/information": [
         "libs/client-web/account/feature/information/src/index.ts"
@@ -116,6 +119,9 @@
       ],
       "@e-commerce/client-web/shared/data-access/api-services": [
         "libs/client-web/shared/data-access/api-services/src/index.ts"
+      ],
+      "@e-commerce/client-web/shared/data-access/signal-store-feature": [
+        "libs/client-web/shared/data-access/signal-store-feature/src/index.ts"
       ],
       "@e-commerce/client-web/shared/ui": [
         "libs/client-web/shared/ui/src/index.ts"

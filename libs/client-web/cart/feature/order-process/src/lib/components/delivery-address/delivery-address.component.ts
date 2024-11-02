@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  OnInit,
+} from '@angular/core';
 import { AddressStore } from '@e-commerce/client-web/cart/data-access';
 import { UserAddressFormComponent } from './user-address-form/user-address-form.component';
 import { SectionWrapperComponent } from '@e-commerce/client-web/cart/ui';
@@ -6,7 +11,10 @@ import { ButtonModule } from 'primeng/button';
 import { SkeletonModule } from 'primeng/skeleton';
 import { UserAddress } from '@e-commerce/client-web/shared/data-access/api-models';
 import { OrderProcessItemDirective } from '@e-commerce/client-web/shared/utils';
-import { AddressInformationComponent } from '@e-commerce/client-web/shared/ui';
+import {
+  AddressInformationComponent,
+  DeleteAddressConfirmationDialogComponent,
+} from '@e-commerce/client-web/shared/ui';
 
 @Component({
   selector: 'lib-delivery-address',
@@ -18,12 +26,13 @@ import { AddressInformationComponent } from '@e-commerce/client-web/shared/ui';
     SkeletonModule,
     OrderProcessItemDirective,
     AddressInformationComponent,
+    DeleteAddressConfirmationDialogComponent,
   ],
   templateUrl: './delivery-address.component.html',
   styleUrl: './delivery-address.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DeliveryAddressComponent {
+export class DeliveryAddressComponent implements OnInit {
   private readonly addressStore = inject(AddressStore);
 
   public loading = this.addressStore.loading;
@@ -34,6 +43,12 @@ export class DeliveryAddressComponent {
   public updatingAddress = this.addressStore.updatingAddress;
   public formType = this.addressStore.formType;
   public formVisibility = this.addressStore.formVisibility;
+
+  public isDeleteDialogVisible = this.addressStore.isDeleteDialogVisible;
+
+  public ngOnInit(): void {
+    this.addressStore.resetState();
+  }
 
   public showForm(address?: UserAddress) {
     this.addressStore.showForm(address);
@@ -47,7 +62,15 @@ export class DeliveryAddressComponent {
     this.addressStore.selectAddress(address);
   }
 
-  public deleteAddress(id: UserAddress['id']) {
-    this.addressStore.deleteAddress$({ id });
+  public delete() {
+    this.addressStore.deleteAddress$();
+  }
+
+  public showDeleteDialog(address: UserAddress) {
+    this.addressStore.showDeleteDialog(address.id);
+  }
+
+  public hideDeleteDialog() {
+    this.addressStore.hideDeleteDialog();
   }
 }

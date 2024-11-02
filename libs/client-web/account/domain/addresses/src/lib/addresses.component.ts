@@ -3,11 +3,12 @@ import {
   Component,
   computed,
   inject,
+  OnInit,
 } from '@angular/core';
 import { AddressStore } from '@e-commerce/client-web/account/data-access';
 import {
   AddressInformationComponent,
-  DeleteConfirmationDialogComponent,
+  DeleteAddressConfirmationDialogComponent,
 } from '@e-commerce/client-web/shared/ui';
 import { SkeletonModule } from 'primeng/skeleton';
 import { UserAddress } from '@e-commerce/client-web/shared/data-access/api-models';
@@ -28,12 +29,12 @@ import { NgClass } from '@angular/common';
     ButtonModule,
     ConfirmDialogModule,
     NgClass,
-    DeleteConfirmationDialogComponent,
+    DeleteAddressConfirmationDialogComponent,
   ],
   templateUrl: './addresses.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AddressesComponent {
+export class AddressesComponent implements OnInit {
   private readonly addressesStore = inject(AddressStore);
 
   public loading = this.addressesStore.loading;
@@ -44,17 +45,30 @@ export class AddressesComponent {
     () => this.addressesStore.formInfo().isVisible,
   );
   public formType = this.addressesStore.formType;
-  public isFormTypeDelete = computed(() => this.formType() === 'delete');
+
+  public isDeleteDialogVisible = this.addressesStore.isDeleteDialogVisible;
+
+  public ngOnInit(): void {
+    this.addressesStore.resetState();
+  }
 
   public delete() {
     this.addressesStore.deleteAddress$();
   }
 
-  public showForm(type: 'add' | 'update' | 'delete', address?: UserAddress) {
-    this.addressesStore.showForm(type, address);
+  public showForm(address?: UserAddress) {
+    this.addressesStore.showForm(address);
   }
 
   public hideForm() {
     this.addressesStore.hideForm();
+  }
+
+  public showDeleteDialog(address: UserAddress) {
+    this.addressesStore.showDeleteDialog(address.id);
+  }
+
+  public hideDeleteDialog() {
+    this.addressesStore.hideDeleteDialog();
   }
 }
