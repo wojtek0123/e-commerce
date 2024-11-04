@@ -2,6 +2,7 @@ import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   effect,
   inject,
   untracked,
@@ -25,6 +26,10 @@ import {
   AutoCompleteCompleteEvent,
   AutoCompleteModule,
 } from 'primeng/autocomplete';
+import { TooltipModule } from 'primeng/tooltip';
+import { isEqual, omit } from 'lodash-es';
+import { combineLatest, map, startWith } from 'rxjs';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'lib-user-address-form',
@@ -37,6 +42,7 @@ import {
     AutoCompleteModule,
     ButtonModule,
     InputTextModule,
+    TooltipModule,
   ],
   templateUrl: './user-address-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -60,27 +66,67 @@ export class UserAddressFormComponent {
   public countries = this.addressStore.countries;
 
   public formType = this.addressStore.formType;
+  public isFormVisible = this.addressStore.formVisibility;
   public updatingAddress = this.addressStore.updatingAddress;
+  public isFormInvalid = toSignal(
+    this.form.valueChanges.pipe(map(() => this.form.invalid)),
+    { initialValue: false },
+  );
+
+  public isFormChanged = toSignal(
+    combineLatest([
+      this.form.valueChanges,
+      toObservable(this.updatingAddress),
+    ]).pipe(
+      map(
+        ([formValues, updatingAddress]) =>
+          !isEqual(
+            formValues,
+            omit(updatingAddress, ['id', 'countryId', 'userId']),
+          ),
+      ),
+    ),
+    { initialValue: false },
+  );
+
+  public tooltipMessage = computed(() => {
+    if (!this.isFormChanged()) {
+      return 'No changes detected. Make an update to enable the Save button.';
+    }
+
+    if (this.isFormInvalid()) {
+      return 'Please review the form to make sure all required fields are filled.';
+    }
+
+    return '';
+  });
 
   constructor() {
     effect(() => {
       const address = this.updatingAddress();
 
       untracked(() => {
-        this.form.setValue(
-          {
-            firstName: address?.firstName ?? null,
-            lastName: address?.lastName ?? null,
-            country: address?.country ?? null,
-            street: address?.street ?? null,
-            homeNumber: address?.homeNumber ?? null,
-            houseNumber: address?.houseNumber ?? null,
-            postcode: address?.postcode ?? null,
-            phone: address?.phone ?? null,
-            city: address?.city ?? null,
-          },
-          { emitEvent: false },
-        );
+        this.form.setValue({
+          firstName: address?.firstName ?? null,
+          lastName: address?.lastName ?? null,
+          country: address?.country ?? null,
+          street: address?.street ?? null,
+          homeNumber: address?.homeNumber ?? null,
+          houseNumber: address?.houseNumber ?? null,
+          postcode: address?.postcode ?? null,
+          phone: address?.phone ?? null,
+          city: address?.city ?? null,
+        });
+      });
+    });
+
+    effect(() => {
+      const isFormVisible = this.isFormVisible();
+
+      untracked(() => {
+        if (!isFormVisible) return;
+
+        this.form.reset();
       });
     });
   }

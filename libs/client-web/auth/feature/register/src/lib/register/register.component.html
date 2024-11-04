@@ -46,7 +46,7 @@
         <ng-container slot="error-message">
           @if (registerForm.controls.password.getError('minlength')) {
             <lib-error-message
-              message="Password should have at least 6 characters"
+              message="Password should have at least 8 characters"
             />
           } @else if (registerForm.controls.password.getError('required')) {
             <lib-error-message />

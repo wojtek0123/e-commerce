@@ -185,9 +185,9 @@
       styleClass="w-full"
     />
     <div
-      [pTooltip]="form.invalid ? 'Form has validation errors' : ''"
+      [pTooltip]="tooltipMessage()"
       tooltipPosition="top"
-      tooltipStyleClass="min-w-max"
+      tooltipStyleClass="min-w-fit max-w-40"
     >
       <p-button
         severity="secondary"

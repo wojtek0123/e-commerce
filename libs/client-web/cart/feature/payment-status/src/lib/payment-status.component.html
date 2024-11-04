@@ -1,35 +1,39 @@
 <div class="payment-status">
   @if (loading()) {
-  <div class="payment-status__container">
-    <p-progress-spinner
-      styleClass="w-4rem h-4rem"
-      strokeWidth="8"
-      fill="transparent"
-      animationDuration=".5s"
-    />
-    <span class="payment-status__container__text">
-      Some secure things are happening that will take money to pay for your
-      order
-    </span>
-  </div>
-  } @else {
-  <div class="payment-status__container">
-    <svg
-      class="checkmark"
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 52 52"
-    >
-      <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none" />
-      <path
-        class="checkmark__check"
-        fill="none"
-        d="M14.1 27.2l7.1 7.2 16.7-16.8"
+    <div class="payment-status__container">
+      <p-progress-spinner
+        styleClass="w-4rem h-4rem"
+        strokeWidth="8"
+        fill="transparent"
+        animationDuration=".5s"
       />
-    </svg>
-    <span>Pretend that you actually paid for this items :)</span>
-    <a [routerLink]="['/account', 'orders']" class="text-primary">
-      Go to your order details
-    </a>
-  </div>
+      <span class="payment-status__container__text">
+        Some secure things are happening that will take money to pay for your
+        order
+      </span>
+    </div>
+  } @else {
+    <div class="payment-status__container">
+      <svg
+        class="checkmark"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 52 52"
+      >
+        <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none" />
+        <path
+          class="checkmark__check"
+          fill="none"
+          d="M14.1 27.2l7.1 7.2 16.7-16.8"
+        />
+      </svg>
+      <span>Pretend that you actually paid for this items :)</span>
+      <a
+        [routerLink]="appRoutePaths.ORDERS()"
+        [queryParams]="{ orderDetailsId: orderId() }"
+        class="text-primary"
+      >
+        Go to your order details
+      </a>
+    </div>
   }
 </div>

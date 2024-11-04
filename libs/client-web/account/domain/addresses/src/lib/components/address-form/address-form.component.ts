@@ -2,6 +2,7 @@ import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   effect,
   inject,
   untracked,
@@ -26,6 +27,9 @@ import {
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { TooltipModule } from 'primeng/tooltip';
+import { combineLatest, map } from 'rxjs';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { isEqual, omit } from 'lodash-es';
 
 @Component({
   selector: 'lib-address-form',
@@ -63,6 +67,38 @@ export class AddressFormComponent {
   public loading = this.addressStore.loading;
   public updatingAddress = this.addressStore.updatingAddress;
   public isFormVisible = this.addressStore.formVisibility;
+  public isFormInvalid = toSignal(
+    this.form.valueChanges.pipe(map(() => this.form.invalid)),
+    { initialValue: false },
+  );
+
+  public isFormChanged = toSignal(
+    combineLatest([
+      this.form.valueChanges,
+      toObservable(this.updatingAddress),
+    ]).pipe(
+      map(
+        ([formValues, updatingAddress]) =>
+          !isEqual(
+            formValues,
+            omit(updatingAddress, ['id', 'countryId', 'userId']),
+          ),
+      ),
+    ),
+    { initialValue: false },
+  );
+
+  public tooltipMessage = computed(() => {
+    if (!this.isFormChanged()) {
+      return 'No changes detected. Make an update to enable the Save button.';
+    }
+
+    if (this.isFormInvalid()) {
+      return 'Please review the form to make sure all required fields are filled.';
+    }
+
+    return '';
+  });
 
   constructor() {
     effect(() => {

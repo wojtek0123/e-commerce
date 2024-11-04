@@ -1,11 +1,10 @@
-<!-- <div class="surface-hover border-round p-3"> -->
-<!--   <p-steps -->
-<!--     [activeIndex]="activeStep$ | async" -->
-<!--     [readonly]="true" -->
-<!--     [model]="stepStatuses()" -->
-<!--   /> -->
-<!-- </div> -->
 <div class="flex flex-col gap-base min-h-fit w-full">
+  <p-steps
+    [activeIndex]="activeStep()"
+    [readonly]="true"
+    [model]="stepStatuses()"
+    class="bg-content-background rounded-base p-4"
+  />
   <div
     class="bg-content-background rounded-base p-4 flex flex-col gap-6 lg:justify-between lg:flex-row"
   >

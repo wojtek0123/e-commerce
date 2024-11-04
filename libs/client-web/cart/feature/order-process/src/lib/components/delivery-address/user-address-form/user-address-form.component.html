@@ -184,12 +184,19 @@
       (onClick)="hideForm()"
       styleClass="w-full"
     />
-    <p-button
-      severity="secondary"
-      [loading]="loading()"
-      label="Save"
-      type="submit"
-      styleClass="w-full"
-    />
+    <div
+      [pTooltip]="tooltipMessage()"
+      tooltipPosition="top"
+      tooltipStyleClass="min-w-max"
+    >
+      <p-button
+        severity="secondary"
+        [disabled]="form.invalid || !isFormChanged()"
+        [loading]="loading()"
+        label="Save"
+        type="submit"
+        styleClass="w-full"
+      />
+    </div>
   </div>
 </form>

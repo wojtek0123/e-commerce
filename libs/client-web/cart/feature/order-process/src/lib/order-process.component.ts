@@ -14,6 +14,7 @@ import { StepsModule } from 'primeng/steps';
 import { ToastModule } from 'primeng/toast';
 import { SummaryComponent } from './components/summary/summary.component';
 import { CurrencyPipe, NgClass } from '@angular/common';
+import { APP_ROUTE_PATHS_TOKEN } from '@e-commerce/client-web/shared/app-config';
 
 @Component({
   selector: 'lib-order-process',
@@ -35,6 +36,7 @@ import { CurrencyPipe, NgClass } from '@angular/common';
 })
 export class OrderProcessComponent {
   private readonly cartStore = inject(CartStore);
+  protected readonly appRoutePaths = inject(APP_ROUTE_PATHS_TOKEN);
 
   public cartItems = this.cartStore.cartItems;
   public cartItemsLoading = this.cartStore.loading;

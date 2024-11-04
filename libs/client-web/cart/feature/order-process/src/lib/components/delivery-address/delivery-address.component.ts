@@ -15,6 +15,7 @@ import {
   AddressInformationComponent,
   DeleteAddressConfirmationDialogComponent,
 } from '@e-commerce/client-web/shared/ui';
+import { DialogModule } from 'primeng/dialog';
 
 @Component({
   selector: 'lib-delivery-address',
@@ -27,6 +28,7 @@ import {
     OrderProcessItemDirective,
     AddressInformationComponent,
     DeleteAddressConfirmationDialogComponent,
+    DialogModule,
   ],
   templateUrl: './delivery-address.component.html',
   styleUrl: './delivery-address.component.scss',
@@ -42,7 +44,7 @@ export class DeliveryAddressComponent implements OnInit {
 
   public updatingAddress = this.addressStore.updatingAddress;
   public formType = this.addressStore.formType;
-  public formVisibility = this.addressStore.formVisibility;
+  public isFormVisible = this.addressStore.formVisibility;
 
   public isDeleteDialogVisible = this.addressStore.isDeleteDialogVisible;
 

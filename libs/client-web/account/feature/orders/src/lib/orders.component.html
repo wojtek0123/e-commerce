@@ -61,21 +61,19 @@
     </ng-template>
   </p-table>
 
-  <p-sidebar
-    (onHide)="selectedOrder.set(null)"
-    class="2xl:!hidden"
-    [visible]="sidebarVisible()"
-    position="left"
-    [blockScroll]="true"
-    appendTo="body"
-    styleClass="max-w-[40rem] w-full rounded-r-base bg-surface-100 dark:bg-surface-950"
-    [maskStyle]="{ display: 'none' }"
-  >
-    <ng-template pTemplate="header">
-      <span class="font-bold"> Order details </span>
-    </ng-template>
-    <lib-order class="w-full" [orderDetails]="selectedOrder()" />
-  </p-sidebar>
+  <!-- <p-sidebar -->
+  <!--   (onHide)="selectOrder(null)" -->
+  <!--   class="2xl:hidden" -->
+  <!--   [visible]="sidebarVisible()" -->
+  <!--   position="left" -->
+  <!--   [blockScroll]="true" -->
+  <!--   styleClass="max-w-[40rem] w-full rounded-r-base bg-surface-100 dark:bg-surface-950" -->
+  <!-- > -->
+  <!--   <ng-template pTemplate="header"> -->
+  <!--     <span class="font-bold"> Order details </span> -->
+  <!--   </ng-template> -->
+  <!--   <lib-order class="w-full" [orderDetails]="selectedOrder()" /> -->
+  <!-- </p-sidebar> -->
 
   <div class="hidden 2xl:flex w-full">
     @if (selectedOrder()) {

@@ -1,11 +1,29 @@
 <form
   class="flex flex-col gap-2 bg-content-background p-4 rounded-base"
+  [formGroup]="form"
   (ngSubmit)="updateEmail()"
 >
-  <lib-form-field label="New email">
-    <input pInputText slot="input" [email]="true" [formControl]="newEmail" />
-    @if (newEmail.invalid && newEmail.dirty) {
+  <lib-form-field label="Current email">
+    <input pInputText slot="input" [value]="userEmail()" [disabled]="true" />
+  </lib-form-field>
+
+  <lib-form-field label="New email" [isRequired]="true">
+    <input pInputText slot="input" [email]="true" formControlName="email" />
+    @if (form.controls.email.invalid && form.controls.email.dirty) {
       <lib-error-message message="Enter valid email" />
+    }
+  </lib-form-field>
+
+  <lib-form-field label="Password to confirm" [isRequired]="true">
+    <p-password
+      slot="input"
+      formControlName="password"
+      [fluid]="true"
+      [toggleMask]="true"
+      [feedback]="false"
+    />
+    @if (form.controls.password.invalid && form.controls.password.dirty) {
+      <lib-error-message />
     }
   </lib-form-field>
 
@@ -16,17 +34,11 @@
       label="Cancel"
       (onClick)="setEditingField(null)"
     />
-    <div
-      [pTooltip]="newEmail.invalid ? 'Form is invalid' : ''"
-      tooltipPosition="top"
-    >
-      <p-button
-        type="submit"
-        [disabled]="newEmail.invalid"
-        severity="secondary"
-        styleClass="w-full"
-        label="Save"
-      />
-    </div>
+    <p-button
+      type="submit"
+      severity="secondary"
+      styleClass="w-full"
+      label="Save"
+    />
   </div>
 </form>

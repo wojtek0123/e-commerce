@@ -8,5 +8,5 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ErrorMessageComponent {
-  message = input<string>('Field is required');
+  message = input<string>('This field is required');
 }
