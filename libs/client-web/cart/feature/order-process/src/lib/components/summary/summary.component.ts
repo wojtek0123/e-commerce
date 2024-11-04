@@ -48,46 +48,63 @@ export class SummaryComponent {
   public total = computed(
     () => this.cartItemsTotal() + this.shippingMethodPrice(),
   );
+  public isCartEmpty = computed(() => this.cartStore.cartItems().length === 0);
 
-  public userAddress = this.addressStore.selectedAddress;
-  public shippingMethod = this.shippingStore.selectedShipping;
-  public paymentMethod = this.paymentStore.selectedPayment;
+  public selectedUserAddress = this.addressStore.selectedAddress;
+  public selectedShippingMethod = this.shippingStore.selectedShipping;
+  public selectedPaymentMethod = this.paymentStore.selectedPayment;
   public initialLoading = computed(
     () =>
       this.addressStore.loading() ||
       this.shippingStore.loading() ||
       this.paymentStore.creditCard.loading(),
   );
-  public isSixDigitCodeInvalid = signal(false);
-  public isDeliveryAddressUpdating = signal(false);
+  public isSixDigitCodeInvalid = computed(
+    () =>
+      this.paymentStore.sixDigitCode()?.length !== 6 &&
+      this.selectedPaymentMethod() === 'SIX_DIGIT_CODE',
+  );
+  public isAddressSelected = computed(
+    () => !!this.addressStore.selectedAddress(),
+  );
   public creditCard = this.paymentStore.creditCard.data;
   public isPaymentInvalid = signal(false);
   public checkoutLoading = this.orderProcessStore.loading;
-  private errors = computed(() => [
-    this.isPaymentInvalid(),
-    !this.userAddress(),
-    !this.shippingMethod(),
+
+  private orderProcessErrors = computed(() => [
+    !this.selectedUserAddress(),
+    !this.selectedShippingMethod(),
+    !this.selectedPaymentMethod(),
+    this.isSixDigitCodeInvalid() || !this.creditCard,
+    this.isCartEmpty(),
   ]);
 
   protected submitted = signal(false);
 
-  submit() {
+  protected submit() {
     this.submitted.set(true);
-    const address = this.userAddress();
-    const selectedShippingMethod = this.shippingMethod();
-    const selectedPaymentMethod = this.paymentMethod();
 
-    if (!address || !selectedShippingMethod || !selectedPaymentMethod) return;
+    const selectedUserAddress = this.selectedUserAddress();
+    const selectedShippingMethod = this.selectedShippingMethod();
+    const selectedPaymentMethod = this.selectedPaymentMethod();
 
-    if (this.errors().some((error) => error)) return;
+    if (
+      !selectedUserAddress ||
+      !selectedShippingMethod ||
+      !selectedPaymentMethod
+    )
+      return;
+
+    const isOrderProcessInvalid = this.orderProcessErrors().some(
+      (error) => !!error,
+    );
+
+    if (isOrderProcessInvalid) return;
+
     this.orderProcessStore.checkout({
-      orderAddress: address,
+      orderAddress: selectedUserAddress,
       shippingMethodId: selectedShippingMethod.id,
       paymentMethod: selectedPaymentMethod,
     });
-  }
-
-  setDeliveryAddressState(state: boolean) {
-    this.isDeliveryAddressUpdating.set(state);
   }
 }

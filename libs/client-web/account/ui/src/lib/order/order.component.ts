@@ -4,6 +4,7 @@ import {
   Component,
   computed,
   input,
+  signal,
 } from '@angular/core';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { StepsModule } from 'primeng/steps';
@@ -11,8 +12,12 @@ import { FormFieldComponent } from '@e-commerce/client-web/shared/ui';
 import { TableModule } from 'primeng/table';
 import { SkeletonModule } from 'primeng/skeleton';
 import { CurrencyPipe } from '@angular/common';
-import { OrderDetails } from '@e-commerce/client-web/shared/data-access/api-models';
+import {
+  OrderDetails,
+  orderDetailsStatuses,
+} from '@e-commerce/client-web/shared/data-access/api-models';
 import { DividerModule } from 'primeng/divider';
+import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'lib-order',
@@ -46,10 +51,15 @@ export class OrderComponent {
     ),
   );
 
-  // stepStatuses = signal<MenuItem[]>(
-  //   orderDetailsStatuses.map((status) => ({
-  //     label: status,
-  //     icon: 'pi pi-setting',
-  //   })),
-  // );
+  public activeStep = computed(() =>
+    orderDetailsStatuses.findIndex(
+      (status) => status === this.orderDetails()?.status,
+    ),
+  );
+  public stepStatuses = signal<MenuItem[]>(
+    orderDetailsStatuses.map((status) => ({
+      label: status,
+      icon: 'pi pi-setting',
+    })),
+  );
 }

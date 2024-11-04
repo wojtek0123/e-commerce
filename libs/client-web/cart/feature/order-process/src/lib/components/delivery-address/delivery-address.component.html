@@ -1,41 +1,37 @@
 <lib-section-wrapper header="Address information">
-  @if (formVisibility()) {
-    <lib-user-address-form />
-  } @else {
-    @if (loading() && !addresses().length) {
-      <div libOrderProcessItem class="flex flex-col gap-4">
-        <div class="flex items-center gap-4">
-          <p-skeleton width="10rem" height="2rem" />
-          <p-skeleton width="12rem" height="2rem" />
-        </div>
-        <div class="flex items-center gap-4">
-          <p-skeleton width="8rem" height="2rem" />
-          <p-skeleton width="15rem" height="2rem" />
-        </div>
-        <div class="flex items-center gap-4">
-          <p-skeleton width="12rem" height="2rem" />
-          <p-skeleton width="20rem" height="2rem" />
-        </div>
+  @if (loading() && !addresses().length) {
+    <div libOrderProcessItem class="flex flex-col gap-4">
+      <div class="flex items-center gap-4">
+        <p-skeleton width="10rem" height="2rem" />
+        <p-skeleton width="12rem" height="2rem" />
       </div>
-    } @else if (error()) {
-      <div>{{ error() }}</div>
-    } @else {
-      @for (address of addresses(); track address.id) {
-        <lib-address-information
-          [address]="address"
-          [isActive]="address.id === selectedAddressId()"
-          (onEdit)="showForm($event)"
-          (onSelect)="selectAddress($event)"
-          (onDelete)="showDeleteDialog($event)"
-        />
-      }
-      <p-button
-        severity="secondary"
-        label="Add"
-        styleClass="w-full"
-        (onClick)="showForm()"
+      <div class="flex items-center gap-4">
+        <p-skeleton width="8rem" height="2rem" />
+        <p-skeleton width="15rem" height="2rem" />
+      </div>
+      <div class="flex items-center gap-4">
+        <p-skeleton width="12rem" height="2rem" />
+        <p-skeleton width="20rem" height="2rem" />
+      </div>
+    </div>
+  } @else if (error()) {
+    <div>{{ error() }}</div>
+  } @else {
+    @for (address of addresses(); track address.id) {
+      <lib-address-information
+        [address]="address"
+        [isActive]="address.id === selectedAddressId()"
+        (onEdit)="showForm($event)"
+        (onSelect)="selectAddress($event)"
+        (onDelete)="showDeleteDialog($event)"
       />
     }
+    <p-button
+      severity="secondary"
+      label="Add"
+      styleClass="w-full"
+      (onClick)="showForm()"
+    />
   }
 </lib-section-wrapper>
 
@@ -44,3 +40,14 @@
   (onHide)="hideDeleteDialog()"
   (onDelete)="delete()"
 />
+<p-dialog
+  header="Address form"
+  [visible]="isFormVisible()"
+  [modal]="true"
+  styleClass="w-full max-w-[48rem] mx-4 w-full"
+  [closeOnEscape]="true"
+  [dismissableMask]="true"
+  (visibleChange)="hideForm()"
+>
+  <lib-user-address-form class="w-full" />
+</p-dialog>

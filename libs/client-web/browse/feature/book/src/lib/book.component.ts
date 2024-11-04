@@ -20,6 +20,7 @@ import { CartService } from '@e-commerce/client-web/cart/api';
 import { BookDetails } from '@e-commerce/client-web/shared/data-access/api-models';
 import { SkeletonModule } from 'primeng/skeleton';
 import { SkeletonDirective } from './directives/skeleton.directive';
+import { APP_ROUTE_PATHS_TOKEN } from '@e-commerce/client-web/shared/app-config';
 
 @Component({
   selector: 'lib-book',
@@ -43,6 +44,7 @@ import { SkeletonDirective } from './directives/skeleton.directive';
 export class BookComponent {
   private readonly bookStore = inject(BookStore);
   private readonly cartService = inject(CartService);
+  private readonly appRoutePaths = inject(APP_ROUTE_PATHS_TOKEN);
 
   public book = this.bookStore.book;
   public loading = this.bookStore.loading;
@@ -53,7 +55,7 @@ export class BookComponent {
     { label: 'books', routerLink: '/browse' },
     {
       label: this.book()?.category.name ?? '',
-      routerLink: '/browse',
+      routerLink: this.appRoutePaths.BOOKS(),
       queryParams: { categories: this.book()?.category.name },
     },
     { label: this.book()?.title },

@@ -1,11 +1,12 @@
 import {
   Component,
   computed,
-  HostListener,
+  effect,
   inject,
   Pipe,
   PipeTransform,
   signal,
+  untracked,
 } from '@angular/core';
 import { TableModule } from 'primeng/table';
 import { OrdersStore } from '@e-commerce/client-web/account/data-access';
@@ -19,6 +20,9 @@ import { SidebarModule } from 'primeng/sidebar';
 import { OrderComponent } from '@e-commerce/client-web/account/ui';
 import { TagModule } from 'primeng/tag';
 import { DialogModule } from 'primeng/dialog';
+import { ActivatedRoute, Router } from '@angular/router';
+import { APP_ROUTES_PARAMS } from '@e-commerce/client-web/shared/app-config';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 interface Column {
   header: string;
@@ -61,12 +65,28 @@ export class StatusToServerityPipe implements PipeTransform {
 })
 export class OrdersComponent {
   private readonly store = inject(OrdersStore);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
 
   public orders = this.store.orders;
   public loading = this.store.loading;
   public error = this.store.error;
 
-  public selectedOrder = signal<OrderDetails | null>(null);
+  private _selectedOrder = computed(() => {
+    const orderId =
+      this.route.snapshot.queryParams[
+        APP_ROUTES_PARAMS.PAYMENT_STATUS_ORDER_DETAILS_ID
+      ];
+
+    if (orderId) {
+      this.router.navigate([], { queryParams: null, replaceUrl: true });
+    }
+
+    const order = this.orders().find(({ id }) => id === orderId);
+
+    return signal(order ?? null);
+  });
+  public selectedOrder = computed(() => this._selectedOrder()());
   public columns = signal<Column[]>([
     { header: 'Date', field: 'createdAt' },
     { header: 'Status', field: 'status' },
@@ -74,14 +94,8 @@ export class OrdersComponent {
   ]);
   public skeletons = signal(new Array(10));
   protected sidebarVisible = computed(() => !!this.selectedOrder());
-  protected isWidthHigherThan1280 = signal(window.innerWidth > 1536);
-
-  @HostListener('window:resize')
-  onResize() {
-    this.isWidthHigherThan1280.set(window.innerWidth > 1536);
-  }
 
   public selectOrder(order: OrderDetails | null) {
-    this.selectedOrder.set(order);
+    this._selectedOrder().set(order);
   }
 }

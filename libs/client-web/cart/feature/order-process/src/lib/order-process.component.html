@@ -18,6 +18,18 @@
             (onDelete)="remove($event)"
             (onUpdateQuantity)="updateQuantity($event)"
           />
+        } @empty {
+          <div class="flex flex-col items-center justify-center xl:mt-20">
+            <span class="text-2xl xl:text-4xl text-center">
+              Oops! Your cart is empty.
+            </span>
+            <span class="text-lg text-muted-color">
+              Let’s fill it with some great books!
+            </span>
+            <a [routerLink]="appRoutePaths.BOOKS()" class="underline"
+              >Browse books</a
+            >
+          </div>
         }
       }
     </div>

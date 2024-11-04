@@ -65,7 +65,7 @@ export const OrderProcessStore = signalStore(
                       loading: false,
                       error:
                         error?.error?.message ||
-                        'Error occur while checking out',
+                        'An error occur while checking out',
                     });
                   },
                 }),

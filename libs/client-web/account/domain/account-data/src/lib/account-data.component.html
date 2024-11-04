@@ -46,7 +46,7 @@
 
 <p-dialog
   libSidebarLeft
-  header="Form"
+  [header]="dialogHeader()"
   [visible]="isSidebarVisible()"
   [modal]="true"
   styleClass="w-full max-w-[48rem] mx-4 w-full"
@@ -56,11 +56,5 @@
     <lib-new-password-form class="w-full" />
   } @else if (editingField() === 'email') {
     <lib-new-email-form class="w-full" />
-  } @else {
-    <div
-      class="p-4 h-full rounded-base bg-content-background flex items-center justify-center w-full"
-    >
-      Form placeholder
-    </div>
   }
 </p-dialog>

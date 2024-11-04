@@ -10,10 +10,11 @@ import {
   getState,
   patchState,
   signalStore,
+  withComputed,
   withMethods,
   withState,
 } from '@ngrx/signals';
-import { inject } from '@angular/core';
+import { computed, inject } from '@angular/core';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { filter, map, pipe, switchMap, tap } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
@@ -37,6 +38,9 @@ export type EditingField = 'email' | 'password' | null;
 
 export const InformationStore = signalStore(
   withState(initialInformationState),
+  withComputed(({ user }) => ({
+    email: computed(() => user()?.email),
+  })),
   withMethods(
     (
       store,

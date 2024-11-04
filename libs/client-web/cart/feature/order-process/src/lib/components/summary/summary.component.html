@@ -9,14 +9,14 @@
     <div class="flex items-center justify-between gap-4">
       <span class="text-muted-color font-semibold text-xl">Books</span>
       <span class="text-xl text-end">
-        {{ cartItemsTotal() | currency : 'USD' }}
+        {{ cartItemsTotal() | currency: 'USD' }}
       </span>
     </div>
     <div>
       <div class="flex items-center justify-between gap-4">
         <span class="text-muted-color font-semibold text-xl">Shipping</span>
         <span class="text-xl text-end">
-          {{ shippingMethodPrice() | currency : 'USD' }}
+          {{ shippingMethodPrice() | currency: 'USD' }}
         </span>
       </div>
     </div>
@@ -24,40 +24,44 @@
     <div class="flex items-center justify-between gap-4">
       <span class="text-muted-color font-semibold text-3xl">Total</span>
       <span class="text-3xl text-end">
-        {{ total() | currency : 'USD' }}
+        {{ total() | currency: 'USD' }}
       </span>
     </div>
   </div>
 
   @if (submitted()) {
-  <div class="">
-    @if (!userAddress()) {
-    <div class="flex flex-col gap-4 text-red-300 text-xl">
-      <span class="pi pi-exclamation-triangle"></span>
-      <div>Fill in delivery address form!</div>
+    <div>
+      @if (!selectedUserAddress()) {
+        <div class="flex items-center gap-4 text-red-300 text-xl">
+          <span class="pi pi-exclamation-triangle"></span>
+          <div>Fill in delivery address form!</div>
+        </div>
+      }
+      @if (!selectedShippingMethod()) {
+        <div class="flex items-center gap-4 text-red-300 text-xl">
+          <span class="pi pi-exclamation-triangle"></span>
+          <span>Select shipping method!</span>
+        </div>
+      }
+      @if (!selectedPaymentMethod()) {
+        <div class="flex items-center gap-4 text-red-300 text-xl">
+          <span class="pi pi-exclamation-triangle"></span>
+          <span>Select payment method!</span>
+        </div>
+      }
+      @if (isSixDigitCodeInvalid()) {
+        <div class="flex items-center gap-4 text-red-300 text-xl">
+          <span class="pi pi-exclamation-triangle"></span>
+          <span>Six digit code is invalid</span>
+        </div>
+      }
+      @if (isCartEmpty()) {
+        <div class="flex items-center gap-4 text-red-300 text-xl">
+          <span class="pi pi-exclamation-triangle"></span>
+          <span>Cart is empty</span>
+        </div>
+      }
     </div>
-    } @if (isDeliveryAddressUpdating()) {
-    <div class="flex flex-col gap-4 text-red-300 text-xl">
-      <span class="pi pi-exclamation-triangle"></span>
-      <span>Delivery address is updating. Save changes or cancel.</span>
-    </div>
-    } @if (!shippingMethod()) {
-    <div class="flex flex-col gap-4 text-red-300 text-xl">
-      <span class="pi pi-exclamation-triangle"></span>
-      <span>Select shipping method!</span>
-    </div>
-    } @if (!paymentMethod()) {
-    <div class="flex flex-col gap-4 text-red-300 text-xl">
-      <span class="pi pi-exclamation-triangle"></span>
-      <span>Select payment method!</span>
-    </div>
-    } @if (isSixDigitCodeInvalid()) {
-    <div class="flex flex-col gap-4 text-red-300 text-xl">
-      <span class="pi pi-exclamation-triangle"></span>
-      <span>Six digit code is invalid</span>
-    </div>
-    }
-  </div>
   }
 
   <p-button

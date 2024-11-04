@@ -1,6 +1,13 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
 import {
   FormControl,
+  FormGroup,
   FormsModule,
   ReactiveFormsModule,
   Validators,
@@ -15,6 +22,7 @@ import {
 } from '@e-commerce/client-web/shared/ui';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
+import { PasswordModule } from 'primeng/password';
 import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
@@ -29,21 +37,37 @@ import { TooltipModule } from 'primeng/tooltip';
     InputTextModule,
     ErrorMessageComponent,
     TooltipModule,
+    PasswordModule,
   ],
   templateUrl: './new-email-form.component.html',
 })
 export class NewEmailFormComponent {
   private readonly informationStore = inject(InformationStore);
 
-  public newEmail = new FormControl<string | null>(null, Validators.required);
+  public form = new FormGroup({
+    email: new FormControl<string | null>(null, Validators.required),
+    password: new FormControl<string | null>(null, Validators.required),
+  });
+  public userEmail = this.informationStore.email;
+  public submitted = signal(false);
 
   public setEditingField(editingField: EditingField) {
     this.informationStore.setEditingField(editingField);
   }
 
   public updateEmail() {
+    // this.submitted.set(true);
+    Object.keys(this.form.controls).forEach((key) => {
+      this.form.get(key)?.markAsDirty();
+    });
+
+    if (this.form.invalid) return;
+
     this.informationStore.updateUser$({
-      body: { email: this.newEmail.value ?? '' },
+      body: {
+        email: this.form.value.email ?? '',
+        password: this.form.value.password ?? '',
+      },
     });
   }
 }

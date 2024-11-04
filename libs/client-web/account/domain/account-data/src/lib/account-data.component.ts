@@ -68,6 +68,9 @@ export class AccountDataComponent {
   });
 
   public isSidebarVisible = computed(() => !!this.editingField());
+  public dialogHeader = computed(
+    () => `Change ${this.editingField() === 'password' ? 'password' : 'email'}`,
+  );
 
   public setEditingField(editingField: EditingField) {
     this.informationStore.setEditingField(editingField);
