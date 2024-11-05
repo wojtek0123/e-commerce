@@ -66,8 +66,7 @@ import {
           width: '3.5rem',
         }),
       ),
-      transition('in => out', [animate('300ms ease-in-out')]),
-      transition('out => in', [animate('300ms ease-in-out')]),
+      transition('in <=> out', [animate('300ms ease-in-out')]),
     ]),
   ],
 })

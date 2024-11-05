@@ -1,10 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -23,7 +17,6 @@ import {
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
-import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'lib-new-email-form',
@@ -36,7 +29,6 @@ import { TooltipModule } from 'primeng/tooltip';
     ButtonModule,
     InputTextModule,
     ErrorMessageComponent,
-    TooltipModule,
     PasswordModule,
   ],
   templateUrl: './new-email-form.component.html',
@@ -49,16 +41,14 @@ export class NewEmailFormComponent {
     password: new FormControl<string | null>(null, Validators.required),
   });
   public userEmail = this.informationStore.email;
-  public submitted = signal(false);
 
   public setEditingField(editingField: EditingField) {
     this.informationStore.setEditingField(editingField);
   }
 
-  public updateEmail() {
-    // this.submitted.set(true);
-    Object.keys(this.form.controls).forEach((key) => {
-      this.form.get(key)?.markAsDirty();
+  public submit() {
+    Object.keys(this.form.controls).forEach((control) => {
+      this.form.get(control)?.markAsDirty();
     });
 
     if (this.form.invalid) return;

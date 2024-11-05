@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -16,9 +11,11 @@ import {
   FormFieldComponent,
   ErrorMessageComponent,
 } from '@e-commerce/client-web/shared/ui';
-import { NgClass } from '@angular/common';
 import { InputMaskModule } from 'primeng/inputmask';
-import { PaymentStore } from '@e-commerce/client-web/cart/data-access';
+import {
+  PaymentStore,
+  CreditCardFormType,
+} from '@e-commerce/client-web/cart/data-access';
 
 @Component({
   selector: 'lib-credit-card-form',
@@ -28,12 +25,10 @@ import { PaymentStore } from '@e-commerce/client-web/cart/data-access';
     ButtonModule,
     FormFieldComponent,
     ErrorMessageComponent,
-    NgClass,
     FormsModule,
     InputMaskModule,
   ],
   templateUrl: './credit-card-form.component.html',
-  styleUrl: './credit-card-form.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreditCardFormComponent {
@@ -45,18 +40,20 @@ export class CreditCardFormComponent {
     securityCode: new FormControl<string | null>(null, Validators.required),
   });
 
-  public submitted = signal(false);
-  public creditCard = this.paymentStore.creditCard.data;
-  public loading = this.paymentStore.creditCard.loading;
-  public error = this.paymentStore.creditCard.error;
-  public isEditing = this.paymentStore.creditCard.isEditing;
+  public formType = this.paymentStore.creditCardFormType;
 
-  public toggleCreditCardEdit(isEditing: boolean) {
-    this.paymentStore.toggleCreditCardEdit(isEditing);
+  public showCreditCardForm(type: CreditCardFormType) {
+    this.paymentStore.showCreditCardForm(type);
+  }
+
+  public hideCreditCardForm() {
+    this.paymentStore.hideCreditCardForm();
   }
 
   public submit() {
-    this.submitted.set(true);
+    Object.keys(this.form.controls).forEach((control) =>
+      this.form.get(control)?.markAsDirty(),
+    );
 
     if (this.form.invalid) return;
 

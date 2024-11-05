@@ -5,13 +5,12 @@ import {
   output,
 } from '@angular/core';
 import { CurrencyPipe, NgClass } from '@angular/common';
-import { RadioButtonModule } from 'primeng/radiobutton';
 import { CheckboxModule } from 'primeng/checkbox';
 
 @Component({
   selector: 'lib-order-process-detail-element',
   standalone: true,
-  imports: [CurrencyPipe, RadioButtonModule, CheckboxModule, NgClass],
+  imports: [CurrencyPipe, CheckboxModule, NgClass],
   templateUrl: './order-process-detail-element.component.html',
   styleUrl: './order-process-detail-element.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
