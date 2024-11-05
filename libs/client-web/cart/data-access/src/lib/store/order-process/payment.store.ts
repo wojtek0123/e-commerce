@@ -1,4 +1,4 @@
-import { inject } from '@angular/core';
+import { computed, inject } from '@angular/core';
 import {
   ResponseError,
   PaymentMethod,
@@ -11,6 +11,7 @@ import { tapResponse } from '@ngrx/operators';
 import {
   patchState,
   signalStore,
+  withComputed,
   withHooks,
   withMethods,
   withState,
@@ -24,18 +25,26 @@ interface PaymentState {
     data: CreditCardBase | null;
     loading: boolean;
     error: string | null;
-    isEditing: boolean;
+    form: {
+      isVisible: boolean;
+      type: CreditCardFormType;
+    };
   };
   sixDigitCode: string | null;
   selectedPayment: PaymentMethod | null;
 }
+
+export type CreditCardFormType = 'add' | 'update';
 
 const initialPaymentState: PaymentState = {
   creditCard: {
     data: null,
     loading: false,
     error: null,
-    isEditing: false,
+    form: {
+      isVisible: false,
+      type: 'add',
+    },
   },
   sixDigitCode: null,
   selectedPayment: 'CREDIT_CARD',
@@ -43,6 +52,10 @@ const initialPaymentState: PaymentState = {
 
 export const PaymentStore = signalStore(
   withState(initialPaymentState),
+  withComputed(({ creditCard }) => ({
+    isCreditCardFormVisible: computed(() => creditCard.form.isVisible()),
+    creditCardFormType: computed(() => creditCard.form.type()),
+  })),
   withMethods(
     (
       store,
@@ -134,9 +147,17 @@ export const PaymentStore = signalStore(
           ),
         ),
       ),
-      toggleCreditCardEdit: (isEditing: boolean) => {
+      showCreditCardForm: (type: CreditCardFormType) => {
         patchState(store, (state) => ({
-          creditCard: { ...state.creditCard, isEditing },
+          creditCard: { ...state.creditCard, form: { isVisible: true, type } },
+        }));
+      },
+      hideCreditCardForm: () => {
+        patchState(store, (state) => ({
+          creditCard: {
+            ...state.creditCard,
+            form: { ...state.creditCard.form, isVisible: false },
+          },
         }));
       },
       selectPaymentMethod: (paymentMethod: PaymentMethod) => {

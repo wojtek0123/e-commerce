@@ -10,9 +10,8 @@ import { PaymentStore } from '@e-commerce/client-web/cart/data-access';
   standalone: true,
   imports: [InputOtpModule, ReactiveFormsModule, ErrorMessageComponent],
   templateUrl: './six-digit-code-form.component.html',
-  styleUrl: './six-digit-code-form.component.scss',
   host: {
-    class: 'mx-auto',
+    class: 'flex items-center justify-center',
   },
 })
 export class SixDigitCodeFormComponent implements OnInit {

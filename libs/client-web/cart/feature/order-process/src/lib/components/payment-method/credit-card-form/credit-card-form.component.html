@@ -1,113 +1,63 @@
-@if (loading()) {
-  <div>Loading...</div>
-}
-@if (error()) {
-  <div>{{ error() }}</div>
-}
-@if ((!creditCard() || isEditing()) && !loading()) {
-  <form [formGroup]="form" (ngSubmit)="submit()" class="credit-card-form">
-    <lib-form-field label="Card number" [isRequired]="true">
+<form [formGroup]="form" (ngSubmit)="submit()" class="flex flex-col gap-4">
+  <lib-form-field label="Card number" [isRequired]="true">
+    @let cardNumberControl = form.controls.cardNumber;
+    <p-inputmask
+      slot="input"
+      mask="9999 9999 9999 9999"
+      id="card-number"
+      styleClass="w-full"
+      formControlName="cardNumber"
+      placeholder="Type your card number"
+    />
+    @if (cardNumberControl.invalid && cardNumberControl.dirty) {
+      <lib-error-message />
+    }
+  </lib-form-field>
+
+  <div class="grid grid-cols-2 gap-4">
+    <lib-form-field label="Expiration date" [isRequired]="true">
+      @let expirationDateControl = form.controls.expirationDate;
       <p-inputmask
         slot="input"
-        mask="9999 9999 9999 9999"
-        id="card-number"
-        [ngClass]="{
-          'ng-invalid ng-dirty':
-            form.controls.cardNumber.invalid && submitted(),
-        }"
+        mask="99/9999"
+        id="expiration-date"
         styleClass="w-full"
-        formControlName="cardNumber"
-        placeholder="Type your card number"
+        formControlName="expirationDate"
+        placeholder="Type expiration date"
       />
-      @if (
-        (form.controls.cardNumber.dirty || submitted()) &&
-        form.controls.cardNumber.invalid
-      ) {
+      @if (expirationDateControl.invalid && expirationDateControl.dirty) {
         <lib-error-message />
       }
     </lib-form-field>
 
-    <div class="credit-card-form__row">
-      <lib-form-field label="Expiration date" [isRequired]="true">
-        <p-inputmask
-          slot="input"
-          mask="99/9999"
-          id="expiration-date"
-          [ngClass]="{
-            'ng-invalid ng-dirty':
-              form.controls.expirationDate.invalid && submitted(),
-          }"
-          styleClass="w-full"
-          formControlName="expirationDate"
-          placeholder="Type expiration date"
-        />
-        @if (
-          form.controls.expirationDate.invalid &&
-          (submitted() || form.controls.expirationDate.dirty)
-        ) {
-          <lib-error-message />
-        }
-      </lib-form-field>
-
-      <lib-form-field label="Security code" [isRequired]="true">
-        <p-inputmask
-          slot="input"
-          mask="999"
-          id="security-code"
-          [ngClass]="{
-            'ng-invalid ng-dirty':
-              form.controls.securityCode.invalid && submitted(),
-          }"
-          styleClass="w-full"
-          formControlName="securityCode"
-          placeholder="Type security code"
-        />
-        @if (
-          form.controls.securityCode.invalid &&
-          (submitted() || form.controls.securityCode.dirty)
-        ) {
-          <lib-error-message />
-        }
-      </lib-form-field>
-    </div>
-
-    <div
-      class="grid gap-4 mt-4"
-      [ngClass]="{ 'grid-cols-2': isEditing(), 'grid-cols-1': !isEditing() }"
-    >
-      @if (isEditing()) {
-        <p-button
-          [outlined]="true"
-          (onClick)="toggleCreditCardEdit(false)"
-          label="Cancel"
-          styleClass="w-full"
-        />
-      }
-      <p-button
-        severity="secondary"
+    <lib-form-field label="Security code" [isRequired]="true">
+      @let securityCodeControl = this.form.controls.securityCode;
+      <p-inputmask
+        slot="input"
+        mask="999"
+        id="security-code"
         styleClass="w-full"
-        label="Add credit card"
-        type="submit"
+        formControlName="securityCode"
+        placeholder="Type security code"
       />
-    </div>
-  </form>
-} @else {
-  <div class="change-credit-card">
-    <div class="change-credit-card__text">
-      <img
-        class="change-credit-card__master-card"
-        src="assets/icons/visa-card.svg"
-      />
-      <img
-        class="change-credit-card__master-card"
-        src="assets/icons/mastercard.svg"
-      />
-      <span> {{ creditCard()?.number ?? '-' }}</span>
-    </div>
+      @if (securityCodeControl.invalid && securityCodeControl.dirty) {
+        <lib-error-message />
+      }
+    </lib-form-field>
+  </div>
+
+  <div class="grid grid-cols-2 gap-4 mt-4">
     <p-button
-      [text]="true"
-      label="change"
-      (onClick)="toggleCreditCardEdit(true)"
+      [outlined]="true"
+      (onClick)="hideCreditCardForm()"
+      label="Cancel"
+      styleClass="w-full"
+    />
+    <p-button
+      severity="secondary"
+      styleClass="w-full"
+      label="Save"
+      type="submit"
     />
   </div>
-}
+</form>
