@@ -1,3 +1,13 @@
+const esModules = [
+  '@angular',
+  '@ngrx',
+  'primeng',
+  '@primeuix',
+  '@primeuix/styled',
+  '@primeuix/utils',
+  '@e-commerce/client-web/shared/app-config',
+];
+
 /* eslint-disable */
 export default {
   displayName: 'ui',
@@ -13,14 +23,19 @@ export default {
       },
     ],
   },
+  // transformIgnorePatterns: [
+  //   'node_modules/(?!.*\\.mjs$)',
+  //   'node_modules/(?!@angular|@ngrx)',
+  //   'node_modules/(?!primeng)',
+  // ],
   transformIgnorePatterns: [
-    'node_modules/(?!.*\\.mjs$)',
-    'node_modules/(?!@angular|@ngrx)',
-    'node_modules/(?!primeng)',
+    `node_modules/(?!.*\\.mjs$|${esModules.join('|')})`,
+    // 'node_modules/(?!@angular|@ngrx|primeng|@primeuix)',
   ],
   snapshotSerializers: [
     'jest-preset-angular/build/serializers/no-ng-attributes',
     'jest-preset-angular/build/serializers/ng-snapshot',
     'jest-preset-angular/build/serializers/html-comment',
   ],
+  resolver: '<rootDir>/src/jest.resolver.ts',
 };
