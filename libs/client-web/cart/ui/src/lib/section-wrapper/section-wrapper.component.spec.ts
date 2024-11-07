@@ -12,6 +12,7 @@ describe('SectionWrapperComponent', () => {
 
     fixture = TestBed.createComponent(SectionWrapperComponent);
     component = fixture.componentInstance;
+    fixture.componentRef.setInput('header', '');
     fixture.detectChanges();
   });
 

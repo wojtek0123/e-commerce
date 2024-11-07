@@ -12,6 +12,7 @@ describe('OrderProcessDetailElementComponent', () => {
 
     fixture = TestBed.createComponent(OrderProcessDetailElementComponent);
     component = fixture.componentInstance;
+    fixture.componentRef.setInput('isActive', true);
     fixture.detectChanges();
   });
 
