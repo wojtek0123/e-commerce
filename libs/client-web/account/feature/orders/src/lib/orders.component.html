@@ -1,66 +1,59 @@
 <div
   class="grid grid-cols-1 relative 2xl:grid-cols-2 gap-base [2800px]:grid-cols-[1fr_0.7fr]"
 >
-  <p-table
-    class="h-content overflow-y-auto 2xl:sticky 2xl:top-4"
-    [value]="orders()"
-    selectionMode="single"
-    [selection]="selectedOrder()"
-    (selectionChange)="selectOrder($event)"
-    dataKey="id"
-    tableStyleClass="bg-content-background rounded-base overflow-hidden"
-    [loading]="loading()"
-    [showLoader]="false"
-  >
-    <ng-template pTemplate="header">
-      <tr>
-        @for (col of columns(); track col.header) {
-          <th>
-            {{ col.header }}
-          </th>
-        }
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-order>
-      <tr [pSelectableRow]="order">
-        <td>{{ order['createdAt'] | date }}</td>
-        <td>
-          <p-tag
-            [value]="order['status']"
-            [severity]="order['status'] | statusToSeverity"
-          />
-        </td>
-        <td>{{ order['total'] | currency: 'USD' }}</td>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="emptymessage">
-      @if (orders().length === 0 && !error) {
+  @if (error()) {
+    <div>{{ error() }}</div>
+  } @else {
+    <p-table
+      class="h-content overflow-y-auto 2xl:sticky 2xl:top-4"
+      [value]="orders()"
+      selectionMode="single"
+      [selection]="selectedOrder()"
+      (selectionChange)="selectOrder($event)"
+      dataKey="id"
+      tableStyleClass="bg-content-background rounded-base overflow-hidden"
+      [loading]="loading()"
+      [showLoader]="false"
+    >
+      <ng-template pTemplate="header">
         <tr>
-          <td [attr.colspan]="columns().length" class="text-center">
-            No orders found.
-          </td>
-        </tr>
-      } @else if (error()) {
-        <tr>
-          <td [attr.colspan]="columns().length" class="text-center">
-            {{ error() }}
-          </td>
-        </tr>
-      }
-    </ng-template>
-    <ng-template pTemplate="loadingbody">
-      @for (_ of skeletons(); track $index) {
-        <tr>
-          @for (column of columns(); track $index) {
-            <td>
-              <p-skeleton width="8rem" height="2rem" />
-            </td>
+          @for (col of columns(); track col.header) {
+            <th>
+              {{ col.header }}
+            </th>
           }
         </tr>
-      }
-    </ng-template>
-  </p-table>
-
+      </ng-template>
+      <ng-template pTemplate="body" let-order>
+        <tr [pSelectableRow]="order">
+          <td>{{ order['createdAt'] | date }}</td>
+          <td>
+            <p-tag
+              [value]="order['status']"
+              [severity]="order['status'] | statusToSeverity"
+            />
+          </td>
+          <td>{{ order['total'] | currency: 'USD' }}</td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="3" class="text-center">No orders found.</td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="loadingbody">
+        @for (_ of skeletons(); track $index) {
+          <tr>
+            @for (column of columns(); track $index) {
+              <td>
+                <p-skeleton width="8rem" height="2rem" />
+              </td>
+            }
+          </tr>
+        }
+      </ng-template>
+    </p-table>
+  }
   <!-- <p-sidebar -->
   <!--   (onHide)="selectOrder(null)" -->
   <!--   class="2xl:hidden" -->

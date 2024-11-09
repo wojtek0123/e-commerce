@@ -103,7 +103,7 @@ export function withAddress() {
                         formInfo: {
                           updatingAddress: null,
                           type: 'add',
-                          isVisible: addresses.length === 0,
+                          isVisible: false,
                         },
                       },
                       addEntities(addresses, addressesConfig),

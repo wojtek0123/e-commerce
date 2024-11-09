@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ConflictException,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -9,6 +10,7 @@ import { getUserIdFromAccessToken } from '../common/utils/get-user-id-from-acces
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { ExceptionsHandler } from '@nestjs/core/exceptions/exceptions-handler';
 
 export const roundsOfHashing = 10;
 
@@ -70,20 +72,30 @@ export class UsersService {
       throw new UnauthorizedException();
     }
 
+    if (!body.password) {
+      throw new BadRequestException('Current password is required');
+    }
+
+    const isPasswordCorrect = await compare(body.password, user.password);
+
     let hashedPassword: string | undefined;
 
     if (body.newPassword) {
-      if (!body.password) {
-        throw new BadRequestException('Current password is required');
-      }
-
-      const isPasswordCorrect = await compare(body.password, user.password);
-
       if (!isPasswordCorrect) {
         throw new BadRequestException('Incorrect password');
       }
 
       hashedPassword = await hash(body.newPassword.toString(), roundsOfHashing);
+    }
+
+    if (body.email) {
+      const isEmailUsed = await this.prisma.user.findFirst({
+        where: { email: body.email },
+      });
+
+      if (isEmailUsed) {
+        throw new ConflictException('Email is already used');
+      }
     }
 
     return this.prisma.user.update({

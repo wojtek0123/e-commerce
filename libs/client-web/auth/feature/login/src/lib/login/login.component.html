@@ -7,7 +7,7 @@
   <form
     [formGroup]="loginForm"
     class="flex flex-col gap-2 w-full xl:items-center"
-    (submit)="onSubmit()"
+    (ngSubmit)="submit()"
   >
     <lib-form-field label="Email" [isRequired]="true">
       @let emailControl = loginForm.controls.email;
@@ -17,13 +17,10 @@
         pInputText
         id="email"
         autocomplete="off"
-        [ngClass]="{
-          'ng-dirty ng-invalid': emailControl.invalid,
-        }"
         formControlName="email"
       />
-      @if (emailControl.dirty) {
-        <ng-container slot="error-message">
+      @if (emailControl.dirty && emailControl.invalid) {
+        <ng-container>
           @if (emailControl.getError('required')) {
             <lib-error-message />
           } @else if (emailControl.getError('email')) {
@@ -41,13 +38,10 @@
         inputStyleClass="w-full"
         styleClass="w-full"
         [toggleMask]="true"
-        [ngClass]="{
-          'ng-dirty ng-invalid': passwordControl.invalid,
-        }"
         formControlName="password"
       />
       @if (passwordControl.dirty) {
-        <ng-container slot="error-message">
+        <ng-container>
           @if (passwordControl.getError('minlength')) {
             <lib-error-message
               message="Password should have at least 6 characters"
@@ -60,21 +54,14 @@
       }
     </lib-form-field>
 
-    <div
-      [pTooltip]="loginForm.invalid ? 'Form is invalid' : ''"
-      tooltipPosition="top"
-      class="w-full mt-5"
-    >
-      <p-button
-        type="submit"
-        label="Log in!"
-        [loading]="loading()"
-        loading-icon="pi pi-spin pi-spinner"
-        iconPos="right"
-        [style]="{ width: '100%' }"
-        [disabled]="loginForm.invalid"
-        styleClass="w-full"
-      />
-    </div>
+    <p-button
+      type="submit"
+      label="Log in!"
+      [loading]="loading()"
+      loading-icon="pi pi-spin pi-spinner"
+      iconPos="right"
+      class="w-full"
+      styleClass="w-full"
+    />
   </form>
 </lib-container>

@@ -9,8 +9,8 @@
       <span>{{ label() }} {{ isRequired() ? '*' : '' }}</span>
       <ng-content select="[slot='input']" />
     </label>
-    <div class="mt-1">
-      <ng-content select="[slot='error-message'], lib-error-message" />
+    <div class="mt-1 flex flex-col">
+      <ng-content />
     </div>
   </div>
 }
