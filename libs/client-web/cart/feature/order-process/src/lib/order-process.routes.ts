@@ -11,7 +11,6 @@ export const orderProcessRoutes: Route[] = [
   {
     path: '',
     canMatch: [cartItemsGuard],
-    canActivate: [cartItemsGuard],
     loadComponent: () =>
       import('./order-process.component').then((c) => c.OrderProcessComponent),
     providers: [AddressStore, ShippingStore, PaymentStore, OrderProcessStore],
