@@ -1,21 +1,11 @@
 <div class="flex flex-wrap gap-1 pb-1">
-  <div
-    [pTooltip]="
-      activeFilters().length === 0
-        ? 'Available when any filter is selected'
-        : ''
-    "
-    tooltipPosition="top"
-  >
-    <p-button
-      size="small"
-      styleClass="min-w-max h-10"
-      label="Clear filters"
-      severity="contrast"
-      [disabled]="activeFilters().length === 0"
-      (click)="clearFiltersEvent.emit()"
-    />
-  </div>
+  <p-button
+    size="small"
+    styleClass="min-w-max h-10"
+    label="Clear filters"
+    severity="contrast"
+    (click)="clearFiltersEvent.emit()"
+  />
   @for (activeFilter of activeFilters(); track activeFilter.id) {
     @let label =
       (activeFilter.label ?? activeFilter.id.split('_')[0]) +

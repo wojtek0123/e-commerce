@@ -15,7 +15,7 @@
   header="Cart"
   appendTo="body"
   [blockScroll]="true"
-  styleClass="max-w-[40rem] w-full rounded-r-base bg-surface-100 dark:bg-surface-950"
+  styleClass="max-w-[40rem] w-full rounded-r-base bg-surface-100 dark:bg-surface-950 relative"
 >
   <ng-template pTemplate="header">
     <span class="font-bold">Cart</span>
@@ -34,29 +34,29 @@
           (onDelete)="remove($event)"
         />
       } @empty {
-        <div class="text-center flex flex-col gap-4 mt-4">
-          <span class="text-4xl">Oops! Your cart is empty.</span>
-          <span class="text-lg text-muted-color">
-            Let’s fill it with some great books!
-          </span>
+        <div class="absolute top-1/2 left-0 right-0 -translate-y-1/2">
+          <div class="text-center flex flex-col gap-4 my-4 h-full">
+            <span class="text-4xl">Oops! Your cart is empty.</span>
+            <span class="text-lg text-muted-color">
+              Let’s fill it with some great books!
+            </span>
+          </div>
         </div>
       }
     </div>
 
-    <div class="flex flex-col gap-4">
-      <div class="text-4xl">Total: {{ total() | currency: 'USD' }}</div>
-      <button
-        pButton
-        label="Checkout"
-        [routerLink]="appRoutePaths.ORDER_PROCESS()"
-        icon="pi pi-shopping-bag"
-        (onClick)="visible.set(false)"
-        [loading]="loading()"
-        [pTooltip]="count() === 0 ? 'Add some items to cart to checkout' : ''"
-        tooltipPosition="top"
-        tooltipStyleClass="min-w-fit"
-        [disabled]="count() === 0"
-      ></button>
-    </div>
+    @if (cartItems().length !== 0) {
+      <div class="flex flex-col gap-4">
+        <div class="text-4xl">Total: {{ total() | currency: 'USD' }}</div>
+        <button
+          pButton
+          label="Checkout"
+          [routerLink]="appRoutePaths.ORDER_PROCESS()"
+          icon="pi pi-shopping-bag"
+          (onClick)="visible.set(false)"
+          [loading]="loading()"
+        ></button>
+      </div>
+    }
   </div>
 </p-sidebar>
