@@ -18,7 +18,13 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { SkeletonModule } from 'primeng/skeleton';
-import { canMatchPasswordValidator } from '@e-commerce/client-web/shared/utils';
+import {
+  canMatchPasswordValidator,
+  createStrongPasswordValidator,
+} from '@e-commerce/client-web/shared/utils';
+import { NgClass } from '@angular/common';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { map, startWith } from 'rxjs';
 
 @Component({
   selector: 'lib-new-password-form',
@@ -32,6 +38,7 @@ import { canMatchPasswordValidator } from '@e-commerce/client-web/shared/utils';
     PasswordModule,
     FormsModule,
     ErrorMessageComponent,
+    NgClass,
   ],
   templateUrl: './new-password-form.component.html',
 })
@@ -42,7 +49,7 @@ export class NewPasswordFormComponent {
     {
       newPassword: new FormControl<string | null>(null, [
         Validators.required,
-        Validators.minLength(8),
+        createStrongPasswordValidator(),
       ]),
       newPasswordConfirmation: new FormControl<string | null>(
         null,

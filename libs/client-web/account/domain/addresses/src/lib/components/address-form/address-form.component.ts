@@ -138,9 +138,11 @@ export class AddressFormComponent {
   }
 
   public submit() {
-    if (this.form.invalid) {
-      return;
-    }
+    Object.keys(this.form.controls).forEach((control) =>
+      this.form.get(control)?.markAsDirty(),
+    );
+
+    if (this.form.invalid) return;
 
     const {
       firstName,

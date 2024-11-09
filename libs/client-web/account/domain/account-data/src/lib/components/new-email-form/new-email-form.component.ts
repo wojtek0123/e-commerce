@@ -41,6 +41,7 @@ export class NewEmailFormComponent {
     password: new FormControl<string | null>(null, Validators.required),
   });
   public userEmail = this.informationStore.email;
+  public loading = this.informationStore.loading;
 
   public setEditingField(editingField: EditingField) {
     this.informationStore.setEditingField(editingField);

@@ -11,7 +11,6 @@ import {
 } from '@e-commerce/client-web/shared/ui';
 import { ActivatedRoute } from '@angular/router';
 import { ContainerComponent } from '@e-commerce/client-web/auth/ui';
-import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'lib-login',
@@ -25,7 +24,6 @@ import { TooltipModule } from 'primeng/tooltip';
     FormFieldComponent,
     ErrorMessageComponent,
     ContainerComponent,
-    TooltipModule,
   ],
   templateUrl: './login.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -35,26 +33,26 @@ import { TooltipModule } from 'primeng/tooltip';
 })
 export class LoginComponent {
   private readonly authStore = inject(AuthStore);
-  private fb = inject(FormBuilder);
+  private readonly fb = inject(FormBuilder);
   protected readonly route = inject(ActivatedRoute);
 
   public loading = this.authStore.loading;
 
-  public loginForm = this.fb.nonNullable.group({
-    email: this.fb.control<string>('', {
+  public loginForm = this.fb.group({
+    email: this.fb.control<string | null>(null, {
       validators: [Validators.required, Validators.email],
-      nonNullable: true,
     }),
-    password: this.fb.control<string>('', {
-      validators: [Validators.required, Validators.minLength(6)],
-      nonNullable: true,
+    password: this.fb.control<string | null>(null, {
+      validators: [Validators.required],
     }),
   });
 
-  public onSubmit() {
-    const { invalid } = this.loginForm;
+  public submit() {
+    Object.keys(this.loginForm.controls).forEach((control) =>
+      this.loginForm.get(control)?.markAsDirty(),
+    );
 
-    if (invalid) return;
+    if (this.loginForm.invalid) return;
 
     const { email, password } = this.loginForm.value;
 

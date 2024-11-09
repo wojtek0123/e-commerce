@@ -10,10 +10,6 @@
         slot="input"
         class="w-full"
         id="firstname"
-        [ngClass]="{
-          'ng-invalid ng-dirty':
-            form.controls.firstName.invalid && form.controls.firstName.dirty,
-        }"
         formControlName="firstName"
       />
       @if (form.controls.firstName.invalid && form.controls.firstName.dirty) {
@@ -26,10 +22,6 @@
         class="w-full"
         pInputText
         id="lastname"
-        [ngClass]="{
-          'ng-invalid ng-dirty':
-            form.controls.lastName.invalid && form.controls.lastName.dirty,
-        }"
         formControlName="lastName"
       />
       @if (form.controls.lastName.invalid && form.controls.lastName.dirty) {
@@ -39,16 +31,7 @@
   </div>
   <div class="flex flex-wrap gap-4 w-full @lg:grid @lg:grid-cols-[1fr_1fr]">
     <lib-form-field label="Street" [isRequired]="true">
-      <input
-        slot="input"
-        pInputText
-        id="street"
-        [ngClass]="{
-          'ng-invalid ng-dirty':
-            form.controls.street.invalid && form.controls.street.dirty,
-        }"
-        formControlName="street"
-      />
+      <input slot="input" pInputText id="street" formControlName="street" />
       @if (form.controls.street.invalid && form.controls.street.dirty) {
         <lib-error-message />
       }
@@ -59,11 +42,6 @@
           slot="input"
           pInputText
           id="home-number"
-          [ngClass]="{
-            'ng-invalid ng-dirty':
-              form.controls.homeNumber.invalid &&
-              form.controls.homeNumber.dirty,
-          }"
           formControlName="homeNumber"
         />
         @if (
@@ -77,11 +55,6 @@
           slot="input"
           pInputText
           id="house-number"
-          [ngClass]="{
-            'ng-invalid ng-dirty':
-              form.controls.houseNumber.invalid &&
-              form.controls.houseNumber.dirty,
-          }"
           formControlName="houseNumber"
         />
         @if (
@@ -100,10 +73,6 @@
       [suggestions]="countries()"
       (completeMethod)="filterCountries($event)"
       [dropdown]="true"
-      [ngClass]="{
-        'ng-dirty ng-invalid':
-          form.controls.country.invalid && form.controls.country.dirty,
-      }"
       optionLabel="name"
       [showClear]="true"
     />
@@ -119,16 +88,7 @@
       labelSkeletonWidth="7rem"
       inputSkeletonWidth="14rem"
     >
-      <input
-        slot="input"
-        pInputText
-        id="postcode"
-        [ngClass]="{
-          'ng-invalid ng-dirty':
-            form.controls.postcode.invalid && form.controls.postcode.dirty,
-        }"
-        formControlName="postcode"
-      />
+      <input slot="input" pInputText id="postcode" formControlName="postcode" />
       @if (form.controls.postcode.invalid && form.controls.postcode.dirty) {
         <lib-error-message />
       }
@@ -139,16 +99,7 @@
       [isLoading]="loading()"
       labelSkeletonWidth="5rem"
     >
-      <input
-        slot="input"
-        pInputText
-        id="city"
-        [ngClass]="{
-          'ng-invalid ng-dirty':
-            form.controls.city.invalid && form.controls.city.dirty,
-        }"
-        formControlName="city"
-      />
+      <input slot="input" pInputText id="city" formControlName="city" />
       @if (form.controls.city.invalid && form.controls.city.dirty) {
         <lib-error-message />
       }
@@ -166,10 +117,6 @@
       pInputText
       id="phone"
       class="w-20rem"
-      [ngClass]="{
-        'ng-invalid ng-dirty':
-          form.controls.phone.invalid && form.controls.phone.dirty,
-      }"
       formControlName="phone"
     />
     @if (form.controls.phone.invalid && form.controls.phone.dirty) {
@@ -184,19 +131,12 @@
       (onClick)="hideForm()"
       styleClass="w-full"
     />
-    <div
-      [pTooltip]="tooltipMessage()"
-      tooltipPosition="top"
-      tooltipStyleClass="min-w-fit max-w-40"
-    >
-      <p-button
-        severity="secondary"
-        [loading]="loading()"
-        [disabled]="form.invalid"
-        label="Save"
-        type="submit"
-        styleClass="w-full"
-      />
-    </div>
+    <p-button
+      severity="secondary"
+      [loading]="loading()"
+      label="Save"
+      type="submit"
+      styleClass="w-full"
+    />
   </div>
 </form>

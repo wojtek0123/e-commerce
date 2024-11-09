@@ -7,7 +7,7 @@
   <form
     [formGroup]="registerForm"
     class="flex flex-col gap-2 w-full xl:items-center"
-    (submit)="onSubmit()"
+    (ngSubmit)="submit()"
   >
     <lib-form-field label="Email" [isRequired]="true">
       <input
@@ -16,15 +16,15 @@
         id="email"
         autocomplete="off"
         formControlName="email"
-        [ngClass]="{
-          'ng-dirty ng-invalid': registerForm.controls.email.invalid,
-        }"
       />
-      @if (registerForm.controls.email.dirty) {
-        <ng-container slot="error-message">
+      @if (
+        registerForm.controls.email.invalid && registerForm.controls.email.dirty
+      ) {
+        <ng-container>
           @if (registerForm.controls.email.getError('required')) {
             <lib-error-message message="Field is required" />
-          } @else if (registerForm.controls.email.getError('email')) {
+          }
+          @if (registerForm.controls.email.getError('email')) {
             <lib-error-message message="Email is invalid" />
           }
         </ng-container>
@@ -37,20 +37,94 @@
         [feedback]="false"
         [fluid]="true"
         [toggleMask]="true"
-        [ngClass]="{
-          'ng-dirty ng-invalid': registerForm.controls.password.invalid,
-        }"
         formControlName="password"
       />
       @if (registerForm.controls.password.dirty) {
-        <ng-container slot="error-message">
-          @if (registerForm.controls.password.getError('minlength')) {
-            <lib-error-message
-              message="Password should have at least 8 characters"
-            />
-          } @else if (registerForm.controls.password.getError('required')) {
-            <lib-error-message />
-          }
+        <ng-container>
+          @let minLengthError =
+            registerForm.controls.password.getError('minlength') ||
+            registerForm.controls.password.getError('required');
+          <span
+            [ngClass]="{
+              'text-red-300': minLengthError,
+              'text-green-300': !minLengthError,
+            }"
+          >
+            @if (minLengthError) {
+              <span class="pi pi-times-circle"></span>
+            } @else {
+              <span class="pi pi-check-square"></span>
+            }
+            At least 8 characters
+          </span>
+
+          @let uppercaseError =
+            registerForm.controls.password.getError('uppercase') ||
+            registerForm.controls.password.getError('required');
+          <span
+            [ngClass]="{
+              'text-red-300': uppercaseError,
+              'text-green-300': !uppercaseError,
+            }"
+          >
+            @if (uppercaseError) {
+              <span class="pi pi-times-circle"></span>
+            } @else {
+              <span class="pi pi-check-square"></span>
+            }
+            At least 1 uppercase character
+          </span>
+
+          @let lowercaseError =
+            registerForm.controls.password.getError('lowercase') ||
+            registerForm.controls.password.getError('required');
+          <span
+            [ngClass]="{
+              'text-red-300': lowercaseError,
+              'text-green-300': !lowercaseError,
+            }"
+          >
+            @if (lowercaseError) {
+              <span class="pi pi-times-circle"></span>
+            } @else {
+              <span class="pi pi-check-square"></span>
+            }
+            At least 1 lowercase character
+          </span>
+
+          @let numericError =
+            registerForm.controls.password.getError('numeric') ||
+            registerForm.controls.password.getError('required');
+          <span
+            [ngClass]="{
+              'text-red-300': numericError,
+              'text-green-300': !numericError,
+            }"
+          >
+            @if (numericError) {
+              <span class="pi pi-times-circle"></span>
+            } @else {
+              <span class="pi pi-check-square"></span>
+            }
+            At least 1 numeric character
+          </span>
+
+          @let specialError =
+            registerForm.controls.password.getError('special') ||
+            registerForm.controls.password.getError('required');
+          <span
+            [ngClass]="{
+              'text-red-300': specialError,
+              'text-green-300': !specialError,
+            }"
+          >
+            @if (specialError) {
+              <span class="pi pi-times-circle"></span>
+            } @else {
+              <span class="pi pi-check-square"></span>
+            }
+            At least 1 special character
+          </span>
         </ng-container>
       }
     </lib-form-field>
@@ -61,13 +135,13 @@
         [fluid]="true"
         [feedback]="false"
         [toggleMask]="true"
-        [ngClass]="{
-          'ng-dirty ng-invalid': registerForm.controls.confirmPassword.invalid,
-        }"
         formControlName="confirmPassword"
       />
-      @if (registerForm.controls.confirmPassword.dirty) {
-        <ng-container slot="error-message">
+      @if (
+        registerForm.controls.confirmPassword.invalid &&
+        registerForm.controls.confirmPassword.dirty
+      ) {
+        <ng-container>
           @if (registerForm.controls.confirmPassword.getError('required')) {
             <lib-error-message />
           } @else if (registerForm.getError('passwordMismatch')) {
@@ -77,20 +151,14 @@
       }
     </lib-form-field>
 
-    <div
-      [pTooltip]="registerForm.invalid ? 'Form is invalid' : ''"
-      tooltipPosition="top"
-      class="w-full mt-5"
-    >
-      <p-button
-        type="submit"
-        label="Register"
-        [loading]="loading()"
-        styleClass="w-full"
-        loading-icon="pi pi-spin pi-spinner"
-        iconPos="right"
-        [disabled]="registerForm.invalid"
-      />
-    </div>
+    <p-button
+      type="submit"
+      label="Register"
+      [loading]="loading()"
+      styleClass="w-full"
+      class="w-full"
+      loading-icon="pi pi-spin pi-spinner"
+      iconPos="right"
+    />
   </form>
 </lib-container>

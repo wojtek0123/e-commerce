@@ -1,12 +1,6 @@
 import { AsyncPipe, NgClass, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import {
-  AbstractControl,
-  FormBuilder,
-  ReactiveFormsModule,
-  ValidationErrors,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { AuthStore } from '@e-commerce/client-web/auth/data-access';
 import { ButtonModule } from 'primeng/button';
@@ -18,8 +12,10 @@ import {
   ErrorMessageComponent,
 } from '@e-commerce/client-web/shared/ui';
 import { ContainerComponent } from '@e-commerce/client-web/auth/ui';
-import { TooltipModule } from 'primeng/tooltip';
-import { canMatchPasswordValidator } from '@e-commerce/client-web/shared/utils';
+import {
+  canMatchPasswordValidator,
+  createStrongPasswordValidator,
+} from '@e-commerce/client-web/shared/utils';
 
 @Component({
   selector: 'lib-register',
@@ -37,7 +33,6 @@ import { canMatchPasswordValidator } from '@e-commerce/client-web/shared/utils';
     FormFieldComponent,
     ErrorMessageComponent,
     ContainerComponent,
-    TooltipModule,
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
@@ -53,25 +48,31 @@ export class RegisterComponent {
 
   public loading = this.authStore.loading;
 
-  public registerForm = this.fb.nonNullable.group(
+  public registerForm = this.fb.group(
     {
-      email: this.fb.control<string>('', {
+      email: this.fb.control<string | null>(null, {
         validators: [Validators.required, Validators.email],
+      }),
+      password: this.fb.control<string | null>(null, {
+        validators: [
+          Validators.required,
+          Validators.minLength(8),
+          createStrongPasswordValidator(),
+        ],
         nonNullable: true,
       }),
-      password: this.fb.control<string>('', {
-        validators: [Validators.required, Validators.minLength(8)],
-        nonNullable: true,
-      }),
-      confirmPassword: this.fb.control<string>('', {
+      confirmPassword: this.fb.control<string | null>(null, {
         validators: [Validators.required],
-        nonNullable: true,
       }),
     },
     { validators: canMatchPasswordValidator('password', 'confirmPassword') },
   );
 
-  public onSubmit() {
+  public submit() {
+    Object.keys(this.registerForm.controls).forEach((control) =>
+      this.registerForm.get(control)?.markAsDirty(),
+    );
+
     if (this.registerForm.invalid) return;
 
     const { email, password } = this.registerForm.value;
