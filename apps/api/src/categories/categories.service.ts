@@ -12,10 +12,21 @@ export class CategoriesService {
     return 'This action adds a new category';
   }
 
-  async findAll(opts: { nameLike?: string; page?: number; size?: number }) {
+  async findAll(opts: {
+    nameLike?: string;
+    nameIn?: string;
+    page?: number;
+    size?: number;
+  }) {
     return this.prisma.category
       .findMany({
-        where: { name: { contains: opts.nameLike ?? '', mode: 'insensitive' } },
+        where: {
+          name: {
+            contains: opts.nameLike ?? '',
+            mode: 'insensitive',
+            in: opts.nameIn?.split(','),
+          },
+        },
         skip: (opts.size || 20) * ((opts.page || 1) - 1),
         take: opts.size || 20,
       })

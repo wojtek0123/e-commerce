@@ -39,12 +39,19 @@ export class AuthorsController {
   @ApiQuery({ name: 'page', required: false, type: Number })
   @ApiQuery({ name: 'size', required: false, type: Number })
   @ApiQuery({ name: 'nameLike', required: false, type: String })
+  @ApiQuery({ name: 'nameIn', required: false, type: String })
   findAll(
     @Query('page') page?: number,
     @Query('size') size?: number,
     @Query('nameLike') nameLike?: string,
+    @Query('nameIn') nameIn?: string,
   ) {
-    return this.authorsService.findAll({ page: +page, size: +size, nameLike });
+    return this.authorsService.findAll({
+      page: +page,
+      size: +size,
+      nameLike,
+      nameIn,
+    });
   }
 
   @Get(':id')

@@ -1,30 +1,55 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  inject,
+  OnInit,
+} from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BooksStore } from '@e-commerce/client-web/browse/data-access';
 import { AsyncPipe } from '@angular/common';
+import { debounce, debounceTime, of, timer } from 'rxjs';
 
 @Component({
   selector: 'lib-search',
   standalone: true,
-  imports: [ButtonModule, InputTextModule, FormsModule, AsyncPipe],
+  imports: [ButtonModule, InputTextModule, FormsModule, ReactiveFormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './search.component.html',
   styleUrl: './search.component.scss',
 })
-export class SearchComponent {
+export class SearchComponent implements OnInit {
   private readonly booksStore = inject(BooksStore);
 
-  search = this.booksStore.search;
+  public search = this.booksStore.search;
 
-  setSearch(event: Event) {
-    const value = (event.target as HTMLInputElement).value;
+  public searchControl = new FormControl<string | null>(null);
 
-    this.booksStore.setSearch(value);
+  constructor() {
+    effect(() => {
+      const search = this.search();
+
+      this.searchControl.setValue(search, { emitEvent: false });
+    });
   }
 
-  clearInput() {
-    this.booksStore.setSearch(null);
+  public ngOnInit(): void {
+    this.searchControl.valueChanges
+      .pipe(debounceTime(300))
+      .subscribe((value) => {
+        this.booksStore.setSingleValueFilter(value, 'search');
+      });
+  }
+
+  // public setSearch(event: Event) {
+  //   const value = (event.target as HTMLInputElement).value;
+  //
+  //   this.booksStore.setSingleValueFilter(value, 'search');
+  // }
+
+  public clearInput() {
+    this.booksStore.clearSingleValueFilter('search');
   }
 }

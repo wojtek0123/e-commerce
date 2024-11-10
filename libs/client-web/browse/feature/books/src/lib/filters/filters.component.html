@@ -31,7 +31,7 @@
         <lib-accordion-filter-header
           header="Tags"
           [selectedItemsCount]="selectedTags().length"
-          (clearSelectedItems)="clearSelectedItems('tag')"
+          (onClearFilter)="clearSelectedItems('tag')"
         />
       </ng-template>
       <lib-filter libTags />
@@ -41,7 +41,7 @@
         <lib-accordion-filter-header
           header="Authors"
           [selectedItemsCount]="selectedAuthors().length"
-          (clearSelectedItems)="clearSelectedItems('author')"
+          (onClearFilter)="clearSelectedItems('author')"
         />
       </ng-template>
       <lib-filter libAuthors />
@@ -51,7 +51,7 @@
         <lib-accordion-filter-header
           header="Categories"
           [selectedItemsCount]="selectedCategories().length"
-          (clearSelectedItems)="clearSelectedItems('category')"
+          (onClearFilter)="clearSelectedItems('category')"
         />
       </ng-template>
       <lib-filter libCategories />
@@ -61,7 +61,7 @@
         <lib-accordion-filter-header
           header="Price"
           [selectedItemsCount]="selectedPrices().length"
-          (clearSelectedItems)="clearSelectedItems('price')"
+          (onClearFilter)="clearPriceFilter()"
         />
       </ng-template>
       <lib-price-filter />

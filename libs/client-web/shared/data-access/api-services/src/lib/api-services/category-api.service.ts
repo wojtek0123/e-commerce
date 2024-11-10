@@ -11,7 +11,7 @@ export class CategoryApiService {
   private http = inject(HttpClient);
   private apiUrl = inject(API_URL);
 
-  getCategories$(params: { nameLike?: string } & Pagination) {
+  getCategories$(params: { nameLike?: string; nameIn?: string } & Pagination) {
     return this.http.get<Category[]>(`${this.apiUrl}/categories`, {
       params: { ...params },
     });

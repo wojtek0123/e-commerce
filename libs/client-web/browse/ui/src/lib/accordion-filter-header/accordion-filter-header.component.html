@@ -11,6 +11,6 @@
     icon="pi pi-trash"
     [disabled]="selectedItemsCount() === 0"
     [text]="true"
-    (onClick)="$event.stopImmediatePropagation(); clearFilterSelectedItems()"
+    (onClick)="$event.stopImmediatePropagation(); clearFilter()"
   />
 </div>
