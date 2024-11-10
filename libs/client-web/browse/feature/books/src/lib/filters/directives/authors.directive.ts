@@ -14,7 +14,7 @@ export class AuthorsDirective extends AbstractSelectItemsFilterDirective<Author>
   override getItemLabel = (item: Author) => item.name;
   override placeholder = 'Search for author';
   override readonly filterName = 'author';
-  override items = this.booksStore.filters.author.items;
+  override items = this.booksStore.filters.multiSelect.author.items;
 
   getItemId = input((item: Author) => item.id);
 

@@ -12,6 +12,7 @@ import { Book } from '@e-commerce/client-web/shared/data-access/api-models';
 import {
   ActiveFilter,
   BooksStore,
+  sizes,
 } from '@e-commerce/client-web/browse/data-access';
 import { BooksGridComponent } from '@e-commerce/client-web/shared/ui';
 import { AsyncPipe, ViewportScroller } from '@angular/common';
@@ -57,7 +58,7 @@ export class BooksComponent {
   public page = this.booksStore.page;
   public size = this.booksStore.size;
   public first = computed(() => this.page() - 1 * this.size());
-  public sizes = signal([20, 40, 60]);
+  public sizes = signal(sizes);
   public activeFilters = this.booksStore.activeFilters;
 
   public addToCart(book: Book) {
@@ -75,7 +76,7 @@ export class BooksComponent {
   }
 
   public clearFilter(activeFilter: ActiveFilter) {
-    this.booksStore.removeActiveFilter(activeFilter.id);
+    this.booksStore.removeActiveFilter(activeFilter);
   }
 
   public clearFilters() {

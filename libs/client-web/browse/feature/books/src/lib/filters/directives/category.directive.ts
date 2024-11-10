@@ -10,7 +10,7 @@ export class CategoriesDirective extends AbstractSelectItemsFilterDirective<Cate
   override triggerGetItems = (search: string) =>
     this.booksStore.getCategories({ search });
   override selectedItems = this.booksStore.selectedCategories;
-  override items = this.booksStore.filters.category.items;
+  override items = this.booksStore.filters.multiSelect.category.items;
   override trackFn = (_: number, item: Category) => item.id;
   override getItemLabel = (item: Category) => item.name;
   override placeholder = 'Search for category';

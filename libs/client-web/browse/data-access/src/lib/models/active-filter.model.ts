@@ -1,5 +1,10 @@
+import {
+  MultiSelectFilters,
+  SingleValueFilters,
+} from '../store/books/books.store';
+
 export interface ActiveFilter {
   id: string;
-  label?: string;
-  name: string;
+  filter: MultiSelectFilters | SingleValueFilters;
+  value: string;
 }

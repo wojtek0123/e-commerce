@@ -20,9 +20,9 @@ export class AccordionFilterHeaderComponent {
   public selectedItemsCount = input.required<number>();
   public header = input.required();
 
-  public clearSelectedItems = output<void>();
+  public onClearFilter = output<void>();
 
-  public clearFilterSelectedItems() {
-    this.clearSelectedItems.emit();
+  public clearFilter() {
+    this.onClearFilter.emit();
   }
 }

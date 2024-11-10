@@ -7,13 +7,9 @@
     (click)="clearFiltersEvent.emit()"
   />
   @for (activeFilter of activeFilters(); track activeFilter.id) {
-    @let label =
-      (activeFilter.label ?? activeFilter.id.split('_')[0]) +
-      ': ' +
-      activeFilter.name;
     <p-chip
       styleClass="bg-content-background"
-      [label]="label"
+      [label]="activeFilter | label"
       [removable]="true"
       (onRemove)="clearFilterEvent.emit(activeFilter)"
     />

@@ -11,7 +11,10 @@ import { DividerModule } from 'primeng/divider';
 import { FormFieldComponent } from '@e-commerce/client-web/shared/ui';
 import { AsyncPipe } from '@angular/common';
 import { CustomFilterDirective } from '@e-commerce/client-web/browse/utils';
-import { BooksStore } from '@e-commerce/client-web/browse/data-access';
+import {
+  BooksStore,
+  SingleValueFilters,
+} from '@e-commerce/client-web/browse/data-access';
 
 @Component({
   selector: 'lib-price-filter',
@@ -48,10 +51,14 @@ export class PriceFilterComponent {
   private minPriceInput = viewChild.required<HTMLInputElement>('minPriceInput');
   private maxPriceInput = viewChild.required<HTMLInputElement>('maxPriceInput');
 
-  public setPrice(key: 'min' | 'max') {
+  public setPrice(
+    filter: Extract<SingleValueFilters, 'minPrice' | 'maxPrice'>,
+  ) {
     const value =
-      key === 'min' ? this.minPriceInput().value : this.maxPriceInput().value;
+      filter === 'minPrice'
+        ? this.minPriceInput().value
+        : this.maxPriceInput().value;
 
-    this.booksStore.setPrice(value ? Number(value) : null, key);
+    this.booksStore.setSingleValueFilter(value, filter);
   }
 }

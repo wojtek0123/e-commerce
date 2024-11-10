@@ -1,15 +1,23 @@
-import { DestroyRef, Directive, effect, inject, OnInit } from '@angular/core';
 import {
-  BooksState,
+  DestroyRef,
+  Directive,
+  effect,
+  inject,
+  OnInit,
+  untracked,
+} from '@angular/core';
+import {
   BooksStore,
+  MultiSelectFilters,
 } from '@e-commerce/client-web/browse/data-access';
 import { FilterComponent } from '../filter/filter.component';
 import { debounce, of, timer, Unsubscribable } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Directive({})
-export abstract class AbstractSelectItemsFilterDirective<Item>
-  implements OnInit
+export abstract class AbstractSelectItemsFilterDirective<
+  Item extends { id: string; name: string },
+> implements OnInit
 {
   protected filterComponent = inject(FilterComponent);
   protected booksStore = inject(BooksStore);
@@ -20,17 +28,19 @@ export abstract class AbstractSelectItemsFilterDirective<Item>
   abstract trackFn: (_: number, item: Item) => number | string;
   abstract getItemLabel: (item: Item) => string;
   abstract placeholder: string;
-  abstract filterName: keyof BooksState['filters'];
+  abstract filterName: MultiSelectFilters;
   abstract selectedItems: () => Item[];
 
   constructor() {
-    effect(
-      () => {
-        this.filterComponent.selectedItems.set(this.selectedItems());
-        this.filterComponent.items.set(this.items());
-      },
-      { allowSignalWrites: true },
-    );
+    effect(() => {
+      const selectedItems = this.selectedItems();
+      const items = this.items();
+
+      untracked(() => {
+        this.filterComponent.selectedItems.set(selectedItems);
+        this.filterComponent.items.set(items);
+      });
+    });
   }
 
   ngOnInit(): void {

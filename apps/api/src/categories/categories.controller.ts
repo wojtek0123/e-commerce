@@ -33,15 +33,18 @@ export class CategoriesController {
   @ApiOperation({ summary: 'Get categories' })
   @ApiOkResponse({ type: CategoryDto })
   @ApiQuery({ name: 'nameLike', required: false, type: String })
+  @ApiQuery({ name: 'nameIn', required: false, type: String })
   @ApiQuery({ name: 'page', required: false, type: Number })
   @ApiQuery({ name: 'size', required: false, type: Number })
   findAll(
     @Query('page') page?: number,
     @Query('size') size?: number,
     @Query('nameLike') nameLike?: string,
+    @Query('nameIn') nameIn?: string,
   ) {
     return this.categoriesService.findAll({
       nameLike,
+      nameIn,
       page: +page,
       size: +size,
     });

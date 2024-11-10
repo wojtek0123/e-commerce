@@ -10,9 +10,20 @@ export class AuthorsService {
     return this.prisma.author.create({ data });
   }
 
-  findAll(opts: { page?: number; size?: number; nameLike?: string }) {
+  findAll(opts: {
+    page?: number;
+    size?: number;
+    nameLike?: string;
+    nameIn?: string;
+  }) {
     return this.prisma.author.findMany({
-      where: { name: { contains: opts.nameLike ?? '', mode: 'insensitive' } },
+      where: {
+        name: {
+          contains: opts.nameLike ?? '',
+          mode: 'insensitive',
+          in: opts.nameIn?.split(','),
+        },
+      },
       take: opts.size || 20,
       skip: (opts.size || 20) * ((opts.page || 1) - 1),
     });
