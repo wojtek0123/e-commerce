@@ -122,22 +122,9 @@ export class OrderDetailsService {
 
   findAll(authHeader: string) {
     const userId = String(decode(authHeader.split(' ')[1]).sub);
+
     return this.prisma.orderDetails.findMany({
       where: { userId },
-      include: {
-        orderItems: {
-          include: {
-            book: true,
-          },
-        },
-        orderAddress: {
-          include: {
-            country: true,
-          },
-        },
-        paymentDetails: true,
-        shippingMethod: true,
-      },
     });
   }
 

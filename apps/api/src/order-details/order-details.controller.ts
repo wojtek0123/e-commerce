@@ -18,6 +18,7 @@ import {
 } from '@nestjs/swagger';
 import { AccessTokenGuard } from '../common/guards/access-token.guard';
 import { OrderDetail } from './entities/order-detail.entity';
+import { OrderDetailList } from './entities/order-detail-list.dto';
 
 @ApiTags('order-details')
 @ApiBearerAuth()
@@ -38,7 +39,7 @@ export class OrderDetailsController {
 
   @Get()
   @ApiOperation({ summary: 'Get all orders details for a specific user' })
-  @ApiOkResponse({ type: OrderDetail, isArray: true })
+  @ApiOkResponse({ type: OrderDetailList, isArray: true })
   findAll(@Headers('authorization') authHeader: string) {
     return this.orderDetailsService.findAll(authHeader);
   }
