@@ -125,7 +125,6 @@ export const CartStore = signalStore(
               tapResponse({
                 next: (shoppingSession) => {
                   localStorage.removeItem(appLocalStorageKeys.CART);
-                  console.log(shoppingSession.cartItems);
                   patchState(
                     store,
                     {

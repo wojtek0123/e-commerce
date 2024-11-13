@@ -3,15 +3,15 @@
     size="small"
     styleClass="min-w-max h-10"
     label="Clear filters"
-    severity="contrast"
-    (click)="clearFiltersEvent.emit()"
+    severity="primary"
+    (click)="clearFilters()"
   />
   @for (activeFilter of activeFilters(); track activeFilter.id) {
     <p-chip
-      styleClass="bg-content-background"
+      styleClass="bg-content-background capitalize"
       [label]="activeFilter | label"
       [removable]="true"
-      (onRemove)="clearFilterEvent.emit(activeFilter)"
+      (onRemove)="onClearFilter.emit(activeFilter)"
     />
   }
 </div>

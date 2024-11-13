@@ -3,6 +3,7 @@ import {
   Component,
   computed,
   inject,
+  OnInit,
   signal,
 } from '@angular/core';
 import { MenuItem } from 'primeng/api';
@@ -38,7 +39,7 @@ import { CartService } from '@e-commerce/client-web/cart/api';
   styleUrl: './books.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BooksComponent {
+export class BooksComponent implements OnInit {
   private readonly booksStore = inject(BooksStore);
   private readonly cartService = inject(CartService);
   private viewport = inject(ViewportScroller);
@@ -60,6 +61,10 @@ export class BooksComponent {
   public first = computed(() => this.page() - 1 * this.size());
   public sizes = signal(sizes);
   public activeFilters = this.booksStore.activeFilters;
+
+  public ngOnInit(): void {
+    this.booksStore.restoreQueryParamsFilters();
+  }
 
   public addToCart(book: Book) {
     this.cartService.addBook(book, 1);

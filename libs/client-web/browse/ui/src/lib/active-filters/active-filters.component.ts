@@ -21,6 +21,12 @@ import { LabelPipe } from './label.pipe';
 export class ActiveFiltersComponent {
   public activeFilters = input.required<ActiveFilter[]>();
 
-  public clearFiltersEvent = output<void>();
-  public clearFilterEvent = output<ActiveFilter>();
+  public onClearFilters = output<void>();
+  public onClearFilter = output<ActiveFilter>();
+
+  public clearFilters() {
+    if (this.activeFilters().length === 0) return;
+
+    this.onClearFilters.emit();
+  }
 }
