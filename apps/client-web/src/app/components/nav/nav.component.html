@@ -13,7 +13,6 @@
         [routerLink]="appRoutePaths.BOOKS()"
         routerLinkActive="bg-surface-100 dark:bg-surface-700 rounded-base"
         [queryParams]="null"
-        [state]="{}"
         icon="pi pi-search"
       />
       <p-button
@@ -188,7 +187,7 @@
         [routerLink]="appRoutePaths.BOOKS()"
         [queryParams]="{ categories: category.name }"
         class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-200 hover:dark:bg-surface-600"
-        [state]="{ category: stringifyCategory(category) }"
+        [state]="{ clearFilters: true }"
       >
         <span>
           {{ isLabelShowed() ? category.name : category.name.slice(0, 2) }}

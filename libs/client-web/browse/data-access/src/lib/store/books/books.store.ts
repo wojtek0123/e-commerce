@@ -26,6 +26,7 @@ import { computed, effect, inject, untracked } from '@angular/core';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import {
   distinctUntilChanged,
+  filter,
   forkJoin,
   map,
   of,
@@ -36,7 +37,7 @@ import {
 } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
 import { Filter } from '../../models/filter.model';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import {
   addEntities,
   addEntity,
@@ -52,6 +53,8 @@ import {
   getSelectedItemsFromQueryParam,
   buildSelectedItemsQueryParam,
 } from '@e-commerce/client-web/browse/utils';
+import { Tag } from '../../models/tag.model';
+import { MessageService } from 'primeng/api';
 
 const FILTER_PAGE = 1 as const;
 const FILTER_SIZE = 20 as const;
@@ -145,6 +148,7 @@ export const BooksStore = signalStore(
       booksApi = inject(BooksApiService),
       authorApi = inject(AuthorApiService),
       categoryApi = inject(CategoryApiService),
+      messageService = inject(MessageService),
     ) => ({
       getBooks: rxMethod<void>(
         pipe(
@@ -226,7 +230,13 @@ export const BooksStore = signalStore(
                     }));
                   },
                   error: (error: ResponseError) => {
-                    // TODO: display toast noti
+                    messageService.add({
+                      summary: 'Error',
+                      severity: 'error',
+                      detail:
+                        error?.error?.message ??
+                        'Error occured while getting authors to filter',
+                    });
                   },
                 }),
               ),
@@ -259,7 +269,13 @@ export const BooksStore = signalStore(
                     }));
                   },
                   error: (error: ResponseError) => {
-                    // TODO: display toast noti
+                    messageService.add({
+                      summary: 'Error',
+                      severity: 'error',
+                      detail:
+                        error?.error?.message ??
+                        'Error occured while getting categories to filter',
+                    });
                   },
                 }),
               ),
@@ -289,231 +305,281 @@ export const BooksStore = signalStore(
       },
     }),
   ),
-  withMethods((store) => ({
-    setPage: (page: number) => {
-      patchState(store, { page });
-    },
-    setSize: (size: number) => {
-      patchState(store, { size });
-    },
-    selectItem: <T extends { id: string; name: string }>(
-      item: T,
-      filter: MultiSelectFilters,
-    ) => {
-      const activeFilter: ActiveFilter = {
-        id: item.id,
-        filter,
-        value: item.name,
-      };
+  withMethods(
+    (store, router = inject(Router), route = inject(ActivatedRoute)) => ({
+      setPage: (page: number) => {
+        patchState(store, { page });
+      },
+      setSize: (size: number) => {
+        patchState(store, { size });
+      },
+      selectItem: <T extends { id: string; name: string }>(
+        item: T,
+        filter: MultiSelectFilters,
+      ) => {
+        const activeFilter: ActiveFilter = {
+          id: item.id,
+          filter,
+          value: filter === 'tag' ? item.name.toLowerCase() : item.name,
+        };
 
-      patchState(
-        store,
-        addEntity(activeFilter, activeFilterConfig),
-        (state) => ({
-          filters: {
-            ...state.filters,
-            multiSelect: {
-              ...state.filters.multiSelect,
-              [filter]: {
-                ...state.filters.multiSelect[filter],
-                selectedItems: [
-                  ...state.filters.multiSelect[filter].selectedItems,
-                  item,
-                ],
+        patchState(
+          store,
+          addEntity(activeFilter, activeFilterConfig),
+          (state) => ({
+            filters: {
+              ...state.filters,
+              multiSelect: {
+                ...state.filters.multiSelect,
+                [filter]: {
+                  ...state.filters.multiSelect[filter],
+                  selectedItems: [
+                    ...state.filters.multiSelect[filter].selectedItems,
+                    item,
+                  ],
+                },
               },
             },
-          },
-        }),
-      );
+          }),
+        );
 
-      store.getBooks();
-    },
-    unselectItem: <T extends { id: string; name: string }>(
-      item: T,
-      filter: MultiSelectFilters,
-    ) => {
-      const selectedItems = getState(store).filters.multiSelect[
-        filter
-      ].selectedItems.filter((selectedItem) => selectedItem.id !== item.id);
+        store.getBooks();
+      },
+      unselectItem: <T extends { id: string; name: string }>(
+        item: T,
+        filter: MultiSelectFilters,
+      ) => {
+        const selectedItems = getState(store).filters.multiSelect[
+          filter
+        ].selectedItems.filter((selectedItem) => selectedItem.id !== item.id);
 
-      patchState(store, removeEntity(item.id, activeFilterConfig), (state) => ({
-        filters: {
-          ...state.filters,
-          multiSelect: {
-            ...state.filters.multiSelect,
-            [filter]: {
-              ...state.filters.multiSelect[filter],
-              selectedItems,
+        patchState(
+          store,
+          removeEntity(item.id, activeFilterConfig),
+          (state) => ({
+            filters: {
+              ...state.filters,
+              multiSelect: {
+                ...state.filters.multiSelect,
+                [filter]: {
+                  ...state.filters.multiSelect[filter],
+                  selectedItems,
+                },
+              },
             },
-          },
-        },
-      }));
+          }),
+        );
 
-      store.getBooks();
-    },
-    setSingleValueFilter: <T>(value: T | null, filter: SingleValueFilters) => {
-      const activeFilter: ActiveFilter = {
-        id: filter,
-        filter,
-        value: value?.toString() ?? '',
-      };
-      const isFilterSearch = filter === 'search';
+        store.getBooks();
+      },
+      setSingleValueFilter: <T>(
+        value: T | null,
+        filter: SingleValueFilters,
+      ) => {
+        const activeFilter: ActiveFilter = {
+          id: filter,
+          filter,
+          value: value?.toString() ?? '',
+        };
+        const isFilterSearch = filter === 'search';
 
-      if (!isFilterSearch && value !== null) {
-        patchState(store, setEntity(activeFilter, activeFilterConfig));
-      } else if (!isFilterSearch) {
-        patchState(store, removeEntity(filter, activeFilterConfig));
-      }
+        if (!isFilterSearch && value !== null) {
+          patchState(store, setEntity(activeFilter, activeFilterConfig));
+        } else if (!isFilterSearch) {
+          patchState(store, removeEntity(filter, activeFilterConfig));
+        }
 
-      patchState(store, (state) => ({
-        ...state,
-        filters: {
-          ...state.filters,
-          singleValue: {
-            ...state.filters.singleValue,
-            [filter]: value,
-          },
-        },
-      }));
-
-      store.getBooks();
-    },
-    clearSelectedItems: (filter: MultiSelectFilters) => {
-      patchState(
-        store,
-        removeEntities(
-          (activeFilter) => activeFilter.filter === filter,
-          activeFilterConfig,
-        ),
-        (state) => ({
+        patchState(store, (state) => ({
           ...state,
-          page: 1,
           filters: {
             ...state.filters,
+            singleValue: {
+              ...state.filters.singleValue,
+              [filter]: value,
+            },
+          },
+        }));
+
+        store.getBooks();
+      },
+      clearSelectedItems: (filter: MultiSelectFilters) => {
+        patchState(
+          store,
+          removeEntities(
+            (activeFilter) => activeFilter.filter === filter,
+            activeFilterConfig,
+          ),
+          (state) => ({
+            ...state,
+            page: 1,
+            filters: {
+              ...state.filters,
+              multiSelect: {
+                ...state.filters.multiSelect,
+                [filter]: {
+                  ...state.filters.multiSelect[filter],
+                  selectedItems: [],
+                },
+              },
+            },
+          }),
+        );
+
+        store.getBooks();
+      },
+      clearSingleValueFilter: (filter: SingleValueFilters) => {
+        patchState(
+          store,
+          removeEntity(filter, activeFilterConfig),
+          (state) => ({
+            filters: {
+              ...state.filters,
+              singleValue: {
+                ...state.filters.singleValue,
+                [filter]: null,
+              },
+            },
+          }),
+        );
+      },
+      clearPrice: () => {
+        patchState(
+          store,
+          removeEntities(['minPrice', 'maxPrice'], activeFilterConfig),
+          (state) => ({
+            filters: {
+              ...state.filters,
+              singleValue: {
+                ...state.filters.singleValue,
+                minPrice: null,
+                maxPrice: null,
+              },
+            },
+          }),
+        );
+      },
+      removeActiveFilter: (activeFilter: ActiveFilter) => {
+        const { filter, id } = activeFilter;
+
+        const isSingleValueFilter = (
+          allSingleValueFilters as string[]
+        ).includes(filter);
+
+        if (isSingleValueFilter) {
+          patchState(store, removeEntity(id, activeFilterConfig), (state) => ({
+            ...state,
+            page: 1,
+            filters: {
+              ...state.filters,
+              singleValue: {
+                ...state.filters.singleValue,
+                [filter]: null,
+              },
+            },
+          }));
+        } else {
+          patchState(store, removeEntity(id, activeFilterConfig), (state) => ({
+            ...state,
+            filters: {
+              ...state.filters,
+              multiSelect: {
+                ...state.filters.multiSelect,
+                [filter]: {
+                  ...state.filters.multiSelect[filter as MultiSelectFilters],
+                  selectedItems: state.filters.multiSelect[
+                    filter as MultiSelectFilters
+                  ].selectedItems.filter(
+                    (selectedItem) => selectedItem.id !== id,
+                  ),
+                },
+              },
+            },
+          }));
+        }
+
+        store.getBooks();
+      },
+      removeActiveFilters: () => {
+        patchState(store, removeAllEntities(activeFilterConfig), (state) => ({
+          page: 1,
+          filters: {
             multiSelect: {
-              ...state.filters.multiSelect,
-              [filter]: {
-                ...state.filters.multiSelect[filter],
+              category: {
+                ...state.filters.multiSelect.category,
+                selectedItems: [],
+              },
+              tag: {
+                ...state.filters.multiSelect.tag,
+                selectedItems: [],
+              },
+              author: {
+                ...state.filters.multiSelect.author,
                 selectedItems: [],
               },
             },
-          },
-        }),
-      );
-
-      store.getBooks();
-    },
-    clearSingleValueFilter: (filter: SingleValueFilters) => {
-      patchState(store, removeEntity(filter, activeFilterConfig), (state) => ({
-        filters: {
-          ...state.filters,
-          singleValue: {
-            ...state.filters.singleValue,
-            [filter]: null,
-          },
-        },
-      }));
-    },
-    clearPrice: () => {
-      patchState(
-        store,
-        removeEntities(['minPrice', 'maxPrice'], activeFilterConfig),
-        (state) => ({
-          filters: {
-            ...state.filters,
             singleValue: {
-              ...state.filters.singleValue,
               minPrice: null,
               maxPrice: null,
-            },
-          },
-        }),
-      );
-    },
-    removeActiveFilter: (activeFilter: ActiveFilter) => {
-      const { filter, id } = activeFilter;
-
-      const isSingleValueFilter = (allSingleValueFilters as string[]).includes(
-        filter,
-      );
-
-      if (isSingleValueFilter) {
-        patchState(store, removeEntity(id, activeFilterConfig), (state) => ({
-          ...state,
-          page: 1,
-          filters: {
-            ...state.filters,
-            singleValue: {
-              ...state.filters.singleValue,
-              [filter]: null,
+              search: null,
             },
           },
         }));
-      } else {
-        patchState(store, removeEntity(id, activeFilterConfig), (state) => ({
-          ...state,
-          filters: {
-            ...state.filters,
-            multiSelect: {
-              ...state.filters.multiSelect,
-              [filter]: {
-                ...state.filters.multiSelect[filter as MultiSelectFilters],
-                selectedItems: state.filters.multiSelect[
-                  filter as MultiSelectFilters
-                ].selectedItems.filter(
-                  (selectedItem) => selectedItem.id !== id,
-                ),
-              },
-            },
-          },
-        }));
-      }
 
-      store.getBooks();
-    },
-    removeActiveFilters: () => {
-      patchState(store, removeAllEntities(activeFilterConfig), (state) => ({
-        page: 1,
-        filters: {
-          multiSelect: {
-            category: {
-              ...state.filters.multiSelect.category,
-              selectedItems: [],
-            },
-            tag: {
-              ...state.filters.multiSelect.tag,
-              selectedItems: [],
-            },
-            author: {
-              ...state.filters.multiSelect.author,
-              selectedItems: [],
-            },
+        store.getBooks();
+      },
+      setQueryParams: ({
+        selectedTags,
+        selectedAuthors,
+        selectedCategories,
+        search,
+        minPrice,
+        maxPrice,
+        page,
+        size,
+      }: {
+        selectedTags: Tag[];
+        selectedAuthors: Author[];
+        selectedCategories: Category[];
+        search: string | null;
+        minPrice: number | null;
+        maxPrice: number | null;
+        page: number;
+        size: number;
+      }) => {
+        router.navigate([], {
+          relativeTo: route,
+          queryParams: {
+            tags: buildSelectedItemsQueryParam(
+              selectedTags,
+              'name',
+            )?.toLowerCase(),
+            categories: buildSelectedItemsQueryParam(
+              selectedCategories,
+              'name',
+            ),
+            authors: buildSelectedItemsQueryParam(selectedAuthors, 'name'),
+            search: search || null,
+            min_price: minPrice,
+            max_price: maxPrice,
+            size,
+            page,
           },
-          singleValue: {
-            minPrice: null,
-            maxPrice: null,
-            search: null,
-          },
-        },
-      }));
-
-      store.getBooks();
-    },
-  })),
+          replaceUrl: true,
+        });
+      },
+    }),
+  ),
   withMethods(
     (
       store,
       route = inject(ActivatedRoute),
-      router = inject(Router),
       categoryApi = inject(CategoryApiService),
       authorApi = inject(AuthorApiService),
     ) => ({
-      deserializeQueryParamsFilters: rxMethod<void>(
+      _deserializeQueryParamsFilters: rxMethod<void>(
         pipe(
-          switchMap(() => route.queryParams),
-          tap(() =>
-            patchState(store, { loading: true, books: [], error: null }),
-          ),
+          map(() => route.snapshot.queryParams),
+          tap(() => patchState(store, { loading: true })),
           map((queryParams) => {
             const categories = queryParams['categories'] as string | undefined;
             const authors = queryParams['authors'] as string | undefined;
@@ -547,13 +613,17 @@ export const BooksStore = signalStore(
               page,
               size,
             }) => {
-              const categories$ = categoryApi.getCategories$({
-                nameIn: getSelectedItemsFromQueryParam(categories),
-              });
+              const categories$ = categories
+                ? categoryApi.getCategories$({
+                    nameIn: getSelectedItemsFromQueryParam(categories),
+                  })
+                : of([]);
 
-              const authors$ = authorApi.getAll$({
-                nameIn: getSelectedItemsFromQueryParam(authors),
-              });
+              const authors$ = authors
+                ? authorApi.getAll$({
+                    nameIn: getSelectedItemsFromQueryParam(authors),
+                  })
+                : of([]);
 
               const tags$ = of(
                 getSelectedItemsFromQueryParam(tags)
@@ -609,7 +679,7 @@ export const BooksStore = signalStore(
                 ...tags.map((t) => ({
                   id: t.id,
                   filter: 'tag' as MultiSelectFilters,
-                  value: t.name,
+                  value: t.name.toLowerCase(),
                 })),
               ];
 
@@ -631,6 +701,7 @@ export const BooksStore = signalStore(
 
               patchState(
                 store,
+                removeAllEntities(activeFilterConfig),
                 addEntities(activeFilters, activeFilterConfig),
                 (state) => ({
                   ...(page && { page: Number(page) }),
@@ -668,7 +739,32 @@ export const BooksStore = signalStore(
           }),
         ),
       ),
-      serializeQueryParamsFilters: rxMethod<{
+      restoreQueryParamsFilters: () => {
+        const {
+          page,
+          size,
+          filters: { multiSelect, singleValue },
+        } = getState(store);
+
+        const selectedTags = multiSelect.tag.selectedItems;
+        const selectedAuthors = multiSelect.author.selectedItems;
+        const selectedCategories = multiSelect.category.selectedItems;
+        const search = singleValue.search;
+        const minPrice = singleValue.minPrice;
+        const maxPrice = singleValue.maxPrice;
+
+        store.setQueryParams({
+          selectedTags,
+          selectedCategories,
+          selectedAuthors,
+          search,
+          minPrice,
+          maxPrice,
+          page,
+          size,
+        });
+      },
+      _serializeQueryParamsFilters: rxMethod<{
         selectedTags: { id: BookTag; name: BookTag }[];
         selectedAuthors: Author[];
         selectedCategories: Category[];
@@ -692,42 +788,47 @@ export const BooksStore = signalStore(
               page,
               size,
             }) => {
-              router.navigate([], {
-                relativeTo: route,
-                queryParams: {
-                  tags: buildSelectedItemsQueryParam(
-                    selectedTags,
-                    'name',
-                  )?.toLowerCase(),
-                  categories: buildSelectedItemsQueryParam(
-                    selectedCategories,
-                    'name',
-                  ),
-                  authors: buildSelectedItemsQueryParam(
-                    selectedAuthors,
-                    'name',
-                  ),
-                  search,
-                  min_price: minPrice,
-                  max_price: maxPrice,
-                  size,
-                  page,
-                },
-                replaceUrl: true,
+              store.setQueryParams({
+                selectedTags,
+                selectedCategories,
+                selectedAuthors,
+                search,
+                minPrice,
+                maxPrice,
+                page,
+                size,
               });
             },
           ),
         ),
       ),
+      getAllFilters: () => {
+        store.getTags('');
+        store.getCategories({ search: '' });
+        store.getAuthors({ search: '' });
+      },
     }),
   ),
   withHooks({
-    onInit(store) {
-      store.deserializeQueryParamsFilters();
+    onInit(store, router = inject(Router)) {
+      store._deserializeQueryParamsFilters();
 
-      store.getAuthors({ search: '' });
-      store.getCategories({ search: '' });
-      store.getTags('');
+      store.getAllFilters();
+
+      router.events
+        .pipe(
+          filter((event): event is NavigationEnd => {
+            return event instanceof NavigationEnd;
+          }),
+          filter(() => {
+            const shouldClearFilters = history.state['clearFilters'] ?? false;
+
+            return shouldClearFilters;
+          }),
+        )
+        .subscribe(() => {
+          store._deserializeQueryParamsFilters();
+        });
 
       effect(() => {
         const selectedTags = store.selectedTags();
@@ -740,7 +841,7 @@ export const BooksStore = signalStore(
         const size = store.size();
 
         untracked(() => {
-          store.serializeQueryParamsFilters({
+          store._serializeQueryParamsFilters({
             selectedTags,
             selectedAuthors,
             selectedCategories,

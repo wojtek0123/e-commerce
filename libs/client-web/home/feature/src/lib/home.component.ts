@@ -1,12 +1,11 @@
 import { NgOptimizedImage } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import {
   BookCardComponent,
   BooksGridComponent,
 } from '@e-commerce/client-web/shared/ui';
-// import { BooksSectionComponent } from './books-section/books-section.component';
 import {
   Book,
   BookTag,
@@ -28,7 +27,6 @@ import { HomeStore } from '@e-commerce/client-web/home/data-acess';
     BooksGridComponent,
   ],
   templateUrl: './home.component.html',
-  styleUrl: './home.component.scss',
 })
 export class HomeComponent {
   protected readonly appRoutePaths = inject(APP_ROUTE_PATHS_TOKEN);
@@ -41,6 +39,34 @@ export class HomeComponent {
   public newBooks = this.homeStore.newBooks;
   public loading = this.homeStore.loading;
   public error = this.homeStore.error;
+
+  public sections = computed<
+    Array<{
+      name: string;
+      books: Book[];
+      routerLink: string;
+      queryParams: { tags: BookTag };
+    }>
+  >(() => [
+    {
+      name: this.bookTag.INCOMING.toLowerCase(),
+      routerLink: this.appRoutePaths.BOOKS(),
+      queryParams: { tags: this.bookTag.INCOMING },
+      books: this.incomingBooks(),
+    },
+    {
+      name: this.bookTag.BESTSELLER.toLowerCase(),
+      routerLink: this.appRoutePaths.BOOKS(),
+      queryParams: { tags: this.bookTag.BESTSELLER },
+      books: this.bestsellerBooks(),
+    },
+    {
+      name: this.bookTag.NEW.toLowerCase(),
+      routerLink: this.appRoutePaths.BOOKS(),
+      queryParams: { tags: this.bookTag.NEW },
+      books: this.newBooks(),
+    },
+  ]);
 
   public addToCart(book: Book) {
     this.cartService.addBook(book, 1);

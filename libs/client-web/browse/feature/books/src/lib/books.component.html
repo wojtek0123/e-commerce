@@ -10,8 +10,8 @@
     </div>
     <lib-active-filters
       [activeFilters]="activeFilters()"
-      (clearFilterEvent)="clearFilter($event)"
-      (clearFiltersEvent)="clearFilters()"
+      (onClearFilter)="clearFilter($event)"
+      (onClearFilters)="clearFilters()"
     />
 
     <lib-books-grid

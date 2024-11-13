@@ -52,12 +52,16 @@ export class BookComponent {
   public availableQuantity = this.bookStore.availableQuantity;
   public breadcrumbs = computed<MenuItem[]>(() => [
     { label: 'Home', routerLink: '/' },
-    { label: 'books', routerLink: '/browse' },
     {
-      label: this.book()?.category.name ?? '',
+      label: 'books',
       routerLink: this.appRoutePaths.BOOKS(),
-      queryParams: { categories: this.book()?.category.name },
     },
+    // {
+    //   label: this.book()?.category.name ?? '',
+    //   routerLink: this.appRoutePaths.BOOKS(),
+    //   queryParams: { categories: this.book()?.category.name },
+    //   state: { clearFilters: true },
+    // },
     { label: this.book()?.title },
   ]);
   public amount = new FormControl<number>(1, {
