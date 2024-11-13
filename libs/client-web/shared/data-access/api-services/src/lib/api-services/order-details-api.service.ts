@@ -4,6 +4,7 @@ import {
   ShoppingSession,
   OrderDetails,
   PaymentMethod,
+  OrderDetailsBase,
 } from '@e-commerce/client-web/shared/data-access/api-models';
 import { API_URL } from '@e-commerce/client-web/shared/app-config';
 
@@ -33,7 +34,7 @@ export class OrderDetailsApiService {
   }
 
   getMany() {
-    return this.http.get<OrderDetails[]>(`${this.apiUrl}/order-details`);
+    return this.http.get<OrderDetailsBase[]>(`${this.apiUrl}/order-details`);
   }
 
   getUnique(id: OrderDetails['id']) {

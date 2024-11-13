@@ -3,12 +3,15 @@ import { Book } from './book.model';
 import { ShippingMethod } from './shipping-method.model';
 import { OrderAddress } from './order-address.model';
 
-export interface OrderDetails {
+export interface OrderDetailsBase {
   id: string;
   total: number;
   status: OrderDetailsStatus;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface OrderDetails extends OrderDetailsBase {
   paymentDetails: PaymentDetails;
   orderAddress: OrderAddress;
   paymentDetailsId: number;
