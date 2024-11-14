@@ -19,7 +19,7 @@ import { rxMethod } from '@ngrx/signals/rxjs-interop';
 interface OrdersState {
   loading: boolean;
   error: string | null;
-  orders: OrderDetails[];
+  orders: OrderDetailsBase[];
   selectedOrder: {
     data: OrderDetails | null;
     loading: boolean;
