@@ -50,7 +50,7 @@ export const ShippingStore = signalStore(
                   patchState(store, {
                     error:
                       error?.error?.message ||
-                      'Error occur while getting shippings',
+                      'Error occurred while getting shippings',
                     loading: false,
                   });
                 },
