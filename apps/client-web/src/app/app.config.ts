@@ -16,6 +16,9 @@ import { MessageService } from 'primeng/api';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { authInterceptor } from '@e-commerce/client-web/auth/data-access';
 import { provideServiceWorker } from '@angular/service-worker';
+import { providePrimeNG } from 'primeng/config';
+import Aura from '@primeng/themes/aura';
+import { definePreset } from '@primeng/themes';
 
 export const appConfig: ApplicationConfig = {
   providers: [

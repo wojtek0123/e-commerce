@@ -21,6 +21,7 @@ import { BookDetails } from '@e-commerce/client-web/shared/data-access/api-model
 import { SkeletonModule } from 'primeng/skeleton';
 import { SkeletonDirective } from './directives/skeleton.directive';
 import { APP_ROUTE_PATHS_TOKEN } from '@e-commerce/client-web/shared/app-config';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'lib-book',
@@ -36,6 +37,7 @@ import { APP_ROUTE_PATHS_TOKEN } from '@e-commerce/client-web/shared/app-config'
     DatePipe,
     SkeletonModule,
     SkeletonDirective,
+    TooltipModule,
   ],
   templateUrl: './book.component.html',
   styleUrl: './book.component.scss',

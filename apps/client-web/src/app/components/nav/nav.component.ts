@@ -1,18 +1,3 @@
-import { Component, inject, OnDestroy, signal, OnInit } from '@angular/core';
-import { NavigationEnd, Router, RouterLink } from '@angular/router';
-import { DividerModule } from 'primeng/divider';
-import { ButtonModule } from 'primeng/button';
-import { MenuModule } from 'primeng/menu';
-import { Category } from '@e-commerce/client-web/shared/data-access/api-models';
-import { FormsModule } from '@angular/forms';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { debounce, filter, map, of, timer } from 'rxjs';
-import { NgClass, NgTemplateOutlet } from '@angular/common';
-import { SidebarModule } from 'primeng/sidebar';
-import { ToolbarModule } from 'primeng/toolbar';
-import { NavToolbarDirective } from '../../utils/toolbar.directive';
-import { SidebarLeftDirective } from '../../utils/sidebar-left.directive';
-import { NavButtonDirective } from '@e-commerce/client-web/shared/utils';
 import {
   animate,
   state,
@@ -20,20 +5,34 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
-import { CartSidebarComponent } from '@e-commerce/client-web/cart/feature/cart-sidebar';
-import { ThemeService } from '../../services/theme.service';
-import { CategoryStore } from '../../stores/category.store';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
+import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { FormsModule } from '@angular/forms';
+import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { AuthService } from '@e-commerce/client-web/auth/api';
+import { CartSidebarComponent } from '@e-commerce/client-web/cart/feature/cart-sidebar';
 import {
   APP_LOCAL_STORAGE_KEYS_TOKEN,
   APP_ROUTE_PATHS_TOKEN,
 } from '@e-commerce/client-web/shared/app-config';
+import { Category } from '@e-commerce/client-web/shared/data-access/api-models';
+import { NavButtonDirective } from '@e-commerce/client-web/shared/utils';
+import { ButtonModule } from 'primeng/button';
+import { DividerModule } from 'primeng/divider';
+import { MenuModule } from 'primeng/menu';
+import { SidebarModule } from 'primeng/sidebar';
+import { ToolbarModule } from 'primeng/toolbar';
+import { debounce, filter, map, of, timer } from 'rxjs';
+import { ThemeService } from '../../services/theme.service';
+import { CategoryStore } from '../../stores/category.store';
+import { SidebarLeftDirective } from '../../utils/sidebar-left.directive';
+import { NavToolbarDirective } from '../../utils/toolbar.directive';
 
 @Component({
   selector: 'app-nav',
   standalone: true,
   imports: [
-    RouterLink,
     DividerModule,
     ButtonModule,
     MenuModule,
@@ -141,12 +140,14 @@ export class NavComponent implements OnInit, OnDestroy {
     {
       label: 'Orders',
       icon: 'pi pi-book',
-      routerLink: '/account/orders',
+      routerLink: this.appRoutePaths.ORDERS(),
+      routerLinkActive: 'bg-surface-100 dark:bg-surface-700 rounded-base',
     },
     {
       label: 'Information',
       icon: 'pi pi-cog',
-      routerLink: '/account/information',
+      routerLink: this.appRoutePaths.INFORMATION(),
+      routerLinkActive: 'bg-surface-100 dark:bg-surface-700 rounded-base',
     },
   ]);
 

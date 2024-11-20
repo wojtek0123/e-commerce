@@ -1,13 +1,11 @@
 import {
   Component,
   computed,
-  effect,
   inject,
   OnInit,
   Pipe,
   PipeTransform,
   signal,
-  untracked,
 } from '@angular/core';
 import { TableModule } from 'primeng/table';
 import { OrdersStore } from '@e-commerce/client-web/account/data-access';
@@ -23,9 +21,6 @@ import { OrderComponent } from '@e-commerce/client-web/account/ui';
 import { TagModule } from 'primeng/tag';
 import { DialogModule } from 'primeng/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { APP_ROUTES_PARAMS } from '@e-commerce/client-web/shared/app-config';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { switchMap } from 'rxjs';
 import { ButtonModule } from 'primeng/button';
 
 interface Column {

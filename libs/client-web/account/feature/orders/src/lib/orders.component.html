@@ -28,7 +28,7 @@
       [loading]="loading()"
       [showLoader]="false"
     >
-      <ng-template pTemplate="header">
+      <ng-template #header>
         <tr>
           @for (col of columns(); track col.header) {
             <th>
@@ -37,7 +37,7 @@
           }
         </tr>
       </ng-template>
-      <ng-template pTemplate="body" let-order>
+      <ng-template #body let-order>
         <tr [pSelectableRow]="order">
           <td>{{ order['createdAt'] | date }}</td>
           <td>
@@ -49,12 +49,12 @@
           <td>{{ order['total'] | currency: 'USD' }}</td>
         </tr>
       </ng-template>
-      <ng-template pTemplate="emptymessage">
+      <ng-template #emptymessage>
         <tr>
           <td colspan="3" class="text-center">No orders found.</td>
         </tr>
       </ng-template>
-      <ng-template pTemplate="loadingbody">
+      <ng-template #loadingbody>
         @for (_ of skeletons(); track $index) {
           <tr>
             @for (column of columns(); track $index) {

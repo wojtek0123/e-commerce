@@ -11,11 +11,11 @@ import { NavComponent } from './components/nav/nav.component';
 import { ToastModule } from 'primeng/toast';
 import { CartSidebarComponent } from '@e-commerce/client-web/cart/feature/cart-sidebar';
 import { AsyncPipe } from '@angular/common';
-import { PrimeNGConfig } from 'primeng/api';
-import { Aura } from 'primeng/themes/aura';
-import { definePreset } from 'primeng/themes';
+import Aura from '@primeng/themes/aura';
+import { definePreset } from '@primeng/themes';
 import { AuthService } from '@e-commerce/client-web/auth/api';
 import { CartService } from '@e-commerce/client-web/cart/api';
+import { PrimeNG } from 'primeng/config';
 
 const borderRadius = '1rem' as const;
 const MyPreset = definePreset(Aura, {
@@ -58,7 +58,7 @@ const MyPreset = definePreset(Aura, {
 export class AppComponent implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly cartService = inject(CartService);
-  private readonly config = inject(PrimeNGConfig);
+  private readonly primeng = inject(PrimeNG);
 
   public event = this.authService.event;
 
@@ -81,7 +81,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.config.theme.set({
+    this.primeng.theme.set({
       preset: MyPreset,
       options: {
         darkModeSelector: '.dark',

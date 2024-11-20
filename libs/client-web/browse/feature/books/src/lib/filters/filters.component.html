@@ -26,45 +26,53 @@
 
 <ng-template #filters>
   <p-accordion>
-    <p-accordion-tab>
-      <ng-template pTemplate="header">
+    <p-accordion-panel [value]="0">
+      <p-accordion-header>
         <lib-accordion-filter-header
           header="Tags"
           [selectedItemsCount]="selectedTags().length"
           (onClearFilter)="clearSelectedItems('tag')"
         />
-      </ng-template>
-      <lib-filter libTags />
-    </p-accordion-tab>
-    <p-accordion-tab>
-      <ng-template pTemplate="header">
+      </p-accordion-header>
+      <p-accordion-content>
+        <lib-filter libTags />
+      </p-accordion-content>
+    </p-accordion-panel>
+    <p-accordion-panel [value]="1">
+      <p-accordion-header>
         <lib-accordion-filter-header
           header="Authors"
           [selectedItemsCount]="selectedAuthors().length"
           (onClearFilter)="clearSelectedItems('author')"
         />
-      </ng-template>
-      <lib-filter libAuthors />
-    </p-accordion-tab>
-    <p-accordion-tab>
-      <ng-template pTemplate="header">
+      </p-accordion-header>
+      <p-accordion-content>
+        <lib-filter libAuthors />
+      </p-accordion-content>
+    </p-accordion-panel>
+    <p-accordion-panel [value]="2">
+      <p-accordion-header>
         <lib-accordion-filter-header
           header="Categories"
           [selectedItemsCount]="selectedCategories().length"
           (onClearFilter)="clearSelectedItems('category')"
         />
-      </ng-template>
-      <lib-filter libCategories />
-    </p-accordion-tab>
-    <p-accordion-tab>
-      <ng-template pTemplate="header">
+      </p-accordion-header>
+      <p-accordion-content>
+        <lib-filter libCategories />
+      </p-accordion-content>
+    </p-accordion-panel>
+    <p-accordion-panel [value]="3">
+      <p-accordion-header>
         <lib-accordion-filter-header
           header="Price"
           [selectedItemsCount]="selectedPrices().length"
           (onClearFilter)="clearPriceFilter()"
         />
-      </ng-template>
-      <lib-price-filter />
-    </p-accordion-tab>
+      </p-accordion-header>
+      <p-accordion-content>
+        <lib-price-filter />
+      </p-accordion-content>
+    </p-accordion-panel>
   </p-accordion>
 </ng-template>

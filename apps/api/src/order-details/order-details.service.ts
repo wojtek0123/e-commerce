@@ -1,4 +1,9 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { CreateOrderDetailDto } from './dto/create-order-detail.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { decode } from 'jsonwebtoken';
@@ -25,7 +30,9 @@ export class OrderDetailsService {
     });
 
     if (!shoppingSession) {
-      throw new Error('No active shopping session found for the user');
+      throw new NotFoundException(
+        'No active shopping session found for the user',
+      );
     }
 
     const productInventories = await Promise.all(
@@ -47,7 +54,9 @@ export class OrderDetailsService {
         const newQuantity = pi.quantity - cartItem.quantity;
 
         if (newQuantity < 0) {
-          throw new Error(`Not enough stock for bookId: ${pi.book.id}`);
+          throw new ConflictException(
+            `Not enough stock for bookId: ${pi.book.id}`,
+          );
         }
 
         return this.prisma.productInventory.update({

@@ -14,18 +14,17 @@ import {
 import { tapResponse } from '@ngrx/operators';
 import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
+import { MessageService } from 'primeng/api';
 import { pipe, switchMap, tap } from 'rxjs';
 
 interface OrderProcessState {
   loading: boolean;
-  error: string | null;
   orderDetails: OrderDetails | null;
 }
 
 const initialOrderProcessState: OrderProcessState = {
   orderDetails: null,
   loading: false,
-  error: null,
 };
 
 export const OrderProcessStore = signalStore(
@@ -36,6 +35,7 @@ export const OrderProcessStore = signalStore(
       orderDetailsApi = inject(OrderDetailsApiService),
       router = inject(Router),
       appRoutePaths = inject(APP_ROUTE_PATHS_TOKEN),
+      messageService = inject(MessageService),
     ) => ({
       checkout: rxMethod<{
         orderAddress: CreateOrderAddress;
@@ -61,11 +61,16 @@ export const OrderProcessStore = signalStore(
                     ]);
                   },
                   error: (error: ResponseError) => {
+                    messageService.add({
+                      summary: 'Error',
+                      detail:
+                        error?.error?.message ??
+                        'Error occurred while checking out',
+                      severity: 'error',
+                    });
+
                     patchState(store, {
                       loading: false,
-                      error:
-                        error?.error?.message ||
-                        'An error occur while checking out',
                     });
                   },
                 }),
