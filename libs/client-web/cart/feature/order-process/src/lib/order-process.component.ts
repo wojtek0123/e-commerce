@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { RouterLink, RouterOutlet } from '@angular/router';
 import { CartStore } from '@e-commerce/client-web/cart/data-access';
 import {
   CartItemComponent,
@@ -29,6 +29,7 @@ import { APP_ROUTE_PATHS_TOKEN } from '@e-commerce/client-web/shared/app-config'
     CurrencyPipe,
     CartItemSkeletonComponent,
     SummaryComponent,
+    RouterLink,
   ],
   templateUrl: './order-process.component.html',
   styleUrl: './order-process.component.scss',
