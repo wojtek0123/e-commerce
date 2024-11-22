@@ -92,7 +92,7 @@
   >
     <span class="text-xl">Order items</span>
     <p-table [value]="orderDetails()?.orderItems ?? []">
-      <ng-template pTemplate="header">
+      <ng-template #header>
         <tr>
           <th>Cover</th>
           <th>Title</th>
@@ -102,11 +102,11 @@
           <th>Value</th>
         </tr>
       </ng-template>
-      <ng-template pTemplate="body" let-item>
+      <ng-template #body let-item>
         <tr>
           <td class="h-[11rem] relative">
             <img
-              class="object-cover py-4 rounded-base"
+              class="aspect-[3/4] max-w-32 object-cover py-4 rounded-base"
               [ngSrc]="item.book.coverImage ?? 'assets/images/not-found.png'"
               [alt]="item.book.title"
               fill
@@ -121,7 +121,7 @@
           </td>
         </tr>
       </ng-template>
-      <ng-template pTemplate="footer" let-item>
+      <ng-template #footer let-item>
         <tr>
           <td colspan="3" class="text-right">Totals</td>
           <td>

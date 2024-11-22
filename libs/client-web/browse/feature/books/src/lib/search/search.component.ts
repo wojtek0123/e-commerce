@@ -2,15 +2,16 @@ import {
   ChangeDetectionStrategy,
   Component,
   effect,
+  ElementRef,
   inject,
   OnInit,
+  viewChild,
 } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BooksStore } from '@e-commerce/client-web/browse/data-access';
-import { AsyncPipe } from '@angular/common';
-import { debounce, debounceTime, of, timer } from 'rxjs';
+import { debounceTime } from 'rxjs';
 
 @Component({
   selector: 'lib-search',
@@ -26,6 +27,8 @@ export class SearchComponent implements OnInit {
   public search = this.booksStore.search;
 
   public searchControl = new FormControl<string | null>(null);
+
+  private searchInputRef = viewChild.required<ElementRef>('searchInput');
 
   constructor() {
     effect(() => {
@@ -43,13 +46,9 @@ export class SearchComponent implements OnInit {
       });
   }
 
-  // public setSearch(event: Event) {
-  //   const value = (event.target as HTMLInputElement).value;
-  //
-  //   this.booksStore.setSingleValueFilter(value, 'search');
-  // }
-
   public clearInput() {
     this.booksStore.clearSingleValueFilter('search');
+
+    this.searchInputRef().nativeElement?.focus();
   }
 }

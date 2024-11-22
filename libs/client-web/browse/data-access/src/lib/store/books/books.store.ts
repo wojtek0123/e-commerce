@@ -26,6 +26,7 @@ import { computed, effect, inject, untracked } from '@angular/core';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import {
   distinctUntilChanged,
+  distinctUntilKeyChanged,
   filter,
   forkJoin,
   map,
@@ -579,7 +580,6 @@ export const BooksStore = signalStore(
       _deserializeQueryParamsFilters: rxMethod<void>(
         pipe(
           map(() => route.snapshot.queryParams),
-          tap(() => patchState(store, { loading: true })),
           map((queryParams) => {
             const categories = queryParams['categories'] as string | undefined;
             const authors = queryParams['authors'] as string | undefined;
@@ -602,6 +602,8 @@ export const BooksStore = signalStore(
               search,
             };
           }),
+          distinctUntilChanged((prev, curr) => isEqual(prev, curr)),
+          tap(() => patchState(store, { loading: true })),
           switchMap(
             ({
               categories,
@@ -817,13 +819,13 @@ export const BooksStore = signalStore(
 
       router.events
         .pipe(
-          filter((event): event is NavigationEnd => {
-            return event instanceof NavigationEnd;
-          }),
-          filter(() => {
-            const shouldClearFilters = history.state['clearFilters'] ?? false;
-
-            return shouldClearFilters;
+          filter(
+            (event): event is NavigationEnd => event instanceof NavigationEnd,
+          ),
+          map(() => history.state['clearFilters'] ?? false),
+          filter((shouldClearFilters) => shouldClearFilters),
+          tap((shouldClearFilters) => {
+            if (shouldClearFilters) store.restoreQueryParamsFilters();
           }),
         )
         .subscribe(() => {

@@ -1,10 +1,10 @@
 import { sortBy } from 'lodash-es';
 
 export const buildSelectedItemsQueryParam = <T>(
-  selectedItems: T[],
+  selectedItems: T[] | undefined,
   key: keyof T,
 ) => {
-  if (selectedItems.length === 0) return null;
+  if (!selectedItems || selectedItems.length === 0) return null;
 
   return sortBy(selectedItems, key)
     .map((item) =>

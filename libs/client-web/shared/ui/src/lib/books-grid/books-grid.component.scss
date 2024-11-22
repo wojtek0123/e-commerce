@@ -4,15 +4,6 @@
   container-name: books-view;
   container-type: inline-size;
 
-  &__information {
-    width: 100%;
-    margin-top: 3rem;
-    grid-column: 1 / -1;
-    text-align: center;
-    font-size: 2rem;
-    font-weight: bold;
-  }
-
   &__content {
     width: 100%;
     display: grid;
@@ -20,7 +11,7 @@
     gap: theme('gap.base');
   }
 }
-
+/* 34.375rem */
 @container books-view (min-width: 550px) {
   .books-grid {
     &__content {
@@ -29,6 +20,7 @@
   }
 }
 
+/* 48.125 */
 @container books-view (min-width: 770px) {
   .books-grid {
     &__content {
@@ -37,6 +29,7 @@
   }
 }
 
+/* 65 */
 @container books-view (min-width: 1040px) {
   .books-grid {
     &__content {
@@ -45,6 +38,7 @@
   }
 }
 
+/* 86.25 */
 @container books-view (min-width: 1380px) {
   .books-grid {
     &__content {
@@ -53,6 +47,7 @@
   }
 }
 
+/* 100 */
 @container books-view (min-width: 1760px) {
   .books-grid {
     &__content {
@@ -61,6 +56,7 @@
   }
 }
 
+/* 125 */
 @container books-view (min-width: 2000px) {
   .books-grid {
     &__content {
@@ -69,6 +65,7 @@
   }
 }
 
+/* 150 */
 @container books-view (min-width: 2400px) {
   .books-grid {
     &__content {
@@ -77,6 +74,7 @@
   }
 }
 
+/* 165.625 */
 @container books-view (min-width: 2650px) {
   .books-grid {
     &__content {
@@ -85,10 +83,20 @@
   }
 }
 
-@container books-view (min-width: 3700px) {
+/* 187.5 */
+@container books-view (min-width: 3000px) {
   .books-grid {
     &__content {
       grid-template-columns: repeat(10, 1fr);
+    }
+  }
+}
+
+/* 209.375 */
+@container books-view (min-width: 3350px) {
+  .books-grid {
+    &__content {
+      grid-template-columns: repeat(11, 1fr);
     }
   }
 }
