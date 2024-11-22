@@ -1,5 +1,5 @@
 import { NgOptimizedImage } from '@angular/common';
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import {
@@ -14,6 +14,8 @@ import { SkeletonBooksSectionComponent } from '@e-commerce/client-web/home/ui';
 import { APP_ROUTE_PATHS_TOKEN } from '@e-commerce/client-web/shared/app-config';
 import { CartService } from '@e-commerce/client-web/cart/api';
 import { HomeStore } from '@e-commerce/client-web/home/data-acess';
+import { fromEvent, map, startWith, tap, throttleTime } from 'rxjs';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'lib-home',
@@ -27,6 +29,9 @@ import { HomeStore } from '@e-commerce/client-web/home/data-acess';
     BooksGridComponent,
   ],
   templateUrl: './home.component.html',
+  host: {
+    class: 'flex flex-col gap-base',
+  },
 })
 export class HomeComponent {
   protected readonly appRoutePaths = inject(APP_ROUTE_PATHS_TOKEN);
@@ -40,6 +45,27 @@ export class HomeComponent {
   public loading = this.homeStore.loading;
   public error = this.homeStore.error;
 
+  public columnsCount = toSignal(
+    fromEvent(window, 'resize').pipe(
+      throttleTime(250),
+      startWith(window.innerWidth),
+      map(() => window.innerWidth),
+      map((innerWidth) => {
+        if (innerWidth > 3360) return 11;
+        if (innerWidth > 3000) return 10;
+        if (innerWidth > 2640) return 9;
+        if (innerWidth > 2400) return 8;
+        if (innerWidth > 2000) return 7;
+        if (innerWidth > 1600) return 6;
+        if (innerWidth > 1380) return 5;
+        if (innerWidth > 1024) return 4;
+        if (innerWidth > 768) return 3;
+        if (innerWidth > 576) return 2;
+        return 1;
+      }),
+    ),
+  );
+
   public sections = computed<
     Array<{
       name: string;
@@ -52,19 +78,23 @@ export class HomeComponent {
       name: this.bookTag.INCOMING.toLowerCase(),
       routerLink: this.appRoutePaths.BOOKS(),
       queryParams: { tags: this.bookTag.INCOMING },
-      books: this.incomingBooks(),
+      books: computed(() =>
+        this.incomingBooks().slice(0, this.columnsCount()),
+      )(),
     },
     {
       name: this.bookTag.BESTSELLER.toLowerCase(),
       routerLink: this.appRoutePaths.BOOKS(),
       queryParams: { tags: this.bookTag.BESTSELLER },
-      books: this.bestsellerBooks(),
+      books: computed(() =>
+        this.bestsellerBooks().slice(0, this.columnsCount()),
+      )(),
     },
     {
       name: this.bookTag.NEW.toLowerCase(),
       routerLink: this.appRoutePaths.BOOKS(),
       queryParams: { tags: this.bookTag.NEW },
-      books: this.newBooks(),
+      books: computed(() => this.newBooks().slice(0, this.columnsCount()))(),
     },
   ]);
 

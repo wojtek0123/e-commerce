@@ -13,6 +13,7 @@
         [routerLink]="appRoutePaths.BOOKS()"
         routerLinkActive="bg-surface-100 dark:bg-surface-700 rounded-base"
         [queryParams]="null"
+        [state]="{ clearFilters: true }"
         icon="pi pi-search"
       />
       <p-button
@@ -68,6 +69,7 @@
           routerLinkActive="bg-surface-100 dark:bg-surface-700"
           class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-200 hover:dark:bg-surface-600"
           [queryParams]="null"
+          [state]="{ clearFilters: true }"
         >
           <i class="pi pi-search"></i>
           @if (isLabelShowed()) {

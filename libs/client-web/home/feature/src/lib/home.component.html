@@ -1,5 +1,5 @@
 <header
-  class="w-full flex flex-col-reverse justify-center relative 2xl:grid 2xl:grid-cols-2 2xl:place-items-center"
+  class="w-full flex flex-col-reverse justify-center relative bg-content-background p-4 rounded-base 2xl:grid 2xl:grid-cols-2 2xl:place-items-center"
 >
   <div class="flex flex-col gap-4 lg:gap-8">
     <h2
@@ -27,9 +27,7 @@
 </header>
 <main class="flex gap-8 xl:gap-16 mt-16 flex-col">
   @for (section of sections(); track section.name) {
-    <section
-      class="flex flex-col items-center w-full mx-auto max-w-[120rem] gap-base"
-    >
+    <section class="flex flex-col items-center w-full mx-auto gap-base">
       <div class="flex items-center justify-between w-full capitalize">
         <h2 class="text-4xl">{{ section.name }}</h2>
         <a
@@ -50,3 +48,24 @@
     </section>
   }
 </main>
+<footer
+  class="bg-content-background w-full p-4 gap-10 rounded-base grid grid-cols-1 place-items-center"
+>
+  <div class="flex flex-col gap-4">
+    <div class="text-lg font-bold">Contact</div>
+    <div class="flex items-center gap-4">
+      <span class="w-24">Address:</span>
+      <span>John Smith street 19/3</span>
+    </div>
+    <div class="flex items-center gap-4">
+      <span class="w-24">Email:</span>
+      <span>e-commerce&#64;gmail.com</span>
+    </div>
+    <div class="flex items-center gap-4">
+      <span class="w-24">Phone:</span>
+      <span>123 123 123</span>
+    </div>
+  </div>
+
+  <div class="text-center">Created by Wojciech Pietraszuk</div>
+</footer>

@@ -31,6 +31,15 @@ module.exports = {
         '8xl': '3300px',
         '9xl': '3640px',
       },
+      containers: {
+        '8xl': '86.25rem',
+        '9xl': '100rem',
+        '10xl': '125rem',
+        '11xl': '150rem',
+        '12xl': '165rem',
+        '13xl': '187.5rem',
+        '14xl': '210rem',
+      },
     },
   },
   plugins: [
