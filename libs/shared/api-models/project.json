@@ -1,0 +1,19 @@
+{
+  "name": "api-models",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/shared/api-models/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/shared/api-models",
+        "main": "libs/shared/api-models/src/index.ts",
+        "tsConfig": "libs/shared/api-models/tsconfig.lib.json",
+        "assets": ["libs/shared/api-models/*.md"]
+      }
+    }
+  },
+  "tags": ["type:shared-data-access", "scope:shared"]
+}
