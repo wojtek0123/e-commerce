@@ -1,5 +1,4 @@
 <script setup lang="ts">
-// defineProps<{}>()
 import { RouterLink } from 'vue-router';
 import Toolbar from 'primevue/toolbar';
 import Button from 'primevue/button';
@@ -83,7 +82,7 @@ function toggleTheme() {
             class="text-muted-color h-10 !rounded-base overflow-hidden hover:bg-surface-200 hover:dark:bg-surface-600"
           />
           <RouterLink
-            to="/books"
+            to="/books/list"
             active-class="bg-surface-100 dark:bg-surface-700 rounded-base"
             class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-200 hover:dark:bg-surface-600 cursorpointer"
           >
@@ -109,65 +108,73 @@ function toggleTheme() {
     </Toolbar>
   </div>
 
-  <aside
-    :class="[
-      isExpanded ? 'w-80' : 'w-14',
-      'transition-[width] duration-300 ease-in-out hidden justify-between gap-4 xl:h-content px-2 py-4 bg-content-background xl:sticky z-[1001] top-4 flex-col rounded-base xl:flex',
-    ]"
-  >
-    <nav class="h-content flex flex-col justify-between">
-      <div class="flex flex-col">
-        <div class="h-9 flex items-center justify-center">
-          <RouterLink
-            to="/"
-            v-if="shouldLabelBeShowed"
-            class="items-center justify-center"
-          >
-            <span class="font-bold text-primary">Story</span>
-            <span class="uppercase text-muted-color">Stash</span>
-          </RouterLink>
+  <div class="max-w-80">
+    <aside
+      :class="[
+        isExpanded ? 'w-80' : 'w-14',
+        'transition-[width] transition-all duration-300 ease-in-out hidden justify-between gap-4 xl:h-content px-2 py-4 bg-content-background xl:sticky z-[1001] top-4 flex-col rounded-base xl:flex',
+      ]"
+    >
+      <nav class="h-content flex flex-col justify-between">
+        <div class="flex flex-col">
+          <div class="h-9 flex items-center justify-center">
+            <RouterLink
+              to="/"
+              v-if="shouldLabelBeShowed"
+              class="items-center justify-center"
+            >
+              <span class="font-bold text-primary">Story</span>
+              <span class="uppercase text-muted-color">Stash</span>
+            </RouterLink>
 
-          <RouterLink
-            v-if="!shouldLabelBeShowed"
-            to="/"
-            active-class="bg-surface-100 dark:bg-surface-700 rounded-base"
-            class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-200 hover:dark:bg-surface-600"
-          >
-            <i class="pi pi-home"></i>
-          </RouterLink>
+            <RouterLink
+              v-if="!shouldLabelBeShowed"
+              to="/"
+              active-class="bg-surface-100 dark:bg-surface-700 rounded-base"
+              class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-200 hover:dark:bg-surface-600"
+            >
+              <i class="pi pi-home"></i>
+            </RouterLink>
+          </div>
+          <Divider />
+          <ul class="flex flex-col">
+            <RouterLink
+              to="/books"
+              activeClass="bg-surface-100 dark:bg-surface-700"
+              class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-200 hover:dark:bg-surface-600 cursorpointer"
+            >
+              <i class="pi pi-book"></i>
+              <span v-if="isExpanded">Books</span>
+            </RouterLink>
+          </ul>
         </div>
-        <Divider />
-        <ul class="flex flex-col">
-          <RouterLink
-            to="/books"
-            activeClass="bg-surface-100 dark:bg-surface-700"
-            class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-200 hover:dark:bg-surface-600 cursorpointer"
-          >
-            <i class="pi pi-book"></i>
-            <span v-if="isExpanded">Books</span>
-          </RouterLink>
-        </ul>
-      </div>
 
-      <div class="flex flex-col gap-2">
-        <Divider />
-        <button
-          class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-200 hover:dark:bg-surface-600"
-          @click="toggleTheme"
-        >
-          <i v-if="isDark" class="pi pi-moon"></i>
-          <i v-if="!isDark" class="pi pi-sun"></i>
-          <span v-if="isExpanded">{{ isDark ? 'Dark' : 'Light' }}</span>
-        </button>
-        <button
-          class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-200 hover:dark:bg-surface-600"
-          @click="toggleExpandCollapse"
-        >
-          <i v-if="isExpanded" class="pi pi-arrow-left"></i>
-          <i v-if="!isExpanded" class="pi pi-arrow-right"></i>
-          <span>Collapse</span>
-        </button>
-      </div>
-    </nav>
-  </aside>
+        <div class="flex flex-col gap-2">
+          <Divider />
+          <button
+            class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-200 hover:dark:bg-surface-600"
+            @click="toggleTheme"
+          >
+            <i v-if="isDark" class="pi pi-moon"></i>
+            <i v-if="!isDark" class="pi pi-sun"></i>
+            <span v-if="isExpanded">{{ isDark ? 'Dark' : 'Light' }}</span>
+          </button>
+          <button
+            class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-200 hover:dark:bg-surface-600"
+            @click="toggleExpandCollapse"
+          >
+            <i v-if="isExpanded" class="pi pi-arrow-left"></i>
+            <i v-if="!isExpanded" class="pi pi-arrow-right"></i>
+            <span>Collapse</span>
+          </button>
+        </div>
+      </nav>
+    </aside>
+  </div>
 </template>
+
+<style scoped lang="css">
+.p-panelmenu-header {
+  border: none;
+}
+</style>

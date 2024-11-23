@@ -1,0 +1,32 @@
+{
+  "name": "book-list",
+  "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/admin-dashboard/book/feature/book-list/src",
+  "projectType": "library",
+  "tags": ["domain:book", "scope:admin-dashboard", "type:feature"],
+  "targets": {
+    "build": {
+      "executor": "@nx/vite:build",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "outputPath": "dist/libs/admin-dashboard/book/feature/book-list"
+      },
+      "configurations": {
+        "development": {
+          "mode": "development"
+        },
+        "production": {
+          "mode": "production"
+        }
+      }
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "outputs": ["{options.reportsDirectory}"],
+      "options": {
+        "reportsDirectory": "../../../../../coverage/libs/admin-dashboard/book/feature/book-list"
+      }
+    }
+  }
+}
