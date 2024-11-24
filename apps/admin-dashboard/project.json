@@ -39,6 +39,18 @@
         }
       }
     },
+    "electron": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["nx serve admin-dashboard"],
+        "parallel": false
+      },
+      "configurations": {
+        "build": {
+          "commands": ["nx build admin-dashboard", "electron-builder"]
+        }
+      }
+    },
     "preview": {
       "dependsOn": ["build"],
       "executor": "@nx/vite:preview-server",
