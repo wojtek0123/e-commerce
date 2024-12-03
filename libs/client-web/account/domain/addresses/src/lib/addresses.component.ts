@@ -16,7 +16,6 @@ import { DialogModule } from 'primeng/dialog';
 import { AddressFormComponent } from './components/address-form/address-form.component';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'lib-addresses',
@@ -28,7 +27,6 @@ import { NgClass } from '@angular/common';
     AddressFormComponent,
     ButtonModule,
     ConfirmDialogModule,
-    NgClass,
     DeleteAddressConfirmationDialogComponent,
   ],
   templateUrl: './addresses.component.html',

@@ -1,4 +1,3 @@
-import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -37,7 +36,6 @@ import { isEqual, omit } from 'lodash-es';
   templateUrl: './address-form.component.html',
   imports: [
     ReactiveFormsModule,
-    NgClass,
     FormFieldComponent,
     ErrorMessageComponent,
     AutoCompleteModule,
@@ -102,9 +100,11 @@ export class AddressFormComponent {
 
   constructor() {
     effect(() => {
-      this.isFormVisible();
+      const isFormVisible = this.isFormVisible();
 
-      untracked(() => this.form.reset());
+      untracked(() => {
+        if (!isFormVisible) this.form.reset();
+      });
     });
 
     effect(() => {
