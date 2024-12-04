@@ -38,6 +38,7 @@ model Book {
   publishedDate      DateTime?
   price              Float
   coverImage         String?
+  coverImagePath     String?
   createdAt          DateTime         @default(now())
   updatedAt          DateTime         @updatedAt
   publisher          Publisher?       @relation(fields: [publisherId], references: [id], onDelete: Cascade, onUpdate: Cascade)

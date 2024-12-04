@@ -2,6 +2,7 @@ import './styles.css';
 import PrimeConfig from 'primevue/config';
 import Aura from '@primevue/themes/aura';
 import { createPinia } from 'pinia';
+import ToastService from 'primevue/toastservice';
 // import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
 
 import router from './router';
@@ -25,6 +26,7 @@ app.use(PrimeConfig, {
     },
   },
 });
+app.use(ToastService);
 app.use(pinia);
 
 app.mount('#root');

@@ -7,14 +7,10 @@ import Skeleton from 'primevue/skeleton';
 import InputText from 'primevue/inputtext';
 import { useBooksStore } from '@e-commerce/admin-dashboard/book/data-access';
 import { onMounted } from 'vue';
-import { ref } from 'vue';
-import { Book } from '@e-commerce/shared/api-models';
 
 import AddBookDrawer from './components/add-book-drawer/add-book-drawer.vue';
 
 const store = useBooksStore();
-
-const selectedBooks = ref<Book[]>([]);
 
 function retryGettingBooks() {
   store.getBooks();
@@ -37,6 +33,7 @@ onMounted(() => {
           :outlined="true"
           icon="pi pi-trash"
           label="Delete"
+          @click="store.deleteBooks()"
         ></Button>
       </div>
 
@@ -58,7 +55,7 @@ onMounted(() => {
 
     <DataTable
       v-else
-      v-model:selection="selectedBooks"
+      v-model:selection="store.selectedBooks"
       :value="store.books"
       :loading="store.loading"
       data-key="id"
@@ -87,7 +84,12 @@ onMounted(() => {
       </Column>
       <Column field="tag" header="Tag">
         <template #body="book">
-          <Tag :value="book.data.tag" severity="secondary"></Tag>
+          <Tag
+            v-if="book.data.tag"
+            :value="book.data.tag"
+            severity="secondary"
+          ></Tag>
+          <span v-if="!book.data.tag">-</span>
         </template>
         <template #loading>
           <div
@@ -104,6 +106,7 @@ onMounted(() => {
             {{ author.name
             }}{{ index !== book.data.authors.length - 1 ? ', ' : '' }}
           </span>
+          <span v-if="!book.data.authors?.length">-</span>
         </template>
 
         <template #loading>

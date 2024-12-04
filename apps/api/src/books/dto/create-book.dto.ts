@@ -2,7 +2,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Tag } from '@prisma/client';
 import {
   IsArray,
-  IsDate,
   IsEnum,
   IsNumber,
   IsOptional,
@@ -18,6 +17,11 @@ export class CreateBookDto {
   @IsString()
   @IsOptional()
   coverImage?: string;
+
+  @ApiProperty({ type: String, required: false })
+  @IsString()
+  @IsOptional()
+  coverImagePath?: string;
 
   @ApiProperty({ type: String, required: false })
   @IsString()
@@ -41,7 +45,7 @@ export class CreateBookDto {
   price: number;
 
   @ApiProperty({ type: String, required: false })
-  @IsDate()
+  // @IsDate()
   @IsOptional()
   publishedDate: string;
 

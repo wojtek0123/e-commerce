@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import { BooksService } from './books.service';
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiCreatedResponse,
   ApiOkResponse,
@@ -27,7 +28,7 @@ import { Tag } from '@prisma/client';
 export class BooksController {
   constructor(private readonly booksService: BooksService) {}
 
-  @Post('create')
+  @Post()
   @ApiOperation({ summary: 'Create a book' })
   @ApiBody({ type: CreateBookDto })
   @ApiCreatedResponse({ type: BookEntity })
@@ -92,10 +93,12 @@ export class BooksController {
     return this.booksService.update(id, data);
   }
 
-  @Delete(':id')
+  @Delete()
   @ApiOperation({ summary: 'Delete a book' })
   @ApiOkResponse({ type: BookEntity })
-  remove(@Param('id') id: string) {
-    return this.booksService.remove(id);
+  @ApiBearerAuth()
+  @ApiQuery({ name: 'ids', required: true })
+  remove(@Query('ids') ids: string) {
+    return this.booksService.remove(ids);
   }
 }
