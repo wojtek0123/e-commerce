@@ -31,6 +31,9 @@ export class BookEntity implements Book {
   coverImage: string;
 
   @ApiProperty({ required: false, type: String })
+  coverImagePath: string;
+
+  @ApiProperty({ required: false, type: String })
   @IsOptional()
   description: string;
 

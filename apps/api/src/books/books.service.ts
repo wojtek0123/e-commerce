@@ -17,6 +17,7 @@ export class BooksService {
         publishedDate: data.publishedDate,
         price: data.price,
         coverImage: data.coverImage,
+        coverImagePath: data.coverImagePath,
         tag: data.tag,
         authors: {
           createMany: {
@@ -27,10 +28,13 @@ export class BooksService {
         productInventory: { create: { quantity: data.quantity } },
         publisher: {
           connectOrCreate: {
-            create: { name: data.publisherName },
-            where: { id: data.publisherId },
+            create: { name: data.publisherName ?? '' },
+            where: { id: data.publisherId ?? '' },
           },
         },
+      },
+      include: {
+        authors: { include: { author: true } },
       },
     });
   }
@@ -144,7 +148,9 @@ export class BooksService {
     return this.prisma.book.update({ where: { id }, data });
   }
 
-  remove(id: string) {
-    return this.prisma.book.delete({ where: { id } });
+  remove(ids: string) {
+    const parsedIds = ids.split(',');
+
+    return this.prisma.book.deleteMany({ where: { id: { in: parsedIds } } });
   }
 }

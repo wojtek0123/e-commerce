@@ -13,6 +13,7 @@ import InputNumber from 'primevue/inputnumber';
 import FloatLabel from 'primevue/floatlabel';
 import Drawer from 'primevue/drawer';
 import Button from 'primevue/button';
+import Message from 'primevue/message';
 import {
   Category,
   BookTag,
@@ -22,16 +23,17 @@ import {
 import { ref } from 'vue';
 
 import { useBooksStore } from '@e-commerce/admin-dashboard/book/data-access';
-import { createClient } from '@supabase/supabase-js';
 import { Publisher } from '@prisma/client';
+import { onUnmounted } from 'vue';
 
 const store = useBooksStore();
 
+type PublisherOption = 'Add' | 'Select';
+
 const title = ref<string | null>(null);
-const coverImage = ref<string | null>(null);
 const description = ref<string | null>(null);
 const language = ref<string | null>(null);
-const pages = ref<number | null>(null);
+const pageCount = ref<number | null>(null);
 const price = ref<number | null>(null);
 const publishDate = ref<Date | null>(null);
 const category = ref<Category | null>(null);
@@ -42,16 +44,10 @@ const publisherName = ref<string | null>(null);
 const publisher = ref<Publisher | null>(null);
 const file = ref<File | null>(null);
 
-type PublisherOption = 'Add' | 'Select';
-
 const publisherOptions = ref<PublisherOption[]>(['Add', 'Select']);
-
 const publisherInputType = ref<PublisherOption>('Select');
-
-// const publisher = ref<Publisher
-
+const successed = ref(false);
 const visible = ref(false);
-
 const bookTags = ref(allBookTags);
 
 function searchTag(event: AutoCompleteCompleteEvent) {
@@ -59,13 +55,6 @@ function searchTag(event: AutoCompleteCompleteEvent) {
     tag.toLowerCase().includes(event.query.toLowerCase()),
   );
 }
-
-console.log(import.meta.env.VITE_API_SUPABASE_URL);
-const supbase = createClient(
-  import.meta.env.VITE_API_SUPABASE_URL,
-  import.meta.env.VITE_API_SUPABASE_KEY,
-  {},
-);
 
 function searchCategories(event: AutoCompleteCompleteEvent) {
   store.getCategories(event.query);
@@ -79,73 +68,97 @@ function searchPublisher(event: AutoCompleteCompleteEvent) {
   store.getPublishers(event.query);
 }
 
-function submit(event: Event) {
-  event.preventDefault();
-}
-
 function selectImage(event: FileUploadSelectEvent) {
   file.value = event.files[0];
 }
 
-async function onCoverUpload() {
-  if (!file.value) return;
-
-  const { data, error } = await supbase.storage
-    .from('image-covers')
-    .upload(`${file.value?.name}`, file.value);
-
-  if (!data?.path) return;
-
-  if (error) {
-    console.log(error);
-    return;
-  }
-
-  const path = `image-cover/${file.value.name}`;
-
-  const { data: response } = supbase.storage
-    .from('image-cover')
-    .getPublicUrl(path);
-
-  coverImage.value = response.publicUrl;
-}
-
-async function onDeleteCover() {
-  if (!coverImage.value) return;
-  const { data, error } = await supbase.storage
-    .from('image-cover')
-    .remove([coverImage.value]);
-
-  console.log(data, error);
-}
-
-function clearImage() {}
-
 function removeImage(event: FileUploadRemoveEvent) {
   console.log(event.file);
 }
+
+function uploadImageCover() {
+  if (!file.value) return;
+  store.uploadCoverImage(file.value);
+}
+
+function submit(event: Event) {
+  event.preventDefault();
+
+  if (!title.value) return;
+  if (!language.value) return;
+  if (!pageCount.value) return;
+  if (!price.value) return;
+  if (!quantity.value) return;
+  if (!category.value) return;
+  if (!publishDate.value) return;
+
+  store
+    .addBook({
+      title: title.value,
+      categoryId: category.value?.id,
+      description: description.value ?? '',
+      language: language.value,
+      pages: pageCount.value,
+      price: price.value,
+      publishedDate: publishDate.value.toISOString(),
+      publisherId: publisher.value?.id,
+      quantity: quantity.value,
+      ...(tag.value && { tag: tag.value }),
+      authorsId: authors.value.map(({ id }) => id),
+      publisherName: publisherName.value ?? undefined,
+    })
+    .then(() => {
+      visible.value = false;
+      successed.value = true;
+    });
+}
+
+onUnmounted(() => {
+  if (!successed.value) {
+    store.deleteUploadedCoverImage();
+  }
+});
 </script>
 
 <template>
   <Button @click="visible = true" label="Add" />
   <Drawer v-model:visible="visible" class="max-w-[40rem] w-full">
     <form
-      @submit="submit"
+      @submit.prevent="submit"
       class="flex flex-col h-full justify-between gap-4 w-full max-w-[120rem]"
     >
       <div class="flex flex-col gap-4">
         <FloatLabel variant="in">
-          <InputText id="title" v-model="title" />
+          <InputText fluid id="title" v-model="title" :invalid="!title" />
           <label for="title">Title *</label>
+          <Message v-if="!title" severity="error" variant="simple" size="small">
+            Title is required
+          </Message>
         </FloatLabel>
         <FloatLabel variant="in">
-          <InputNumber id="pages" v-model="pages" />
-          <label for="pages">Pages *</label>
+          <InputNumber
+            fluid
+            id="pages"
+            v-model="pageCount"
+            :invalid="!pageCount"
+          />
+          <label for="pages">Page count *</label>
+          <Message
+            v-if="!pageCount"
+            severity="error"
+            variant="simple"
+            size="small"
+          >
+            Page count is required
+          </Message>
         </FloatLabel>
 
         <FloatLabel variant="in">
-          <InputNumber id="price" v-model="price" />
+          <InputNumber fluid id="price" v-model="price" :invalid="!price" />
           <label for="price">Price *</label>
+          <Message v-if="!price" severity="error" variant="simple" size="small">
+            Price is required
+          </Message>
         </FloatLabel>
 
         <FloatLabel variant="in">
@@ -178,7 +191,7 @@ function removeImage(event: FileUploadRemoveEvent) {
         </FloatLabel>
 
         <FloatLabel v-if="publisherInputType === 'Add'" variant="in">
-          <InputText id="publisher_name" v-model="publisherName" />
+          <InputText fluid id="publisher_name" v-model="publisherName" />
           <label for="publisher_name">Publisher name</label>
         </FloatLabel>
 
@@ -187,6 +200,7 @@ function removeImage(event: FileUploadRemoveEvent) {
             id="tag"
             dropdown
             v-model="tag"
+            fluid
             :suggestions="bookTags"
             @complete="searchTag"
           />
@@ -203,8 +217,17 @@ function removeImage(event: FileUploadRemoveEvent) {
             option-label="name"
             @complete="searchCategories"
             dropdown
+            :invalid="!category"
           />
-          <label for="category">Category</label>
+          <label for="category">Category *</label>
+          <Message
+            v-if="!category"
+            severity="error"
+            variant="simple"
+            size="small"
+          >
+            Category is required
+          </Message>
         </FloatLabel>
 
         <FloatLabel variant="in">
@@ -223,23 +246,46 @@ function removeImage(event: FileUploadRemoveEvent) {
             @complete="searchAuthors"
             dropdown
             multiple
+            :invalid="!authors.length"
           />
-          <label for="author">Author</label>
+          <label for="author">Author *</label>
+          <Message
+            v-if="!authors.length"
+            severity="error"
+            variant="simple"
+            size="small"
+          >
+            Choose at least one author
+          </Message>
         </FloatLabel>
 
         <FloatLabel variant="in">
-          <Textarea id="description" v-model="description" />
+          <Textarea id="description" fluid v-model="description" />
           <label for="description">Description</label>
         </FloatLabel>
 
         <FloatLabel variant="in">
-          <InputNumber id="quanity" v-model="quantity" />
+          <InputNumber
+            id="quanity"
+            :invalid="!quantity"
+            fluid
+            v-model="quantity"
+          />
           <label for="quantity">Quantity</label>
+          <Message
+            v-if="!quantity"
+            severity="error"
+            variant="simple"
+            size="small"
+          >
+            Quantity is required
+          </Message>
         </FloatLabel>
 
-        <div>
+        <div class="flex flex-col gap-4">
           <FileUpload
             mode="basic"
+            class="mr-auto"
             name="file"
             ref="file"
             accept="image/*"
@@ -250,29 +296,23 @@ function removeImage(event: FileUploadRemoveEvent) {
           <ButtonGroup>
             <Button
               icon="pi pi-upload"
+              :loading="store.uploadLoading"
               severity="secondary"
               label="Upload"
-              @click="onCoverUpload"
+              @click="uploadImageCover"
             />
             <Button
               label="Delete"
               icon="pi pi-trash"
-              @click="onDeleteCover"
+              :loading="store.deleteLoading"
+              @click="store.deleteUploadedCoverImage"
               severity="danger"
-              outlined
-            />
-
-            <Button
-              label="Clear"
-              icon="pi pi-trash"
-              severity="danger"
-              @click="clearImage"
               outlined
             />
           </ButtonGroup>
         </div>
       </div>
-      <Button type="submit">Add book</Button>
+      <Button :loading="store.addLoading" type="submit">Add book</Button>
     </form>
   </Drawer>
 </template>
