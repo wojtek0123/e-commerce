@@ -4,7 +4,7 @@ import Aura from '@primevue/themes/aura';
 import { createPinia } from 'pinia';
 import ToastService from 'primevue/toastservice';
 // import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
-
+import ConfirmationService from 'primevue/confirmationservice';
 import router from './router';
 
 import { createApp } from 'vue';
@@ -27,6 +27,7 @@ app.use(PrimeConfig, {
   },
 });
 app.use(ToastService);
+app.use(ConfirmationService);
 app.use(pinia);
 
 app.mount('#root');

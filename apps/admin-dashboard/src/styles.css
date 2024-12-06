@@ -20,6 +20,6 @@ body {
   overflow-x: hidden;
 }
 
-body.dark {
+.dark body {
   background-color: var(--p-surface-950);
 }
