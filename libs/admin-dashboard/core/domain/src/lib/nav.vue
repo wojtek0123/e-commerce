@@ -51,7 +51,7 @@ function setTheme(theme: 'dark' | 'light') {
   isDark.value = theme === 'dark';
 
   if (theme === 'dark') {
-    document.body.classList.add('dark');
+    document.querySelector('html')?.classList.add('dark');
   }
 
   localStorage.setItem('isDark', JSON.stringify(isDark.value));
@@ -60,7 +60,7 @@ function setTheme(theme: 'dark' | 'light') {
 function toggleTheme() {
   isDark.value = !isDark.value;
 
-  document.body.classList.toggle('dark');
+  document.querySelector('html')?.classList.toggle('dark');
 
   localStorage.setItem('isDark', JSON.stringify(isDark.value));
 }
@@ -172,9 +172,3 @@ function toggleTheme() {
     </aside>
   </div>
 </template>
-
-<style scoped lang="css">
-.p-panelmenu-header {
-  border: none;
-}
-</style>

@@ -114,15 +114,15 @@ function submit(event: Event) {
 }
 
 onUnmounted(() => {
-  if (!successed.value) {
+  if (!successed.value && file.value) {
     store.deleteUploadedCoverImage();
   }
 });
 </script>
 
 <template>
-  <Button @click="visible = true" label="Add" />
-  <Drawer v-model:visible="visible" class="max-w-[40rem] w-full">
+  <Button text icon="pi pi-plus" @click="visible = true" />
+  <Drawer v-model:visible="visible" class="max-w-[40rem] w-full rounded-r-base">
     <form
       @submit.prevent="submit"
       class="flex flex-col h-full justify-between gap-4 w-full max-w-[120rem]"

@@ -16,6 +16,7 @@ export const useBooksStore = defineStore('books', () => {
   const error = ref<string | null>(null);
   const addLoading = ref(false);
   const deleteLoading = ref(false);
+  const search = ref<string | null>(null);
 
   const categories = ref<Category[]>([]);
   const authors = ref<Author[]>([]);
@@ -35,6 +36,7 @@ export const useBooksStore = defineStore('books', () => {
     try {
       const response = await axios.get<{ items: Book[]; total: number }>(
         'http://localhost:3000/books',
+        { params: { titleLike: search.value ?? '' } },
       );
       books.value = response.data.items;
     } catch (e: unknown) {
@@ -235,7 +237,7 @@ export const useBooksStore = defineStore('books', () => {
 
     deleteLoading.value = true;
 
-    const { error } = await supabase.storage
+    const { error, data } = await supabase.storage
       .from(bucket)
       .remove([coverImageUrl.value]);
 
@@ -248,6 +250,8 @@ export const useBooksStore = defineStore('books', () => {
       });
       return;
     }
+
+    if (!data) return;
 
     coverImageUrl.value = '';
     coverImagePath.value = '';
@@ -263,6 +267,7 @@ export const useBooksStore = defineStore('books', () => {
   return {
     books,
     loading,
+    search,
     error,
     getBooks,
     addBook,
