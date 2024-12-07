@@ -1,5 +1,5 @@
 {
-  "name": "login",
+  "name": "client-web-auth-feature-login",
   "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/client-web/auth/feature/login/src",
   "prefix": "lib",

@@ -1,5 +1,5 @@
 {
-  "name": "book",
+  "name": "client-web-browse-feature-book",
   "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/client-web/browse/feature/book/src",
   "prefix": "lib",

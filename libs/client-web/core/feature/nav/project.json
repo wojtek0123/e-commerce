@@ -1,16 +1,16 @@
 {
-  "name": "client-web-browse-feature-shell",
+  "name": "nav",
   "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/client-web/browse/feature/shell/src",
+  "sourceRoot": "libs/client-web/core/feature/nav/src",
   "prefix": "lib",
   "projectType": "library",
-  "tags": ["scope:client-web", "domain:browse", "type:shell"],
+  "tags": ["scope:client-web", "domain:core", "type:feature"],
   "targets": {
     "test": {
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "libs/client-web/browse/feature/shell/jest.config.ts"
+        "jestConfig": "libs/client-web/core/feature/nav/jest.config.ts"
       }
     },
     "lint": {
