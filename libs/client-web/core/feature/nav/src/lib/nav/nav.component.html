@@ -34,14 +34,14 @@
   </p-toolbar>
 </div>
 
-<p-sidebar appSidebarLeft [(visible)]="isOpen" [blockScroll]="true">
-  <ng-template pTemplate="header">
+<p-drawer libDrawerLeft [(visible)]="isOpen">
+  <p-header>
     <ng-container [ngTemplateOutlet]="logo" />
-  </ng-template>
+  </p-header>
   <div class="flex flex-col">
     <ng-container [ngTemplateOutlet]="links" />
   </div>
-</p-sidebar>
+</p-drawer>
 
 <aside
   class="hidden justify-between gap-4 xl:h-content px-2 py-4 bg-content-background xl:sticky z-[1001] top-4 flex-col rounded-base xl:flex"

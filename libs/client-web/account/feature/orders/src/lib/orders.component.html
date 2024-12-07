@@ -22,7 +22,7 @@
       [value]="orders()"
       selectionMode="single"
       [selection]="selectedOrder()"
-      (selectionChange)="selectOrder($event)"
+      (selectionChange)="toggleOrderSelection($event)"
       dataKey="id"
       tableStyleClass="bg-content-background rounded-base overflow-hidden"
       [loading]="loading()"
@@ -67,19 +67,16 @@
       </ng-template>
     </p-table>
   }
-  <!-- <p-sidebar -->
-  <!--   (onHide)="unselectOrder()" -->
-  <!--   class="2xl:hidden" -->
-  <!--   [visible]="sidebarVisible()" -->
-  <!--   position="left" -->
-  <!--   [blockScroll]="true" -->
-  <!--   styleClass="max-w-[40rem] w-full rounded-r-base bg-surface-100 dark:bg-surface-950" -->
-  <!-- > -->
-  <!--   <ng-template pTemplate="header"> -->
-  <!--     <span class="font-bold"> Order details </span> -->
-  <!--   </ng-template> -->
-  <!--   <lib-order class="w-full" [orderDetails]="selectedOrder()" /> -->
-  <!-- </p-sidebar> -->
+
+  <p-drawer
+    libDrawerLeft
+    class="2xl:hidden"
+    [visible]="drawerVisible()"
+    header="Order details"
+    (onHide)="unselectOrder()"
+  >
+    <lib-order class="w-full" [orderDetails]="selectedOrder()" />
+  </p-drawer>
 
   <div class="hidden 2xl:flex w-full">
     @if (selectedOrderLoading()) {

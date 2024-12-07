@@ -1,48 +1,23 @@
-import {
-  Component,
-  computed,
-  inject,
-  OnInit,
-  Pipe,
-  PipeTransform,
-  signal,
-} from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { TableModule } from 'primeng/table';
-import { OrdersStore } from '@e-commerce/client-web/account/data-access';
+import {
+  OrderColumn,
+  OrdersStore,
+} from '@e-commerce/client-web/account/data-access';
 import {
   OrderDetails,
   OrderDetailsBase,
-  OrderDetailsStatus,
 } from '@e-commerce/client-web/shared/data-access/api-models';
-import { CurrencyPipe, DatePipe, NgStyle } from '@angular/common';
+import { CurrencyPipe, DatePipe } from '@angular/common';
 import { SkeletonModule } from 'primeng/skeleton';
-import { SidebarModule } from 'primeng/sidebar';
 import { OrderComponent } from '@e-commerce/client-web/account/ui';
 import { TagModule } from 'primeng/tag';
 import { DialogModule } from 'primeng/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
-
-interface Column {
-  header: string;
-  field: keyof OrderDetails;
-}
-
-@Pipe({ name: 'statusToSeverity', standalone: true })
-export class StatusToServerityPipe implements PipeTransform {
-  transform(orderDetailsStatus: OrderDetailsStatus) {
-    switch (orderDetailsStatus) {
-      case 'NEW':
-        return 'danger';
-      case 'PROCESSING':
-        return 'warn';
-      case 'SHIPPED':
-        return 'info';
-      case 'COMPLETED':
-        return 'success';
-    }
-  }
-}
+import { DrawerLeftDirective } from '@e-commerce/client-web/shared/utils';
+import { DrawerModule } from 'primeng/drawer';
+import { StatusToServerityPipe } from './pipes/status-to-severity.pipe';
 
 @Component({
   selector: 'lib-orders',
@@ -52,8 +27,8 @@ export class StatusToServerityPipe implements PipeTransform {
     CurrencyPipe,
     DatePipe,
     SkeletonModule,
-    NgStyle,
-    SidebarModule,
+    DrawerModule,
+    DrawerLeftDirective,
     OrderComponent,
     TagModule,
     StatusToServerityPipe,
@@ -73,13 +48,22 @@ export class OrdersComponent implements OnInit {
   public error = this.store.error;
 
   public selectedOrderId = signal<OrderDetailsBase['id'] | null>(null);
-  public columns = signal<Column[]>([
+  public columns = signal<OrderColumn[]>([
     { header: 'Date', field: 'createdAt' },
     { header: 'Status', field: 'status' },
     { header: 'Total', field: 'total' },
   ]);
   public skeletons = signal(new Array(10));
-  protected sidebarVisible = computed(() => !!this.selectedOrderId());
+  // TODO: linkedSignal, close and open drawer when 1536 inner width is reached
+  protected drawerVisible = computed(() => {
+    const selectedOrderId = this.selectedOrderId();
+
+    if (window.innerWidth > 1536) {
+      return false;
+    }
+
+    return !!selectedOrderId;
+  });
 
   public selectedOrder = this.store.selectedOrder.data;
   public selectedOrderLoading = this.store.selectedOrder.loading;
@@ -97,11 +81,17 @@ export class OrdersComponent implements OnInit {
     this.router.navigate([], { queryParams: null, replaceUrl: true });
   }
 
-  public selectOrder(order: OrderDetails | null) {
-    if (!order) return;
-    this.selectedOrderId.set(order?.id);
+  public toggleOrderSelection(order: OrderDetails | null) {
+    if (order) {
+      this.selectOrder(order.id);
+    } else {
+      this.unselectOrder();
+    }
+  }
 
-    this.store.getOrderDetails({ id: order.id });
+  public selectOrder(id: OrderDetails['id']) {
+    this.selectedOrderId.set(id);
+    this.store.getOrderDetails({ id });
   }
 
   public unselectOrder() {

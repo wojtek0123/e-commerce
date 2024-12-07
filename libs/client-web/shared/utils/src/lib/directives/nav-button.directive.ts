@@ -6,11 +6,10 @@ import { Button } from 'primeng/button';
   standalone: true,
 })
 export class NavButtonDirective {
-  private readonly button = inject(Button);
+  #button = inject(Button);
 
   constructor() {
-    this.button.styleClass = 'h-[2.625rem] capitalize py-0 text-muted-color';
-    this.button.text = true;
-    this.button.plain = true;
+    this.#button.styleClass = 'h-[2.625rem] capitalize py-0 text-muted-color';
+    this.#button.text = true;
   }
 }

@@ -19,7 +19,7 @@ import { NewPasswordFormComponent } from './components/new-password-form/new-pas
 import { DrawerModule } from 'primeng/drawer';
 import { SidebarModule } from 'primeng/sidebar';
 import { NgTemplateOutlet } from '@angular/common';
-import { SidebarLeftDirective } from '@e-commerce/client-web/shared/utils';
+import { DrawerLeftDirective } from '@e-commerce/client-web/shared/utils';
 import { DialogModule } from 'primeng/dialog';
 import { NewEmailFormComponent } from './components/new-email-form/new-email-form.component';
 import { AuthService } from '@e-commerce/client-web/auth/api';
@@ -35,13 +35,8 @@ import { AddressInformationComponent } from '@e-commerce/client-web/shared/ui';
     TooltipModule,
     InputTextModule,
     NewPasswordFormComponent,
-    DrawerModule,
-    NgTemplateOutlet,
-    SidebarModule,
-    SidebarLeftDirective,
     DialogModule,
     NewEmailFormComponent,
-    AddressInformationComponent,
   ],
   templateUrl: './account-data.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -67,7 +62,7 @@ export class AccountDataComponent {
     });
   });
 
-  public isSidebarVisible = computed(() => !!this.editingField());
+  public isDialogVisible = computed(() => !!this.editingField());
   public dialogHeader = computed(
     () => `Change ${this.editingField() === 'password' ? 'password' : 'email'}`,
   );
