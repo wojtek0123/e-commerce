@@ -7,10 +7,8 @@ import {
   untracked,
 } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { NavComponent } from './components/nav/nav.component';
+import { NavComponent } from '@e-commerce/client-web/core/feature/nav';
 import { ToastModule } from 'primeng/toast';
-import { CartSidebarComponent } from '@e-commerce/client-web/cart/feature/cart-sidebar';
-import { AsyncPipe } from '@angular/common';
 import Aura from '@primeng/themes/aura';
 import { definePreset } from '@primeng/themes';
 import { AuthService } from '@e-commerce/client-web/auth/api';
@@ -43,24 +41,18 @@ const MyPreset = definePreset(Aura, {
 
 @Component({
   standalone: true,
-  imports: [
-    RouterOutlet,
-    NavComponent,
-    ToastModule,
-    AsyncPipe,
-    CartSidebarComponent,
-  ],
+  imports: [RouterOutlet, ToastModule, NavComponent],
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent implements OnInit {
-  private readonly authService = inject(AuthService);
-  private readonly cartService = inject(CartService);
-  private readonly primeng = inject(PrimeNG);
+  #authService = inject(AuthService);
+  #cartService = inject(CartService);
+  #primeng = inject(PrimeNG);
 
-  public event = this.authService.event;
+  event = this.#authService.event;
 
   constructor() {
     effect(() => {
@@ -68,20 +60,20 @@ export class AppComponent implements OnInit {
 
       untracked(() => {
         if (event === 'auth-success' || event === 'init-database') {
-          this.cartService.syncCartAndFetchSession();
+          this.#cartService.syncCartAndFetchSession();
         }
         if (event === 'logout-success') {
-          this.cartService.clearCartAndSession();
+          this.#cartService.clearCartAndSession();
         }
         if (event === 'init-local') {
-          this.cartService.getLocalCartItems();
+          this.#cartService.getLocalCartItems();
         }
       });
     });
   }
 
   ngOnInit(): void {
-    this.primeng.theme.set({
+    this.#primeng.theme.set({
       preset: MyPreset,
       options: {
         darkModeSelector: '.dark',

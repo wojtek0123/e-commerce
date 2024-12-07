@@ -1,5 +1,5 @@
 {
-  "name": "payment-status",
+  "name": "client-web-cart-feature-payment-status",
   "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/client-web/cart/feature/payment-status/src",
   "prefix": "lib",

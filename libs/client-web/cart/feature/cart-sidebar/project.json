@@ -1,5 +1,5 @@
 {
-  "name": "cart-sidebar",
+  "name": "client-web-cart-feature-cart-sidebar",
   "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/client-web/cart/feature/cart-sidebar/src",
   "prefix": "lib",

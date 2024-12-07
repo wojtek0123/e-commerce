@@ -18,6 +18,7 @@
                   "type:feature",
                   "type:ui",
                   "type:util",
+                  "type:api",
                   "type:shell",
                   "type:data-access",
                   "type:shared-data-access",

@@ -5,7 +5,7 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
-import { NgClass, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
@@ -29,13 +29,11 @@ import { MenuModule } from 'primeng/menu';
 import { SidebarModule } from 'primeng/sidebar';
 import { ToolbarModule } from 'primeng/toolbar';
 import { debounce, filter, map, of, timer } from 'rxjs';
-import { ThemeService } from '../../services/theme.service';
-import { CategoryStore } from '../../stores/category.store';
-import { SidebarLeftDirective } from '../../utils/sidebar-left.directive';
-import { NavToolbarDirective } from '../../utils/toolbar.directive';
+import { ThemeService } from '@e-commerce/client-web/core/data-access';
+import { CategoryStore } from '@e-commerce/client-web/shared/data-access/stores';
 
 @Component({
-  selector: 'app-nav',
+  selector: 'lib-nav',
   standalone: true,
   imports: [
     DividerModule,
@@ -47,13 +45,11 @@ import { NavToolbarDirective } from '../../utils/toolbar.directive';
     SidebarModule,
     NgTemplateOutlet,
     ToolbarModule,
-    NavToolbarDirective,
-    SidebarLeftDirective,
     NavButtonDirective,
     CartSidebarComponent,
   ],
+  providers: [ThemeService],
   templateUrl: './nav.component.html',
-  styleUrl: './nav.component.scss',
   animations: [
     trigger('slideInOut', [
       state(
@@ -73,31 +69,32 @@ import { NavToolbarDirective } from '../../utils/toolbar.directive';
   ],
 })
 export class NavComponent implements OnInit, OnDestroy {
-  private readonly themeService = inject(ThemeService);
-  private readonly categoriesStore = inject(CategoryStore);
-  private readonly authService = inject(AuthService);
-  private readonly appLocalStorageKeys = inject(APP_LOCAL_STORAGE_KEYS_TOKEN);
-  protected readonly appRoutePaths = inject(APP_ROUTE_PATHS_TOKEN);
+  #themeService = inject(ThemeService);
+  #categoriesStore = inject(CategoryStore);
+  #authService = inject(AuthService);
+  #appLocalStorageKeys = inject(APP_LOCAL_STORAGE_KEYS_TOKEN);
 
-  public isAuthenticated = this.authService.isAuthenticated;
-  public categories = this.categoriesStore.categories;
-  public isOpen = signal(false);
-  public isExpanded = signal(true);
-  public isLabelShowed = toSignal(
+  appRoutePaths = inject(APP_ROUTE_PATHS_TOKEN);
+
+  isAuthenticated = this.#authService.isAuthenticated;
+  categories = this.#categoriesStore.categories;
+  isOpen = signal(false);
+  isExpanded = signal(true);
+  isLabelShowed = toSignal(
     toObservable(this.isExpanded).pipe(
       debounce((isExpanded) => (isExpanded ? timer(150) : of({}))),
     ),
     { initialValue: false },
   );
-  public isDark = this.themeService.isDark;
+  isDark = this.#themeService.isDark;
 
-  private resizeObserver?: ResizeObserver;
-  private shouldRestoreExpanded = signal(false);
+  resizeObserver?: ResizeObserver;
+  shouldRestoreExpanded = signal(false);
 
-  public ngOnInit() {
+  ngOnInit() {
     // TODO: Create shared config to all routes and local storage keys
     const isExpanded = localStorage.getItem(
-      this.appLocalStorageKeys.IS_EXPANDED,
+      this.#appLocalStorageKeys.IS_EXPANDED,
     );
 
     if (isExpanded) {
@@ -109,7 +106,8 @@ export class NavComponent implements OnInit, OnDestroy {
     this.resizeObserver = new ResizeObserver(() => {
       if (mediaQueryList.matches && this.shouldRestoreExpanded()) {
         const isExpanded = JSON.parse(
-          localStorage.getItem(this.appLocalStorageKeys.IS_EXPANDED) || 'false',
+          localStorage.getItem(this.#appLocalStorageKeys.IS_EXPANDED) ||
+            'false',
         );
 
         this.isExpanded.set(isExpanded);
@@ -125,15 +123,15 @@ export class NavComponent implements OnInit, OnDestroy {
     this.resizeObserver.observe(document.body);
   }
 
-  public ngOnDestroy(): void {
+  ngOnDestroy(): void {
     this.resizeObserver?.unobserve(document.body);
   }
 
-  public stringifyCategory(category: Category) {
+  stringifyCategory(category: Category) {
     return JSON.stringify(category);
   }
 
-  protected isAccountRouteActive = toSignal(
+  isAccountRouteActive = toSignal(
     inject(Router).events.pipe(
       filter((events) => events instanceof NavigationEnd),
       map((event) => event.url.includes('account')),
@@ -141,7 +139,7 @@ export class NavComponent implements OnInit, OnDestroy {
   );
 
   // TODO: stworzyć injectionToken dla, aby było jedno źródło danych (app.routes i tutaj)
-  public menuItems = signal([
+  menuItems = signal([
     {
       label: 'Orders',
       icon: 'pi pi-book',
@@ -156,23 +154,23 @@ export class NavComponent implements OnInit, OnDestroy {
     },
   ]);
 
-  public toggleDarkMode() {
-    this.themeService.toggleDarkMode();
+  toggleDarkMode() {
+    this.#themeService.toggleDarkMode();
   }
 
-  public toggleNavigation() {
+  toggleNavigation() {
     this.isOpen.update((isOpen) => !isOpen);
   }
 
-  public expandCollapseNavigation() {
+  expandCollapseNavigation() {
     this.isExpanded.update((isExpanded) => !isExpanded);
     localStorage.setItem(
-      this.appLocalStorageKeys.IS_EXPANDED,
+      this.#appLocalStorageKeys.IS_EXPANDED,
       JSON.stringify(this.isExpanded()),
     );
   }
 
-  public logout() {
-    this.authService.logout();
+  logout() {
+    this.#authService.logout();
   }
 }

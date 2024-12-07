@@ -3,9 +3,7 @@ import { Injectable, signal } from '@angular/core';
 const DARK_THEME_CLASS_NAME = 'dark' as const;
 const LOCAL_STORAGE_THEME_NAME = 'isDark' as const;
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class ThemeService {
   private _isDark = signal(false);
   public isDark = this._isDark.asReadonly();

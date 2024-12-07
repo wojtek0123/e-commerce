@@ -114,6 +114,12 @@
       "@e-commerce/client-web/cart/ui": [
         "libs/client-web/cart/ui/src/index.ts"
       ],
+      "@e-commerce/client-web/core/data-access": [
+        "libs/client-web/core/data-access/src/index.ts"
+      ],
+      "@e-commerce/client-web/core/feature/nav": [
+        "libs/client-web/core/feature/nav/src/index.ts"
+      ],
       "@e-commerce/client-web/home/data-acess": [
         "libs/client-web/home/data-access/src/index.ts"
       ],
@@ -137,6 +143,9 @@
       ],
       "@e-commerce/client-web/shared/data-access/signal-store-feature": [
         "libs/client-web/shared/data-access/signal-store-feature/src/index.ts"
+      ],
+      "@e-commerce/client-web/shared/data-access/stores": [
+        "libs/client-web/shared/data-access/stores/src/index.ts"
       ],
       "@e-commerce/client-web/shared/ui": [
         "libs/client-web/shared/ui/src/index.ts"

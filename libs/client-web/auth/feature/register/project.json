@@ -1,5 +1,5 @@
 {
-  "name": "register",
+  "name": "client-web-auth-feature-register",
   "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/client-web/auth/feature/register/src",
   "prefix": "lib",
