@@ -15,14 +15,9 @@
   (onClick)="sidebarVisible.set(true)"
 />
 
-<p-sidebar
-  [(visible)]="sidebarVisible"
-  appendTo="body"
-  [blockScroll]="true"
-  class="xl:hidden"
->
+<p-drawer libDrawerLeft class="xl:hidden" [(visible)]="sidebarVisible">
   <ng-container [ngTemplateOutlet]="filters" />
-</p-sidebar>
+</p-drawer>
 
 <ng-template #filters>
   <p-accordion>

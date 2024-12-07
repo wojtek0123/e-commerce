@@ -14,14 +14,13 @@ import {
   MultiSelectFilters,
   SingleValueFilters,
 } from '@e-commerce/client-web/browse/data-access';
-import {
-  AccordionFilterHeaderComponent,
-  SelectItemsFilterComponent,
-} from '@e-commerce/client-web/browse/ui';
+import { AccordionFilterHeaderComponent } from '@e-commerce/client-web/browse/ui';
 import { AuthorsDirective } from './directives/authors.directive';
 import { FilterComponent } from './filter/filter.component';
 import { CategoriesDirective } from './directives/category.directive';
 import { TagsDirective } from './directives/tags.directive';
+import { DrawerModule } from 'primeng/drawer';
+import { DrawerLeftDirective } from '@e-commerce/client-web/shared/utils';
 
 @Component({
   selector: 'lib-filters',
@@ -29,15 +28,15 @@ import { TagsDirective } from './directives/tags.directive';
   imports: [
     AccordionModule,
     PriceFilterComponent,
-    SidebarModule,
+    DrawerModule,
     ButtonModule,
     NgTemplateOutlet,
     AccordionFilterHeaderComponent,
-    SelectItemsFilterComponent,
     FilterComponent,
     AuthorsDirective,
     CategoriesDirective,
     TagsDirective,
+    DrawerLeftDirective,
   ],
   templateUrl: './filters.component.html',
   styleUrl: './filters.component.scss',

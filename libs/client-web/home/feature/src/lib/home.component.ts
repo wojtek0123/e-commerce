@@ -1,33 +1,22 @@
 import { NgOptimizedImage } from '@angular/common';
-import { Component, computed, inject, OnInit } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
-import {
-  BookCardComponent,
-  BooksGridComponent,
-} from '@e-commerce/client-web/shared/ui';
+import { BooksGridComponent } from '@e-commerce/client-web/shared/ui';
 import {
   Book,
   BookTag,
 } from '@e-commerce/client-web/shared/data-access/api-models';
-import { SkeletonBooksSectionComponent } from '@e-commerce/client-web/home/ui';
 import { APP_ROUTE_PATHS_TOKEN } from '@e-commerce/client-web/shared/app-config';
 import { CartService } from '@e-commerce/client-web/cart/api';
 import { HomeStore } from '@e-commerce/client-web/home/data-acess';
-import { fromEvent, map, startWith, tap, throttleTime } from 'rxjs';
+import { fromEvent, map, startWith, throttleTime } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'lib-home',
   standalone: true,
-  imports: [
-    RouterLink,
-    ButtonModule,
-    NgOptimizedImage,
-    BookCardComponent,
-    SkeletonBooksSectionComponent,
-    BooksGridComponent,
-  ],
+  imports: [RouterLink, ButtonModule, NgOptimizedImage, BooksGridComponent],
   templateUrl: './home.component.html',
   host: {
     class: 'flex flex-col gap-base',

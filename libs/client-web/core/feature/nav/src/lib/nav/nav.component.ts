@@ -22,15 +22,18 @@ import {
   APP_ROUTE_PATHS_TOKEN,
 } from '@e-commerce/client-web/shared/app-config';
 import { Category } from '@e-commerce/client-web/shared/data-access/api-models';
-import { NavButtonDirective } from '@e-commerce/client-web/shared/utils';
+import {
+  DrawerLeftDirective,
+  NavButtonDirective,
+} from '@e-commerce/client-web/shared/utils';
 import { ButtonModule } from 'primeng/button';
 import { DividerModule } from 'primeng/divider';
 import { MenuModule } from 'primeng/menu';
-import { SidebarModule } from 'primeng/sidebar';
 import { ToolbarModule } from 'primeng/toolbar';
 import { debounce, filter, map, of, timer } from 'rxjs';
 import { ThemeService } from '@e-commerce/client-web/core/data-access';
 import { CategoryStore } from '@e-commerce/client-web/shared/data-access/stores';
+import { DrawerModule } from 'primeng/drawer';
 
 @Component({
   selector: 'lib-nav',
@@ -42,11 +45,12 @@ import { CategoryStore } from '@e-commerce/client-web/shared/data-access/stores'
     RouterLink,
     FormsModule,
     RouterLinkActive,
-    SidebarModule,
+    DrawerModule,
     NgTemplateOutlet,
     ToolbarModule,
     NavButtonDirective,
     CartSidebarComponent,
+    DrawerLeftDirective,
   ],
   providers: [ThemeService],
   templateUrl: './nav.component.html',

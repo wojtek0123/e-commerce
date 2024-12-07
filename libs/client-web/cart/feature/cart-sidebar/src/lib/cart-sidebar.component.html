@@ -10,16 +10,7 @@
   }
 </button>
 
-<p-sidebar
-  [(visible)]="visible"
-  header="Cart"
-  appendTo="body"
-  [blockScroll]="true"
-  styleClass="max-w-[40rem] w-full rounded-r-base bg-surface-100 dark:bg-surface-950 relative"
->
-  <ng-template pTemplate="header">
-    <span class="font-bold">Cart</span>
-  </ng-template>
+<p-drawer libDrawerLeft header="Cart" [(visible)]="visible">
   <div class="flex flex-col justify-between gap-4 h-full">
     <div
       class="flex flex-col gap-4 overflow-y-auto"
@@ -59,4 +50,4 @@
       </div>
     }
   </div>
-</p-sidebar>
+</p-drawer>
