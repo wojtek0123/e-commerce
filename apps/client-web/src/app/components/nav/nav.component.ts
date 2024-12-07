@@ -9,7 +9,12 @@ import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { NavigationEnd, Router, RouterLink } from '@angular/router';
+import {
+  NavigationEnd,
+  Router,
+  RouterLink,
+  RouterLinkActive,
+} from '@angular/router';
 import { AuthService } from '@e-commerce/client-web/auth/api';
 import { CartSidebarComponent } from '@e-commerce/client-web/cart/feature/cart-sidebar';
 import {
@@ -38,7 +43,7 @@ import { NavToolbarDirective } from '../../utils/toolbar.directive';
     MenuModule,
     RouterLink,
     FormsModule,
-    NgClass,
+    RouterLinkActive,
     SidebarModule,
     NgTemplateOutlet,
     ToolbarModule,
