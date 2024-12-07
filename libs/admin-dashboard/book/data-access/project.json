@@ -1,5 +1,5 @@
 {
-  "name": "data-access",
+  "name": "admin-dashboard-book-data-access",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/admin-dashboard/book/data-access/src",
   "projectType": "library",

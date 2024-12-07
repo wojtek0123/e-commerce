@@ -1,5 +1,5 @@
 {
-  "name": "@e-commerce/admin-dashboard/book/feature/add-book",
+  "name": "@e-commerce/admin-dashboard/core/data-access",
   "version": "0.0.1",
   "main": "./index.js",
   "types": "./index.d.ts",

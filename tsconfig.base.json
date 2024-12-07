@@ -18,14 +18,14 @@
       "@e-commerce/admin-dashboard/book/data-access": [
         "libs/admin-dashboard/book/data-access/src/index.ts"
       ],
-      "@e-commerce/admin-dashboard/book/feature/add-book": [
-        "libs/admin-dashboard/book/feature/add-book/src/index.ts"
-      ],
       "@e-commerce/admin-dashboard/book/feature/book-list": [
         "libs/admin-dashboard/book/feature/book-list/src/index.ts"
       ],
       "@e-commerce/admin-dashboard/book/feature/shell": [
         "libs/admin-dashboard/book/feature/shell/src/index.ts"
+      ],
+      "@e-commerce/admin-dashboard/core/data-access": [
+        "libs/admin-dashboard/core/data-access/src/index.ts"
       ],
       "@e-commerce/admin-dashboard/core/domain": [
         "libs/admin-dashboard/core/domain/src/index.ts"

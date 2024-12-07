@@ -9,7 +9,7 @@ import { nxCopyAssetsPlugin } from '@nx/vite/plugins/nx-copy-assets.plugin';
 export default defineConfig({
   root: __dirname,
   cacheDir:
-    '../../../../../node_modules/.vite/libs/admin-dashboard/book/feature/add-book',
+    '../../../../node_modules/.vite/libs/admin-dashboard/core/data-access',
   plugins: [
     vue(),
     nxViteTsPaths(),
@@ -26,7 +26,7 @@ export default defineConfig({
   // Configuration for building your library.
   // See: https://vitejs.dev/guide/build.html#library-mode
   build: {
-    outDir: '../../../../../dist/libs/admin-dashboard/book/feature/add-book',
+    outDir: '../../../../dist/libs/admin-dashboard/core/data-access',
     emptyOutDir: true,
     reportCompressedSize: true,
     commonjsOptions: {
@@ -35,7 +35,7 @@ export default defineConfig({
     lib: {
       // Could also be a dictionary or array of multiple entry points.
       entry: 'src/index.ts',
-      name: 'add-book',
+      name: 'data-access',
       fileName: 'index',
       // Change this to the formats you want to support.
       // Don't forget to update your package.json as well.
@@ -54,7 +54,7 @@ export default defineConfig({
     reporters: ['default'],
     coverage: {
       reportsDirectory:
-        '../../../../../coverage/libs/admin-dashboard/book/feature/add-book',
+        '../../../../coverage/libs/admin-dashboard/core/data-access',
       provider: 'v8',
     },
   },

@@ -12,7 +12,6 @@ import { onMounted, ref } from 'vue';
 import { useConfirm } from 'primevue/useconfirm';
 import AddBookDrawer from './components/add-book-drawer/add-book-drawer.vue';
 import { debounce } from 'lodash-es';
-import { Book } from '@e-commerce/shared/api-models';
 import viewBookDetails from './components/view-book-details/view-book-details.vue';
 
 const store = useBooksStore();
