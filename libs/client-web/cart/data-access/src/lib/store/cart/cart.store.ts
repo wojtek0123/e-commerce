@@ -1,4 +1,4 @@
-import { computed, inject } from '@angular/core';
+import { computed, DestroyRef, inject } from '@angular/core';
 import {
   Book,
   CartItemBase,
@@ -10,6 +10,7 @@ import {
   ShoppingSessionApiService,
 } from '@e-commerce/client-web/shared/data-access/api-services';
 import {
+  getState,
   patchState,
   signalStore,
   type,
@@ -29,16 +30,18 @@ import {
   entityConfig,
   removeAllEntities,
   removeEntity,
-  setEntity,
   updateEntity,
   withEntities,
 } from '@ngrx/signals/entities';
 import { APP_LOCAL_STORAGE_KEYS_TOKEN } from '@e-commerce/client-web/shared/app-config';
+import { NavigationEnd, Router } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 interface CartState {
   shoppingSession: ShoppingSession | null;
   shoppingSessionId: ShoppingSession['id'] | null;
   cartItemsCached: CartItemBase[];
+  isDrawerVisible: boolean;
 
   loading: boolean;
   error: string | null;
@@ -50,6 +53,7 @@ const initialCartState: CartState = {
   cartItemsCached: [],
   loading: false,
   error: null,
+  isDrawerVisible: false,
 };
 
 const cartItemsConfig = entityConfig({
@@ -146,7 +150,7 @@ export const CartStore = signalStore(
                     loading: false,
                     error:
                       error?.error?.message ||
-                      'Error occur while getting shopping session',
+                      'An error has occurred while getting shopping session',
                   });
                 },
               }),
@@ -157,12 +161,26 @@ export const CartStore = signalStore(
       addBook: rxMethod<{ book: Book; quantity: number }>(
         pipe(
           tap(({ book, quantity }) => {
+            const isInCart = !!getState(store)._cartItemsIds.find(
+              (id) => id === book.id,
+            );
+            console.log(isInCart);
             patchState(
               store,
               (state) => ({
                 cartItemsCached: Object.values(state._cartItemsEntityMap) ?? [],
               }),
-              setEntity({ book, quantity }, cartItemsConfig),
+              isInCart
+                ? updateEntity(
+                    {
+                      id: book.id,
+                      changes: (cartItem) => ({
+                        quantity: cartItem.quantity + quantity,
+                      }),
+                    },
+                    cartItemsConfig,
+                  )
+                : addEntity({ book, quantity }, cartItemsConfig),
             );
 
             messageService.add({
@@ -186,7 +204,7 @@ export const CartStore = signalStore(
                     summary: 'Error',
                     detail:
                       error?.error?.message ||
-                      'Error has occur while adding book to cart',
+                      'An error has occurred while adding book to cart',
                     severity: 'error',
                   });
 
@@ -236,10 +254,15 @@ export const CartStore = signalStore(
               severity: 'success',
             });
           }),
-          filter(() => !!store.shoppingSessionId()),
-          switchMap(({ bookId, quantity }) =>
+          map(({ bookId, quantity }) => ({
+            bookId,
+            quantity,
+            shoppingSessionId: getState(store).shoppingSessionId,
+          })),
+          filter(({ shoppingSessionId }) => !!shoppingSessionId),
+          switchMap(({ bookId, quantity, shoppingSessionId }) =>
             cartItemApi
-              .updateQuantity(store.shoppingSessionId()!, bookId, {
+              .updateQuantity(shoppingSessionId ?? '', bookId, {
                 quantity,
               })
               .pipe(
@@ -299,40 +322,42 @@ export const CartStore = signalStore(
           }),
           filter(() => !!store.shoppingSessionId()),
           switchMap(({ bookId }) =>
-            cartItemApi.deleteCartItem(store.shoppingSessionId()!, bookId).pipe(
-              tapResponse({
-                next: () => {
-                  patchState(store, (state) => ({
-                    ...state,
-                    cartItemsCached:
-                      Object.values(state._cartItemsEntityMap) ?? [],
-                  }));
-                },
-                error: () => {
-                  messageService.add({
-                    summary: 'Error',
-                    detail: 'Error occur while removing the book quantity',
-                    severity: 'error',
-                  });
+            cartItemApi
+              .deleteCartItem(store.shoppingSessionId() ?? '', bookId)
+              .pipe(
+                tapResponse({
+                  next: () => {
+                    patchState(store, (state) => ({
+                      ...state,
+                      cartItemsCached:
+                        Object.values(state._cartItemsEntityMap) ?? [],
+                    }));
+                  },
+                  error: () => {
+                    messageService.add({
+                      summary: 'Error',
+                      detail: 'Error occur while removing the book quantity',
+                      severity: 'error',
+                    });
 
-                  const cachedCartItem = store
-                    .cartItemsCached()
-                    .find((ct) => ct.book.id === bookId);
+                    const cachedCartItem = store
+                      .cartItemsCached()
+                      .find((ct) => ct.book.id === bookId);
 
-                  if (cachedCartItem)
-                    patchState(
-                      store,
-                      addEntity(
-                        {
-                          book: cachedCartItem.book,
-                          quantity: cachedCartItem.quantity,
-                        },
-                        cartItemsConfig,
-                      ),
-                    );
-                },
-              }),
-            ),
+                    if (cachedCartItem)
+                      patchState(
+                        store,
+                        addEntity(
+                          {
+                            book: cachedCartItem.book,
+                            quantity: cachedCartItem.quantity,
+                          },
+                          cartItemsConfig,
+                        ),
+                      );
+                  },
+                }),
+              ),
           ),
         ),
       ),
@@ -342,7 +367,6 @@ export const CartStore = signalStore(
             shoppingSessionApi.delete().pipe(
               tapResponse({
                 next: () => {
-                  // return cartActions.clearCartSuccess();
                   patchState(
                     store,
                     { shoppingSession: null, shoppingSessionId: null },
@@ -350,7 +374,13 @@ export const CartStore = signalStore(
                   );
                 },
                 error: (error: ResponseError) => {
-                  // return cartActions.clearCartFailure({ error });
+                  messageService.add({
+                    summary: 'Error',
+                    detail:
+                      error?.error?.message ??
+                      'An error occured while deleting shopping session',
+                    severity: 'error',
+                  });
                 },
               }),
             ),
@@ -371,10 +401,21 @@ export const CartStore = signalStore(
 
         patchState(store, addEntities([...cartItems], cartItemsConfig));
       },
+      openDrawerCart: () => {
+        patchState(store, { isDrawerVisible: true });
+      },
+      closeDrawerCart: () => {
+        patchState(store, { isDrawerVisible: false });
+      },
     }),
   ),
   withHooks({
-    onInit(store, appLocalStorageKeys = inject(APP_LOCAL_STORAGE_KEYS_TOKEN)) {
+    onInit(
+      store,
+      appLocalStorageKeys = inject(APP_LOCAL_STORAGE_KEYS_TOKEN),
+      router = inject(Router),
+      destroyRef = inject(DestroyRef),
+    ) {
       watchState(store, (state) => {
         if (!state.shoppingSessionId) {
           localStorage.setItem(
@@ -383,6 +424,19 @@ export const CartStore = signalStore(
           );
         }
       });
+
+      router.events
+        .pipe(
+          filter(
+            (events) =>
+              events instanceof NavigationEnd &&
+              getState(store).isDrawerVisible,
+          ),
+          takeUntilDestroyed(destroyRef),
+        )
+        .subscribe(() => {
+          store.closeDrawerCart();
+        });
     },
   }),
 );

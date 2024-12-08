@@ -41,24 +41,32 @@ import { DrawerLeftDirective } from '@e-commerce/client-web/shared/utils';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CartSidebarComponent {
-  private readonly cartStore = inject(CartStore);
-  protected readonly appRoutePaths = inject(APP_ROUTE_PATHS_TOKEN);
+  #cartStore = inject(CartStore);
 
-  public isLabelShowed = input<boolean>(false);
+  appRoutePaths = inject(APP_ROUTE_PATHS_TOKEN);
 
-  public cartItems = this.cartStore.cartItems;
-  public count = this.cartStore.itemsCount;
-  public total = this.cartStore.total;
-  public loading = this.cartStore.loading;
-  public error = this.cartStore.error;
+  isLabelShowed = input<boolean>(false);
 
-  public visible = signal(false);
+  cartItems = this.#cartStore.cartItems;
+  count = this.#cartStore.itemsCount;
+  total = this.#cartStore.total;
+  loading = this.#cartStore.loading;
+  error = this.#cartStore.error;
+  visible = this.#cartStore.isDrawerVisible;
 
-  public updateQuantity({ book, quantity }: { book: Book; quantity: number }) {
-    this.cartStore.updateQuantity({ bookId: book.id, quantity });
+  updateQuantity({ book, quantity }: { book: Book; quantity: number }) {
+    this.#cartStore.updateQuantity({ bookId: book.id, quantity });
   }
 
-  public remove(args: { bookId: Book['id'] }) {
-    this.cartStore.removeBook(args);
+  remove(args: { bookId: Book['id'] }) {
+    this.#cartStore.removeBook(args);
+  }
+
+  openDrawer() {
+    this.#cartStore.openDrawerCart();
+  }
+
+  closeDrawer() {
+    this.#cartStore.closeDrawerCart();
   }
 }
