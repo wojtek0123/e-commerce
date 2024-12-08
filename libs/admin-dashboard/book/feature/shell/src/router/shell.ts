@@ -13,14 +13,6 @@ export const shellRouter: RouteRecordRaw[] = [
             (c) => c.BookList,
           ),
       },
-      {
-        path: 'add',
-        name: 'add book',
-        component: () =>
-          import('@e-commerce/admin-dashboard/book/feature/add-book').then(
-            (c) => c.AddBook,
-          ),
-      },
     ],
   },
 ];

@@ -24,4 +24,8 @@ export class CartService {
   public getLocalCartItems() {
     this.cartStore.getLocalCartItems();
   }
+
+  public openDrawer() {
+    this.cartStore.openDrawerCart();
+  }
 }

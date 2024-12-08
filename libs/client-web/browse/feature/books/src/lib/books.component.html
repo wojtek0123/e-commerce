@@ -1,7 +1,9 @@
 <div class="flex gap-base">
   <lib-filters class="hidden xl:flex" />
   <div class="flex flex-col gap-base w-full overflow-x-hidden">
-    <div class="flex flex-col xl:flex-row justify-between gap-base">
+    <div
+      class="flex flex-col bg-content-background p-4 rounded-base xl:flex-row justify-between gap-base"
+    >
       <p-breadcrumb [model]="breadcrumbs()" />
       <div class="flex items-center justify-between gap-4">
         <lib-search class="w-full" />

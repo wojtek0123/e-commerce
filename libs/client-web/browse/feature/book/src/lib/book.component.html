@@ -59,52 +59,12 @@
           }
         </div>
         @if (book()?.tag) {
-          <p-chip [label]="book()?.tag" />
+          <p-tag [value]="book()?.tag" />
         }
         <div
-          class="flex flex-col my-8 gap-4 bg-content-background p-4 rounded-base 4xl:hidden"
+          class="flex flex-col justify-start my-8 gap-4 bg-content-background p-4 rounded-base xl:gap-8 4xl:hidden"
         >
-          <h4 class="text-3xl font-bold md:text-4xl lg:text-5xl xl:text-6xl">
-            {{ book()?.price | currency: 'USD' }}
-          </h4>
-          <div class="flex justify-start flex-row items-center gap-4">
-            <p-inputNumber
-              [showButtons]="true"
-              [formControl]="amount"
-              [size]="'small'"
-              [min]="1"
-              (onBlur)="onBlurInput()"
-              buttonLayout="horizontal"
-              spinnerMode="horizontal"
-              inputId="integeronly"
-              decrementButtonClass="p-button-text p-button-secondary"
-              incrementButtonClass="p-button-text p-button-secondary"
-              incrementButtonIcon="pi pi-plus"
-              decrementButtonIcon="pi pi-minus"
-            />
-            <p-button
-              [pTooltip]="
-                amount.invalid ? 'Make sure that amount is correct' : ''
-              "
-              tooltipPosition="top"
-              tooltipStyleClass="min-w-max"
-              styleClass="w-full"
-              class="w-full"
-              label="Add to cart"
-              icon="pi pi-cart-plus"
-              size="large"
-              [disabled]="amount.invalid"
-              [loading]="loading()"
-              (onClick)="addToCart()"
-            />
-          </div>
-          <span class="text-sm font-semibold text-muted-color">
-            {{
-              availableQuantity() !== 1
-                ? 'There are ' + availableQuantity() + ' pieces left'
-                : 'Hurry up! Only one piece left'
-            }}
-          </span>
+          <ng-container [ngTemplateOutlet]="price" />
         </div>
         <div class="flex flex-col gap-2">
           <lib-detail-row
@@ -126,59 +86,79 @@
         </div>
       </div>
       <div class="flex flex-col gap-4">
-        <span class="font-semibold text-xl">Description</span>
+        <span class="font-medium w-32 text-muted-color">Description</span>
         <p>
           {{ book()?.description }}
         </p>
       </div>
     </div>
 
-    <div class="hidden 4xl:flex h-content justify-center w-full">
+    <div class="hidden 4xl:flex h-content w-full">
       <div
-        class="4xl:sticky 4xl:top-4 flex flex-col items-center gap-12 overflow-y-auto h-fit w-full p-16 bg-content-background rounded-base"
+        class="4xl:sticky 4xl:top-4 flex flex-col gap-12 overflow-y-auto h-fit w-full p-base bg-content-background rounded-base"
       >
-        <span class="text-6xl font-bold">
-          {{ book()?.price | currency: 'USD' }}
-        </span>
-        <div class="flex flex-col items-center gap-4">
-          <p-inputNumber
-            [showButtons]="true"
-            [formControl]="amount"
-            [size]="'small'"
-            [min]="1"
-            [max]="availableQuantity()"
-            (onBlur)="onBlurInput()"
-            buttonLayout="horizontal"
-            spinnerMode="horizontal"
-            inputId="integeronly"
-            decrementButtonClass="p-button-text p-button-secondary"
-            incrementButtonClass="p-button-text p-button-secondary"
-            incrementButtonIcon="pi pi-plus"
-            decrementButtonIcon="pi pi-minus"
-          />
-          <span class="text-sm font-semibold text-muted-color">
-            {{
-              availableQuantity() !== 1
-                ? 'There are ' + availableQuantity() + ' pieces left'
-                : 'Hurry up! Only one piece left'
-            }}
-          </span>
-        </div>
-        <div
-          [pTooltip]="amount.invalid ? 'Make sure that amount is correct' : ''"
-          tooltipPosition="top"
-          tooltipStyleClass="min-w-max"
-        >
-          <p-button
-            label="Add to cart"
-            icon="pi pi-cart-plus"
-            size="large"
-            [disabled]="amount.invalid"
-            [loading]="loading()"
-            (onClick)="addToCart()"
-          />
-        </div>
+        <ng-container [ngTemplateOutlet]="price" />
       </div>
     </div>
   </div>
 }
+
+<ng-template #price>
+  <h4 class="text-4xl font-bold md:text-5xl lg:text-6xl xl:text-7xl">
+    {{ book()?.price | currency: 'USD' }}
+  </h4>
+  <div class="flex flex-col gap-base w-full">
+    <div class="flex flex-col gap-base w-full">
+      <p-inputnumber
+        [showButtons]="true"
+        [formControl]="amount"
+        size="large"
+        [min]="1"
+        (onBlur)="onBlurInput()"
+        buttonLayout="horizontal"
+        spinnerMode="horizontal"
+        inputId="integeronly"
+        class="max-w-80 w-full"
+        inputStyleClass="w-full"
+        decrementButtonClass="p-button-text p-button-secondary"
+        incrementButtonClass="p-button-text p-button-secondary"
+        incrementButtonIcon="pi pi-plus"
+        decrementButtonIcon="pi pi-minus"
+      />
+      @if (amount.getError('min')) {
+        <p-message severity="error" variant="simple">
+          Amount is too small. Should be at least 1.
+        </p-message>
+      }
+      @if (amount.getError('max')) {
+        <p-message severity="error" variant="simple">
+          Available quantity are smaller than provided amount. Adjust amount.
+        </p-message>
+      }
+      <small class="text-sm font-semibold text-muted-color">
+        {{ availableQuantityMessage() }}
+      </small>
+    </div>
+
+    <div class="flex items-center gap-4">
+      <p-button
+        label="Buy now"
+        outlined
+        icon="pi pi-shopping-bag"
+        styleClass="w-full"
+        class="w-full"
+        size="large"
+        (onClick)="buyNow()"
+      />
+      <p-button
+        styleClass="w-full"
+        class="w-full"
+        label="Add to cart"
+        icon="pi pi-cart-plus"
+        size="large"
+        [loading]="loading()"
+        (onClick)="addToCart()"
+      />
+    </div>
+  </div>
+</ng-template>

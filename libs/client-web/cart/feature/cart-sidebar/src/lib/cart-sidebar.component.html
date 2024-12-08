@@ -1,5 +1,5 @@
 <button
-  (click)="visible.set(true)"
+  (click)="openDrawer()"
   class="text-muted-color w-full px-3 h-10 flex items-center gap-4 !rounded-base hover:bg-surface-200 hover:dark:bg-surface-600"
 >
   <p-overlayBadge [value]="count()" badgeSize="small">
@@ -10,7 +10,12 @@
   }
 </button>
 
-<p-drawer libDrawerLeft header="Cart" [(visible)]="visible">
+<p-drawer
+  libDrawerLeft
+  header="Cart"
+  [visible]="visible()"
+  (onHide)="closeDrawer()"
+>
   <div class="flex flex-col justify-between gap-4 h-full">
     <div
       class="flex flex-col gap-4 overflow-y-auto"
@@ -39,14 +44,14 @@
     @if (cartItems().length !== 0) {
       <div class="flex flex-col gap-4">
         <div class="text-4xl">Total: {{ total() | currency: 'USD' }}</div>
-        <button
-          pButton
+        <p-button
+          styleClass="w-full"
           label="Checkout"
-          [routerLink]="appRoutePaths.ORDER_PROCESS()"
           icon="pi pi-shopping-bag"
-          (onClick)="visible.set(false)"
+          [routerLink]="appRoutePaths.ORDER_PROCESS()"
+          (onClick)="closeDrawer()"
           [loading]="loading()"
-        ></button>
+        />
       </div>
     }
   </div>
