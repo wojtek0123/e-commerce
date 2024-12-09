@@ -121,6 +121,14 @@
                   "type:shared-data-access",
                   "type:shared-util"
                 ]
+              },
+              {
+                "sourceTag": "scope:admin-dashboard",
+                "onlyDependOnLibsWithTags": [
+                  "scope:admin-dashboard",
+                  "scope:client-web",
+                  "scope:api"
+                ]
               }
             ]
           }
