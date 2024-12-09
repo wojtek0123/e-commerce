@@ -1,5 +1,5 @@
 {
-  "name": "data-access",
+  "name": "client-web-core-data-access",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/client-web/core/data-access/src",
   "prefix": "lib",

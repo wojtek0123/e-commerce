@@ -15,6 +15,18 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@e-commerce/admin-dashboard/auth/data-access": [
+        "libs/admin-dashboard/auth/data-access/src/index.ts"
+      ],
+      "@e-commerce/admin-dashboard/auth/feature/login": [
+        "libs/admin-dashboard/auth/feature/login/src/index.ts"
+      ],
+      "@e-commerce/admin-dashboard/auth/feature/register": [
+        "libs/admin-dashboard/auth/feature/register/src/index.ts"
+      ],
+      "@e-commerce/admin-dashboard/auth/feature/shell": [
+        "libs/admin-dashboard/auth/feature/shell/src/index.ts"
+      ],
       "@e-commerce/admin-dashboard/book/data-access": [
         "libs/admin-dashboard/book/data-access/src/index.ts"
       ],

@@ -35,7 +35,7 @@ export const useBooksStore = defineStore('books', () => {
 
     try {
       const response = await axios.get<{ items: Book[]; total: number }>(
-        'http://localhost:3000/books',
+        `${import.meta.env.VITE_API_URL}/books`,
         { params: { titleLike: search.value ?? '' } },
       );
       books.value = response.data.items;
@@ -68,11 +68,14 @@ export const useBooksStore = defineStore('books', () => {
     addLoading.value = true;
 
     try {
-      const response = await axios.post('http://localhost:3000/books', {
-        ...body,
-        coverImage: coverImageUrl.value,
-        coverImagePath: coverImagePath.value,
-      });
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/books`,
+        {
+          ...body,
+          coverImage: coverImageUrl.value,
+          coverImagePath: coverImagePath.value,
+        },
+      );
 
       books.value = [...books.value, response.data];
     } catch (e: unknown) {
@@ -101,7 +104,7 @@ export const useBooksStore = defineStore('books', () => {
         .map((selectedBook) => selectedBook.id)
         .join(',');
 
-      await axios.delete('http://localhost:3000/books', {
+      await axios.delete(`${import.meta.env.VITE_API_URL}/books`, {
         params: { ids },
       });
 
@@ -141,7 +144,7 @@ export const useBooksStore = defineStore('books', () => {
   async function getCategories(search: string | undefined) {
     try {
       const response = await axios.get<Category[]>(
-        `http://localhost:3000/categories`,
+        `${import.meta.env.VITE_API_URL}/categories`,
         {
           params: {
             titleLike: search,
@@ -158,7 +161,7 @@ export const useBooksStore = defineStore('books', () => {
   async function getAuthors(search: string | undefined) {
     try {
       const response = await axios.get<Author[]>(
-        'http://localhost:3000/authors',
+        `${import.meta.env.VITE_API_URL}/authors`,
         {
           params: {
             nameLike: search,
@@ -175,7 +178,7 @@ export const useBooksStore = defineStore('books', () => {
   async function getPublishers(search: string | undefined) {
     try {
       const response = await axios.get<Publisher[]>(
-        'http://localhost:3000/publishers',
+        `${import.meta.env.VITE_API_URL}/publishers`,
         { params: { nameLike: search } },
       );
 
