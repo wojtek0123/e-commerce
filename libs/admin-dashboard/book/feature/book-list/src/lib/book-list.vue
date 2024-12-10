@@ -90,6 +90,7 @@ onMounted(() => {
 
     <div
       class="bg-content-background w-full p-4 rounded-base flex flex-col gap-base"
+      v-else
     >
       <div class="flex flex-items gap-4">
         <AddBookDrawer />
@@ -103,7 +104,6 @@ onMounted(() => {
         ></Button>
       </div>
       <DataTable
-        v-if="!store.error"
         v-model:selection="store.selectedBooks"
         :value="store.books"
         :loading="store.loading"
