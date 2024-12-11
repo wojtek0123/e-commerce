@@ -5,11 +5,6 @@ import {
   signal,
 } from '@angular/core';
 import { RadioButtonModule } from 'primeng/radiobutton';
-import {
-  FormFieldComponent,
-  ErrorMessageComponent,
-} from '@e-commerce/client-web/shared/ui';
-import { NgClass } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import {
   SectionWrapperComponent,
@@ -29,9 +24,6 @@ import { DialogModule } from 'primeng/dialog';
   standalone: true,
   imports: [
     RadioButtonModule,
-    FormFieldComponent,
-    ErrorMessageComponent,
-    NgClass,
     ButtonModule,
     OrderProcessItemDirective,
     CreditCardFormComponent,

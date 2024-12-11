@@ -108,6 +108,5 @@
       "style": "scss"
     }
   },
-  "useInferencePlugins": false,
-  "useLegacyCache": true
+  "useInferencePlugins": false
 }

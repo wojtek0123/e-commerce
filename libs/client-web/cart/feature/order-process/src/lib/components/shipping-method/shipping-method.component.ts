@@ -3,10 +3,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { ShippingStore } from '@e-commerce/client-web/cart/data-access';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CurrencyPipe } from '@angular/common';
-import {
-  OrderProcessDetailElementComponent,
-  SectionWrapperComponent,
-} from '@e-commerce/client-web/cart/ui';
+import { SectionWrapperComponent } from '@e-commerce/client-web/cart/ui';
 import { SkeletonModule } from 'primeng/skeleton';
 import { OrderProcessItemDirective } from '@e-commerce/client-web/shared/utils';
 import { ShippingMethod } from '@e-commerce/client-web/shared/data-access/api-models';
@@ -18,7 +15,6 @@ import { ShippingMethod } from '@e-commerce/client-web/shared/data-access/api-mo
     RadioButtonModule,
     ReactiveFormsModule,
     CurrencyPipe,
-    OrderProcessDetailElementComponent,
     SectionWrapperComponent,
     SkeletonModule,
     OrderProcessItemDirective,

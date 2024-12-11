@@ -8,7 +8,6 @@ import {
 } from '@angular/core';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { StepsModule } from 'primeng/steps';
-import { FormFieldComponent } from '@e-commerce/client-web/shared/ui';
 import { TableModule } from 'primeng/table';
 import { SkeletonModule } from 'primeng/skeleton';
 import { CurrencyPipe } from '@angular/common';
@@ -29,7 +28,6 @@ import { MenuItem } from 'primeng/api';
     DatePipe,
     BreadcrumbModule,
     StepsModule,
-    FormFieldComponent,
     NgOptimizedImage,
     TableModule,
     CurrencyPipe,

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { CartStore } from '@e-commerce/client-web/cart/data-access';
 import {
   CartItemComponent,
@@ -13,7 +13,7 @@ import { ButtonModule } from 'primeng/button';
 import { StepsModule } from 'primeng/steps';
 import { ToastModule } from 'primeng/toast';
 import { SummaryComponent } from './components/summary/summary.component';
-import { CurrencyPipe, NgClass } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { APP_ROUTE_PATHS_TOKEN } from '@e-commerce/client-web/shared/app-config';
 
 @Component({
@@ -22,11 +22,9 @@ import { APP_ROUTE_PATHS_TOKEN } from '@e-commerce/client-web/shared/app-config'
   imports: [
     StepsModule,
     ToastModule,
-    RouterOutlet,
     ButtonModule,
     CartItemComponent,
     NgClass,
-    CurrencyPipe,
     CartItemSkeletonComponent,
     SummaryComponent,
     RouterLink,

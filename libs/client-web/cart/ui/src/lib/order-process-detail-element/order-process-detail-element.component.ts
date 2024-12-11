@@ -4,12 +4,11 @@ import {
   input,
   output,
 } from '@angular/core';
-import { CurrencyPipe, NgClass } from '@angular/common';
 
 @Component({
   selector: 'lib-order-process-detail-element',
   standalone: true,
-  imports: [CurrencyPipe, NgClass],
+  imports: [],
   templateUrl: './order-process-detail-element.component.html',
   styleUrl: './order-process-detail-element.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

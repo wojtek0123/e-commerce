@@ -1,7 +1,7 @@
-import { AsyncPipe, NgClass, NgIf } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { AuthStore } from '@e-commerce/client-web/auth/data-access';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -21,13 +21,10 @@ import {
   selector: 'lib-register',
   standalone: true,
   imports: [
-    NgIf,
-    AsyncPipe,
     NgClass,
     InputTextModule,
     PasswordModule,
     ButtonModule,
-    RouterLink,
     ReactiveFormsModule,
     FloatLabelModule,
     FormFieldComponent,
