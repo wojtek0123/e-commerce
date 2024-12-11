@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { afterNextRender, Injectable, signal } from '@angular/core';
 
 const DARK_THEME_CLASS_NAME = 'dark' as const;
 const LOCAL_STORAGE_THEME_NAME = 'isDark' as const;
@@ -7,18 +7,22 @@ const LOCAL_STORAGE_THEME_NAME = 'isDark' as const;
 export class ThemeService {
   private _isDark = signal(false);
   public isDark = this._isDark.asReadonly();
-  private htmlElement = document.querySelector('html');
+  private htmlElement: HTMLHtmlElement | null = null;
 
   constructor() {
-    const userPreference = window.matchMedia(
-      '(prefers-color-scheme: dark)',
-    ).matches;
+    afterNextRender(() => {
+      this.htmlElement = document.querySelector('html');
 
-    const isDark: boolean | null = JSON.parse(
-      localStorage.getItem(LOCAL_STORAGE_THEME_NAME) ?? 'null',
-    );
+      const userPreference = window.matchMedia(
+        '(prefers-color-scheme: dark)',
+      ).matches;
 
-    this.setMode(isDark === null ? userPreference : isDark);
+      const isDark: boolean | null = JSON.parse(
+        localStorage.getItem(LOCAL_STORAGE_THEME_NAME) ?? 'null',
+      );
+
+      this.setMode(isDark === null ? userPreference : isDark);
+    });
   }
 
   public toggleDarkMode() {

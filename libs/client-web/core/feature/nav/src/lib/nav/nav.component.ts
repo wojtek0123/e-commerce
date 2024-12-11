@@ -5,8 +5,16 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
-import { NgTemplateOutlet } from '@angular/common';
-import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { isPlatformBrowser, NgTemplateOutlet } from '@angular/common';
+import {
+  afterNextRender,
+  Component,
+  inject,
+  OnDestroy,
+  OnInit,
+  PLATFORM_ID,
+  signal,
+} from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import {
@@ -77,6 +85,7 @@ export class NavComponent implements OnInit, OnDestroy {
   #categoriesStore = inject(CategoryStore);
   #authService = inject(AuthService);
   #appLocalStorageKeys = inject(APP_LOCAL_STORAGE_KEYS_TOKEN);
+  #platform = inject(PLATFORM_ID);
 
   appRoutePaths = inject(APP_ROUTE_PATHS_TOKEN);
 
@@ -95,36 +104,43 @@ export class NavComponent implements OnInit, OnDestroy {
   resizeObserver?: ResizeObserver;
   shouldRestoreExpanded = signal(false);
 
+  constructor() {
+    afterNextRender(() => {});
+  }
+
   ngOnInit() {
     // TODO: Create shared config to all routes and local storage keys
-    const isExpanded = localStorage.getItem(
-      this.#appLocalStorageKeys.IS_EXPANDED,
-    );
 
-    if (isExpanded) {
-      this.isExpanded.set(JSON.parse(isExpanded));
-    }
+    if (isPlatformBrowser(this.#platform)) {
+      const isExpanded = localStorage.getItem(
+        this.#appLocalStorageKeys.IS_EXPANDED,
+      );
 
-    const mediaQueryList = matchMedia('(min-width: 1280px)');
-
-    this.resizeObserver = new ResizeObserver(() => {
-      if (mediaQueryList.matches && this.shouldRestoreExpanded()) {
-        const isExpanded = JSON.parse(
-          localStorage.getItem(this.#appLocalStorageKeys.IS_EXPANDED) ||
-            'false',
-        );
-
-        this.isExpanded.set(isExpanded);
-        // this.isLabelShowed.set(isExpanded);
-        this.shouldRestoreExpanded.set(false);
-      } else if (!mediaQueryList.matches) {
-        // this.isLabelShowed.set(true);
-        this.isExpanded.set(true);
-        this.shouldRestoreExpanded.set(true);
+      if (isExpanded) {
+        this.isExpanded.set(JSON.parse(isExpanded));
       }
-    });
 
-    this.resizeObserver.observe(document.body);
+      const mediaQueryList = matchMedia('(min-width: 1280px)');
+
+      this.resizeObserver = new ResizeObserver(() => {
+        if (mediaQueryList.matches && this.shouldRestoreExpanded()) {
+          const isExpanded = JSON.parse(
+            localStorage.getItem(this.#appLocalStorageKeys.IS_EXPANDED) ||
+              'false',
+          );
+
+          this.isExpanded.set(isExpanded);
+          // this.isLabelShowed.set(isExpanded);
+          this.shouldRestoreExpanded.set(false);
+        } else if (!mediaQueryList.matches) {
+          // this.isLabelShowed.set(true);
+          this.isExpanded.set(true);
+          this.shouldRestoreExpanded.set(true);
+        }
+      });
+
+      this.resizeObserver.observe(document.body);
+    }
   }
 
   ngOnDestroy(): void {

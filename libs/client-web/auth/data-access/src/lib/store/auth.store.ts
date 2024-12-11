@@ -14,7 +14,13 @@ import {
   Tokens,
   User,
 } from '@e-commerce/client-web/shared/data-access/api-models';
-import { computed, inject } from '@angular/core';
+import {
+  afterNextRender,
+  computed,
+  inject,
+  Injector,
+  runInInjectionContext,
+} from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { filter, map, pipe, switchMap, tap } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
@@ -91,25 +97,30 @@ export const AuthStore = signalStore(
       router = inject(Router),
       appRoutePaths = inject(APP_ROUTE_PATHS_TOKEN),
       appLocalStorageKeys = inject(APP_LOCAL_STORAGE_KEYS_TOKEN),
+      injector = inject(Injector),
     ) => ({
       init: () => {
-        const accessToken =
-          localStorage.getItem(appLocalStorageKeys.ACCESS_TOKEN) ?? null;
-        const refreshToken =
-          localStorage.getItem(appLocalStorageKeys.REFRESH_TOKEN) ?? null;
-        const userId =
-          localStorage.getItem(appLocalStorageKeys.USER_ID) ?? null;
+        runInInjectionContext(injector, () => {
+          afterNextRender(() => {
+            const accessToken =
+              localStorage.getItem(appLocalStorageKeys.ACCESS_TOKEN) ?? null;
+            const refreshToken =
+              localStorage.getItem(appLocalStorageKeys.REFRESH_TOKEN) ?? null;
+            const userId =
+              localStorage.getItem(appLocalStorageKeys.USER_ID) ?? null;
 
-        if (accessToken && refreshToken && userId) {
-          patchState(store, {
-            accessToken,
-            refreshToken,
-            userId,
-            event: 'init-database',
+            if (accessToken && refreshToken && userId) {
+              patchState(store, {
+                accessToken,
+                refreshToken,
+                userId,
+                event: 'init-database',
+              });
+            } else {
+              patchState(store, { event: 'init-local' });
+            }
           });
-        } else {
-          patchState(store, { event: 'init-local' });
-        }
+        });
       },
       login: rxMethod<{ email: string; password: string }>(
         pipe(
@@ -261,37 +272,49 @@ export const AuthStore = signalStore(
     }),
   ),
   withHooks({
-    onInit(store, appLocalStorageKeys = inject(APP_LOCAL_STORAGE_KEYS_TOKEN)) {
+    onInit(
+      store,
+      appLocalStorageKeys = inject(APP_LOCAL_STORAGE_KEYS_TOKEN),
+      injector = inject(Injector),
+    ) {
       store.init();
 
-      watchState(store, (state) => {
-        const storageItems = {
-          [appLocalStorageKeys.REFRESH_TOKEN]: state.refreshToken,
-          [appLocalStorageKeys.ACCESS_TOKEN]: state.accessToken,
-          [appLocalStorageKeys.USER_ID]: state.userId,
-        };
+      runInInjectionContext(injector, () => {
+        afterNextRender(() => {
+          watchState(
+            store,
+            (state) => {
+              const storageItems = {
+                [appLocalStorageKeys.REFRESH_TOKEN]: state.refreshToken,
+                [appLocalStorageKeys.ACCESS_TOKEN]: state.accessToken,
+                [appLocalStorageKeys.USER_ID]: state.userId,
+              };
 
-        for (const [key, value] of Object.entries(storageItems)) {
-          if (value) {
-            localStorage.setItem(key, value);
-          } else {
-            localStorage.removeItem(key);
+              for (const [key, value] of Object.entries(storageItems)) {
+                if (value) {
+                  localStorage.setItem(key, value);
+                } else {
+                  localStorage.removeItem(key);
+                }
+              }
+            },
+            { injector },
+          );
+
+          const refreshToken = localStorage.getItem(
+            appLocalStorageKeys.REFRESH_TOKEN,
+          );
+
+          if (refreshToken) {
+            const { exp } = jwtDecode(refreshToken ?? '');
+            const expirationTime = (exp ?? 0) * 1000 - 60000;
+
+            if (expirationTime <= Date.now()) {
+              store.logout();
+            }
           }
-        }
+        });
       });
-
-      const refreshToken = localStorage.getItem(
-        appLocalStorageKeys.REFRESH_TOKEN,
-      );
-
-      if (refreshToken) {
-        const { exp } = jwtDecode(refreshToken ?? '');
-        const expirationTime = (exp ?? 0) * 1000 - 60000;
-
-        if (expirationTime <= Date.now()) {
-          store.logout();
-        }
-      }
     },
   }),
 );
