@@ -9,8 +9,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DividerModule } from 'primeng/divider';
 import { FormFieldComponent } from '@e-commerce/client-web/shared/ui';
-import { AsyncPipe } from '@angular/common';
-import { CustomFilterDirective } from '@e-commerce/client-web/browse/utils';
 import {
   BooksStore,
   SingleValueFilters,
@@ -26,10 +24,7 @@ import {
     InputNumberModule,
     DividerModule,
     FormFieldComponent,
-    AsyncPipe,
     FormsModule,
-    CustomFilterDirective,
-    AsyncPipe,
     ReactiveFormsModule,
   ],
   host: {

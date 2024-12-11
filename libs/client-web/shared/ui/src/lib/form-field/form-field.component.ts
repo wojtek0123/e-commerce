@@ -1,4 +1,3 @@
-import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { InputTextModule } from 'primeng/inputtext';
 import { SkeletonModule } from 'primeng/skeleton';
@@ -6,7 +5,7 @@ import { SkeletonModule } from 'primeng/skeleton';
 @Component({
   selector: 'lib-form-field',
   standalone: true,
-  imports: [InputTextModule, SkeletonModule, NgClass],
+  imports: [InputTextModule, SkeletonModule],
   templateUrl: './form-field.component.html',
   styleUrl: './form-field.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

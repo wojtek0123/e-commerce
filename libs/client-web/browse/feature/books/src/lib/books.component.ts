@@ -16,7 +16,7 @@ import {
   sizes,
 } from '@e-commerce/client-web/browse/data-access';
 import { BooksGridComponent } from '@e-commerce/client-web/shared/ui';
-import { AsyncPipe, ViewportScroller } from '@angular/common';
+import { ViewportScroller } from '@angular/common';
 import { ActiveFiltersComponent } from '@e-commerce/client-web/browse/ui';
 
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
@@ -29,7 +29,6 @@ import { CartService } from '@e-commerce/client-web/cart/api';
   imports: [
     BreadcrumbModule,
     SearchComponent,
-    AsyncPipe,
     BooksGridComponent,
     PaginatorModule,
     FiltersComponent,

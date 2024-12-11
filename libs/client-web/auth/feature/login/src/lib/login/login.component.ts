@@ -1,4 +1,3 @@
-import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthStore } from '@e-commerce/client-web/auth/data-access';
@@ -19,7 +18,6 @@ import { ContainerComponent } from '@e-commerce/client-web/auth/ui';
     InputTextModule,
     PasswordModule,
     ButtonModule,
-    NgClass,
     ReactiveFormsModule,
     FormFieldComponent,
     ErrorMessageComponent,
