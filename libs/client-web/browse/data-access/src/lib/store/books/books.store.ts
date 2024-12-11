@@ -22,7 +22,13 @@ import {
   withState,
 } from '@ngrx/signals';
 import { ActiveFilter } from '../../models/active-filter.model';
-import { computed, effect, inject, untracked } from '@angular/core';
+import {
+  afterNextRender,
+  computed,
+  effect,
+  inject,
+  untracked,
+} from '@angular/core';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import {
   distinctUntilChanged,
@@ -817,20 +823,22 @@ export const BooksStore = signalStore(
 
       store.getAllFilters();
 
-      router.events
-        .pipe(
-          filter(
-            (event): event is NavigationEnd => event instanceof NavigationEnd,
-          ),
-          map(() => history.state['clearFilters'] ?? false),
-          filter((shouldClearFilters) => shouldClearFilters),
-          tap((shouldClearFilters) => {
-            if (shouldClearFilters) store.restoreQueryParamsFilters();
-          }),
-        )
-        .subscribe(() => {
-          store._deserializeQueryParamsFilters();
-        });
+      afterNextRender(() => {
+        router.events
+          .pipe(
+            filter(
+              (event): event is NavigationEnd => event instanceof NavigationEnd,
+            ),
+            map(() => history.state['clearFilters'] ?? false),
+            filter((shouldClearFilters) => shouldClearFilters),
+            tap((shouldClearFilters) => {
+              if (shouldClearFilters) store.restoreQueryParamsFilters();
+            }),
+          )
+          .subscribe(() => {
+            store._deserializeQueryParamsFilters();
+          });
+      });
 
       effect(() => {
         const selectedTags = store.selectedTags();

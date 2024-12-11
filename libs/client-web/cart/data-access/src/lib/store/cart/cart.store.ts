@@ -1,4 +1,4 @@
-import { computed, DestroyRef, inject } from '@angular/core';
+import { computed, DestroyRef, inject, PLATFORM_ID } from '@angular/core';
 import {
   Book,
   CartItemBase,
@@ -36,6 +36,7 @@ import {
 import { APP_LOCAL_STORAGE_KEYS_TOKEN } from '@e-commerce/client-web/shared/app-config';
 import { NavigationEnd, Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { isPlatformBrowser } from '@angular/common';
 
 interface CartState {
   shoppingSession: ShoppingSession | null;
@@ -415,15 +416,18 @@ export const CartStore = signalStore(
       appLocalStorageKeys = inject(APP_LOCAL_STORAGE_KEYS_TOKEN),
       router = inject(Router),
       destroyRef = inject(DestroyRef),
+      platform = inject(PLATFORM_ID),
     ) {
-      watchState(store, (state) => {
-        if (!state.shoppingSessionId) {
-          localStorage.setItem(
-            appLocalStorageKeys.CART,
-            JSON.stringify(Object.values(state._cartItemsEntityMap)),
-          );
-        }
-      });
+      if (isPlatformBrowser(platform)) {
+        watchState(store, (state) => {
+          if (!state.shoppingSessionId) {
+            localStorage.setItem(
+              appLocalStorageKeys.CART,
+              JSON.stringify(Object.values(state._cartItemsEntityMap)),
+            );
+          }
+        });
+      }
 
       router.events
         .pipe(
