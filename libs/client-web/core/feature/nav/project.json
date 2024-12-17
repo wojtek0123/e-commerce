@@ -1,5 +1,5 @@
 {
-  "name": "nav",
+  "name": "client-web-core-feature-nav",
   "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/client-web/core/feature/nav/src",
   "prefix": "lib",
