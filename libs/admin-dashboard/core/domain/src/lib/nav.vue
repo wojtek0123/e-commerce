@@ -60,7 +60,7 @@ onMounted(() => {
     <aside
       :class="[
         store.isExpanded ? 'w-80' : 'w-14',
-        'transition-[width] transition-all duration-300 ease-in-out hidden justify-between gap-4 xl:h-content px-2 py-4 bg-content-background xl:sticky z-[1001] top-4 flex-col rounded-base xl:flex',
+        'transition-[width] duration-300 ease-in-out hidden justify-between gap-4 xl:h-content px-2 py-4 bg-content-background xl:sticky z-[1001] top-4 flex-col rounded-base xl:flex',
       ]"
     >
       <nav class="h-content flex flex-col justify-between">

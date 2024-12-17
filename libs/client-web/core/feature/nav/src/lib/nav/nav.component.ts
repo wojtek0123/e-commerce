@@ -5,14 +5,12 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
-import { isPlatformBrowser, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import {
   afterNextRender,
   Component,
   inject,
   OnDestroy,
-  OnInit,
-  PLATFORM_ID,
   signal,
 } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
@@ -42,6 +40,7 @@ import { debounce, filter, map, of, timer } from 'rxjs';
 import { ThemeService } from '@e-commerce/client-web/core/data-access';
 import { CategoryStore } from '@e-commerce/client-web/shared/data-access/stores';
 import { DrawerModule } from 'primeng/drawer';
+import { GetNamePipe } from '../pipes/get-name.pipe';
 
 @Component({
   selector: 'lib-nav',
@@ -59,6 +58,7 @@ import { DrawerModule } from 'primeng/drawer';
     NavButtonDirective,
     CartSidebarComponent,
     DrawerLeftDirective,
+    GetNamePipe,
   ],
   providers: [ThemeService],
   templateUrl: './nav.component.html',
@@ -80,38 +80,39 @@ import { DrawerModule } from 'primeng/drawer';
     ]),
   ],
 })
-export class NavComponent implements OnInit, OnDestroy {
+export class NavComponent implements OnDestroy {
   #themeService = inject(ThemeService);
   #categoriesStore = inject(CategoryStore);
   #authService = inject(AuthService);
   #appLocalStorageKeys = inject(APP_LOCAL_STORAGE_KEYS_TOKEN);
-  #platform = inject(PLATFORM_ID);
 
-  appRoutePaths = inject(APP_ROUTE_PATHS_TOKEN);
+  #appRoutePaths = inject(APP_ROUTE_PATHS_TOKEN);
 
   isAuthenticated = this.#authService.isAuthenticated;
   categories = this.#categoriesStore.categories;
-  isOpen = signal(false);
+  isMobileDrawerOpened = signal(false);
   isExpanded = signal(true);
   isLabelShowed = toSignal(
     toObservable(this.isExpanded).pipe(
       debounce((isExpanded) => (isExpanded ? timer(150) : of({}))),
     ),
-    { initialValue: false },
+    { initialValue: true },
   );
   isDark = this.#themeService.isDark;
 
-  resizeObserver?: ResizeObserver;
+  urls = signal({
+    home: this.#appRoutePaths.HOME(),
+    books: this.#appRoutePaths.BOOKS(),
+    orders: this.#appRoutePaths.ORDERS(),
+    login: this.#appRoutePaths.LOGIN(),
+    register: this.#appRoutePaths.REGISTER(),
+  }).asReadonly();
+
+  resizeObserver = signal<ResizeObserver | null>(null);
   shouldRestoreExpanded = signal(false);
 
   constructor() {
-    afterNextRender(() => {});
-  }
-
-  ngOnInit() {
-    // TODO: Create shared config to all routes and local storage keys
-
-    if (isPlatformBrowser(this.#platform)) {
+    afterNextRender(() => {
       const isExpanded = localStorage.getItem(
         this.#appLocalStorageKeys.IS_EXPANDED,
       );
@@ -122,29 +123,31 @@ export class NavComponent implements OnInit, OnDestroy {
 
       const mediaQueryList = matchMedia('(min-width: 1280px)');
 
-      this.resizeObserver = new ResizeObserver(() => {
-        if (mediaQueryList.matches && this.shouldRestoreExpanded()) {
-          const isExpanded = JSON.parse(
-            localStorage.getItem(this.#appLocalStorageKeys.IS_EXPANDED) ||
-              'false',
-          );
+      this.resizeObserver.set(
+        new ResizeObserver(() => {
+          if (mediaQueryList.matches && this.shouldRestoreExpanded()) {
+            const isExpanded = JSON.parse(
+              localStorage.getItem(this.#appLocalStorageKeys.IS_EXPANDED) ||
+                'false',
+            );
 
-          this.isExpanded.set(isExpanded);
-          // this.isLabelShowed.set(isExpanded);
-          this.shouldRestoreExpanded.set(false);
-        } else if (!mediaQueryList.matches) {
-          // this.isLabelShowed.set(true);
-          this.isExpanded.set(true);
-          this.shouldRestoreExpanded.set(true);
-        }
-      });
+            this.isExpanded.set(isExpanded);
+            this.shouldRestoreExpanded.set(false);
+          } else if (!mediaQueryList.matches) {
+            this.isExpanded.set(true);
+            this.shouldRestoreExpanded.set(true);
+          }
+        }),
+      );
 
-      this.resizeObserver.observe(document.body);
-    }
+      this.resizeObserver()?.observe(document.body);
+    });
   }
 
-  ngOnDestroy(): void {
-    this.resizeObserver?.unobserve(document.body);
+  timer: any;
+
+  ngOnDestroy() {
+    this.resizeObserver()?.unobserve(document.body);
   }
 
   stringifyCategory(category: Category) {
@@ -158,18 +161,17 @@ export class NavComponent implements OnInit, OnDestroy {
     ),
   );
 
-  // TODO: stworzyć injectionToken dla, aby było jedno źródło danych (app.routes i tutaj)
   menuItems = signal([
     {
       label: 'Orders',
       icon: 'pi pi-book',
-      routerLink: this.appRoutePaths.ORDERS(),
+      routerLink: this.#appRoutePaths.ORDERS(),
       routerLinkActive: 'bg-surface-100 dark:bg-surface-700 rounded-base',
     },
     {
       label: 'Information',
       icon: 'pi pi-cog',
-      routerLink: this.appRoutePaths.INFORMATION(),
+      routerLink: this.#appRoutePaths.INFORMATION(),
       routerLinkActive: 'bg-surface-100 dark:bg-surface-700 rounded-base',
     },
   ]);
@@ -178,8 +180,8 @@ export class NavComponent implements OnInit, OnDestroy {
     this.#themeService.toggleDarkMode();
   }
 
-  toggleNavigation() {
-    this.isOpen.update((isOpen) => !isOpen);
+  toggleMobileDrawer() {
+    this.isMobileDrawerOpened.update((isOpen) => !isOpen);
   }
 
   expandCollapseNavigation() {
@@ -192,5 +194,9 @@ export class NavComponent implements OnInit, OnDestroy {
 
   logout() {
     this.#authService.logout();
+  }
+
+  closeMobileDrawer() {
+    this.isMobileDrawerOpened.set(false);
   }
 }
