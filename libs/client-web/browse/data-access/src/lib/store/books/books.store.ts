@@ -608,7 +608,6 @@ export const BooksStore = signalStore(
               search,
             };
           }),
-          distinctUntilChanged((prev, curr) => isEqual(prev, curr)),
           tap(() => patchState(store, { loading: true })),
           switchMap(
             ({
@@ -832,7 +831,9 @@ export const BooksStore = signalStore(
             map(() => history.state['clearFilters'] ?? false),
             filter((shouldClearFilters) => shouldClearFilters),
             tap((shouldClearFilters) => {
-              if (shouldClearFilters) store.restoreQueryParamsFilters();
+              if (shouldClearFilters) {
+                store.restoreQueryParamsFilters();
+              }
             }),
           )
           .subscribe(() => {
