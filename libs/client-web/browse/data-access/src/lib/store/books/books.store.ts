@@ -32,7 +32,6 @@ import {
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import {
   distinctUntilChanged,
-  distinctUntilKeyChanged,
   filter,
   forkJoin,
   map,
@@ -675,33 +674,38 @@ export const BooksStore = signalStore(
               const activeFilters: ActiveFilter[] = [
                 ...categories.map((c) => ({
                   id: c.id,
-                  filter: 'category' as MultiSelectFilters,
+                  filter:
+                    'category' satisfies MultiSelectFilters as MultiSelectFilters,
                   value: c.name,
                 })),
                 ...authors.map((a) => ({
                   id: a.id,
-                  filter: 'author' as MultiSelectFilters,
+                  filter:
+                    'author' satisfies MultiSelectFilters as MultiSelectFilters,
                   value: a.name,
                 })),
                 ...tags.map((t) => ({
                   id: t.id,
-                  filter: 'tag' as MultiSelectFilters,
+                  filter:
+                    'tag' satisfies MultiSelectFilters as MultiSelectFilters,
                   value: t.name.toLowerCase(),
                 })),
               ];
 
               if (minPrice) {
                 activeFilters.push({
-                  id: 'minPrice' as SingleValueFilters,
-                  filter: 'minPrice' as SingleValueFilters,
+                  id: 'minPrice' satisfies SingleValueFilters as SingleValueFilters,
+                  filter:
+                    'minPrice' satisfies SingleValueFilters as SingleValueFilters,
                   value: minPrice.toString(),
                 });
               }
 
               if (maxPrice) {
                 activeFilters.push({
-                  id: 'maxPrice' as SingleValueFilters,
-                  filter: 'maxPrice' as SingleValueFilters,
+                  id: 'maxPrice' satisfies SingleValueFilters as SingleValueFilters,
+                  filter:
+                    'maxPrice' satisfies SingleValueFilters as SingleValueFilters,
                   value: maxPrice.toString(),
                 });
               }
@@ -740,8 +744,8 @@ export const BooksStore = signalStore(
 
               store.getBooks();
             },
-            error: (error) => {
-              console.log(error);
+            error: (error: ResponseError) => {
+              console.error(error?.error?.message);
             },
           }),
         ),

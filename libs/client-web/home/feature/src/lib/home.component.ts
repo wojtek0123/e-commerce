@@ -6,7 +6,6 @@ import {
   inject,
   Injector,
   Signal,
-  signal,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
@@ -18,7 +17,7 @@ import {
 import { APP_ROUTE_PATHS_TOKEN } from '@e-commerce/client-web/shared/app-config';
 import { CartService } from '@e-commerce/client-web/cart/api';
 import { HomeStore } from '@e-commerce/client-web/home/data-acess';
-import { fromEvent, map, Observable, startWith, throttleTime } from 'rxjs';
+import { fromEvent, map, startWith, throttleTime } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
