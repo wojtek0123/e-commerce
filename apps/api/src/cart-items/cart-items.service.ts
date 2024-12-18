@@ -17,8 +17,6 @@ export class CartItemsService {
     private shoppingSessionService: ShoppingSessionsService,
   ) {}
 
-  // async createMany(authHeader: string, data: CreateCartItemDto[]) {}
-
   async create(authHeader: string, { bookId, quantity }: CreateCartItemDto) {
     const userId = String(decode(authHeader.split(' ')[1]).sub);
 
@@ -41,6 +39,10 @@ export class CartItemsService {
       },
     });
 
+    const availableAmount = await this.prisma.productInventory.findFirst({
+      where: { book: { id: bookId } },
+    });
+
     if (existingCartItem) {
       if (existingCartItem.shoppingSession.user.id !== userId) {
         throw new ForbiddenException(
@@ -48,11 +50,16 @@ export class CartItemsService {
         );
       }
 
+      const concatQuantity = existingCartItem.quantity + quantity;
+
       const cartItem = await this.prisma.cartItem
         .update({
           where: { id: existingCartItem.id },
           data: {
-            quantity: existingCartItem.quantity + quantity,
+            quantity:
+              concatQuantity > availableAmount.quantity
+                ? availableAmount.quantity
+                : concatQuantity,
           },
           include: {
             book: {

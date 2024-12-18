@@ -2,10 +2,10 @@
   <lib-filters class="hidden xl:flex" />
   <div class="flex flex-col gap-base w-full overflow-x-hidden">
     <div
-      class="flex flex-col bg-content-background p-4 rounded-base xl:flex-row justify-between gap-base"
+      class="flex flex-col bg-content-background pt-2 pb-4 xl:pb-2 xl:pl-2 xl:pr-4 rounded-base xl:flex-row justify-between gap-base"
     >
       <p-breadcrumb [model]="breadcrumbs()" />
-      <div class="flex items-center justify-between gap-4">
+      <div class="flex items-center justify-between gap-4 px-4 xl:px-0">
         <lib-search class="w-full" />
         <lib-filters class="xl:hidden" />
       </div>
@@ -32,6 +32,8 @@
           [rows]="size()"
           [totalRecords]="total()"
           [rowsPerPageOptions]="sizes()"
+          [showCurrentPageReport]="true"
+          currentPageReportTemplate="{first} - {last} of {totalRecords}"
         />
       }
     </div>

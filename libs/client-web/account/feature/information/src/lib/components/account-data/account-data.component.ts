@@ -15,15 +15,10 @@ import { ButtonModule } from 'primeng/button';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TooltipModule } from 'primeng/tooltip';
 import { InputTextModule } from 'primeng/inputtext';
-import { NewPasswordFormComponent } from './components/new-password-form/new-password-form.component';
-import { DrawerModule } from 'primeng/drawer';
-import { SidebarModule } from 'primeng/sidebar';
-import { NgTemplateOutlet } from '@angular/common';
-import { DrawerLeftDirective } from '@e-commerce/client-web/shared/utils';
+import { NewPasswordFormComponent } from '../new-password-form/new-password-form.component';
 import { DialogModule } from 'primeng/dialog';
-import { NewEmailFormComponent } from './components/new-email-form/new-email-form.component';
+import { NewEmailFormComponent } from '../new-email-form/new-email-form.component';
 import { AuthService } from '@e-commerce/client-web/auth/api';
-import { AddressInformationComponent } from '@e-commerce/client-web/shared/ui';
 
 @Component({
   selector: 'lib-account-data',

@@ -22,13 +22,13 @@ import { debounceTime } from 'rxjs';
   styleUrl: './search.component.scss',
 })
 export class SearchComponent implements OnInit {
-  private readonly booksStore = inject(BooksStore);
+  #booksStore = inject(BooksStore);
 
-  public search = this.booksStore.search;
+  search = this.#booksStore.search;
 
-  public searchControl = new FormControl<string | null>(null);
+  searchControl = new FormControl<string | null>(null);
 
-  private searchInputRef = viewChild.required<ElementRef>('searchInput');
+  searchInputRef = viewChild.required<ElementRef>('searchInput');
 
   constructor() {
     effect(() => {
@@ -38,16 +38,16 @@ export class SearchComponent implements OnInit {
     });
   }
 
-  public ngOnInit(): void {
+  ngOnInit(): void {
     this.searchControl.valueChanges
       .pipe(debounceTime(300))
       .subscribe((value) => {
-        this.booksStore.setSingleValueFilter(value, 'search');
+        this.#booksStore.setSingleValueFilter(value, 'search');
       });
   }
 
-  public clearInput() {
-    this.booksStore.clearSingleValueFilter('search');
+  clearInput() {
+    this.#booksStore.clearSingleValueFilter('search');
 
     this.searchInputRef().nativeElement?.focus();
   }

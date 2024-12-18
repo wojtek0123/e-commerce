@@ -5,13 +5,19 @@ import {
   effect,
   inject,
   input,
+  signal,
   untracked,
 } from '@angular/core';
 import { BookStore } from '@e-commerce/client-web/browse/data-access';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
-import { CurrencyPipe, DatePipe, NgTemplateOutlet } from '@angular/common';
+import {
+  CurrencyPipe,
+  DatePipe,
+  NgClass,
+  NgTemplateOutlet,
+} from '@angular/common';
 import { InputNumberModule } from 'primeng/inputnumber';
-import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { MenuItem } from 'primeng/api';
 import { DetailRowComponent } from '@e-commerce/client-web/browse/ui';
@@ -28,11 +34,11 @@ import { MessageModule } from 'primeng/message';
   selector: 'lib-book',
   standalone: true,
   imports: [
+    NgClass,
     BreadcrumbModule,
     TagModule,
     CurrencyPipe,
     InputNumberModule,
-    ReactiveFormsModule,
     ButtonModule,
     DetailRowComponent,
     DatePipe,
@@ -41,37 +47,32 @@ import { MessageModule } from 'primeng/message';
     TooltipModule,
     MessageModule,
     NgTemplateOutlet,
+    FormsModule,
   ],
   templateUrl: './book.component.html',
   styleUrl: './book.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BookComponent {
-  private readonly bookStore = inject(BookStore);
-  private readonly cartService = inject(CartService);
-  private readonly appRoutePaths = inject(APP_ROUTE_PATHS_TOKEN);
+  #bookStore = inject(BookStore);
+  #cartService = inject(CartService);
+  #appRoutePaths = inject(APP_ROUTE_PATHS_TOKEN);
 
-  public book = this.bookStore.book;
-  public loading = this.bookStore.loading;
-  public error = this.bookStore.error;
-  public availableQuantity = this.bookStore.availableQuantity;
-  public breadcrumbs = computed<MenuItem[]>(() => [
-    {
-      label: 'Back',
-      routerLink: '../..',
-    },
+  book = this.#bookStore.book;
+  loading = this.#bookStore.loading;
+  error = this.#bookStore.error;
+  availableQuantity = this.#bookStore.availableQuantity;
+  breadcrumbs = computed<MenuItem[]>(() => [
     { label: 'Home', routerLink: '/' },
     {
       label: 'books',
-      routerLink: this.appRoutePaths.BOOKS(),
+      routerLink: this.#appRoutePaths.BOOKS(),
     },
     { label: this.book()?.title },
   ]);
-  public amount = new FormControl<number>(1, {
-    validators: [Validators.min(1)],
-    nonNullable: true,
-  });
-  public bookId = input.required<BookDetails['id']>();
+
+  amount = signal(1);
+  bookId = input.required<BookDetails['id']>();
 
   availableQuantityMessage = computed(() =>
     this.availableQuantity() > 1
@@ -84,44 +85,44 @@ export class BookComponent {
       const bookId = this.bookId();
 
       untracked(() => {
-        this.bookStore.getBook$({ bookId });
-      });
-    });
-
-    effect(() => {
-      const availableQuantity = this.availableQuantity();
-
-      untracked(() => {
-        this.amount.setValidators(Validators.max(availableQuantity));
+        this.#bookStore.getBook$({ bookId });
       });
     });
   }
 
-  public onBlurInput() {
-    if (!this.amount.value) {
-      this.amount.setValue(1);
+  onBlurInput() {
+    if (!this.amount()) {
+      this.amount.set(1);
     }
   }
 
-  public addToCart() {
-    if (this.amount.invalid) return;
+  isMinAmountInvalid = computed(() => this.amount() < 1);
+  isMaxAmountInvalid = computed(() => this.amount() > this.availableQuantity());
+  isAmountInvalid = computed(
+    () => this.isMinAmountInvalid() || this.isMaxAmountInvalid(),
+  );
+
+  addToCart() {
+    if (this.isAmountInvalid()) return;
 
     const book = this.book();
 
     if (!book) return;
 
-    this.cartService.addBook(book, this.amount.value);
+    this.#cartService.addBook(book, this.amount());
   }
 
-  public getBook() {
+  getBook() {
     const bookId = this.bookId();
 
-    this.bookStore.getBook$({ bookId });
+    this.#bookStore.getBook$({ bookId });
   }
 
   buyNow() {
+    if (this.isAmountInvalid()) return;
+
     this.addToCart();
 
-    this.cartService.openDrawer();
+    this.#cartService.openDrawer();
   }
 }

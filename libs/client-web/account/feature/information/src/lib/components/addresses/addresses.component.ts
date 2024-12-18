@@ -13,7 +13,7 @@ import {
 import { SkeletonModule } from 'primeng/skeleton';
 import { UserAddress } from '@e-commerce/client-web/shared/data-access/api-models';
 import { DialogModule } from 'primeng/dialog';
-import { AddressFormComponent } from './components/address-form/address-form.component';
+import { AddressFormComponent } from '../address-form/address-form.component';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
