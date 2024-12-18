@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { OrderDetailsStatus } from '@e-commerce/client-web/shared/data-access/api-models';
+import { OrderDetailsStatus } from '@e-commerce/shared/api-models';
 
 @Pipe({ name: 'statusToSeverity', standalone: true })
 export class StatusToServerityPipe implements PipeTransform {

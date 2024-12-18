@@ -1,8 +1,5 @@
 import { inject } from '@angular/core';
-import {
-  Category,
-  ResponseError,
-} from '@e-commerce/client-web/shared/data-access/api-models';
+import { Category, ResponseError } from '@e-commerce/shared/api-models';
 import { CategoryApiService } from '@e-commerce/client-web/shared/data-access/api-services';
 import { tapResponse } from '@ngrx/operators';
 import {

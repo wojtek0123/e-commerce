@@ -27,7 +27,7 @@ import {
   APP_LOCAL_STORAGE_KEYS_TOKEN,
   APP_ROUTE_PATHS_TOKEN,
 } from '@e-commerce/client-web/shared/app-config';
-import { Category } from '@e-commerce/client-web/shared/data-access/api-models';
+import { Category } from '@e-commerce/shared/api-models';
 import {
   DrawerLeftDirective,
   NavButtonDirective,

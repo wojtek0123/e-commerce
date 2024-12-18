@@ -3,7 +3,7 @@ import {
   OrderDetails,
   OrderDetailsBase,
   ResponseError,
-} from '@e-commerce/client-web/shared/data-access/api-models';
+} from '@e-commerce/shared/api-models';
 import { OrderDetailsApiService } from '@e-commerce/client-web/shared/data-access/api-services';
 import { tapResponse } from '@ngrx/operators';
 import {

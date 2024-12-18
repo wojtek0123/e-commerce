@@ -15,7 +15,7 @@ import { PaymentStore } from '@e-commerce/client-web/cart/data-access';
 import { InputOtpModule } from 'primeng/inputotp';
 import { SkeletonModule } from 'primeng/skeleton';
 import { SixDigitCodeFormComponent } from './six-digit-code-form/six-digit-code-form.component';
-import { PaymentMethod } from '@e-commerce/client-web/shared/data-access/api-models';
+import { PaymentMethod } from '@e-commerce/shared/api-models';
 import { OrderProcessItemDirective } from '@e-commerce/client-web/shared/utils';
 import { DialogModule } from 'primeng/dialog';
 

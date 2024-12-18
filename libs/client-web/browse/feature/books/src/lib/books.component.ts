@@ -9,7 +9,7 @@ import {
 import { MenuItem } from 'primeng/api';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { SearchComponent } from './search/search.component';
-import { Book } from '@e-commerce/client-web/shared/data-access/api-models';
+import { Book } from '@e-commerce/shared/api-models';
 import {
   ActiveFilter,
   BooksStore,

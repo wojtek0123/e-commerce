@@ -3,7 +3,7 @@ import {
   ResponseError,
   UserAddress,
   Country,
-} from '@e-commerce/client-web/shared/data-access/api-models';
+} from '@e-commerce/shared/api-models';
 import {
   CountryApiService,
   CreateUserAddressBody,

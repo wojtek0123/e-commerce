@@ -14,7 +14,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { AddressStore } from '@e-commerce/client-web/cart/data-access';
-import { Country } from '@e-commerce/client-web/shared/data-access/api-models';
+import { Country } from '@e-commerce/shared/api-models';
 import { CreateUserAddressBody } from '@e-commerce/client-web/shared/data-access/api-services';
 import {
   ErrorMessageComponent,
@@ -28,7 +28,7 @@ import {
 } from 'primeng/autocomplete';
 import { TooltipModule } from 'primeng/tooltip';
 import { isEqual, omit } from 'lodash-es';
-import { combineLatest, map, startWith } from 'rxjs';
+import { combineLatest, map } from 'rxjs';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 
 @Component({

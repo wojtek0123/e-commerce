@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { API_URL } from '@e-commerce/client-web/shared/app-config';
-import { User } from '@e-commerce/client-web/shared/data-access/api-models';
+import { User } from '@e-commerce/shared/api-models';
 
 export interface UpdateUserBody {
   email?: string;

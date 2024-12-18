@@ -1,10 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { API_URL } from '@e-commerce/client-web/shared/app-config';
-import {
-  Book,
-  ShoppingSession,
-} from '@e-commerce/client-web/shared/data-access/api-models';
+import { Book, ShoppingSession } from '@e-commerce/shared/api-models';
 
 @Injectable({ providedIn: 'root' })
 export class ShoppingSessionApiService {

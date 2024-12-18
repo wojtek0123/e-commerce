@@ -3,7 +3,6 @@ import {
   Component,
   inject,
   input,
-  signal,
 } from '@angular/core';
 import { CurrencyPipe, NgClass } from '@angular/common';
 import { TooltipModule } from 'primeng/tooltip';
@@ -14,7 +13,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ToastModule } from 'primeng/toast';
 import { CartItemComponent } from '@e-commerce/client-web/cart/ui';
 import { CartStore } from '@e-commerce/client-web/cart/data-access';
-import { Book } from '@e-commerce/client-web/shared/data-access/api-models';
+import { Book } from '@e-commerce/shared/api-models';
 import { OverlayBadgeModule } from 'primeng/overlaybadge';
 import { DrawerModule } from 'primeng/drawer';
 import { APP_ROUTE_PATHS_TOKEN } from '@e-commerce/client-web/shared/app-config';

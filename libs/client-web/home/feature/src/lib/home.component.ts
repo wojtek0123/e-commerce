@@ -10,10 +10,7 @@ import {
 import { RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { BooksGridComponent } from '@e-commerce/client-web/shared/ui';
-import {
-  Book,
-  BookTag,
-} from '@e-commerce/client-web/shared/data-access/api-models';
+import { Book, BookTag } from '@e-commerce/shared/api-models';
 import { APP_ROUTE_PATHS_TOKEN } from '@e-commerce/client-web/shared/app-config';
 import { CartService } from '@e-commerce/client-web/cart/api';
 import { HomeStore } from '@e-commerce/client-web/home/data-acess';

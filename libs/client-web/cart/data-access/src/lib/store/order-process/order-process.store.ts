@@ -6,7 +6,7 @@ import {
   ShippingMethod,
   OrderDetails,
   PaymentMethod,
-} from '@e-commerce/client-web/shared/data-access/api-models';
+} from '@e-commerce/shared/api-models';
 import {
   OrderDetailsApiService,
   CreateOrderAddress,

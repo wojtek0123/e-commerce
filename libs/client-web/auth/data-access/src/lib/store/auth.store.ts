@@ -9,11 +9,7 @@ import {
 } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { AuthApiService } from '@e-commerce/client-web/shared/data-access/api-services';
-import {
-  ResponseError,
-  Tokens,
-  User,
-} from '@e-commerce/client-web/shared/data-access/api-models';
+import { ResponseError, Tokens, User } from '@e-commerce/shared/api-models';
 import {
   afterNextRender,
   computed,

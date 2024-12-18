@@ -10,7 +10,7 @@ import {
   BookTag,
   Category,
   ResponseError,
-} from '@e-commerce/client-web/shared/data-access/api-models';
+} from '@e-commerce/shared/api-models';
 import {
   getState,
   patchState,

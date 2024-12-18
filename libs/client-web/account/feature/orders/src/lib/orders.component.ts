@@ -4,10 +4,7 @@ import {
   OrderColumn,
   OrdersStore,
 } from '@e-commerce/client-web/account/data-access';
-import {
-  OrderDetails,
-  OrderDetailsBase,
-} from '@e-commerce/client-web/shared/data-access/api-models';
+import { OrderDetails, OrderDetailsBase } from '@e-commerce/shared/api-models';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { SkeletonModule } from 'primeng/skeleton';
 import { OrderComponent } from '@e-commerce/client-web/account/ui';
@@ -54,7 +51,6 @@ export class OrdersComponent implements OnInit {
     { header: 'Total', field: 'total' },
   ]);
   public skeletons = signal(new Array(10));
-  // TODO: linkedSignal, close and open drawer when 1536 inner width is reached
   protected drawerVisible = computed(() => {
     const selectedOrderId = this.selectedOrderId();
 

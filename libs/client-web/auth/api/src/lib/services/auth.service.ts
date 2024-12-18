@@ -1,6 +1,6 @@
 import { computed, inject, Injectable } from '@angular/core';
 import { AuthStore } from '@e-commerce/client-web/auth/data-access';
-import { Tokens } from '@e-commerce/client-web/shared/data-access/api-models';
+import { Tokens } from '@e-commerce/shared/api-models';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {

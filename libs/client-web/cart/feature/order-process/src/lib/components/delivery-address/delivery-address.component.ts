@@ -9,7 +9,7 @@ import { UserAddressFormComponent } from './user-address-form/user-address-form.
 import { SectionWrapperComponent } from '@e-commerce/client-web/cart/ui';
 import { ButtonModule } from 'primeng/button';
 import { SkeletonModule } from 'primeng/skeleton';
-import { UserAddress } from '@e-commerce/client-web/shared/data-access/api-models';
+import { UserAddress } from '@e-commerce/shared/api-models';
 import { OrderProcessItemDirective } from '@e-commerce/client-web/shared/utils';
 import {
   AddressInformationComponent,

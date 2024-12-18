@@ -1,8 +1,5 @@
 import { inject } from '@angular/core';
-import {
-  ResponseError,
-  ShippingMethod,
-} from '@e-commerce/client-web/shared/data-access/api-models';
+import { ResponseError, ShippingMethod } from '@e-commerce/shared/api-models';
 import { ShippingMethodApiService } from '@e-commerce/client-web/shared/data-access/api-services';
 import { tapResponse } from '@ngrx/operators';
 import {

@@ -1,8 +1,5 @@
 import { computed, inject } from '@angular/core';
-import {
-  BookDetails,
-  ResponseError,
-} from '@e-commerce/client-web/shared/data-access/api-models';
+import { BookDetails, ResponseError } from '@e-commerce/shared/api-models';
 import { BooksApiService } from '@e-commerce/client-web/shared/data-access/api-services';
 import { tapResponse } from '@ngrx/operators';
 import {

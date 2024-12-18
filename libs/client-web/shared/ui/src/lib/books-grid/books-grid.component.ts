@@ -6,7 +6,7 @@ import {
   input,
   output,
 } from '@angular/core';
-import { Book } from '@e-commerce/client-web/shared/data-access/api-models';
+import { Book } from '@e-commerce/shared/api-models';
 import { BookCardComponent } from '../book-card/book-card.component';
 import { BookCardSkeletonComponent } from '../book-card-skeleton/book-card-skeleton.component';
 

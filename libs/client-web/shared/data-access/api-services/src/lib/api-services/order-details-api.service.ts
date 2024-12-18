@@ -5,7 +5,7 @@ import {
   OrderDetails,
   PaymentMethod,
   OrderDetailsBase,
-} from '@e-commerce/client-web/shared/data-access/api-models';
+} from '@e-commerce/shared/api-models';
 import { API_URL } from '@e-commerce/client-web/shared/app-config';
 
 export interface CreateOrderAddress {

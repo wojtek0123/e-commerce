@@ -141,9 +141,6 @@
       "@e-commerce/client-web/shared/data-access": [
         "libs/client-web/shared/data-access/src/index.ts"
       ],
-      "@e-commerce/client-web/shared/data-access/api-models": [
-        "libs/client-web/shared/data-access/api-models/src/index.ts"
-      ],
       "@e-commerce/client-web/shared/data-access/api-services": [
         "libs/client-web/shared/data-access/api-services/src/index.ts"
       ],
