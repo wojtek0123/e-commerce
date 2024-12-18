@@ -39,7 +39,11 @@ export class OrderDetailsService {
       shoppingSession.cartItems.map((cartItem) =>
         this.prisma.productInventory.findFirst({
           where: { book: { id: cartItem.bookId } },
-          select: { id: true, quantity: true, book: { select: { id: true } } },
+          select: {
+            id: true,
+            quantity: true,
+            book: { select: { id: true, title: true } },
+          },
         }),
       ),
     );
@@ -55,7 +59,7 @@ export class OrderDetailsService {
 
         if (newQuantity < 0) {
           throw new ConflictException(
-            `Not enough stock for bookId: ${pi.book.id}`,
+            `Not enough stock for book: ${pi.book.title}`,
           );
         }
 

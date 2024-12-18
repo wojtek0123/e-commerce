@@ -20,18 +20,17 @@ import { ShippingMethod } from '@e-commerce/client-web/shared/data-access/api-mo
     OrderProcessItemDirective,
   ],
   templateUrl: './shipping-method.component.html',
-  styleUrl: './shipping-method.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ShippingMethodComponent {
-  private readonly shippingStore = inject(ShippingStore);
+  #shippingStore = inject(ShippingStore);
 
-  public selectedShipping = this.shippingStore.selectedShipping;
-  public shippings = this.shippingStore.shippings;
-  public loading = this.shippingStore.loading;
-  public error = this.shippingStore.error;
+  selectedShipping = this.#shippingStore.selectedShipping;
+  shippings = this.#shippingStore.shippings;
+  loading = this.#shippingStore.loading;
+  error = this.#shippingStore.error;
 
-  public selectShipping(shipping: ShippingMethod) {
-    this.shippingStore.selectShipping(shipping);
+  selectShipping(shipping: ShippingMethod) {
+    this.#shippingStore.selectShipping(shipping);
   }
 }

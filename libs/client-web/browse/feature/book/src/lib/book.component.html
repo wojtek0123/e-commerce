@@ -59,7 +59,7 @@
           }
         </div>
         @if (book()?.tag) {
-          <p-tag [value]="book()?.tag" />
+          <p-tag class="w-fit" [value]="book()?.tag" />
         }
         <div
           class="flex flex-col justify-start my-8 gap-4 bg-content-background p-4 rounded-base xl:gap-8 4xl:hidden"
@@ -111,9 +111,10 @@
     <div class="flex flex-col gap-base w-full">
       <p-inputnumber
         [showButtons]="true"
-        [formControl]="amount"
+        [(ngModel)]="amount"
         size="large"
         [min]="1"
+        [max]="availableQuantity"
         (onBlur)="onBlurInput()"
         buttonLayout="horizontal"
         spinnerMode="horizontal"
@@ -124,13 +125,14 @@
         incrementButtonClass="p-button-text p-button-secondary"
         incrementButtonIcon="pi pi-plus"
         decrementButtonIcon="pi pi-minus"
+        [ngClass]="{ 'ng-invalid ng-dirty': isAmountInvalid() }"
       />
-      @if (amount.getError('min')) {
+      @if (isMinAmountInvalid()) {
         <p-message severity="error" variant="simple">
           Amount is too small. Should be at least 1.
         </p-message>
       }
-      @if (amount.getError('max')) {
+      @if (isMaxAmountInvalid()) {
         <p-message severity="error" variant="simple">
           Available quantity are smaller than provided amount. Adjust amount.
         </p-message>

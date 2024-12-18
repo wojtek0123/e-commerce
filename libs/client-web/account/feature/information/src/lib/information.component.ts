@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { AccountDataComponent } from '@e-commerce/client-web/account/domain/account-data';
-import { AddressesComponent } from '@e-commerce/client-web/account/domain/addresses';
+import { AccountDataComponent } from './components/account-data/account-data.component';
+import { AddressesComponent } from './components/addresses/addresses.component';
 
 @Component({
   selector: 'lib-information',

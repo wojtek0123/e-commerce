@@ -447,6 +447,8 @@ export const BooksStore = signalStore(
             },
           }),
         );
+
+        store.getBooks();
       },
       clearPrice: () => {
         patchState(
@@ -463,6 +465,8 @@ export const BooksStore = signalStore(
             },
           }),
         );
+
+        store.getBooks();
       },
       removeActiveFilter: (activeFilter: ActiveFilter) => {
         const { filter, id } = activeFilter;

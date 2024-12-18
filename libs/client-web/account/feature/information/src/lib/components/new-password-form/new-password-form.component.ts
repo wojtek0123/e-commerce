@@ -23,8 +23,6 @@ import {
   createStrongPasswordValidator,
 } from '@e-commerce/client-web/shared/utils';
 import { NgClass } from '@angular/common';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { map, startWith } from 'rxjs';
 
 @Component({
   selector: 'lib-new-password-form',
