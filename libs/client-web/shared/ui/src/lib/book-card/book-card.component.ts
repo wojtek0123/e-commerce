@@ -5,7 +5,7 @@ import {
   input,
   output,
 } from '@angular/core';
-import { Book } from '@e-commerce/client-web/shared/data-access/api-models';
+import { Book } from '@e-commerce/shared/api-models';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { RouterLink } from '@angular/router';

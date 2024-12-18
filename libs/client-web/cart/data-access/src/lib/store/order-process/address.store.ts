@@ -1,5 +1,5 @@
 import { computed, effect, untracked } from '@angular/core';
-import { UserAddress } from '@e-commerce/client-web/shared/data-access/api-models';
+import { UserAddress } from '@e-commerce/shared/api-models';
 import {
   patchState,
   signalStore,

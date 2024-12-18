@@ -14,7 +14,7 @@ import { CurrencyPipe } from '@angular/common';
 import {
   OrderDetails,
   orderDetailsStatuses,
-} from '@e-commerce/client-web/shared/data-access/api-models';
+} from '@e-commerce/shared/api-models';
 import { DividerModule } from 'primeng/divider';
 import { MenuItem } from 'primeng/api';
 

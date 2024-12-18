@@ -6,11 +6,7 @@ import {
   withMethods,
   withState,
 } from '@ngrx/signals';
-import {
-  Book,
-  BookTag,
-  ResponseError,
-} from '@e-commerce/client-web/shared/data-access/api-models';
+import { Book, BookTag, ResponseError } from '@e-commerce/shared/api-models';
 import { BooksApiService } from '@e-commerce/client-web/shared/data-access/api-services';
 import { computed, inject } from '@angular/core';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';

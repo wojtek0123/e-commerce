@@ -1,5 +1,5 @@
 import { Directive, input } from '@angular/core';
-import { Author } from '@e-commerce/client-web/shared/data-access/api-models';
+import { Author } from '@e-commerce/shared/api-models';
 import { AbstractSelectItemsFilterDirective } from './select-item-filter.directive';
 
 @Directive({

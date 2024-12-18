@@ -1,4 +1,4 @@
-import { OrderDetails } from '@e-commerce/client-web/shared/data-access/api-models';
+import { OrderDetails } from '@e-commerce/shared/api-models';
 
 export interface OrderColumn {
   header: string;

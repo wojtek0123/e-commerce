@@ -1,10 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import {
-  User,
-  Session,
-  Tokens,
-} from '@e-commerce/client-web/shared/data-access/api-models';
+import { User, Session, Tokens } from '@e-commerce/shared/api-models';
 import { API_URL } from '@e-commerce/client-web/shared/app-config';
 
 @Injectable({ providedIn: 'root' })

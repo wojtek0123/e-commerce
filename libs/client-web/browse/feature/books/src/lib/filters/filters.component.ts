@@ -6,7 +6,6 @@ import {
 } from '@angular/core';
 import { AccordionModule } from 'primeng/accordion';
 import { PriceFilterComponent } from './price-filters/price-filters.component';
-import { SidebarModule } from 'primeng/sidebar';
 import { ButtonModule } from 'primeng/button';
 import { NgTemplateOutlet } from '@angular/common';
 import {

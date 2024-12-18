@@ -1,9 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import {
-  Category,
-  Pagination,
-} from '@e-commerce/client-web/shared/data-access/api-models';
+import { Category, Pagination } from '@e-commerce/shared/api-models';
 import { API_URL } from '@e-commerce/client-web/shared/app-config';
 
 @Injectable({ providedIn: 'root' })

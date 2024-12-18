@@ -5,10 +5,7 @@ import {
   CartItemComponent,
   CartItemSkeletonComponent,
 } from '@e-commerce/client-web/cart/ui';
-import {
-  Book,
-  CartItem,
-} from '@e-commerce/client-web/shared/data-access/api-models';
+import { Book, CartItem } from '@e-commerce/shared/api-models';
 import { ButtonModule } from 'primeng/button';
 import { StepsModule } from 'primeng/steps';
 import { ToastModule } from 'primeng/toast';

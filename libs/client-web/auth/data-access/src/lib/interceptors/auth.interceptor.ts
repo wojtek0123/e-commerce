@@ -8,7 +8,7 @@ import { catchError, Observable, switchMap, throwError } from 'rxjs';
 import { AuthStore } from '../store/auth.store';
 import { inject } from '@angular/core';
 import { AuthApiService } from '@e-commerce/client-web/shared/data-access/api-services';
-import { ResponseError } from '@e-commerce/client-web/shared/data-access/api-models';
+import { ResponseError } from '@e-commerce/shared/api-models';
 import { APP_ROUTE_PATHS_TOKEN } from '@e-commerce/client-web/shared/app-config';
 
 export const authInterceptor: HttpInterceptorFn = (

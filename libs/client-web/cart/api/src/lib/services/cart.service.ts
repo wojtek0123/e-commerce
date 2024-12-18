@@ -1,6 +1,6 @@
 import { computed, inject, Injectable } from '@angular/core';
 import { CartStore } from '@e-commerce/client-web/cart/data-access';
-import { Book } from '@e-commerce/client-web/shared/data-access/api-models';
+import { Book } from '@e-commerce/shared/api-models';
 
 @Injectable({ providedIn: 'root' })
 export class CartService {

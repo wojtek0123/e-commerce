@@ -4,7 +4,7 @@ import {
   CartItemBase,
   ResponseError,
   ShoppingSession,
-} from '@e-commerce/client-web/shared/data-access/api-models';
+} from '@e-commerce/shared/api-models';
 import {
   CartItemsApiService,
   ShoppingSessionApiService,

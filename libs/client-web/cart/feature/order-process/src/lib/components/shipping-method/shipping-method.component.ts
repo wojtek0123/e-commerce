@@ -6,7 +6,7 @@ import { CurrencyPipe } from '@angular/common';
 import { SectionWrapperComponent } from '@e-commerce/client-web/cart/ui';
 import { SkeletonModule } from 'primeng/skeleton';
 import { OrderProcessItemDirective } from '@e-commerce/client-web/shared/utils';
-import { ShippingMethod } from '@e-commerce/client-web/shared/data-access/api-models';
+import { ShippingMethod } from '@e-commerce/shared/api-models';
 
 @Component({
   selector: 'lib-shipping-method',

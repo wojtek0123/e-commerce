@@ -22,7 +22,7 @@ import { ButtonModule } from 'primeng/button';
 import { MenuItem } from 'primeng/api';
 import { DetailRowComponent } from '@e-commerce/client-web/browse/ui';
 import { CartService } from '@e-commerce/client-web/cart/api';
-import { BookDetails } from '@e-commerce/client-web/shared/data-access/api-models';
+import { BookDetails } from '@e-commerce/shared/api-models';
 import { SkeletonModule } from 'primeng/skeleton';
 import { SkeletonDirective } from './directives/skeleton.directive';
 import { APP_ROUTE_PATHS_TOKEN } from '@e-commerce/client-web/shared/app-config';

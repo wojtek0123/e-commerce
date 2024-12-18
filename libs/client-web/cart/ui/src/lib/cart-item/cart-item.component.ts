@@ -5,11 +5,7 @@ import {
   input,
   output,
 } from '@angular/core';
-import {
-  Book,
-  CartItem,
-  CartItemBase,
-} from '@e-commerce/client-web/shared/data-access/api-models';
+import { Book, CartItem, CartItemBase } from '@e-commerce/shared/api-models';
 import { CurrencyPipe, NgOptimizedImage } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { InputNumberModule } from 'primeng/inputnumber';

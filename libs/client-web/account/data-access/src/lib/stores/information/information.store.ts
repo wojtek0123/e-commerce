@@ -1,7 +1,4 @@
-import {
-  ResponseError,
-  User,
-} from '@e-commerce/client-web/shared/data-access/api-models';
+import { ResponseError, User } from '@e-commerce/shared/api-models';
 import {
   UserApiService,
   UpdateUserBody,

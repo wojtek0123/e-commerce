@@ -2,11 +2,9 @@ import { computed, inject } from '@angular/core';
 import {
   ResponseError,
   PaymentMethod,
-} from '@e-commerce/client-web/shared/data-access/api-models';
-import {
-  CreditCardApiService,
-  CreditCardBase,
-} from '@e-commerce/client-web/shared/data-access/api-services';
+  CreditCard,
+} from '@e-commerce/shared/api-models';
+import { CreditCardApiService } from '@e-commerce/client-web/shared/data-access/api-services';
 import { tapResponse } from '@ngrx/operators';
 import {
   patchState,
@@ -22,7 +20,7 @@ import { pipe, switchMap, tap } from 'rxjs';
 
 interface PaymentState {
   creditCard: {
-    data: CreditCardBase | null;
+    data: CreditCard | null;
     loading: boolean;
     error: string | null;
     form: {
@@ -104,7 +102,7 @@ export const PaymentStore = signalStore(
         securityCode: string;
       }>(
         pipe(
-          tap(({ number }) => {
+          tap(() => {
             patchState(store, (state) => ({
               creditCard: { ...state.creditCard, loading: true },
             }));
