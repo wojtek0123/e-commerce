@@ -15,8 +15,8 @@ import {
 import { AddressStore } from '@e-commerce/client-web/account/data-access';
 import { CreateUserAddressBody } from '@e-commerce/client-web/shared/data-access/api-services';
 import {
-  ErrorMessageComponent,
   FormFieldComponent,
+  LabelComponent,
 } from '@e-commerce/client-web/shared/ui';
 import { Country } from '@prisma/client';
 import {
@@ -29,6 +29,8 @@ import { TooltipModule } from 'primeng/tooltip';
 import { combineLatest, map } from 'rxjs';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { isEqual, omit } from 'lodash-es';
+import { ErrorMessageDirective } from '@e-commerce/client-web/shared/utils';
+import { Message } from 'primeng/message';
 
 @Component({
   selector: 'lib-address-form',
@@ -37,11 +39,13 @@ import { isEqual, omit } from 'lodash-es';
   imports: [
     ReactiveFormsModule,
     FormFieldComponent,
-    ErrorMessageComponent,
     AutoCompleteModule,
     ButtonModule,
     InputTextModule,
     TooltipModule,
+    LabelComponent,
+    ErrorMessageDirective,
+    Message,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -142,7 +146,7 @@ export class AddressFormComponent {
       this.form.get(control)?.markAsDirty(),
     );
 
-    if (this.form.invalid) return;
+    if (this.form.invalid || !this.isFormChanged()) return;
 
     const {
       firstName,

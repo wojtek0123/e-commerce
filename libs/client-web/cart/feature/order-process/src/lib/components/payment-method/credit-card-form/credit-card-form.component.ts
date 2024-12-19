@@ -9,13 +9,15 @@ import {
 import { ButtonModule } from 'primeng/button';
 import {
   FormFieldComponent,
-  ErrorMessageComponent,
+  LabelComponent,
 } from '@e-commerce/client-web/shared/ui';
 import { InputMaskModule } from 'primeng/inputmask';
 import {
   PaymentStore,
   CreditCardFormType,
 } from '@e-commerce/client-web/cart/data-access';
+import { Message } from 'primeng/message';
+import { ErrorMessageDirective } from '@e-commerce/client-web/shared/utils';
 
 @Component({
   selector: 'lib-credit-card-form',
@@ -24,9 +26,11 @@ import {
     ReactiveFormsModule,
     ButtonModule,
     FormFieldComponent,
-    ErrorMessageComponent,
     FormsModule,
     InputMaskModule,
+    LabelComponent,
+    Message,
+    ErrorMessageDirective,
   ],
   templateUrl: './credit-card-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

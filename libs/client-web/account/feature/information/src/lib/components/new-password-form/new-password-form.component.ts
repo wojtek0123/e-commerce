@@ -13,6 +13,7 @@ import {
 import {
   ErrorMessageComponent,
   FormFieldComponent,
+  LabelComponent,
 } from '@e-commerce/client-web/shared/ui';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -21,8 +22,10 @@ import { SkeletonModule } from 'primeng/skeleton';
 import {
   canMatchPasswordValidator,
   createStrongPasswordValidator,
+  ErrorMessageDirective,
 } from '@e-commerce/client-web/shared/utils';
 import { NgClass } from '@angular/common';
+import { Message } from 'primeng/message';
 
 @Component({
   selector: 'lib-new-password-form',
@@ -37,6 +40,9 @@ import { NgClass } from '@angular/common';
     FormsModule,
     ErrorMessageComponent,
     NgClass,
+    LabelComponent,
+    ErrorMessageDirective,
+    Message,
   ],
   templateUrl: './new-password-form.component.html',
 })

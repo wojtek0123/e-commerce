@@ -1,4 +1,3 @@
-import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -9,27 +8,30 @@ import { PasswordModule } from 'primeng/password';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import {
   FormFieldComponent,
-  ErrorMessageComponent,
+  LabelComponent,
 } from '@e-commerce/client-web/shared/ui';
 import { ContainerComponent } from '@e-commerce/client-web/auth/ui';
 import {
   canMatchPasswordValidator,
   createStrongPasswordValidator,
+  ErrorMessageDirective,
 } from '@e-commerce/client-web/shared/utils';
+import { Message } from 'primeng/message';
 
 @Component({
   selector: 'lib-register',
   standalone: true,
   imports: [
-    NgClass,
     InputTextModule,
     PasswordModule,
     ButtonModule,
     ReactiveFormsModule,
     FloatLabelModule,
     FormFieldComponent,
-    ErrorMessageComponent,
+    ErrorMessageDirective,
     ContainerComponent,
+    Message,
+    LabelComponent,
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',

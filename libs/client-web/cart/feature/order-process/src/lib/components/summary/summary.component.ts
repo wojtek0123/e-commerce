@@ -18,6 +18,8 @@ import { DeliveryAddressComponent } from '../delivery-address/delivery-address.c
 import { PaymentMethodComponent } from '../payment-method/payment-method.component';
 import { ShippingMethodComponent } from '../shipping-method/shipping-method.component';
 import { DividerModule } from 'primeng/divider';
+import { Message } from 'primeng/message';
+import { ErrorMessageDirective } from '@e-commerce/client-web/shared/utils';
 
 @Component({
   selector: 'lib-summary',
@@ -29,6 +31,8 @@ import { DividerModule } from 'primeng/divider';
     DeliveryAddressComponent,
     PaymentMethodComponent,
     ShippingMethodComponent,
+    Message,
+    ErrorMessageDirective,
   ],
   templateUrl: './summary.component.html',
   styleUrl: './summary.component.scss',

@@ -14,9 +14,7 @@ import { SkeletonModule } from 'primeng/skeleton';
   },
 })
 export class FormFieldComponent {
-  label = input.required<string>();
-  isRequired = input<boolean>(false);
-  isLoading = input<boolean>(false);
   labelSkeletonWidth = input<string>('5rem');
   inputSkeletonWidth = input<string>('100%');
+  isInvalid = input<boolean>(false);
 }

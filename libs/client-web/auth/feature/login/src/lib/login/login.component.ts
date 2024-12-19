@@ -4,12 +4,13 @@ import { AuthStore } from '@e-commerce/client-web/auth/data-access';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
-import {
-  FormFieldComponent,
-  ErrorMessageComponent,
-} from '@e-commerce/client-web/shared/ui';
+import { FormFieldComponent } from '@e-commerce/client-web/shared/ui';
 import { ActivatedRoute } from '@angular/router';
 import { ContainerComponent } from '@e-commerce/client-web/auth/ui';
+import { IftaLabelModule } from 'primeng/iftalabel';
+import { Message } from 'primeng/message';
+import { LabelComponent } from '@e-commerce/client-web/shared/ui';
+import { ErrorMessageDirective } from '@e-commerce/client-web/shared/utils';
 
 @Component({
   selector: 'lib-login',
@@ -20,8 +21,11 @@ import { ContainerComponent } from '@e-commerce/client-web/auth/ui';
     ButtonModule,
     ReactiveFormsModule,
     FormFieldComponent,
-    ErrorMessageComponent,
     ContainerComponent,
+    IftaLabelModule,
+    Message,
+    LabelComponent,
+    ErrorMessageDirective,
   ],
   templateUrl: './login.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

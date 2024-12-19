@@ -4,95 +4,74 @@
   class="flex flex-col gap-2 @container"
 >
   <div class="flex flex-col gap-4 @3xl:flex-row">
-    <lib-form-field label="First name" [isRequired]="true">
+    <lib-form-field>
+      <lib-label idFor="firstname">First name</lib-label>
       <input
         pInputText
         slot="input"
         class="w-full"
         id="firstname"
-        [ngClass]="{
-          'ng-invalid ng-dirty':
-            form.controls.firstName.invalid && form.controls.firstName.dirty,
-        }"
         formControlName="firstName"
       />
       @if (form.controls.firstName.invalid && form.controls.firstName.dirty) {
-        <lib-error-message />
+        <p-message libErrorMessage>First name is required</p-message>
       }
     </lib-form-field>
-    <lib-form-field label="Last name" [isRequired]="true">
+    <lib-form-field>
+      <lib-label idFor="lastname">Last name</lib-label>
       <input
         slot="input"
         class="w-full"
         pInputText
         id="lastname"
-        [ngClass]="{
-          'ng-invalid ng-dirty':
-            form.controls.lastName.invalid && form.controls.lastName.dirty,
-        }"
         formControlName="lastName"
       />
       @if (form.controls.lastName.invalid && form.controls.lastName.dirty) {
-        <lib-error-message />
+        <p-message libErrorMessage>Last name is required</p-message>
       }
     </lib-form-field>
   </div>
   <div class="flex flex-wrap gap-4 w-full @lg:grid @lg:grid-cols-[1fr_1fr]">
-    <lib-form-field label="Street" [isRequired]="true">
-      <input
-        slot="input"
-        pInputText
-        id="street"
-        [ngClass]="{
-          'ng-invalid ng-dirty':
-            form.controls.street.invalid && form.controls.street.dirty,
-        }"
-        formControlName="street"
-      />
+    <lib-form-field>
+      <lib-label idFor="street">Street</lib-label>
+      <input slot="input" pInputText id="street" formControlName="street" />
       @if (form.controls.street.invalid && form.controls.street.dirty) {
-        <lib-error-message />
+        <p-message libErrorMessage>Street is required</p-message>
       }
     </lib-form-field>
     <div class="grid grid-cols-2 gap-4">
-      <lib-form-field label="Home number" [isRequired]="true">
+      <lib-form-field>
+        <lib-label idFor="home-number">Home number</lib-label>
         <input
-          slot="input"
           pInputText
+          slot="input"
           id="home-number"
-          [ngClass]="{
-            'ng-invalid ng-dirty':
-              form.controls.homeNumber.invalid &&
-              form.controls.homeNumber.dirty,
-          }"
           formControlName="homeNumber"
         />
         @if (
           form.controls.homeNumber.invalid && form.controls.homeNumber.dirty
         ) {
-          <lib-error-message />
+          <p-message libErrorMessage>Home number is required</p-message>
         }
       </lib-form-field>
       <lib-form-field label="House number">
+        <lib-label idFor="house-number">Home number</lib-label>
         <input
           slot="input"
           pInputText
           id="house-number"
-          [ngClass]="{
-            'ng-invalid ng-dirty':
-              form.controls.houseNumber.invalid &&
-              form.controls.houseNumber.dirty,
-          }"
           formControlName="houseNumber"
         />
         @if (
           form.controls.houseNumber.invalid && form.controls.houseNumber.dirty
         ) {
-          <lib-error-message />
+          <p-message libErrorMessage>House number is required</p-message>
         }
       </lib-form-field>
     </div>
   </div>
-  <lib-form-field label="Country" [isRequired]="true" class="max-w-64">
+  <lib-form-field class="max-w-64">
+    <lib-label idFor="country">Country</lib-label>
     <p-autocomplete
       slot="input"
       styleClass="w-full"
@@ -100,82 +79,41 @@
       [suggestions]="countries()"
       (completeMethod)="filterCountries($event)"
       [dropdown]="true"
-      [ngClass]="{
-        'ng-dirty ng-invalid':
-          form.controls.country.invalid && form.controls.country.dirty,
-      }"
       optionLabel="name"
       [showClear]="true"
     />
     @if (form.controls.country.invalid && form.controls.country.dirty) {
-      <lib-error-message />
+      <p-message libErrorMessage>Country is required</p-message>
     }
   </lib-form-field>
   <div class="grid grid-cols-1 gap-4 @md:grid-cols-[9rem_1fr]">
-    <lib-form-field
-      label="Post code"
-      [isRequired]="true"
-      [isLoading]="loading()"
-      labelSkeletonWidth="7rem"
-      inputSkeletonWidth="14rem"
-    >
-      <input
-        slot="input"
-        pInputText
-        id="postcode"
-        [ngClass]="{
-          'ng-invalid ng-dirty':
-            form.controls.postcode.invalid && form.controls.postcode.dirty,
-        }"
-        formControlName="postcode"
-      />
+    <lib-form-field>
+      <lib-label idFor="postcode">Postcode</lib-label>
+      <input slot="input" pInputText id="postcode" formControlName="postcode" />
       @if (form.controls.postcode.invalid && form.controls.postcode.dirty) {
-        <lib-error-message />
+        <p-message libErrorMessage>Postcode is required</p-message>
       }
     </lib-form-field>
-    <lib-form-field
-      label="City"
-      [isRequired]="true"
-      [isLoading]="loading()"
-      labelSkeletonWidth="5rem"
-    >
-      <input
-        slot="input"
-        pInputText
-        id="city"
-        [ngClass]="{
-          'ng-invalid ng-dirty':
-            form.controls.city.invalid && form.controls.city.dirty,
-        }"
-        formControlName="city"
-      />
+    <lib-form-field>
+      <lib-label idFor="city">City</lib-label>
+      <input slot="input" pInputText id="city" formControlName="city" />
       @if (form.controls.city.invalid && form.controls.city.dirty) {
-        <lib-error-message />
+        <p-message libErrorMessage>City is required</p-message>
       }
     </lib-form-field>
   </div>
-  <lib-form-field
-    label="Phone"
-    [isRequired]="true"
-    [isLoading]="loading()"
-    labelSkeletonWidth="8rem"
-    inputSkeletonWidth="20rem"
-  >
-    <input
-      slot="input"
-      pInputText
-      id="phone"
-      class="w-20rem"
-      [ngClass]="{
-        'ng-invalid ng-dirty':
-          form.controls.phone.invalid && form.controls.phone.dirty,
-      }"
-      formControlName="phone"
-    />
+  <lib-form-field>
+    <lib-label idFor="phone">Phone</lib-label>
+    <input pInputText id="phone" class="w-20rem" formControlName="phone" />
     @if (form.controls.phone.invalid && form.controls.phone.dirty) {
-      <lib-error-message />
+      <p-message libErrorMessage>Phone is required</p-message>
     }
   </lib-form-field>
+  @if (!isFormChanged() && form.dirty) {
+    <p-message libErrorMessage class="mt-2">
+      You don't changed any value
+    </p-message>
+  }
 
   <div class="grid grid-cols-2 gap-4 mt-4">
     <p-button
@@ -184,19 +122,13 @@
       (onClick)="hideForm()"
       styleClass="w-full"
     />
-    <div
-      [pTooltip]="tooltipMessage()"
-      tooltipPosition="top"
-      tooltipStyleClass="min-w-max"
-    >
-      <p-button
-        severity="secondary"
-        [disabled]="form.invalid || !isFormChanged()"
-        [loading]="loading()"
-        label="Save"
-        type="submit"
-        styleClass="w-full"
-      />
-    </div>
+
+    <p-button
+      severity="secondary"
+      [loading]="loading()"
+      label="Save"
+      type="submit"
+      styleClass="w-full"
+    />
   </div>
 </form>
