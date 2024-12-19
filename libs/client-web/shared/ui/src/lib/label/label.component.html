@@ -1,0 +1,7 @@
+<label
+  class="flex flex-col text-sm gap-1 text-surface-600"
+  [ngClass]="{ 'text-red-600': invalid() }"
+  [for]="idFor()"
+>
+  <ng-content />
+</label>

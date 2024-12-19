@@ -3,27 +3,35 @@
   [formGroup]="form"
   (ngSubmit)="submit()"
 >
-  <lib-form-field label="Current email">
-    <input pInputText slot="input" [value]="userEmail()" [disabled]="true" />
+  <lib-form-field>
+    <lib-label idFor="current-email">Current email</lib-label>
+    <input
+      pInputText
+      id="current-email"
+      [value]="userEmail()"
+      [disabled]="true"
+    />
   </lib-form-field>
 
-  <lib-form-field label="New email" [isRequired]="true">
-    <input pInputText slot="input" [email]="true" formControlName="email" />
+  <lib-form-field>
+    <lib-label idFor="new-email">New email</lib-label>
+    <input pInputText id="new-email" [email]="true" formControlName="email" />
     @if (form.controls.email.invalid && form.controls.email.dirty) {
-      <lib-error-message message="Enter valid email" />
+      <p-message libErrorMessage>Enter valid email</p-message>
     }
   </lib-form-field>
 
-  <lib-form-field label="Password to confirm" [isRequired]="true">
+  <lib-form-field>
+    <lib-label idFor="password">Password to confirm</lib-label>
     <p-password
-      slot="input"
+      id="password"
       formControlName="password"
       [fluid]="true"
       [toggleMask]="true"
       [feedback]="false"
     />
     @if (form.controls.password.invalid && form.controls.password.dirty) {
-      <lib-error-message />
+      <p-message libErrorMessage>Password is required</p-message>
     }
   </lib-form-field>
 

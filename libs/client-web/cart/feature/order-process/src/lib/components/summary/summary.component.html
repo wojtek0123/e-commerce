@@ -32,34 +32,44 @@
   @if (submitted()) {
     <div>
       @if (!selectedUserAddress()) {
-        <div class="flex items-center gap-4 text-red-300 text-xl">
-          <span class="pi pi-exclamation-triangle"></span>
-          <div>Fill in delivery address form!</div>
-        </div>
+        <p-message
+          severity="error"
+          icon="pi pi-exclamation-circle"
+          text="Fill in delivery address form"
+          styleClass="rounded-2xl"
+        />
       }
       @if (!selectedShippingMethod()) {
-        <div class="flex items-center gap-4 text-red-300 text-xl">
-          <span class="pi pi-exclamation-triangle"></span>
-          <span>Select shipping method!</span>
-        </div>
+        <p-message
+          severity="error"
+          icon="pi pi-exclamation-circle"
+          text="Select shipping method"
+          styleClass="rounded-2xl"
+        />
       }
       @if (!selectedPaymentMethod()) {
-        <div class="flex items-center gap-4 text-red-300 text-xl">
-          <span class="pi pi-exclamation-triangle"></span>
-          <span>Select payment method!</span>
-        </div>
+        <p-message
+          severity="error"
+          icon="pi pi-exclamation-circle"
+          text="Select payment method"
+          styleClass="rounded-2xl"
+        />
       }
       @if (isSixDigitCodeInvalid()) {
-        <div class="flex items-center gap-4 text-red-300 text-xl">
-          <span class="pi pi-exclamation-triangle"></span>
-          <span>Six digit code is invalid</span>
-        </div>
+        <p-message
+          severity="error"
+          icon="pi pi-exclamation-circle"
+          text="Six digit code is invalid"
+          styleClass="rounded-2xl"
+        />
       }
       @if (isCartEmpty()) {
-        <div class="flex items-center gap-4 text-red-300 text-xl">
-          <span class="pi pi-exclamation-triangle"></span>
-          <span>Cart is empty</span>
-        </div>
+        <p-message
+          severity="error"
+          icon="pi pi-exclamation-circle"
+          text="Cart is empty"
+          styleClass="rounded-2xl"
+        />
       }
     </div>
   }

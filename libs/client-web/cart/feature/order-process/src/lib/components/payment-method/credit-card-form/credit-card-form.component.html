@@ -1,6 +1,7 @@
 <form [formGroup]="form" (ngSubmit)="submit()" class="flex flex-col gap-4">
-  <lib-form-field label="Card number" [isRequired]="true">
+  <lib-form-field>
     @let cardNumberControl = form.controls.cardNumber;
+    <lib-label idFor="card-number">Cart number</lib-label>
     <p-inputmask
       slot="input"
       mask="9999 9999 9999 9999"
@@ -10,13 +11,14 @@
       placeholder="Type your card number"
     />
     @if (cardNumberControl.invalid && cardNumberControl.dirty) {
-      <lib-error-message />
+      <p-message libErrorMessage>Card number is required</p-message>
     }
   </lib-form-field>
 
   <div class="grid grid-cols-2 gap-4">
-    <lib-form-field label="Expiration date" [isRequired]="true">
+    <lib-form-field>
       @let expirationDateControl = form.controls.expirationDate;
+      <lib-label idFor="expiration-date">Expiration date</lib-label>
       <p-inputmask
         slot="input"
         mask="99/9999"
@@ -26,12 +28,13 @@
         placeholder="Type expiration date"
       />
       @if (expirationDateControl.invalid && expirationDateControl.dirty) {
-        <lib-error-message />
+        <p-message libErrorMessage>Expiration date is required</p-message>
       }
     </lib-form-field>
 
-    <lib-form-field label="Security code" [isRequired]="true">
+    <lib-form-field>
       @let securityCodeControl = this.form.controls.securityCode;
+      <lib-label idFor="security-code">Security code</lib-label>
       <p-inputmask
         slot="input"
         mask="999"
@@ -41,7 +44,7 @@
         placeholder="Type security code"
       />
       @if (securityCodeControl.invalid && securityCodeControl.dirty) {
-        <lib-error-message />
+        <p-message libErrorMessage>Security code is required</p-message>
       }
     </lib-form-field>
   </div>

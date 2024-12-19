@@ -1,4 +1,3 @@
-import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -17,8 +16,8 @@ import { AddressStore } from '@e-commerce/client-web/cart/data-access';
 import { Country } from '@e-commerce/shared/api-models';
 import { CreateUserAddressBody } from '@e-commerce/client-web/shared/data-access/api-services';
 import {
-  ErrorMessageComponent,
   FormFieldComponent,
+  LabelComponent,
 } from '@e-commerce/client-web/shared/ui';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -30,19 +29,22 @@ import { TooltipModule } from 'primeng/tooltip';
 import { isEqual, omit } from 'lodash-es';
 import { combineLatest, map } from 'rxjs';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { Message } from 'primeng/message';
+import { ErrorMessageDirective } from '@e-commerce/client-web/shared/utils';
 
 @Component({
   selector: 'lib-user-address-form',
   standalone: true,
   imports: [
     ReactiveFormsModule,
-    NgClass,
     FormFieldComponent,
-    ErrorMessageComponent,
     AutoCompleteModule,
     ButtonModule,
     InputTextModule,
     TooltipModule,
+    LabelComponent,
+    Message,
+    ErrorMessageDirective,
   ],
   templateUrl: './user-address-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -103,6 +105,14 @@ export class UserAddressFormComponent {
 
   constructor() {
     effect(() => {
+      const isFormVisible = this.isFormVisible();
+
+      untracked(() => {
+        if (!isFormVisible) this.form.reset();
+      });
+    });
+
+    effect(() => {
       const address = this.updatingAddress();
 
       untracked(() => {
@@ -119,16 +129,6 @@ export class UserAddressFormComponent {
         });
       });
     });
-
-    effect(() => {
-      const isFormVisible = this.isFormVisible();
-
-      untracked(() => {
-        if (!isFormVisible) return;
-
-        this.form.reset();
-      });
-    });
   }
 
   public hideForm() {
@@ -140,9 +140,11 @@ export class UserAddressFormComponent {
   }
 
   public submit() {
-    if (this.form.invalid) {
-      return;
-    }
+    Object.keys(this.form.controls).forEach((control) =>
+      this.form.get(control)?.markAsDirty(),
+    );
+
+    if (this.form.invalid || !this.isFormChanged()) return;
 
     const {
       firstName,

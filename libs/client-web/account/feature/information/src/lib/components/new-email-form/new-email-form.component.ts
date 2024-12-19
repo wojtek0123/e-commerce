@@ -13,9 +13,12 @@ import {
 import {
   ErrorMessageComponent,
   FormFieldComponent,
+  LabelComponent,
 } from '@e-commerce/client-web/shared/ui';
+import { ErrorMessageDirective } from '@e-commerce/client-web/shared/utils';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
+import { Message } from 'primeng/message';
 import { PasswordModule } from 'primeng/password';
 
 @Component({
@@ -30,6 +33,9 @@ import { PasswordModule } from 'primeng/password';
     InputTextModule,
     ErrorMessageComponent,
     PasswordModule,
+    LabelComponent,
+    Message,
+    ErrorMessageDirective,
   ],
   templateUrl: './new-email-form.component.html',
 })
