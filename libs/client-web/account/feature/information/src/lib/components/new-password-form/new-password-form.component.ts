@@ -11,7 +11,6 @@ import {
   InformationStore,
 } from '@e-commerce/client-web/account/data-access';
 import {
-  ErrorMessageComponent,
   FormFieldComponent,
   LabelComponent,
 } from '@e-commerce/client-web/shared/ui';
@@ -24,7 +23,6 @@ import {
   createStrongPasswordValidator,
   ErrorMessageDirective,
 } from '@e-commerce/client-web/shared/utils';
-import { NgClass } from '@angular/common';
 import { Message } from 'primeng/message';
 
 @Component({
@@ -38,8 +36,6 @@ import { Message } from 'primeng/message';
     FormFieldComponent,
     PasswordModule,
     FormsModule,
-    ErrorMessageComponent,
-    NgClass,
     LabelComponent,
     ErrorMessageDirective,
     Message,

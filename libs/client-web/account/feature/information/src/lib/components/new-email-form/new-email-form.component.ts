@@ -11,7 +11,6 @@ import {
   InformationStore,
 } from '@e-commerce/client-web/account/data-access';
 import {
-  ErrorMessageComponent,
   FormFieldComponent,
   LabelComponent,
 } from '@e-commerce/client-web/shared/ui';
@@ -31,7 +30,6 @@ import { PasswordModule } from 'primeng/password';
     FormFieldComponent,
     ButtonModule,
     InputTextModule,
-    ErrorMessageComponent,
     PasswordModule,
     LabelComponent,
     Message,
