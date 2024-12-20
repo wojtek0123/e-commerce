@@ -11,7 +11,7 @@
         libNavButton
         size="large"
         [routerLink]="urls().books"
-        routerLinkActive="bg-surface-100 dark:bg-surface-700 rounded-base"
+        routerLinkActive="bg-surface-50 dark:bg-surface-800 rounded-base"
         [queryParams]="null"
         [state]="{ clearFilters: true }"
         icon="pi pi-search"
@@ -20,7 +20,7 @@
         libNavButton
         size="large"
         [routerLink]="urls().home"
-        routerLinkActive="bg-surface-100 dark:bg-surface-700 rounded-base"
+        routerLinkActive="bg-surface-50 dark:bg-surface-800 rounded-base"
         icon="pi pi-home"
       />
       <p-button
@@ -55,8 +55,8 @@
         } @else {
           <a
             [routerLink]="urls().home"
-            routerLinkActive="bg-surface-100 dark:bg-surface-700 rounded-base"
-            class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-200 hover:dark:bg-surface-600"
+            routerLinkActive="bg-surface-50 dark:bg-surface-800 rounded-base"
+            class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700"
           >
             <i class="pi pi-home"></i>
           </a>
@@ -66,8 +66,8 @@
       <ul class="flex flex-col">
         <a
           [routerLink]="urls().books"
-          routerLinkActive="bg-surface-100 dark:bg-surface-700"
-          class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-200 hover:dark:bg-surface-600"
+          routerLinkActive="bg-surface-50 dark:bg-surface-800"
+          class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700"
           [queryParams]="null"
           [state]="{ clearFilters: true }"
         >
@@ -85,7 +85,7 @@
       @if (isAuthenticated()) {
         <a
           [routerLink]="urls().orders"
-          class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-200 hover:dark:bg-surface-600"
+          class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700"
         >
           <i class="pi pi-user"></i>
           @if (isLabelShowed()) {
@@ -94,7 +94,7 @@
         </a>
         <button
           (click)="logout()"
-          class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-200 hover:dark:bg-surface-600"
+          class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700"
         >
           <i class="pi pi-sign-in"></i>
           @if (isLabelShowed()) {
@@ -105,7 +105,7 @@
         <a
           [routerLink]="urls().login"
           routerLinkActive="bg-surface-100 dark:bg-surface-700"
-          class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-200 hover:dark:bg-surface-600"
+          class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700"
         >
           <i class="pi pi-sign-in"></i>
           @if (isLabelShowed()) {
@@ -115,7 +115,7 @@
         <a
           [routerLink]="urls().register"
           routerLinkActive="bg-surface-100 dark:bg-surface-700"
-          class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-200 hover:dark:bg-surface-600"
+          class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700"
         >
           <i class="pi pi-user-plus"></i>
           @if (isLabelShowed()) {
@@ -127,7 +127,7 @@
       <div class="flex flex-col gap-2">
         <button
           (click)="toggleDarkMode()"
-          class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-200 hover:dark:bg-surface-600"
+          class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700"
         >
           @if (isDark()) {
             <i class="pi pi-moon"></i>
@@ -140,7 +140,7 @@
         </button>
         <button
           (click)="expandCollapseNavigation()"
-          class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-200 hover:dark:bg-surface-600"
+          class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700"
         >
           @if (isExpanded()) {
             <i class="pi pi-arrow-left"></i>
@@ -174,7 +174,7 @@
         (click)="closeMobileDrawer()"
         [routerLink]="menuItem.routerLink"
         routerLinkActive="bg-surface-100 dark:bg-surface-700"
-        class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-200 hover:dark:bg-surface-600"
+        class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700"
       >
         <i [class]="menuItem.icon"></i>
         @if (isLabelShowed()) {
@@ -188,7 +188,7 @@
         (click)="closeMobileDrawer()"
         [routerLink]="urls().books"
         [queryParams]="{ categories: category.name }"
-        class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-200 hover:dark:bg-surface-600"
+        class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700"
         [state]="{ clearFilters: true }"
       >
         <span>

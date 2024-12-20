@@ -1,11 +1,6 @@
 import { computed, inject } from '@angular/core';
+import { ResponseError, UserAddress } from '@e-commerce/shared/api-models';
 import {
-  ResponseError,
-  UserAddress,
-  Country,
-} from '@e-commerce/shared/api-models';
-import {
-  CountryApiService,
   CreateUserAddressBody,
   UserAddressApiService,
 } from '@e-commerce/client-web/shared/data-access/api-services';
@@ -31,13 +26,12 @@ import {
 } from '@ngrx/signals/entities';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { MessageService } from 'primeng/api';
-import { debounce, filter, map, of, pipe, switchMap, tap, timer } from 'rxjs';
+import { filter, map, pipe, switchMap, tap } from 'rxjs';
 
 interface AddressState {
   loading: boolean;
   error: string | null;
   cachedAddress: UserAddress | null;
-  countries: Country[];
   formInfo: {
     updatingAddress: UserAddress | null;
     type: 'add' | 'update';
@@ -53,7 +47,6 @@ const initialAddressState: AddressState = {
   loading: false,
   error: null,
   cachedAddress: null,
-  countries: [],
   formInfo: {
     updatingAddress: null,
     type: 'add',
@@ -86,7 +79,6 @@ export function withAddress() {
       (
         store,
         userAddressApi = inject(UserAddressApiService),
-        countryApi = inject(CountryApiService),
         messageService = inject(MessageService),
       ) => ({
         getAddresses$: rxMethod<void>(
@@ -115,29 +107,6 @@ export function withAddress() {
                         error?.error?.message ||
                         'Error occur while getting addresses',
                       loading: false,
-                    });
-                  },
-                }),
-              ),
-            ),
-          ),
-        ),
-        getCountries$: rxMethod<{ name: string }>(
-          pipe(
-            debounce(({ name }) => (name.length === 0 ? of({}) : timer(300))),
-            switchMap(({ name }) =>
-              countryApi.getAll$({ nameLike: name }).pipe(
-                tapResponse({
-                  next: (countries) => {
-                    patchState(store, { countries });
-                  },
-                  error: (error: ResponseError) => {
-                    messageService.add({
-                      summary: 'Error',
-                      detail:
-                        error?.error?.message ||
-                        'Error occur while getting countries',
-                      severity: 'error',
                     });
                   },
                 }),

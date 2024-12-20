@@ -8,7 +8,10 @@ import {
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DividerModule } from 'primeng/divider';
-import { FormFieldComponent } from '@e-commerce/client-web/shared/ui';
+import {
+  FormFieldComponent,
+  LabelComponent,
+} from '@e-commerce/client-web/shared/ui';
 import {
   BooksStore,
   SingleValueFilters,
@@ -26,6 +29,7 @@ import {
     FormFieldComponent,
     FormsModule,
     ReactiveFormsModule,
+    LabelComponent,
   ],
   host: {
     class: 'max-w-[20rem] w-full',

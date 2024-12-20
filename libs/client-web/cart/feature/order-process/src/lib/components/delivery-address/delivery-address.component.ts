@@ -16,6 +16,8 @@ import {
   DeleteAddressConfirmationDialogComponent,
 } from '@e-commerce/client-web/shared/ui';
 import { DialogModule } from 'primeng/dialog';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { delay } from 'rxjs';
 
 @Component({
   selector: 'lib-delivery-address',
@@ -35,44 +37,48 @@ import { DialogModule } from 'primeng/dialog';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DeliveryAddressComponent implements OnInit {
-  private readonly addressStore = inject(AddressStore);
+  #addressStore = inject(AddressStore);
 
-  public loading = this.addressStore.loading;
-  public error = this.addressStore.error;
-  public addresses = this.addressStore.addresses;
-  public selectedAddressId = this.addressStore.selectedAddressId;
+  loading = this.#addressStore.loading;
+  error = this.#addressStore.error;
+  addresses = this.#addressStore.addresses;
+  selectedAddressId = this.#addressStore.selectedAddressId;
 
-  public updatingAddress = this.addressStore.updatingAddress;
-  public formType = this.addressStore.formType;
-  public isFormVisible = this.addressStore.formVisibility;
+  updatingAddress = this.#addressStore.updatingAddress;
+  formType = this.#addressStore.formType;
+  isFormVisible = this.#addressStore.formVisibility;
 
-  public isDeleteDialogVisible = this.addressStore.isDeleteDialogVisible;
+  isDeleteDialogVisible = this.#addressStore.isDeleteDialogVisible;
 
-  public ngOnInit(): void {
-    this.addressStore.resetState();
+  isFormVisibleDelayedToResetForm = toSignal(
+    toObservable(this.isFormVisible).pipe(delay(50)),
+  );
+
+  ngOnInit() {
+    this.#addressStore.resetState();
   }
 
-  public showForm(address?: UserAddress) {
-    this.addressStore.showForm(address);
+  showForm(address?: UserAddress) {
+    this.#addressStore.showForm(address);
   }
 
-  public hideForm() {
-    this.addressStore.hideForm();
+  hideForm() {
+    this.#addressStore.hideForm();
   }
 
-  public selectAddress(address: UserAddress) {
-    this.addressStore.selectAddress(address);
+  selectAddress(address: UserAddress) {
+    this.#addressStore.selectAddress(address);
   }
 
-  public delete() {
-    this.addressStore.deleteAddress$();
+  delete() {
+    this.#addressStore.deleteAddress$();
   }
 
-  public showDeleteDialog(address: UserAddress) {
-    this.addressStore.showDeleteDialog(address.id);
+  showDeleteDialog(address: UserAddress) {
+    this.#addressStore.showDeleteDialog(address.id);
   }
 
-  public hideDeleteDialog() {
-    this.addressStore.hideDeleteDialog();
+  hideDeleteDialog() {
+    this.#addressStore.hideDeleteDialog();
   }
 }

@@ -13,9 +13,11 @@ import {
 import { SkeletonModule } from 'primeng/skeleton';
 import { UserAddress } from '@e-commerce/shared/api-models';
 import { DialogModule } from 'primeng/dialog';
-import { AddressFormComponent } from '../address-form/address-form.component';
+import { AccountDataAddressFormComponent } from '../address-form/address-form.component';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { delay } from 'rxjs';
 
 @Component({
   selector: 'lib-addresses',
@@ -24,7 +26,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
     SkeletonModule,
     AddressInformationComponent,
     DialogModule,
-    AddressFormComponent,
+    AccountDataAddressFormComponent,
     ButtonModule,
     ConfirmDialogModule,
     DeleteAddressConfirmationDialogComponent,
@@ -33,40 +35,40 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddressesComponent implements OnInit {
-  private readonly addressesStore = inject(AddressStore);
+  #addressesStore = inject(AddressStore);
 
-  public loading = this.addressesStore.loading;
-  public error = this.addressesStore.error;
-  public addresses = this.addressesStore.addresses;
+  loading = this.#addressesStore.loading;
+  error = this.#addressesStore.error;
+  addresses = this.#addressesStore.addresses;
+  isDeleteDialogVisible = this.#addressesStore.isDeleteDialogVisible;
+  formType = this.#addressesStore.formType;
 
-  public isFormVisible = computed(
-    () => this.addressesStore.formInfo().isVisible,
+  isFormVisible = computed(() => this.#addressesStore.formInfo().isVisible);
+  isFormVisibleDelayedToResetForm = toSignal(
+    toObservable(this.isFormVisible).pipe(delay(50)),
   );
-  public formType = this.addressesStore.formType;
 
-  public isDeleteDialogVisible = this.addressesStore.isDeleteDialogVisible;
-
-  public ngOnInit(): void {
-    this.addressesStore.resetState();
+  ngOnInit(): void {
+    this.#addressesStore.resetState();
   }
 
-  public delete() {
-    this.addressesStore.deleteAddress$();
+  delete() {
+    this.#addressesStore.deleteAddress$();
   }
 
-  public showForm(address?: UserAddress) {
-    this.addressesStore.showForm(address);
+  showForm(address?: UserAddress) {
+    this.#addressesStore.showForm(address);
   }
 
-  public hideForm() {
-    this.addressesStore.hideForm();
+  hideForm() {
+    this.#addressesStore.hideForm();
   }
 
-  public showDeleteDialog(address: UserAddress) {
-    this.addressesStore.showDeleteDialog(address.id);
+  showDeleteDialog(address: UserAddress) {
+    this.#addressesStore.showDeleteDialog(address.id);
   }
 
-  public hideDeleteDialog() {
-    this.addressesStore.hideDeleteDialog();
+  hideDeleteDialog() {
+    this.#addressesStore.hideDeleteDialog();
   }
 }
