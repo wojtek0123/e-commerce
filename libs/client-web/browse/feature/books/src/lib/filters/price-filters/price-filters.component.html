@@ -1,6 +1,8 @@
-<div class="flex items-end gap-2 p-4">
-  <lib-form-field label="Min">
+<div class="flex items-end gap-2 p-base">
+  <lib-form-field>
+    <lib-label idFor="min">Min</lib-label>
     <p-inputnumber
+      id="min"
       #minPriceInput
       slot="input"
       [min]="0"
@@ -17,8 +19,10 @@
     <p-divider />
   </div>
 
-  <lib-form-field label="Max">
+  <lib-form-field>
+    <lib-label idFor="max">Max</lib-label>
     <p-inputnumber
+      id="max"
       #maxPriceInput
       slot="input"
       [min]="0"

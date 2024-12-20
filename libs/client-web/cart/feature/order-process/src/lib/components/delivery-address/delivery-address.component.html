@@ -40,6 +40,7 @@
   (onHide)="hideDeleteDialog()"
   (onDelete)="delete()"
 />
+
 <p-dialog
   header="Address form"
   [visible]="isFormVisible()"
@@ -49,5 +50,7 @@
   [dismissableMask]="true"
   (visibleChange)="hideForm()"
 >
-  <lib-user-address-form class="w-full" />
+  @if (isFormVisibleDelayedToResetForm()) {
+    <lib-user-address-form class="w-full" />
+  }
 </p-dialog>
