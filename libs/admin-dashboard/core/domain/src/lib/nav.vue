@@ -27,27 +27,27 @@ onMounted(() => {
             size="large"
             text
             icon="pi pi-bars"
-            class="text-muted-color h-10 !rounded-base overflow-hidden hover:bg-surface-200 hover:dark:bg-surface-600"
+            class="text-muted-color h-10 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700"
           />
           <RouterLink
             to="/books/list"
-            active-class="bg-surface-100 dark:bg-surface-700 rounded-base"
-            class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-200 hover:dark:bg-surface-600 cursorpointer"
+            active-class="bg-surface-50 dark:bg-surface-800 rounded-base"
+            class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700 cursorpointer"
           >
             <i class="pi pi-book"></i>
           </RouterLink>
           <RouterLink
             to="/"
-            active-class="bg-surface-100 dark:bg-surface-700 rounded-base"
-            class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-200 hover:dark:bg-surface-600 cursorpointer"
+            active-class="bg-surface-50 dark:bg-surface-800 rounded-base"
+            class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700 cursorpointer"
           >
             <i class="pi pi-home"></i>
           </RouterLink>
 
           <RouterLink
             to="/account"
-            active-class="bg-surface-100 dark:bg-surface-700 rounded-base"
-            class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-200 hover:dark:bg-surface-600 cursorpointer"
+            active-class="bg-surface-50 dark:bg-surface-800 rounded-base"
+            class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700 cursorpointer"
           >
             <i class="pi pi-user"></i>
           </RouterLink>
@@ -60,7 +60,7 @@ onMounted(() => {
     <aside
       :class="[
         store.isExpanded ? 'w-80' : 'w-14',
-        'transition-[width] duration-300 ease-in-out hidden justify-between gap-4 xl:h-content px-2 py-4 bg-content-background xl:sticky z-[1001] top-4 flex-col rounded-base xl:flex',
+        'transition-[width] duration-300 ease-in-out hidden justify-between gap-4 xl:h-content px-2 py-4 bg-content-background xl:sticky z-[501] top-4 flex-col rounded-base xl:flex',
       ]"
     >
       <nav class="h-content flex flex-col justify-between">
@@ -78,8 +78,8 @@ onMounted(() => {
             <RouterLink
               v-if="!store.shouldLabelBeShowed"
               to="/"
-              active-class="bg-surface-100 dark:bg-surface-700 rounded-base"
-              class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-200 hover:dark:bg-surface-600"
+              active-class="bg-surface-50 dark:bg-surface-800 rounded-base"
+              class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700"
             >
               <i class="pi pi-home"></i>
             </RouterLink>
@@ -88,8 +88,8 @@ onMounted(() => {
           <ul class="flex flex-col">
             <RouterLink
               to="/books"
-              activeClass="bg-surface-100 dark:bg-surface-700"
-              class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-200 hover:dark:bg-surface-600 cursorpointer"
+              activeClass="bg-surface-50 dark:bg-surface-800"
+              class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700 cursorpointer"
             >
               <i class="pi pi-book"></i>
               <span v-if="store.isExpanded">Books</span>
@@ -100,7 +100,7 @@ onMounted(() => {
         <div class="flex flex-col gap-2">
           <Divider />
           <button
-            class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-200 hover:dark:bg-surface-600"
+            class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700"
             @click="store.toggleTheme"
           >
             <i v-if="store.isDark" class="pi pi-moon"></i>
@@ -110,7 +110,7 @@ onMounted(() => {
             }}</span>
           </button>
           <button
-            class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-200 hover:dark:bg-surface-600"
+            class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700"
             @click="store.toggleExpandCollapse"
           >
             <i v-if="store.isExpanded" class="pi pi-arrow-left"></i>

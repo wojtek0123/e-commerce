@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
-import { SearchComponent } from './search/search.component';
+import { SearchComponent } from './components/search/search.component';
 import { Book } from '@e-commerce/shared/api-models';
 import {
   ActiveFilter,
@@ -20,7 +20,7 @@ import { ViewportScroller } from '@angular/common';
 import { ActiveFiltersComponent } from '@e-commerce/client-web/browse/ui';
 
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
-import { FiltersComponent } from './filters/filters.component';
+import { FiltersComponent } from './components/filters/filters.component';
 import { CartService } from '@e-commerce/client-web/cart/api';
 
 @Component({
