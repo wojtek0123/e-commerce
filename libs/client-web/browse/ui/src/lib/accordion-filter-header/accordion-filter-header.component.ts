@@ -6,12 +6,11 @@ import {
 } from '@angular/core';
 import { BadgeModule } from 'primeng/badge';
 import { ButtonModule } from 'primeng/button';
-import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'lib-accordion-filter-header',
   standalone: true,
-  imports: [BadgeModule, ButtonModule, TooltipModule],
+  imports: [BadgeModule, ButtonModule],
   templateUrl: './accordion-filter-header.component.html',
   styleUrl: './accordion-filter-header.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
