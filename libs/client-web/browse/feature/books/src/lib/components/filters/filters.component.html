@@ -16,7 +16,9 @@
 />
 
 <p-drawer libDrawerLeft class="xl:hidden" [(visible)]="sidebarVisible">
-  <ng-container [ngTemplateOutlet]="filters" />
+  @if (sidebarVisible()) {
+    <ng-container [ngTemplateOutlet]="filters" />
+  }
 </p-drawer>
 
 <ng-template #filters>
