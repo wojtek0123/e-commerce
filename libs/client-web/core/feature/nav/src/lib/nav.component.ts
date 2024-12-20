@@ -40,7 +40,7 @@ import { debounce, filter, map, of, timer } from 'rxjs';
 import { ThemeService } from '@e-commerce/client-web/core/data-access';
 import { CategoryStore } from '@e-commerce/client-web/shared/data-access/stores';
 import { DrawerModule } from 'primeng/drawer';
-import { GetNamePipe } from '../pipes/get-name.pipe';
+import { GetNamePipe } from './pipes/get-name.pipe';
 
 @Component({
   selector: 'lib-nav',
