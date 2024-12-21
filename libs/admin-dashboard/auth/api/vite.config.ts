@@ -8,8 +8,7 @@ import { nxCopyAssetsPlugin } from '@nx/vite/plugins/nx-copy-assets.plugin';
 
 export default defineConfig({
   root: __dirname,
-  cacheDir:
-    '../../../../../node_modules/.vite/libs/admin-dashboard/auth/feature/register',
+  cacheDir: '../../../../node_modules/.vite/libs/admin-dashboard/auth/api',
   plugins: [
     vue(),
     nxViteTsPaths(),
@@ -26,7 +25,7 @@ export default defineConfig({
   // Configuration for building your library.
   // See: https://vitejs.dev/guide/build.html#library-mode
   build: {
-    outDir: '../../../../../dist/libs/admin-dashboard/auth/feature/register',
+    outDir: '../../../../dist/libs/admin-dashboard/auth/api',
     emptyOutDir: true,
     reportCompressedSize: true,
     commonjsOptions: {
@@ -35,11 +34,11 @@ export default defineConfig({
     lib: {
       // Could also be a dictionary or array of multiple entry points.
       entry: 'src/index.ts',
-      name: 'register',
+      name: 'api',
       fileName: 'index',
       // Change this to the formats you want to support.
       // Don't forget to update your package.json as well.
-      formats: ['es', 'cjs'],
+      formats: ['es'],
     },
     rollupOptions: {
       // External packages that should not be bundled into your library.
@@ -53,8 +52,7 @@ export default defineConfig({
     include: ['src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
     reporters: ['default'],
     coverage: {
-      reportsDirectory:
-        '../../../../../coverage/libs/admin-dashboard/auth/feature/register',
+      reportsDirectory: '../../../../coverage/libs/admin-dashboard/auth/api',
       provider: 'v8',
     },
   },

@@ -1,7 +1,19 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router';
-import { Nav } from '@e-commerce/admin-dashboard/core/domain';
 import Toast from 'primevue/toast';
+
+import { onMounted } from 'vue';
+import { useCoreStore } from '@e-commerce/admin-dashboard/core/data-access';
+import { getSessionFromStorage } from '@e-commerce/admin-dashboard/auth/api';
+
+const coreStore = useCoreStore();
+
+onMounted(() => {
+  coreStore.getTheme();
+  coreStore.getExpanded();
+
+  getSessionFromStorage();
+});
 </script>
 
 <template>
@@ -9,11 +21,6 @@ import Toast from 'primevue/toast';
   <div
     class="flex flex-col-reverse w-full h-svh xl:flex-row xl:p-gap xl:min-h-svh xl:h-full"
   >
-    <Nav />
-    <div
-      class="w-full h-full overflow-y-auto p-4 xl:pl-gap xl:p-0 xl:overflow-y-visible"
-    >
-      <RouterView />
-    </div>
+    <RouterView />
   </div>
 </template>

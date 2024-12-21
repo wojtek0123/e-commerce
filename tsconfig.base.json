@@ -21,9 +21,6 @@
       "@e-commerce/admin-dashboard/auth/feature/login": [
         "libs/admin-dashboard/auth/feature/login/src/index.ts"
       ],
-      "@e-commerce/admin-dashboard/auth/feature/register": [
-        "libs/admin-dashboard/auth/feature/register/src/index.ts"
-      ],
       "@e-commerce/admin-dashboard/auth/feature/shell": [
         "libs/admin-dashboard/auth/feature/shell/src/index.ts"
       ],
@@ -159,7 +156,10 @@
       "@e-commerce/client-web/shared/utils": [
         "libs/client-web/shared/utils/src/index.ts"
       ],
-      "@e-commerce/shared/api-models": ["libs/shared/api-models/src/index.ts"]
+      "@e-commerce/shared/api-models": ["libs/shared/api-models/src/index.ts"],
+      "@e-commerce/admin-dashboard/auth/api": [
+        "libs/admin-dashboard/auth/api/src/index.ts"
+      ]
     }
   },
   "exclude": ["node_modules", "tmp"]

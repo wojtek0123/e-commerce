@@ -1,16 +1,16 @@
 {
-  "name": "register",
-  "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/admin-dashboard/auth/feature/register/src",
+  "name": "admin-dashboard-auth-api",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/admin-dashboard/auth/api/src",
   "projectType": "library",
-  "tags": ["scope:admin-dashboard", "domain:auth", "type:feature"],
+  "tags": ["scope:admin-dashboard", "type:api", "domain:auth"],
   "targets": {
     "build": {
       "executor": "@nx/vite:build",
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "outputPath": "dist/libs/admin-dashboard/auth/feature/register"
+        "outputPath": "dist/libs/admin-dashboard/auth/api"
       },
       "configurations": {
         "development": {
@@ -25,7 +25,7 @@
       "executor": "@nx/vite:test",
       "outputs": ["{options.reportsDirectory}"],
       "options": {
-        "reportsDirectory": "../../../../../coverage/libs/admin-dashboard/auth/feature/register"
+        "reportsDirectory": "../../../../coverage/libs/admin-dashboard/auth/api"
       }
     }
   }

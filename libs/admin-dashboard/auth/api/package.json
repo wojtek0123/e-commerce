@@ -1,5 +1,5 @@
 {
-  "name": "@e-commerce/admin-dashboard/auth/feature/register",
+  "name": "e-commerce/admin-dashboard/auth/api",
   "version": "0.0.1",
   "main": "./index.js",
   "types": "./index.d.ts",

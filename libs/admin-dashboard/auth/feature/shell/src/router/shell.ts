@@ -1,5 +1,6 @@
 import { RouteRecordRaw } from 'vue-router';
 import Shell from '../lib/shell.vue';
+import { useAuthStore } from '@e-commerce/admin-dashboard/auth/data-access';
 
 export const shellRouter: RouteRecordRaw[] = [
   {
@@ -15,14 +16,13 @@ export const shellRouter: RouteRecordRaw[] = [
             (c) => c.Login,
           ),
       },
-      {
-        path: 'register',
-        name: 'register',
-        component: () =>
-          import('@e-commerce/admin-dashboard/auth/feature/register').then(
-            (c) => c.Register,
-          ),
-      },
     ],
+    beforeEnter: () => {
+      const authStore = useAuthStore();
+
+      if (authStore.isAuthenticated) {
+        return 'books/list';
+      }
+    },
   },
 ];
