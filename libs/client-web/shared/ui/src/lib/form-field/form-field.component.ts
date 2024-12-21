@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { InputTextModule } from 'primeng/inputtext';
 import { SkeletonModule } from 'primeng/skeleton';
 
@@ -13,8 +13,4 @@ import { SkeletonModule } from 'primeng/skeleton';
     class: 'w-full',
   },
 })
-export class FormFieldComponent {
-  labelSkeletonWidth = input<string>('5rem');
-  inputSkeletonWidth = input<string>('100%');
-  isInvalid = input<boolean>(false);
-}
+export class FormFieldComponent {}

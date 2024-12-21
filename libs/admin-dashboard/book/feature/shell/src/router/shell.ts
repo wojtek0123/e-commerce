@@ -3,7 +3,7 @@ import { RouteRecordRaw } from 'vue-router';
 export const shellRouter: RouteRecordRaw[] = [
   {
     path: '/books',
-    redirect: '/books/list',
+    redirect: { name: 'book-list' },
     children: [
       {
         path: 'list',

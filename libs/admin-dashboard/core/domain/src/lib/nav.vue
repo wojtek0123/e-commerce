@@ -3,15 +3,11 @@ import { RouterLink } from 'vue-router';
 import Toolbar from 'primevue/toolbar';
 import Button from 'primevue/button';
 import Divider from 'primevue/divider';
-import { onMounted } from 'vue';
 import { useCoreStore } from '@e-commerce/admin-dashboard/core/data-access';
+import { useAuthApi } from '@e-commerce/admin-dashboard/auth/api';
 
 const store = useCoreStore();
-
-onMounted(() => {
-  store.getTheme();
-  store.getExpanded();
-});
+const { logout } = useAuthApi;
 </script>
 
 <template>
@@ -98,6 +94,13 @@ onMounted(() => {
         </div>
 
         <div class="flex flex-col gap-2">
+          <button
+            class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700"
+            @click="logout"
+          >
+            <i class="pi pi-sign-out"></i>
+            <span v-if="store.isExpanded">Log out</span>
+          </button>
           <Divider />
           <button
             class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700"
@@ -105,9 +108,9 @@ onMounted(() => {
           >
             <i v-if="store.isDark" class="pi pi-moon"></i>
             <i v-if="!store.isDark" class="pi pi-sun"></i>
-            <span v-if="store.isExpanded">{{
-              store.isDark ? 'Dark' : 'Light'
-            }}</span>
+            <span v-if="store.isExpanded">
+              {{ store.isDark ? 'Dark' : 'Light' }}
+            </span>
           </button>
           <button
             class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700"

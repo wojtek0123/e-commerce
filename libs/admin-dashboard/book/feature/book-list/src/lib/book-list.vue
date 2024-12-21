@@ -64,13 +64,15 @@ onMounted(() => {
   <ConfirmDialog />
   <div class="flex flex-col gap-base">
     <div
-      class="bg-content-background w-full p-4 rounded-base flex justify-between items-center"
+      class="flex flex-col bg-content-background pt-2 pb-4 xl:pb-2 xl:pl-2 xl:pr-4 rounded-base xl:flex-row justify-between items-center gap-base"
     >
       <Breadcrumb :home="home" :model="breadcrumbs" />
       <InputText
-        placeholder="Search book by title..."
-        class="w-full max-w-[40rem]"
         v-model="store.search"
+        size="medium"
+        type="text"
+        placeholder="Search book by title..."
+        class="w-full h-fit 2xl:max-w-[30rem]"
         @value-change="onSearchInput"
       />
     </div>
