@@ -1,54 +1,79 @@
 <script setup lang="ts">
 import ButtonGroup from 'primevue/buttongroup';
 import SelectButton from 'primevue/selectbutton';
-import FileUpload, {
-  FileUploadRemoveEvent,
-  FileUploadSelectEvent,
-} from 'primevue/fileupload';
+import FileUpload, { FileUploadState } from 'primevue/fileupload';
 import Textarea from 'primevue/textarea';
 import AutoComplete, { AutoCompleteCompleteEvent } from 'primevue/autocomplete';
 import DatePicker from 'primevue/datepicker';
 import InputText from 'primevue/inputtext';
 import InputNumber from 'primevue/inputnumber';
-import FloatLabel from 'primevue/floatlabel';
 import Drawer from 'primevue/drawer';
 import Button from 'primevue/button';
 import Message from 'primevue/message';
-import {
-  Category,
-  BookTag,
-  Author,
-  allBookTags,
-} from '@e-commerce/shared/api-models';
+import { Author, allBookTags } from '@e-commerce/shared/api-models';
 import { ref } from 'vue';
 
 import { useBooksStore } from '@e-commerce/admin-dashboard/book/data-access';
-import { Publisher } from '@prisma/client';
 import { onUnmounted } from 'vue';
+import { zodResolver } from '@primevue/forms/resolvers/zod';
+import { z } from 'zod';
+import { Form, FormField, FormSubmitEvent } from '@primevue/forms';
 
 const store = useBooksStore();
 
 type PublisherOption = 'Add' | 'Select';
 
-const title = ref<string | null>(null);
-const description = ref<string | null>(null);
-const language = ref<string | null>(null);
-const pageCount = ref<number | null>(null);
-const price = ref<number | null>(null);
-const publishDate = ref<Date | null>(null);
-const category = ref<Category | null>(null);
-const quantity = ref<number | null>(null);
-const tag = ref<BookTag | null>(null);
-const authors = ref<Author[]>([]);
-const publisherName = ref<string | null>(null);
-const publisher = ref<Publisher | null>(null);
-const file = ref<File | null>(null);
+const uploadFileState = ref<FileUploadState | null>(null);
 
 const publisherOptions = ref<PublisherOption[]>(['Add', 'Select']);
 const publisherInputType = ref<PublisherOption>('Select');
 const successed = ref(false);
 const visible = ref(false);
 const bookTags = ref(allBookTags);
+
+const resolver = zodResolver(
+  z.object({
+    title: z.string().min(1, { message: 'Title is required' }),
+    description: z.string().optional(),
+    language: z.string(),
+    pageCount: z.number().nonnegative(),
+    price: z.number().nonnegative(),
+    publishedDate: z.date(),
+    category: z.object({ id: z.string(), name: z.string().nonempty() }),
+    quantity: z.number().nonnegative(),
+    tag: z.string().optional(),
+    authors: z
+      .array(z.object({ id: z.string(), name: z.string() }))
+      .min(1, { message: 'Select at least one author' }),
+    publisherName: z
+      .string()
+      .optional()
+      .refine(
+        (val) => {
+          if (publisherInputType.value === 'Add') {
+            return !!val;
+          }
+          return true;
+        },
+        { message: 'Publisher name is required when adding new publisher' },
+      ),
+    publisher: z
+      .object({ id: z.string(), name: z.string() })
+      .optional()
+      .refine(
+        (val) => {
+          if (publisherInputType.value === 'Select') {
+            return !!val;
+          }
+          return true;
+        },
+        {
+          message:
+            'Publisher selection is required when selecting existing publisher',
+        },
+      ),
+  }),
+);
 
 function searchTag(event: AutoCompleteCompleteEvent) {
   bookTags.value = allBookTags.filter((tag) =>
@@ -68,29 +93,37 @@ function searchPublisher(event: AutoCompleteCompleteEvent) {
   store.getPublishers(event.query);
 }
 
-function selectImage(event: FileUploadSelectEvent) {
-  file.value = event.files[0];
-}
-
-function removeImage(event: FileUploadRemoveEvent) {
-  console.log(event.file);
-}
-
 function uploadImageCover() {
-  if (!file.value) return;
-  store.uploadCoverImage(file.value);
+  if (!uploadFileState.value) return;
+
+  store.uploadCoverImage(uploadFileState.value.files[0]);
 }
 
-function submit(event: Event) {
-  event.preventDefault();
+function deleteImageCover() {
+  if (!uploadFileState.value) return;
 
-  if (!title.value) return;
-  if (!language.value) return;
-  if (!pageCount.value) return;
-  if (!price.value) return;
-  if (!quantity.value) return;
-  if (!category.value) return;
-  if (!publishDate.value) return;
+  uploadFileState.value.files = [];
+
+  store.deleteUploadedCoverImage();
+}
+
+function submit(event: FormSubmitEvent) {
+  if (!event.valid) return;
+
+  const {
+    title,
+    category,
+    language,
+    pageCount,
+    price,
+    publishedDate,
+    publisher,
+    quantity,
+    tag,
+    authors,
+    publisherName,
+    description,
+  } = event.states;
 
   store
     .addBook({
@@ -100,11 +133,11 @@ function submit(event: Event) {
       language: language.value,
       pages: pageCount.value,
       price: price.value,
-      publishedDate: publishDate.value.toISOString(),
+      publishedDate: publishedDate.value.toISOString(),
       publisherId: publisher.value?.id,
       quantity: quantity.value,
       ...(tag.value && { tag: tag.value }),
-      authorsId: authors.value.map(({ id }) => id),
+      authorsId: authors.value.map((author: Author) => author.id),
       publisherName: publisherName.value ?? undefined,
     })
     .then(() => {
@@ -114,7 +147,7 @@ function submit(event: Event) {
 }
 
 onUnmounted(() => {
-  if (!successed.value && file.value) {
+  if (!successed.value && uploadFileState.value) {
     store.deleteUploadedCoverImage();
   }
 });
@@ -123,177 +156,224 @@ onUnmounted(() => {
 <template>
   <Button text icon="pi pi-plus" @click="visible = true" />
   <Drawer v-model:visible="visible" class="max-w-[40rem] w-full rounded-r-base">
-    <form
-      @submit.prevent="submit"
-      class="flex flex-col h-full justify-between gap-4 w-full max-w-[120rem]"
+    <Form
+      @submit="submit"
+      :resolver="resolver"
+      class="flex flex-col h-full justify-between gap-2 w-full max-w-[120rem]"
     >
       <div class="flex flex-col gap-4">
-        <FloatLabel variant="in">
-          <InputText fluid id="title" v-model="title" :invalid="!title" />
-          <label for="title">Title *</label>
-          <Message v-if="!title" severity="error" variant="simple" size="small">
-            Title is required
-          </Message>
-        </FloatLabel>
-        <FloatLabel variant="in">
-          <InputNumber
-            fluid
-            id="pages"
-            v-model="pageCount"
-            :invalid="!pageCount"
-          />
-          <label for="pages">Page count *</label>
+        <FormField v-slot="$field" class="flex flex-col gap-1" name="title">
+          <label class="text-muted-color">Title</label>
+          <InputText fluid id="title" />
           <Message
-            v-if="!pageCount"
+            v-if="$field.invalid"
             severity="error"
             variant="simple"
             size="small"
           >
-            Page count is required
+            {{ $field.error.message }}
           </Message>
-        </FloatLabel>
+        </FormField>
 
-        <FloatLabel variant="in">
-          <InputNumber fluid id="price" v-model="price" :invalid="!price" />
-          <label for="price">Price *</label>
-          <Message v-if="!price" severity="error" variant="simple" size="small">
-            Price is required
+        <FormField v-slot="$field" class="flex flex-col gap-1" name="pageCount">
+          <label class="text-muted-color">Page count</label>
+          <InputNumber fluid id="pageCount" name="pageCount" />
+          <Message
+            v-if="$field.invalid"
+            severity="error"
+            variant="simple"
+            size="small"
+          >
+            {{ $field.error.message }}
           </Message>
-        </FloatLabel>
+        </FormField>
 
-        <FloatLabel variant="in">
-          <DatePicker
-            id="publish_date"
-            name="date"
-            fluid
-            v-model="publishDate"
-          />
-          <label for="publish_date">Publish date</label>
-        </FloatLabel>
+        <FormField v-slot="$field" class="flex flex-col gap-1" name="price">
+          <label for="price" class="text-muted-color">Price</label>
+          <InputNumber fluid id="price" name="price" />
+          <Message
+            v-if="$field.invalid"
+            severity="error"
+            variant="simple"
+            size="small"
+          >
+            {{ $field.error.message }}
+          </Message>
+        </FormField>
+
+        <FormField v-slot="$field" class="flex flex-col gap-1" name="quantity">
+          <label for="quantity" class="text-muted-color">Quantity *</label>
+          <InputNumber id="quanity" name="quantity" fluid />
+          <Message
+            v-if="$field.invalid"
+            severity="error"
+            variant="simple"
+            size="small"
+          >
+            {{ $field.error.message }}
+          </Message>
+        </FormField>
+
+        <FormField
+          v-slot="$field"
+          class="flex flex-col gap-1"
+          name="Published date"
+        >
+          <label for="price" class="text-muted-color">Published date</label>
+          <DatePicker id="publish_date" name="publishDate" fluid />
+          <Message
+            v-if="$field.invalid"
+            severity="error"
+            variant="simple"
+            size="small"
+          >
+            {{ $field.error.message }}
+          </Message>
+        </FormField>
 
         <SelectButton
           :options="publisherOptions"
           v-model="publisherInputType"
         />
 
-        <FloatLabel v-if="publisherInputType === 'Select'" variant="in">
+        <FormField
+          v-if="publisherInputType === 'Select'"
+          v-slot="$field"
+          class="flex flex-col gap-1"
+          name="publisher"
+        >
+          <label for="price" class="text-muted-color">Publisher</label>
           <AutoComplete
-            id="publishers"
-            name="Publisher"
-            :suggestions="store.publishers"
-            fluid
-            v-model="publisher"
-            option-label="name"
-            @complete="searchPublisher"
+            id="publisher"
             dropdown
+            fluid
+            name="publisher"
+            option-label="name"
+            :suggestions="store.publishers"
+            @complete="searchPublisher"
           />
-          <label for="publishers">Publisher</label>
-        </FloatLabel>
+          <Message
+            v-if="$field.invalid"
+            severity="error"
+            variant="simple"
+            size="small"
+          >
+            {{ $field.error.message }}
+          </Message>
+        </FormField>
 
-        <FloatLabel v-if="publisherInputType === 'Add'" variant="in">
-          <InputText fluid id="publisher_name" v-model="publisherName" />
-          <label for="publisher_name">Publisher name</label>
-        </FloatLabel>
+        <FormField
+          v-if="publisherInputType === 'Add'"
+          v-slot="$field"
+          class="flex flex-col gap-1"
+          name="publisherName"
+        >
+          <label for="publisherName" class="text-muted-color"
+            >Publisher name</label
+          >
+          <InputText fluid id="publisherName" name="publisherName" />
+          <Message
+            v-if="$field.invalid"
+            severity="error"
+            variant="simple"
+            size="small"
+          >
+            {{ $field.error.message }}
+          </Message>
+        </FormField>
 
-        <FloatLabel variant="in">
+        <FormField class="flex flex-col gap-1">
+          <label for="tag" class="text-muted-color">Tag</label>
           <AutoComplete
             id="tag"
             dropdown
-            v-model="tag"
             fluid
+            name="tag"
             :suggestions="bookTags"
             @complete="searchTag"
           />
-          <label for="tag">Tag</label>
-        </FloatLabel>
+        </FormField>
 
-        <FloatLabel variant="in">
+        <FormField v-slot="$field" class="flex flex-col gap-1" name="category">
+          <label for="category" class="text-muted-color">Category *</label>
           <AutoComplete
             id="category"
             name="category"
             :suggestions="store.categories"
             fluid
-            v-model="category"
             option-label="name"
             @complete="searchCategories"
             dropdown
-            :invalid="!category"
           />
-          <label for="category">Category *</label>
           <Message
-            v-if="!category"
+            v-if="$field.invalid"
             severity="error"
             variant="simple"
             size="small"
           >
-            Category is required
+            {{ $field.error.message }}
           </Message>
-        </FloatLabel>
+        </FormField>
 
-        <FloatLabel variant="in">
-          <InputText id="language" v-model="language" />
-          <label for="language">Language</label>
-        </FloatLabel>
+        <FormField v-slot="$field" class="flex flex-col gap-1" name="language">
+          <label class="text-muted-color" for="language">Language *</label>
+          <InputText fluid id="language" name="language" />
+          <Message
+            v-if="$field.invalid"
+            severity="error"
+            variant="simple"
+            size="small"
+          >
+            {{ $field.error.message }}
+          </Message>
+        </FormField>
 
-        <FloatLabel variant="in">
+        <FormField v-slot="$field" class="flex flex-col gap-1" name="authors">
+          <label for="authors" class="text-muted-color">Author *</label>
           <AutoComplete
-            id="author"
-            name="author"
+            id="authors"
+            name="authors"
             :suggestions="store.authors"
             fluid
-            v-model="authors"
             option-label="name"
             @complete="searchAuthors"
             dropdown
             multiple
-            :invalid="!authors.length"
           />
-          <label for="author">Author *</label>
           <Message
-            v-if="!authors.length"
+            v-if="$field.invalid"
             severity="error"
             variant="simple"
             size="small"
           >
-            Choose at least one author
+            {{ $field.error.message }}
           </Message>
-        </FloatLabel>
+        </FormField>
 
-        <FloatLabel variant="in">
-          <Textarea id="description" fluid v-model="description" />
-          <label for="description">Description</label>
-        </FloatLabel>
-
-        <FloatLabel variant="in">
-          <InputNumber
-            id="quanity"
-            :invalid="!quantity"
-            fluid
-            v-model="quantity"
-          />
-          <label for="quantity">Quantity</label>
-          <Message
-            v-if="!quantity"
-            severity="error"
-            variant="simple"
-            size="small"
-          >
-            Quantity is required
-          </Message>
-        </FloatLabel>
+        <FormField class="flex flex-col gap-1" name="description">
+          <label for="description" class="text-muted-color">Description</label>
+          <Textarea id="description" name="description" fluid />
+        </FormField>
 
         <div class="flex flex-col gap-4">
+          <label for="file" class="text-muted-color">Cover image</label>
           <FileUpload
+            id="file"
             mode="basic"
             class="mr-auto"
             name="file"
-            ref="file"
+            ref="uploadFileState"
             accept="image/*"
             :maxFileSize="1000000"
-            @select="selectImage"
-            @remove="removeImage"
           />
-          <ButtonGroup>
+          <Message
+            v-if="!!uploadFileState?.files.length"
+            severity="warn"
+            variant="simple"
+          >
+            Upload image to add cover
+          </Message>
+          <ButtonGroup class="flex items-center gap-4">
             <Button
               icon="pi pi-upload"
               :loading="store.uploadLoading"
@@ -305,7 +385,7 @@ onUnmounted(() => {
               label="Delete"
               icon="pi pi-trash"
               :loading="store.deleteLoading"
-              @click="store.deleteUploadedCoverImage"
+              @click="deleteImageCover"
               severity="danger"
               outlined
             />
@@ -313,6 +393,6 @@ onUnmounted(() => {
         </div>
       </div>
       <Button :loading="store.addLoading" type="submit">Add book</Button>
-    </form>
+    </Form>
   </Drawer>
 </template>

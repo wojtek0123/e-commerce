@@ -84,6 +84,7 @@ export const useAuthStore = defineStore('auth', () => {
         summary: 'Success',
         detail: 'You are logged in',
         severity: 'success',
+        life: 5000,
       });
 
       setSessionToStorage({ ...data.tokens, userId: data.user.id });
@@ -98,6 +99,7 @@ export const useAuthStore = defineStore('auth', () => {
         summary: 'Error',
         detail: error.value ?? 'An error occurred while logging in',
         severity: 'error',
+        life: 5000,
       });
     } finally {
       loading.value = false;
@@ -122,6 +124,7 @@ export const useAuthStore = defineStore('auth', () => {
         severity: 'success',
         detail: 'You have been registered',
         summary: 'Success',
+        life: 5000,
       });
       setSessionToStorage({
         accessToken: data.accessToken,
@@ -141,6 +144,7 @@ export const useAuthStore = defineStore('auth', () => {
         summary: 'Error',
         detail: error.value ?? 'An error occurred',
         severity: 'error',
+        life: 5000,
       });
     } finally {
       loading.value = false;
@@ -150,17 +154,16 @@ export const useAuthStore = defineStore('auth', () => {
   async function logout() {
     loading.value = true;
     try {
-      const response = await axios.post<{ user: User }>(
+      await axios.post<{ user: User }>(
         `${import.meta.env.VITE_API_URL}/auth/logout`,
         { id: userId.value },
       );
-
-      console.log(response);
 
       toast.add({
         severity: 'success',
         detail: 'You have been logged out',
         summary: 'Success',
+        life: 5000,
       });
       removeSessionFromStorage();
       await router.push('/auth/login');
@@ -173,6 +176,7 @@ export const useAuthStore = defineStore('auth', () => {
         summary: 'Error',
         detail: error.value ?? 'An error occurred while logging out',
         severity: 'error',
+        life: 5000,
       });
     } finally {
       loading.value = false;
