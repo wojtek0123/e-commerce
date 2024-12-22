@@ -4,6 +4,7 @@ import { computed, ref } from 'vue';
 import axios, { AxiosError } from 'axios';
 import { Tokens, User } from '@e-commerce/shared/api-models';
 import { useRouter } from 'vue-router';
+import { Role } from '@prisma/client';
 
 export const useAuthStore = defineStore('auth', () => {
   const router = useRouter();
@@ -41,12 +42,24 @@ export const useAuthStore = defineStore('auth', () => {
     localStorage.setItem('accessToken', session.accessToken);
     localStorage.setItem('refreshToken', session.refreshToken);
     if (session.userId) localStorage.setItem('userId', session.userId);
+
+    tokens.value = {
+      access: session.accessToken,
+      refresh: session.refreshToken,
+    };
+    if (session.userId) userId.value = session.userId;
   }
 
   function removeSessionFromStorage() {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('userId');
+
+    tokens.value = {
+      access: null,
+      refresh: null,
+    };
+    userId.value = null;
   }
 
   async function login(body: { email: string; password: string }) {
@@ -57,63 +70,33 @@ export const useAuthStore = defineStore('auth', () => {
         body,
       );
 
-      userId.value = data.user.id;
-      tokens.value = {
-        access: data.tokens.accessToken,
-        refresh: data.tokens.refreshToken,
-      };
-
-      toast.add({
-        detail: 'Success',
-        summary: 'You are logged in',
-        severity: 'success',
-      });
-
-      setSessionToStorage({ ...data.tokens, userId: data.user.id });
-      await router.push({ name: 'books' });
-    } catch (e: unknown) {
-      if (e instanceof AxiosError) {
-        error.value =
-          e.response?.data?.message ?? 'An error occurred while logging in';
+      if (data.user.role !== Role.ADMIN) {
+        throw new Error('Unauthorized Exception');
       }
-      toast.add({
-        detail: 'Error',
-        summary: error.value ?? 'An error occurred while logging in',
-        severity: 'error',
-      });
-    } finally {
-      loading.value = false;
-    }
-  }
-
-  async function register() {
-    loading.value = true;
-    try {
-      const { data } = await axios.get<{ tokens: Tokens; user: User }>(
-        `${import.meta.env.VITE_API_URL}/auth/register`,
-      );
 
       userId.value = data.user.id;
       tokens.value = {
         access: data.tokens.accessToken,
         refresh: data.tokens.refreshToken,
       };
+
       toast.add({
-        severity: 'success',
-        detail: 'You have been logged in',
         summary: 'Success',
+        detail: 'You are logged in',
+        severity: 'success',
       });
 
       setSessionToStorage({ ...data.tokens, userId: data.user.id });
-      await router.push({ name: 'books' });
+      await router.push({ name: 'book-list' });
     } catch (e: unknown) {
+      console.log(e);
       if (e instanceof AxiosError) {
         error.value =
           e.response?.data?.message ?? 'An error occurred while logging in';
       }
       toast.add({
-        detail: 'Error',
-        summary: error.value ?? 'An error occurred while logging in',
+        summary: 'Error',
+        detail: error.value ?? 'An error occurred while logging in',
         severity: 'error',
       });
     } finally {
@@ -123,14 +106,16 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function getNewTokens() {
     loading.value = true;
+    const body = { userId: userId.value, refreshToken: tokens.value.refresh };
     try {
-      const { data } = await axios.get<{ tokens: Tokens }>(
-        `${import.meta.env.VITE_API_URL}/auth/refresh`,
-      );
+      const { data } = await axios.post<{
+        accessToken: Tokens['accessToken'];
+        refreshToken: Tokens['refreshToken'];
+      }>(`${import.meta.env.VITE_API_URL}/auth/refresh`, body);
 
       tokens.value = {
-        access: data.tokens.accessToken,
-        refresh: data.tokens.refreshToken,
+        access: data.accessToken,
+        refresh: data.refreshToken,
       };
 
       toast.add({
@@ -139,17 +124,22 @@ export const useAuthStore = defineStore('auth', () => {
         summary: 'Success',
       });
       setSessionToStorage({
-        accessToken: data.tokens.accessToken,
-        refreshToken: data.tokens.refreshToken,
+        accessToken: data.accessToken,
+        refreshToken: data.refreshToken,
       });
     } catch (e: unknown) {
       if (e instanceof AxiosError) {
-        error.value =
-          e.response?.data?.message ?? 'An error occurred while logging in';
+        error.value = e.response?.data?.message ?? 'Error occurred';
       }
+
+      console.log('here', e);
+
+      logout();
+      removeSessionFromStorage();
+
       toast.add({
-        detail: 'Error',
-        summary: error.value ?? 'An error occurred while logging in',
+        summary: 'Error',
+        detail: error.value ?? 'An error occurred',
         severity: 'error',
       });
     } finally {
@@ -160,29 +150,28 @@ export const useAuthStore = defineStore('auth', () => {
   async function logout() {
     loading.value = true;
     try {
-      const { data } = await axios.get<{ user: User }>(
+      const response = await axios.post<{ user: User }>(
         `${import.meta.env.VITE_API_URL}/auth/logout`,
+        { id: userId.value },
       );
 
-      userId.value = data.user.id;
-      tokens.value = {
-        access: null,
-        refresh: null,
-      };
+      console.log(response);
+
       toast.add({
         severity: 'success',
         detail: 'You have been logged out',
         summary: 'Success',
       });
       removeSessionFromStorage();
+      await router.push('/auth/login');
     } catch (e: unknown) {
       if (e instanceof AxiosError) {
         error.value =
-          e.response?.data?.message ?? 'An error occurred while logging in';
+          e.response?.data?.message ?? 'An error occurred while logging out';
       }
       toast.add({
-        detail: 'Error',
-        summary: error.value ?? 'An error occurred while logging in',
+        summary: 'Error',
+        detail: error.value ?? 'An error occurred while logging out',
         severity: 'error',
       });
     } finally {
@@ -195,10 +184,10 @@ export const useAuthStore = defineStore('auth', () => {
     tokens,
     userId,
     login,
-    register,
     getNewTokens,
     logout,
     getSessionFromStorage,
     isAuthenticated,
+    setSessionToStorage,
   };
 });

@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { BooksService } from './books.service';
 import {
@@ -21,7 +22,12 @@ import {
 import { BookEntity } from './entities/book.entity';
 import { UpdateBookBodyDto } from './dto/update-body.dto';
 import { CreateBookDto } from './dto/create-book.dto';
-import { Tag } from '@prisma/client';
+import { Role, Tag } from '@prisma/client';
+import { RolesGuard } from '../common/guards/role.guard';
+
+import { Reflector } from '@nestjs/core';
+
+export const Roles = Reflector.createDecorator<Role[]>();
 
 @ApiTags('books')
 @Controller('books')
@@ -29,9 +35,12 @@ export class BooksController {
   constructor(private readonly booksService: BooksService) {}
 
   @Post()
+  @UseGuards(RolesGuard)
+  @Roles([Role.ADMIN])
   @ApiOperation({ summary: 'Create a book' })
   @ApiBody({ type: CreateBookDto })
   @ApiCreatedResponse({ type: BookEntity })
+  @ApiBearerAuth()
   create(@Body() data: CreateBookDto) {
     return this.booksService.create(data);
   }

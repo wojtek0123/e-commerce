@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { shellRouter } from '@e-commerce/admin-dashboard/book/feature/shell';
 import { shellRouter as authRouter } from '@e-commerce/admin-dashboard/auth/feature/shell';
-import { useAuthApi } from '@e-commerce/admin-dashboard/auth/api';
+import { useAuthService } from '@e-commerce/admin-dashboard/auth/api';
 import MainLayout from '../views/main-layout.vue';
 
 const router = createRouter({
@@ -29,9 +29,13 @@ const router = createRouter({
 });
 
 router.beforeEach((to) => {
-  const { isAuthenticated } = useAuthApi;
+  const authService = useAuthService();
 
-  if (!isAuthenticated && to.name !== 'login' && to.name !== 'register') {
+  if (
+    !authService.isAuthenticated.value &&
+    to.name !== 'login' &&
+    to.name !== 'register'
+  ) {
     return { name: 'login' };
   }
 });
