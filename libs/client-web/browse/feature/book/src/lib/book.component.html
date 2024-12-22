@@ -108,59 +108,73 @@
     {{ book()?.price | currency: 'USD' }}
   </h4>
   <div class="flex flex-col gap-base w-full">
-    <div class="flex flex-col gap-base w-full">
-      <p-inputnumber
-        [showButtons]="true"
-        [(ngModel)]="amount"
-        size="large"
-        [min]="1"
-        [max]="availableQuantity"
-        (onBlur)="onBlurInput()"
-        buttonLayout="horizontal"
-        spinnerMode="horizontal"
-        inputId="integeronly"
-        class="max-w-80 w-full"
-        inputStyleClass="w-full"
-        decrementButtonClass="p-button-text p-button-secondary"
-        incrementButtonClass="p-button-text p-button-secondary"
-        incrementButtonIcon="pi pi-plus"
-        decrementButtonIcon="pi pi-minus"
-        [ngClass]="{ 'ng-invalid ng-dirty': isAmountInvalid() }"
-      />
-      @if (isMinAmountInvalid()) {
-        <p-message severity="error" variant="simple">
-          Amount is too small. Should be at least 1.
-        </p-message>
-      }
-      @if (isMaxAmountInvalid()) {
-        <p-message severity="error" variant="simple">
-          Available quantity are smaller than provided amount. Adjust amount.
-        </p-message>
-      }
-      <small class="text-sm font-semibold text-muted-color">
-        {{ availableQuantityMessage() }}
-      </small>
-    </div>
+    @if (availableQuantity() === 0) {
+      <div class="flex gap-4">
+        <div class="flex items-center">
+          <span class="pi pi-history text-2xl text-muted-color"></span>
+        </div>
+        <div>
+          <h3 class="text-2xl font-bold">Temporarly unavailable</h3>
+          <small class="text-muted-color">
+            Currently, we don't have more piceses of this book in our warehouse
+          </small>
+        </div>
+      </div>
+    } @else {
+      <div class="flex flex-col gap-base w-full">
+        <p-inputnumber
+          [showButtons]="true"
+          [(ngModel)]="amount"
+          size="large"
+          [min]="1"
+          [max]="availableQuantity"
+          (onBlur)="onBlurInput()"
+          buttonLayout="horizontal"
+          spinnerMode="horizontal"
+          inputId="integeronly"
+          class="max-w-80 w-full"
+          inputStyleClass="w-full"
+          decrementButtonClass="p-button-text p-button-secondary"
+          incrementButtonClass="p-button-text p-button-secondary"
+          incrementButtonIcon="pi pi-plus"
+          decrementButtonIcon="pi pi-minus"
+          [ngClass]="{ 'ng-invalid ng-dirty': isAmountInvalid() }"
+        />
+        @if (isMinAmountInvalid()) {
+          <p-message severity="error" variant="simple">
+            Amount is too small. Should be at least 1.
+          </p-message>
+        }
+        @if (isMaxAmountInvalid()) {
+          <p-message severity="error" variant="simple">
+            Available quantity are smaller than provided amount. Adjust amount.
+          </p-message>
+        }
+        <small class="text-sm font-semibold text-muted-color">
+          {{ availableQuantityMessage() }}
+        </small>
+      </div>
 
-    <div class="flex items-center gap-4">
-      <p-button
-        label="Buy now"
-        outlined
-        icon="pi pi-shopping-bag"
-        styleClass="w-full"
-        class="w-full"
-        size="large"
-        (onClick)="buyNow()"
-      />
-      <p-button
-        styleClass="w-full"
-        class="w-full"
-        label="Add to cart"
-        icon="pi pi-cart-plus"
-        size="large"
-        [loading]="loading()"
-        (onClick)="addToCart()"
-      />
-    </div>
+      <div class="flex items-center gap-4">
+        <p-button
+          label="Buy now"
+          outlined
+          icon="pi pi-shopping-bag"
+          styleClass="w-full"
+          class="w-full"
+          size="large"
+          (onClick)="buyNow()"
+        />
+        <p-button
+          styleClass="w-full"
+          class="w-full"
+          label="Add to cart"
+          icon="pi pi-cart-plus"
+          size="large"
+          [loading]="loading()"
+          (onClick)="addToCart()"
+        />
+      </div>
+    }
   </div>
 </ng-template>

@@ -22,15 +22,22 @@ export const authInterceptor: HttpInterceptorFn = (
   const userId = authStore.userId();
   const appRoutePaths = inject(APP_ROUTE_PATHS_TOKEN);
 
-  if (!accessToken) return next(request);
+  if (!accessToken)
+    return next(
+      request.clone({
+        headers: request.headers.set('app', 'client-web'),
+      }),
+    );
 
   const clonedRequest = request.clone({
-    headers: request.headers.set(
-      'Authorization',
-      `Bearer ${
-        request.url.includes('auth/refresh') ? refreshToken : accessToken
-      }`,
-    ),
+    headers: request.headers
+      .set(
+        'Authorization',
+        `Bearer ${
+          request.url.includes('auth/refresh') ? refreshToken : accessToken
+        }`,
+      )
+      .set('app', 'client-web'),
   });
 
   return next(clonedRequest).pipe(

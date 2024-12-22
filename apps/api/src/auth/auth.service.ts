@@ -1,6 +1,8 @@
 import {
   BadRequestException,
   ForbiddenException,
+  HttpException,
+  HttpStatus,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -9,7 +11,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import { compare, hash } from 'bcrypt';
 import { roundsOfHashing } from '../users/users.service';
-import { Prisma, User } from '@prisma/client';
+import { Prisma, Role, User } from '@prisma/client';
 import { ConfigService } from '@nestjs/config';
 import { omit } from 'lodash';
 
@@ -21,7 +23,7 @@ export class AuthService {
     private configService: ConfigService,
   ) {}
 
-  async login(email: string, password: string) {
+  async login(email: string, password: string, appHeader: string) {
     const user = await this.prisma.user.findUnique({
       where: { email },
       include: { shoppingSessions: { select: { id: true, cartItems: true } } },
@@ -37,7 +39,16 @@ export class AuthService {
       throw new UnauthorizedException('Incorrect email or password');
     }
 
-    const tokens = await this._getTokens(user.id, user.email);
+    const hasAccessToApp = {
+      'admin-dashboard': user.role === Role.ADMIN,
+      'client-web': user.role === Role.USER,
+    }[appHeader];
+
+    if (!hasAccessToApp) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+    }
+
+    const tokens = await this._getTokens(user.id, user.email, user.role);
 
     await this._updateRefreshToken(user.id, tokens.refreshToken);
 
@@ -65,7 +76,11 @@ export class AuthService {
     const createdUser = await this.prisma.user.create({
       data: { ...data, password: hashedPassword },
     });
-    const tokens = await this._getTokens(createdUser.id, createdUser.email);
+    const tokens = await this._getTokens(
+      createdUser.id,
+      createdUser.email,
+      createdUser.role,
+    );
     await this._updateRefreshToken(createdUser.id, tokens.refreshToken);
 
     const user = omit(createdUser, 'password');
@@ -87,12 +102,13 @@ export class AuthService {
     });
   }
 
-  private async _getTokens(id: User['id'], email: string) {
+  private async _getTokens(id: User['id'], email: string, role: Role) {
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(
         {
           sub: id,
           email,
+          role,
         },
         {
           secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
@@ -103,6 +119,7 @@ export class AuthService {
         {
           sub: id,
           email,
+          role,
         },
         {
           secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
@@ -127,7 +144,7 @@ export class AuthService {
 
     if (!refreshTokenMatches) throw new ForbiddenException('Access Denied');
 
-    const tokens = await this._getTokens(user.id, user.email);
+    const tokens = await this._getTokens(user.id, user.email, user.role);
     await this._updateRefreshToken(user.id, tokens.refreshToken);
 
     return tokens;

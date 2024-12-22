@@ -4,10 +4,10 @@ import Toolbar from 'primevue/toolbar';
 import Button from 'primevue/button';
 import Divider from 'primevue/divider';
 import { useCoreStore } from '@e-commerce/admin-dashboard/core/data-access';
-import { useAuthApi } from '@e-commerce/admin-dashboard/auth/api';
+import { useAuthService } from '@e-commerce/admin-dashboard/auth/api';
 
 const store = useCoreStore();
-const { logout } = useAuthApi;
+const authService = useAuthService();
 </script>
 
 <template>
@@ -96,7 +96,7 @@ const { logout } = useAuthApi;
         <div class="flex flex-col gap-2">
           <button
             class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700"
-            @click="logout"
+            @click="authService.logout"
           >
             <i class="pi pi-sign-out"></i>
             <span v-if="store.isExpanded">Log out</span>

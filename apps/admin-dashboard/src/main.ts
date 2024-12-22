@@ -5,9 +5,13 @@ import { createPinia } from 'pinia';
 import ToastService from 'primevue/toastservice';
 import ConfirmationService from 'primevue/confirmationservice';
 import router from './router';
+import axios from 'axios';
+import { useAuthStore } from '@e-commerce/admin-dashboard/auth/data-access';
 
 import { createApp } from 'vue';
 import App from './app/App.vue';
+import { useAuthService } from '@e-commerce/admin-dashboard/auth/api';
+import { Tokens } from '@e-commerce/shared/api-models';
 
 const app = createApp(App);
 const pinia = createPinia();
@@ -28,5 +32,80 @@ app.use(PrimeConfig, {
 app.use(ToastService);
 app.use(ConfirmationService);
 app.use(pinia);
+
+axios.interceptors.request.use(
+  function (config) {
+    const authService = useAuthService();
+
+    const { access, refresh } = authService.tokens.value;
+
+    config.headers.set('app', 'admin-dashboard');
+
+    // if (refresh && access) {
+    // console.log(access)
+    config.headers.Authorization = `Bearer ${config.url?.includes('refresh') ? refresh : access}`;
+    // }
+
+    console.log(access);
+    return config;
+  },
+  function (error) {
+    console.log('y', error);
+    return Promise.reject(error);
+  },
+);
+
+axios.interceptors.response.use(
+  function (response) {
+    return response;
+  },
+  async function (error) {
+    const originalConfig = error.config;
+
+    // Add check if request already failed once to prevent infinite loop
+    if (
+      !originalConfig._retry &&
+      !originalConfig.url.includes('login') &&
+      error.response?.status === 401
+    ) {
+      originalConfig._retry = true;
+
+      const authStore = useAuthStore();
+
+      console.log('headers 1');
+      // try {
+      const { data } = await axios.post<{
+        accessToken: Tokens['accessToken'];
+        refreshToken: Tokens['refreshToken'];
+      }>(`${import.meta.env.VITE_API_URL}/auth/refresh`, {
+        userId: authStore.userId,
+        refreshToken: authStore.tokens.refresh,
+      });
+
+      authStore.setSessionToStorage(data);
+
+      console.log('headers');
+
+      return axios
+        .request({
+          ...originalConfig,
+          headers: {
+            ...originalConfig.headers,
+            Authorization: `Bearer ${data.accessToken}`,
+          },
+        })
+        .catch((err) => {
+          return Promise.reject(err);
+        });
+      // } catch (err) {
+      //   // If getting new tokens fails, reject the promise
+      //   console.log('x', err);
+      //   return Promise.reject(err);
+      // }
+    }
+
+    return Promise.reject(error);
+  },
+);
 
 app.mount('#root');
