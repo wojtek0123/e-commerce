@@ -41,16 +41,11 @@ axios.interceptors.request.use(
 
     config.headers.set('app', 'admin-dashboard');
 
-    // if (refresh && access) {
-    // console.log(access)
     config.headers.Authorization = `Bearer ${config.url?.includes('refresh') ? refresh : access}`;
-    // }
 
-    console.log(access);
     return config;
   },
   function (error) {
-    console.log('y', error);
     return Promise.reject(error);
   },
 );
@@ -62,7 +57,6 @@ axios.interceptors.response.use(
   async function (error) {
     const originalConfig = error.config;
 
-    // Add check if request already failed once to prevent infinite loop
     if (
       !originalConfig._retry &&
       !originalConfig.url.includes('login') &&
@@ -72,36 +66,27 @@ axios.interceptors.response.use(
 
       const authStore = useAuthStore();
 
-      console.log('headers 1');
-      // try {
-      const { data } = await axios.post<{
-        accessToken: Tokens['accessToken'];
-        refreshToken: Tokens['refreshToken'];
-      }>(`${import.meta.env.VITE_API_URL}/auth/refresh`, {
-        userId: authStore.userId,
-        refreshToken: authStore.tokens.refresh,
-      });
+      try {
+        const { data } = await axios.post<{
+          accessToken: Tokens['accessToken'];
+          refreshToken: Tokens['refreshToken'];
+        }>(`${import.meta.env.VITE_API_URL}/auth/refresh`, {
+          userId: authStore.userId,
+          refreshToken: authStore.tokens.refresh,
+        });
 
-      authStore.setSessionToStorage(data);
+        authStore.setSessionToStorage(data);
 
-      console.log('headers');
-
-      return axios
-        .request({
+        return axios.request({
           ...originalConfig,
           headers: {
             ...originalConfig.headers,
             Authorization: `Bearer ${data.accessToken}`,
           },
-        })
-        .catch((err) => {
-          return Promise.reject(err);
         });
-      // } catch (err) {
-      //   // If getting new tokens fails, reject the promise
-      //   console.log('x', err);
-      //   return Promise.reject(err);
-      // }
+      } catch (err) {
+        return Promise.reject(err);
+      }
     }
 
     return Promise.reject(error);

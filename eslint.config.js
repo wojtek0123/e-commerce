@@ -35,19 +35,6 @@ module.exports = [
             {
               sourceTag: 'type:feature',
               onlyDependOnLibsWithTags: [
-                'type:domain',
-                'type:ui',
-                'type:data-access',
-                'type:util',
-                'type:api',
-                'type:shared-data-access',
-                'type:shared-util',
-                'type:shared-ui',
-              ],
-            },
-            {
-              sourceTag: 'type:domain',
-              onlyDependOnLibsWithTags: [
                 'type:ui',
                 'type:data-access',
                 'type:util',
@@ -129,11 +116,14 @@ module.exports = [
               ],
             },
             {
+              sourceTag: 'scope:client-web',
+              onlyDependOnLibsWithTags: ['scope:client-web', 'scope:shared'],
+            },
+            {
               sourceTag: 'scope:admin-dashboard',
               onlyDependOnLibsWithTags: [
                 'scope:admin-dashboard',
-                'scope:client-web',
-                'scope:api',
+                'scope:shared',
               ],
             },
           ],
