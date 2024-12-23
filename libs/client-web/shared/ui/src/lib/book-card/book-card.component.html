@@ -26,11 +26,13 @@
       </div>
     </div>
     <div class="flex items-center justify-between">
-      <span>{{ book().price | currency: 'USD' }}</span>
+      <span class="text-lg font-bold">{{
+        book().price | currency: 'USD'
+      }}</span>
       <p-button
-        label="Add to cart"
+        title="Add to cart"
         icon="pi pi-cart-plus"
-        size="small"
+        size="large"
         [loading]="awaitingBookIdsToAddToCart().includes(book().id)"
         (onClick)="addToCart($event, book())"
       />

@@ -1,48 +1,38 @@
 <div class="flex @container">
-  @defer (hydrate on hover) {
+  <div
+    class="w-full grid grid-cols-1 gap-base @md:grid-cols-2 @2xl:grid-cols-3 @4xl:grid-cols-4 @6xl:grid-cols-5 @7xl:grid-cols-6 @10xl:grid-cols-7 @11xl:grid-cols-8 @12xl:grid-cols-9 @13xl:grid-cols-10 @14xl:grid-cols-11"
+  >
     @if (loading() && books().length === 0) {
-      <div
-        class="w-full grid grid-cols-1 gap-base @xl:grid-cols-2 @3xl:grid-cols-3 @5xl:grid-cols-4 @8xl:grid-cols-5 @9xl:grid-cols-6 @10xl:grid-cols-7 @11xl:grid-cols-8 @12xl:grid-cols-9 @13xl:grid-cols-10 @14xl:grid-cols-11"
-      >
-        @for (_ of skeleconts(); track $index) {
-          <lib-book-card-skeleton />
-        }
-      </div>
-    } @else if (error()) {
-      <div class="w-full mt-12 col-span-full text-center text-4xl font-bold">
-        @for (error of errors(); track $index) {
-          <div class="text-center">{{ error }}</div>
-        }
-      </div>
-    } @else if (books()) {
-      <div
-        class="w-full grid grid-cols-1 gap-base @xl:grid-cols-2 @3xl:grid-cols-3 @5xl:grid-cols-4 @8xl:grid-cols-5 @9xl:grid-cols-6 @10xl:grid-cols-7 @11xl:grid-cols-8 @12xl:grid-cols-9 @13xl:grid-cols-10 @14xl:grid-cols-11"
-        [ngClass]="{
-          loading: loading() && books().length,
-        }"
-      >
-        @for (book of books(); track book.id) {
-          <lib-book-card
-            [book]="book"
-            [awaitingBookIdsToAddToCart]="pendingBookIds()"
-            (onAddToCart)="addToCartEvent.emit($event)"
-          />
-        } @empty {
-          <div
-            class="w-full mt-12 col-start-1 col-span-full text-center text-4xl font-bold"
-          >
-            No books were found!
-          </div>
-        }
-      </div>
-    }
-  } @placeholder {
-    <div
-      class="w-full grid grid-cols-1 gap-base @xl:grid-cols-2 @3xl:grid-cols-3 @5xl:grid-cols-4 @8xl:grid-cols-5 @9xl:grid-cols-6 @10xl:grid-cols-7 @11xl:grid-cols-8 @12xl:grid-cols-9 @13xl:grid-cols-10 @14xl:grid-cols-11"
-    >
       @for (_ of skeleconts(); track $index) {
         <lib-book-card-skeleton />
       }
-    </div>
-  }
+    } @else if (error()) {
+      <div class="flex flex-col items-center gap-4 mt-10 col-span-full">
+        <p class="text-5xl text-center w-full break-words">{{ error() }}</p>
+        <p class="text-xl text-muted-color">
+          Unable to load books. Please try again.
+        </p>
+        <p-button
+          label="Retry"
+          icon="pi pi-refresh"
+          (onClick)="refetchData()"
+          severity="secondary"
+        ></p-button>
+      </div>
+    } @else if (books()) {
+      @for (book of books(); track book.id) {
+        <lib-book-card
+          [book]="book"
+          [awaitingBookIdsToAddToCart]="pendingBookIds()"
+          (onAddToCart)="addToCartEvent.emit($event)"
+        />
+      } @empty {
+        <div
+          class="w-full mt-12 col-start-1 col-span-full text-center text-4xl font-bold"
+        >
+          No books were found!
+        </div>
+      }
+    }
+  </div>
 </div>

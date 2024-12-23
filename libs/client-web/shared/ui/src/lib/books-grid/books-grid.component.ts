@@ -1,4 +1,3 @@
-import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -9,11 +8,12 @@ import {
 import { Book } from '@e-commerce/shared/api-models';
 import { BookCardComponent } from '../book-card/book-card.component';
 import { BookCardSkeletonComponent } from '../book-card-skeleton/book-card-skeleton.component';
+import { Button } from 'primeng/button';
 
 @Component({
   selector: 'lib-books-grid',
   standalone: true,
-  imports: [BookCardSkeletonComponent, BookCardComponent, NgClass],
+  imports: [BookCardSkeletonComponent, BookCardComponent, Button],
   templateUrl: './books-grid.component.html',
   styleUrl: './books-grid.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -32,4 +32,9 @@ export class BooksGridComponent {
   );
 
   public addToCartEvent = output<Book>();
+  onRefetch = output<void>();
+
+  refetchData() {
+    this.onRefetch.emit();
+  }
 }

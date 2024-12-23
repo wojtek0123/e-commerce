@@ -7,11 +7,11 @@
     <div
       class="relative aspect-[3/4] w-20 h-28 @3xl/cart-item:w-32 @3xl/cart-item:h-40"
     >
-      <img
-        class="object-cover"
-        [ngSrc]="item().book.coverImage ?? ''"
+      <p-image
+        [preview]="true"
+        styleClass="h-full"
+        [src]="item().book.coverImage ?? ''"
         [alt]="item().book.title + ' cover image'"
-        fill
       />
     </div>
     <div

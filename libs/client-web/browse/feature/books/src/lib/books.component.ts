@@ -39,51 +39,55 @@ import { CartService } from '@e-commerce/client-web/cart/api';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BooksComponent implements OnInit {
-  private readonly booksStore = inject(BooksStore);
-  private readonly cartService = inject(CartService);
-  private viewport = inject(ViewportScroller);
+  #booksStore = inject(BooksStore);
+  #cartService = inject(CartService);
+  #viewport = inject(ViewportScroller);
 
-  public breadcrumbs = signal<MenuItem[]>([
+  breadcrumbs = signal<MenuItem[]>([
     { label: 'home', routerLink: '/' },
     {
       label: 'books',
     },
   ]);
 
-  public books = this.booksStore.books;
-  public loading = this.booksStore.loading;
-  public error = this.booksStore.error;
-  public count = this.booksStore.count;
-  public total = this.booksStore.total;
-  public page = this.booksStore.page;
-  public size = this.booksStore.size;
-  public first = computed(() => this.page() - 1 * this.size());
-  public sizes = signal(sizes);
-  public activeFilters = this.booksStore.activeFilters;
+  books = this.#booksStore.books;
+  loading = this.#booksStore.loading;
+  error = this.#booksStore.error;
+  count = this.#booksStore.count;
+  total = this.#booksStore.total;
+  page = this.#booksStore.page;
+  size = this.#booksStore.size;
+  first = computed(() => this.page() - 1 * this.size());
+  sizes = signal(sizes);
+  activeFilters = this.#booksStore.activeFilters;
 
-  public ngOnInit(): void {
-    this.booksStore.restoreQueryParamsFilters();
+  ngOnInit(): void {
+    this.#booksStore.restoreQueryParamsFilters();
   }
 
-  public addToCart(book: Book) {
-    this.cartService.addBook(book, 1);
+  addToCart(book: Book) {
+    this.#cartService.addBook(book, 1);
   }
 
-  public onPageChange(event: PaginatorState, size: number | null) {
-    this.booksStore.setPage((event.page || 0) + 1);
+  onPageChange(event: PaginatorState, size: number | null) {
+    this.#booksStore.setPage((event.page || 0) + 1);
 
     if (event.rows && size !== event.rows) {
-      this.booksStore.setSize(event.rows);
+      this.#booksStore.setSize(event.rows);
     }
 
-    this.viewport.scrollToPosition([0, 0]);
+    this.#viewport.scrollToPosition([0, 0]);
   }
 
-  public clearFilter(activeFilter: ActiveFilter) {
-    this.booksStore.removeActiveFilter(activeFilter);
+  clearFilter(activeFilter: ActiveFilter) {
+    this.#booksStore.removeActiveFilter(activeFilter);
   }
 
-  public clearFilters() {
-    this.booksStore.removeActiveFilters();
+  clearFilters() {
+    this.#booksStore.removeActiveFilters();
+  }
+
+  refetchBooks() {
+    this.#booksStore.getBooks();
   }
 }
