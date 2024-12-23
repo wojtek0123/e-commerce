@@ -1,5 +1,5 @@
 export const getSelectedItemsFromQueryParam = (
-  queryParamValue: string | undefined,
+  queryParamValue: string | null,
 ) => {
   return queryParamValue?.replaceAll('_', ' ');
 };
