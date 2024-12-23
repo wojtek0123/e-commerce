@@ -21,6 +21,7 @@
       [loading]="loading()"
       [error]="error()"
       (addToCartEvent)="addToCart($event)"
+      (onRefetch)="refetchBooks()"
     />
     <div
       class="flex items-center justify-center bg-content-background rounded-base w-full"
