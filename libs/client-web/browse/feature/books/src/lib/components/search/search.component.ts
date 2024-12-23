@@ -47,7 +47,7 @@ export class SearchComponent implements OnInit {
   }
 
   clearInput() {
-    this.#booksStore.clearSingleValueFilter('search');
+    this.#booksStore.setSingleValueFilter(null, 'search');
 
     this.searchInputRef().nativeElement?.focus();
   }

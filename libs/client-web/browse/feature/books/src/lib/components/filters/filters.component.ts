@@ -42,24 +42,25 @@ import { DrawerLeftDirective } from '@e-commerce/client-web/shared/utils';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FiltersComponent {
-  private readonly booksStore = inject(BooksStore);
+  #booksStore = inject(BooksStore);
 
-  public selectedTags = this.booksStore.selectedTags;
-  public selectedAuthors = this.booksStore.selectedAuthors;
-  public selectedCategories = this.booksStore.selectedCategories;
-  public selectedPrices = this.booksStore.enteredPrices;
+  selectedTags = this.#booksStore.selectedTags;
+  selectedAuthors = this.#booksStore.selectedAuthors;
+  selectedCategories = this.#booksStore.selectedCategories;
+  selectedPrices = this.#booksStore.enteredPrices;
 
-  sidebarVisible = signal(false);
+  isSidebarVisible = signal(false);
 
   clearSelectedItems(filter: MultiSelectFilters) {
-    this.booksStore.clearSelectedItems(filter);
+    this.#booksStore.clearSelectedItems(filter);
   }
 
   clearSingleValueFilter(filter: SingleValueFilters) {
-    this.booksStore.clearSingleValueFilter(filter);
+    this.#booksStore.setSingleValueFilter(null, filter);
   }
 
   clearPriceFilter() {
-    this.booksStore.clearPrice();
+    this.#booksStore.setSingleValueFilter(null, 'minPrice');
+    this.#booksStore.setSingleValueFilter(null, 'maxPrice');
   }
 }

@@ -12,11 +12,11 @@
   class="xl:hidden"
   [plain]="true"
   icon="pi pi-bars"
-  (onClick)="sidebarVisible.set(true)"
+  (onClick)="isSidebarVisible.set(true)"
 />
 
-<p-drawer libDrawerLeft class="xl:hidden" [(visible)]="sidebarVisible">
-  @if (sidebarVisible()) {
+<p-drawer libDrawerLeft class="xl:hidden" [(visible)]="isSidebarVisible">
+  @if (isSidebarVisible()) {
     <ng-container [ngTemplateOutlet]="filters" />
   }
 </p-drawer>

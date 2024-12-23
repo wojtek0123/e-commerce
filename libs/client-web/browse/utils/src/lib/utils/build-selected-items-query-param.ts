@@ -2,15 +2,19 @@ import { sortBy } from 'lodash-es';
 
 export const buildSelectedItemsQueryParam = <T>(
   selectedItems: T[] | undefined,
-  key: keyof T,
+  sortByKey?: keyof T,
 ) => {
   if (!selectedItems || selectedItems.length === 0) return null;
 
-  return sortBy(selectedItems, key)
+  if (!sortByKey) {
+    return [...selectedItems.sort()].join(',');
+  }
+
+  return sortBy(selectedItems, sortByKey)
     .map((item) =>
-      typeof item[key] === 'string'
-        ? item[key].replaceAll(' ', '_')
-        : item[key],
+      typeof item[sortByKey] === 'string'
+        ? item[sortByKey].replaceAll(' ', '_')
+        : item[sortByKey],
     )
     .join(',');
 };

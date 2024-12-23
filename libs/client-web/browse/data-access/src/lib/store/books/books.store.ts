@@ -3,6 +3,7 @@ import {
   BooksApiService,
   CategoryApiService,
 } from '@e-commerce/client-web/shared/data-access/api-services';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   Author,
   allBookTags,
@@ -19,12 +20,14 @@ import {
   withComputed,
   withHooks,
   withMethods,
+  withProps,
   withState,
 } from '@ngrx/signals';
 import { ActiveFilter } from '../../models/active-filter.model';
 import {
   afterNextRender,
   computed,
+  DestroyRef,
   effect,
   inject,
   untracked,
@@ -43,7 +46,12 @@ import {
 } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
 import { Filter } from '../../models/filter.model';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import {
+  ActivatedRoute,
+  NavigationEnd,
+  ParamMap,
+  Router,
+} from '@angular/router';
 import {
   addEntities,
   addEntity,
@@ -148,690 +156,597 @@ export const BooksStore = signalStore(
     activeFilters: computed(() => _activeFiltersEntities()),
     search: computed(() => filters().singleValue.search),
   })),
-  withMethods(
-    (
-      store,
-      booksApi = inject(BooksApiService),
-      authorApi = inject(AuthorApiService),
-      categoryApi = inject(CategoryApiService),
-      messageService = inject(MessageService),
-    ) => ({
-      getBooks: rxMethod<void>(
-        pipe(
-          tap(() => patchState(store, { loading: true })),
-          switchMap(() => {
-            const {
-              filters: { multiSelect, singleValue },
-            } = getState(store);
+  withProps(() => ({
+    _bookApi: inject(BooksApiService),
+    _authorApi: inject(AuthorApiService),
+    _categoryApi: inject(CategoryApiService),
+    _messageService: inject(MessageService),
+    _router: inject(Router),
+    _route: inject(ActivatedRoute),
+  })),
+  withMethods((store) => ({
+    getBooks: rxMethod<void>(
+      pipe(
+        tap(() => patchState(store, { loading: true })),
+        switchMap(() => {
+          const {
+            filters: { multiSelect, singleValue },
+          } = getState(store);
 
-            const priceMin = singleValue.minPrice;
-            const priceMax = singleValue.maxPrice;
-            const selectedTags = multiSelect.tag.selectedItems.map(
-              ({ id }) => id,
-            );
-            const selectedAuthorsId = multiSelect.author.selectedItems.map(
-              ({ id }) => id,
-            );
-            const selectedCategoriesId = multiSelect.category.selectedItems.map(
-              ({ id }) => id,
-            );
+          const priceMin = singleValue.minPrice;
+          const priceMax = singleValue.maxPrice;
+          const selectedTags = multiSelect.tag.selectedItems.map(
+            ({ id }) => id,
+          );
+          const selectedAuthorsId = multiSelect.author.selectedItems.map(
+            ({ id }) => id,
+          );
+          const selectedCategoriesId = multiSelect.category.selectedItems.map(
+            ({ id }) => id,
+          );
 
-            return booksApi
-              .getBooks$({
-                ...(singleValue.search && { titleLike: singleValue.search }),
-                ...(priceMin && { priceFrom: priceMin }),
-                ...(priceMax && { priceTo: priceMax }),
-                tagIn: selectedTags,
-                authorIdIn: selectedAuthorsId,
-                categoryIdIn: selectedCategoriesId,
-                page: store.page(),
-                size: store.size(),
-              })
-              .pipe(
-                tapResponse({
-                  next: ({ items, total, count }) => {
-                    patchState(store, {
-                      loading: false,
-                      books: items,
-                      total,
-                      count,
-                    });
-                  },
-                  error: (error: ResponseError) => {
-                    patchState(store, {
-                      loading: false,
-                      error:
-                        error?.error?.message ||
-                        'Error occur while getting books',
-                    });
-                  },
-                }),
-              );
-          }),
-        ),
+          return store._bookApi
+            .getBooks$({
+              ...(singleValue.search && { titleLike: singleValue.search }),
+              ...(priceMin && { priceFrom: priceMin }),
+              ...(priceMax && { priceTo: priceMax }),
+              tagIn: selectedTags,
+              authorIdIn: selectedAuthorsId,
+              categoryIdIn: selectedCategoriesId,
+              page: store.page(),
+              size: store.size(),
+            })
+            .pipe(
+              tapResponse({
+                next: ({ items, total, count }) => {
+                  patchState(store, {
+                    loading: false,
+                    books: items,
+                    total,
+                    count,
+                  });
+                },
+                error: (error: ResponseError) => {
+                  patchState(store, {
+                    loading: false,
+                    error:
+                      error?.error?.message ||
+                      'Error occur while getting books',
+                  });
+                },
+              }),
+            );
+        }),
       ),
-      getAuthors: rxMethod<{ search: string }>(
-        pipe(
-          switchMap(({ search }) =>
-            authorApi
-              .getAll$({
-                nameLike: search,
-                page: FILTER_PAGE,
-                size: FILTER_SIZE,
-              })
-              .pipe(
-                tapResponse({
-                  next: (authors) => {
-                    patchState(store, (state) => ({
-                      filters: {
-                        ...state.filters,
-                        multiSelect: {
-                          ...state.filters.multiSelect,
-                          author: {
-                            ...state.filters.multiSelect.author,
-                            items: authors,
-                          },
+    ),
+    getAuthors: rxMethod<{ search: string }>(
+      pipe(
+        switchMap(({ search }) =>
+          store._authorApi
+            .getAll$({
+              nameLike: search,
+              page: FILTER_PAGE,
+              size: FILTER_SIZE,
+            })
+            .pipe(
+              tapResponse({
+                next: (authors) => {
+                  patchState(store, (state) => ({
+                    filters: {
+                      ...state.filters,
+                      multiSelect: {
+                        ...state.filters.multiSelect,
+                        author: {
+                          ...state.filters.multiSelect.author,
+                          items: authors,
                         },
                       },
-                    }));
-                  },
-                  error: (error: ResponseError) => {
-                    messageService.add({
-                      summary: 'Error',
-                      severity: 'error',
-                      detail:
-                        error?.error?.message ??
-                        'Error occured while getting authors to filter',
-                    });
-                  },
-                }),
-              ),
-          ),
+                    },
+                  }));
+                },
+                error: (error: ResponseError) => {
+                  store._messageService.add({
+                    summary: 'Error',
+                    severity: 'error',
+                    detail:
+                      error?.error?.message ??
+                      'Error occured while getting authors to filter',
+                  });
+                },
+              }),
+            ),
         ),
       ),
-      getCategories: rxMethod<{ search: string }>(
-        pipe(
-          switchMap(({ search }) =>
-            categoryApi
-              .getCategories$({
-                nameLike: search,
-                page: FILTER_PAGE,
-                size: FILTER_SIZE,
-              })
-              .pipe(
-                tapResponse({
-                  next: (categories) => {
-                    patchState(store, (state) => ({
-                      filters: {
-                        ...state.filters,
-                        multiSelect: {
-                          ...state.filters.multiSelect,
-                          category: {
-                            ...state.filters.multiSelect.category,
-                            items: categories,
-                          },
+    ),
+    getCategories: rxMethod<{ search: string }>(
+      pipe(
+        switchMap(({ search }) =>
+          store._categoryApi
+            .getCategories$({
+              nameLike: search,
+              page: FILTER_PAGE,
+              size: FILTER_SIZE,
+            })
+            .pipe(
+              tapResponse({
+                next: (categories) => {
+                  patchState(store, (state) => ({
+                    filters: {
+                      ...state.filters,
+                      multiSelect: {
+                        ...state.filters.multiSelect,
+                        category: {
+                          ...state.filters.multiSelect.category,
+                          items: categories,
                         },
                       },
-                    }));
-                  },
-                  error: (error: ResponseError) => {
-                    messageService.add({
-                      summary: 'Error',
-                      severity: 'error',
-                      detail:
-                        error?.error?.message ??
-                        'Error occured while getting categories to filter',
-                    });
-                  },
-                }),
-              ),
-          ),
+                    },
+                  }));
+                },
+                error: (error: ResponseError) => {
+                  store._messageService.add({
+                    summary: 'Error',
+                    severity: 'error',
+                    detail:
+                      error?.error?.message ??
+                      'Error occured while getting categories to filter',
+                  });
+                },
+              }),
+            ),
         ),
       ),
-      getTags: (search: string) => {
-        const allTags = [...allBookTags];
+    ),
+    getTags: (search: string) => {
+      const allTags = [...allBookTags];
 
-        const tags = allTags
-          .filter((tag) => tag.toLowerCase().includes(search.toLowerCase()))
-          .slice(0, FILTER_SIZE);
+      const tags = allTags
+        .filter((tag) => tag.toLowerCase().includes(search.toLowerCase()))
+        .slice(0, FILTER_SIZE);
 
-        patchState(store, (state) => ({
+      patchState(store, (state) => ({
+        ...state,
+        filters: {
+          ...state.filters,
+          multiSelect: {
+            ...state.filters.multiSelect,
+            tag: {
+              ...state.filters.multiSelect.tag,
+              items: tags.map((tag) => ({ id: tag, name: tag })),
+            },
+          },
+        },
+      }));
+    },
+  })),
+  withMethods((store) => ({
+    setPage: (page: number) => {
+      patchState(store, { page });
+    },
+    setSize: (size: number) => {
+      patchState(store, { size });
+    },
+    selectItem: <T extends { id: string; name: string }>(
+      item: T,
+      filter: MultiSelectFilters,
+    ) => {
+      const activeFilter: ActiveFilter = {
+        id: item.id,
+        filter,
+        value: filter === 'tag' ? item.name.toLowerCase() : item.name,
+      };
+
+      patchState(
+        store,
+        addEntity(activeFilter, activeFilterConfig),
+        (state) => ({
+          filters: {
+            ...state.filters,
+            multiSelect: {
+              ...state.filters.multiSelect,
+              [filter]: {
+                ...state.filters.multiSelect[filter],
+                selectedItems: [
+                  ...state.filters.multiSelect[filter].selectedItems,
+                  item,
+                ],
+              },
+            },
+          },
+        }),
+      );
+    },
+    unselectItem: <T extends { id: string; name: string }>(
+      item: T,
+      filter: MultiSelectFilters,
+    ) => {
+      const selectedItems = getState(store).filters.multiSelect[
+        filter
+      ].selectedItems.filter((selectedItem) => selectedItem.id !== item.id);
+
+      patchState(store, removeEntity(item.id, activeFilterConfig), (state) => ({
+        filters: {
+          ...state.filters,
+          multiSelect: {
+            ...state.filters.multiSelect,
+            [filter]: {
+              ...state.filters.multiSelect[filter],
+              selectedItems,
+            },
+          },
+        },
+      }));
+    },
+    setSingleValueFilter: <T>(value: T | null, filter: SingleValueFilters) => {
+      const activeFilter: ActiveFilter = {
+        id: filter,
+        filter,
+        value: value?.toString() ?? '',
+      };
+      const isFilterSearch = filter === 'search';
+
+      if (!isFilterSearch && value !== null) {
+        patchState(store, setEntity(activeFilter, activeFilterConfig));
+      } else if (!isFilterSearch) {
+        patchState(store, removeEntity(filter, activeFilterConfig));
+      }
+
+      patchState(store, (state) => ({
+        ...state,
+        filters: {
+          ...state.filters,
+          singleValue: {
+            ...state.filters.singleValue,
+            [filter]: value,
+          },
+        },
+      }));
+    },
+    clearSelectedItems: (filter: MultiSelectFilters) => {
+      patchState(
+        store,
+        removeEntities(
+          (activeFilter) => activeFilter.filter === filter,
+          activeFilterConfig,
+        ),
+        (state) => ({
+          ...state,
+          page: 1,
+          filters: {
+            ...state.filters,
+            multiSelect: {
+              ...state.filters.multiSelect,
+              [filter]: {
+                ...state.filters.multiSelect[filter],
+                selectedItems: [],
+              },
+            },
+          },
+        }),
+      );
+    },
+    removeActiveFilter: (activeFilter: ActiveFilter) => {
+      const { filter, id } = activeFilter;
+
+      const isSingleValueFilter = (allSingleValueFilters as string[]).includes(
+        filter,
+      );
+
+      if (isSingleValueFilter) {
+        patchState(store, removeEntity(id, activeFilterConfig), (state) => ({
+          ...state,
+          page: 1,
+          filters: {
+            ...state.filters,
+            singleValue: {
+              ...state.filters.singleValue,
+              [filter]: null,
+            },
+          },
+        }));
+      } else {
+        patchState(store, removeEntity(id, activeFilterConfig), (state) => ({
           ...state,
           filters: {
             ...state.filters,
             multiSelect: {
               ...state.filters.multiSelect,
-              tag: {
-                ...state.filters.multiSelect.tag,
-                items: tags.map((tag) => ({ id: tag, name: tag })),
+              [filter]: {
+                ...state.filters.multiSelect[filter as MultiSelectFilters],
+                selectedItems: state.filters.multiSelect[
+                  filter as MultiSelectFilters
+                ].selectedItems.filter(
+                  (selectedItem) => selectedItem.id !== id,
+                ),
               },
             },
           },
         }));
-      },
-    }),
-  ),
-  withMethods(
-    (store, router = inject(Router), route = inject(ActivatedRoute)) => ({
-      setPage: (page: number) => {
-        patchState(store, { page });
-      },
-      setSize: (size: number) => {
-        patchState(store, { size });
-      },
-      selectItem: <T extends { id: string; name: string }>(
-        item: T,
-        filter: MultiSelectFilters,
-      ) => {
-        const activeFilter: ActiveFilter = {
-          id: item.id,
-          filter,
-          value: filter === 'tag' ? item.name.toLowerCase() : item.name,
-        };
-
-        patchState(
-          store,
-          addEntity(activeFilter, activeFilterConfig),
-          (state) => ({
-            filters: {
-              ...state.filters,
-              multiSelect: {
-                ...state.filters.multiSelect,
-                [filter]: {
-                  ...state.filters.multiSelect[filter],
-                  selectedItems: [
-                    ...state.filters.multiSelect[filter].selectedItems,
-                    item,
-                  ],
-                },
-              },
+      }
+    },
+    removeActiveFilters: () => {
+      patchState(store, removeAllEntities(activeFilterConfig), (state) => ({
+        page: 1,
+        filters: {
+          multiSelect: {
+            category: {
+              ...state.filters.multiSelect.category,
+              selectedItems: [],
             },
-          }),
-        );
-
-        store.getBooks();
-      },
-      unselectItem: <T extends { id: string; name: string }>(
-        item: T,
-        filter: MultiSelectFilters,
-      ) => {
-        const selectedItems = getState(store).filters.multiSelect[
-          filter
-        ].selectedItems.filter((selectedItem) => selectedItem.id !== item.id);
-
-        patchState(
-          store,
-          removeEntity(item.id, activeFilterConfig),
-          (state) => ({
-            filters: {
-              ...state.filters,
-              multiSelect: {
-                ...state.filters.multiSelect,
-                [filter]: {
-                  ...state.filters.multiSelect[filter],
-                  selectedItems,
-                },
-              },
+            tag: {
+              ...state.filters.multiSelect.tag,
+              selectedItems: [],
             },
-          }),
-        );
-
-        store.getBooks();
-      },
-      setSingleValueFilter: <T>(
-        value: T | null,
-        filter: SingleValueFilters,
-      ) => {
-        const activeFilter: ActiveFilter = {
-          id: filter,
-          filter,
-          value: value?.toString() ?? '',
-        };
-        const isFilterSearch = filter === 'search';
-
-        if (!isFilterSearch && value !== null) {
-          patchState(store, setEntity(activeFilter, activeFilterConfig));
-        } else if (!isFilterSearch) {
-          patchState(store, removeEntity(filter, activeFilterConfig));
-        }
-
-        patchState(store, (state) => ({
-          ...state,
-          filters: {
-            ...state.filters,
-            singleValue: {
-              ...state.filters.singleValue,
-              [filter]: value,
+            author: {
+              ...state.filters.multiSelect.author,
+              selectedItems: [],
             },
           },
-        }));
-
-        store.getBooks();
-      },
-      clearSelectedItems: (filter: MultiSelectFilters) => {
-        patchState(
-          store,
-          removeEntities(
-            (activeFilter) => activeFilter.filter === filter,
-            activeFilterConfig,
-          ),
-          (state) => ({
-            ...state,
-            page: 1,
-            filters: {
-              ...state.filters,
-              multiSelect: {
-                ...state.filters.multiSelect,
-                [filter]: {
-                  ...state.filters.multiSelect[filter],
-                  selectedItems: [],
-                },
-              },
-            },
-          }),
-        );
-
-        store.getBooks();
-      },
-      clearSingleValueFilter: (filter: SingleValueFilters) => {
-        patchState(
-          store,
-          removeEntity(filter, activeFilterConfig),
-          (state) => ({
-            filters: {
-              ...state.filters,
-              singleValue: {
-                ...state.filters.singleValue,
-                [filter]: null,
-              },
-            },
-          }),
-        );
-
-        store.getBooks();
-      },
-      clearPrice: () => {
-        patchState(
-          store,
-          removeEntities(['minPrice', 'maxPrice'], activeFilterConfig),
-          (state) => ({
-            filters: {
-              ...state.filters,
-              singleValue: {
-                ...state.filters.singleValue,
-                minPrice: null,
-                maxPrice: null,
-              },
-            },
-          }),
-        );
-
-        store.getBooks();
-      },
-      removeActiveFilter: (activeFilter: ActiveFilter) => {
-        const { filter, id } = activeFilter;
-
-        const isSingleValueFilter = (
-          allSingleValueFilters as string[]
-        ).includes(filter);
-
-        if (isSingleValueFilter) {
-          patchState(store, removeEntity(id, activeFilterConfig), (state) => ({
-            ...state,
-            page: 1,
-            filters: {
-              ...state.filters,
-              singleValue: {
-                ...state.filters.singleValue,
-                [filter]: null,
-              },
-            },
-          }));
-        } else {
-          patchState(store, removeEntity(id, activeFilterConfig), (state) => ({
-            ...state,
-            filters: {
-              ...state.filters,
-              multiSelect: {
-                ...state.filters.multiSelect,
-                [filter]: {
-                  ...state.filters.multiSelect[filter as MultiSelectFilters],
-                  selectedItems: state.filters.multiSelect[
-                    filter as MultiSelectFilters
-                  ].selectedItems.filter(
-                    (selectedItem) => selectedItem.id !== id,
-                  ),
-                },
-              },
-            },
-          }));
-        }
-
-        store.getBooks();
-      },
-      removeActiveFilters: () => {
-        patchState(store, removeAllEntities(activeFilterConfig), (state) => ({
-          page: 1,
-          filters: {
-            multiSelect: {
-              category: {
-                ...state.filters.multiSelect.category,
-                selectedItems: [],
-              },
-              tag: {
-                ...state.filters.multiSelect.tag,
-                selectedItems: [],
-              },
-              author: {
-                ...state.filters.multiSelect.author,
-                selectedItems: [],
-              },
-            },
-            singleValue: {
-              minPrice: null,
-              maxPrice: null,
-              search: null,
-            },
+          singleValue: {
+            minPrice: null,
+            maxPrice: null,
+            search: null,
           },
-        }));
+        },
+      }));
+    },
+    setQueryParams: ({
+      selectedTags,
+      selectedAuthors,
+      selectedCategories,
+      search,
+      minPrice,
+      maxPrice,
+      page,
+      size,
+    }: {
+      selectedTags: Tag[];
+      selectedAuthors: Author[];
+      selectedCategories: Category[];
+      search: string | null;
+      minPrice: number | null;
+      maxPrice: number | null;
+      page: number;
+      size: number;
+    }) => {
+      store._router.navigate([], {
+        relativeTo: store._route,
+        queryParams: {
+          tags: buildSelectedItemsQueryParam(
+            selectedTags,
+            'name',
+          )?.toLowerCase(),
+          categories: buildSelectedItemsQueryParam(selectedCategories, 'name'),
+          authors: buildSelectedItemsQueryParam(selectedAuthors, 'name'),
+          search: search || null,
+          min_price: minPrice,
+          max_price: maxPrice,
+          size,
+          page,
+        },
+        replaceUrl: true,
+      });
+    },
+  })),
+  withMethods((store) => ({
+    _deserializeQueryParamsFilters: rxMethod<{ queryParam: ParamMap }>(
+      pipe(
+        tap(() => patchState(store, { loading: true })),
+        map(({ queryParam }) => {
+          return {
+            categories: queryParam.get('categories'),
+            authors: queryParam.get('authors'),
+            tags: queryParam.get('tags'),
+            page: queryParam.get('page'),
+            size: queryParam.get('size'),
+            minPrice: queryParam.get('min_price'),
+            maxPrice: queryParam.get('max_price'),
+            search: queryParam.get('search'),
+          };
+        }),
+        switchMap((params) => {
+          const requests = {
+            categories$: params.categories
+              ? store._categoryApi.getCategories$({
+                  nameIn: getSelectedItemsFromQueryParam(params.categories),
+                })
+              : of([]),
 
-        store.getBooks();
-      },
-      setQueryParams: ({
+            authors$: params.authors
+              ? store._authorApi.getAll$({
+                  nameIn: getSelectedItemsFromQueryParam(params.authors),
+                })
+              : of([]),
+
+            tags$: of(
+              getSelectedItemsFromQueryParam(params.tags)
+                ?.split(',')
+                .map((t) => t.toUpperCase())
+                .filter((t) => (allBookTags as string[]).includes(t))
+                .map((t): { id: BookTag; name: BookTag } => ({
+                  id: t as BookTag,
+                  name: t as BookTag,
+                })) ?? [],
+            ),
+
+            size$: of(
+              sizes.includes(Number(params.size))
+                ? Number(params.size)
+                : FILTER_SIZE,
+            ),
+          };
+
+          return forkJoin(requests).pipe(
+            map(({ categories$, authors$, tags$, size$ }) => ({
+              categories: categories$,
+              authors: authors$,
+              tags: tags$,
+              size: size$,
+              page: Number(params.page) || 1,
+              search: params.search || null,
+              minPrice: params.minPrice ? Number(params.minPrice) : null,
+              maxPrice: params.maxPrice ? Number(params.maxPrice) : null,
+            })),
+          );
+        }),
+        tapResponse({
+          next: (params) => {
+            const activeFilters: ActiveFilter[] = [
+              ...params.categories.map((c) => ({
+                id: c.id,
+                filter:
+                  'category' satisfies MultiSelectFilters as MultiSelectFilters,
+                value: c.name,
+              })),
+              ...params.authors.map((a) => ({
+                id: a.id,
+                filter:
+                  'author' satisfies MultiSelectFilters as MultiSelectFilters,
+                value: a.name,
+              })),
+              ...params.tags.map((t) => ({
+                id: t.id,
+                filter:
+                  'tag' satisfies MultiSelectFilters as MultiSelectFilters,
+                value: t.name.toLowerCase(),
+              })),
+            ];
+
+            if (params.minPrice) {
+              activeFilters.push({
+                id: 'minPrice' satisfies SingleValueFilters,
+                filter: 'minPrice' satisfies SingleValueFilters,
+                value: params.minPrice.toString(),
+              });
+            }
+
+            if (params.maxPrice) {
+              activeFilters.push({
+                id: 'maxPrice' satisfies SingleValueFilters,
+                filter: 'maxPrice' satisfies SingleValueFilters,
+                value: params.maxPrice.toString(),
+              });
+            }
+
+            patchState(
+              store,
+              removeAllEntities(activeFilterConfig),
+              addEntities(activeFilters, activeFilterConfig),
+              (state) => ({
+                ...(params.page && { page: Number(params.page) }),
+                ...(params.size && { size: Number(params.size) }),
+                filters: {
+                  multiSelect: {
+                    ...state.filters.multiSelect,
+                    category: {
+                      ...state.filters.multiSelect.category,
+                      selectedItems: params.categories,
+                    },
+                    author: {
+                      ...state.filters.multiSelect.author,
+                      selectedItems: params.authors,
+                    },
+                    tag: {
+                      ...state.filters.multiSelect.tag,
+                      selectedItems: params.tags,
+                    },
+                  },
+                  singleValue: {
+                    search: params.search,
+                    minPrice: params.minPrice,
+                    maxPrice: params.maxPrice,
+                  },
+                },
+              }),
+            );
+          },
+          error: (error: ResponseError) => {
+            console.error(error?.error?.message);
+          },
+        }),
+      ),
+    ),
+    restoreQueryParamsFilters: () => {
+      const {
+        page,
+        size,
+        filters: { multiSelect, singleValue },
+      } = getState(store);
+
+      const selectedTags = multiSelect.tag.selectedItems;
+      const selectedAuthors = multiSelect.author.selectedItems;
+      const selectedCategories = multiSelect.category.selectedItems;
+      const search = singleValue.search;
+      const minPrice = singleValue.minPrice;
+      const maxPrice = singleValue.maxPrice;
+
+      store.setQueryParams({
         selectedTags,
-        selectedAuthors,
         selectedCategories,
+        selectedAuthors,
         search,
         minPrice,
         maxPrice,
         page,
         size,
-      }: {
-        selectedTags: Tag[];
-        selectedAuthors: Author[];
-        selectedCategories: Category[];
-        search: string | null;
-        minPrice: number | null;
-        maxPrice: number | null;
-        page: number;
-        size: number;
-      }) => {
-        router.navigate([], {
-          relativeTo: route,
-          queryParams: {
-            tags: buildSelectedItemsQueryParam(
-              selectedTags,
-              'name',
-            )?.toLowerCase(),
-            categories: buildSelectedItemsQueryParam(
-              selectedCategories,
-              'name',
-            ),
-            authors: buildSelectedItemsQueryParam(selectedAuthors, 'name'),
-            search: search || null,
-            min_price: minPrice,
-            max_price: maxPrice,
-            size,
+      });
+    },
+    _serializeQueryParamsFilters: rxMethod<{
+      selectedTags: { id: BookTag; name: BookTag }[];
+      selectedAuthors: Author[];
+      selectedCategories: Category[];
+      search: string | null;
+      minPrice: number | null;
+      maxPrice: number | null;
+      page: number;
+      size: number;
+    }>(
+      pipe(
+        skip(1),
+        distinctUntilChanged((prev, curr) => isEqual(prev, curr)),
+        tap(
+          ({
+            selectedTags,
+            selectedAuthors,
+            selectedCategories,
+            search,
+            minPrice,
+            maxPrice,
             page,
-          },
-          replaceUrl: true,
-        });
-      },
-    }),
-  ),
-  withMethods(
-    (
-      store,
-      route = inject(ActivatedRoute),
-      categoryApi = inject(CategoryApiService),
-      authorApi = inject(AuthorApiService),
-    ) => ({
-      _deserializeQueryParamsFilters: rxMethod<void>(
-        pipe(
-          map(() => route.snapshot.queryParams),
-          map((queryParams) => {
-            const categories = queryParams['categories'] as string | undefined;
-            const authors = queryParams['authors'] as string | undefined;
-            const tags = queryParams['tags'] as string | undefined;
-            const page = queryParams['page'] as string | undefined;
-            const size = queryParams['size'] as string | undefined;
-
-            const minPrice = queryParams['min_price'] as string | undefined;
-            const maxPrice = queryParams['max_price'] as string | undefined;
-            const search = queryParams['search'] as string | undefined;
-
-            return {
-              categories,
-              authors,
-              tags,
-              page,
-              size,
-              minPrice,
-              maxPrice,
-              search,
-            };
-          }),
-          tap(() => patchState(store, { loading: true })),
-          switchMap(
-            ({
-              categories,
-              authors,
-              tags,
-              minPrice,
-              maxPrice,
-              search,
-              page,
-              size,
-            }) => {
-              const categories$ = categories
-                ? categoryApi.getCategories$({
-                    nameIn: getSelectedItemsFromQueryParam(categories),
-                  })
-                : of([]);
-
-              const authors$ = authors
-                ? authorApi.getAll$({
-                    nameIn: getSelectedItemsFromQueryParam(authors),
-                  })
-                : of([]);
-
-              const tags$ = of(
-                getSelectedItemsFromQueryParam(tags)
-                  ?.split(',')
-                  .map((t) => t.toUpperCase())
-                  .filter((t) => (allBookTags as string[]).includes(t))
-                  .map((t): { id: BookTag; name: BookTag } => ({
-                    id: t as BookTag,
-                    name: t as BookTag,
-                  })) ?? [],
-              );
-
-              const size$ = of(
-                sizes.includes(Number(size)) ? Number(size) : FILTER_SIZE,
-              );
-
-              return forkJoin([categories$, authors$, tags$, size$]).pipe(
-                map(([categories, authors, tags, size]) => ({
-                  categories,
-                  authors,
-                  tags,
-                  size,
-                  page: Number(page) ?? 1,
-                  search: search || null,
-                  minPrice: minPrice ? Number(minPrice) : null,
-                  maxPrice: maxPrice ? Number(maxPrice) : null,
-                })),
-              );
-            },
-          ),
-          tapResponse({
-            next: ({
-              categories,
-              authors,
-              tags,
-              minPrice,
-              maxPrice,
-              search,
-              page,
-              size,
-            }) => {
-              const activeFilters: ActiveFilter[] = [
-                ...categories.map((c) => ({
-                  id: c.id,
-                  filter:
-                    'category' satisfies MultiSelectFilters as MultiSelectFilters,
-                  value: c.name,
-                })),
-                ...authors.map((a) => ({
-                  id: a.id,
-                  filter:
-                    'author' satisfies MultiSelectFilters as MultiSelectFilters,
-                  value: a.name,
-                })),
-                ...tags.map((t) => ({
-                  id: t.id,
-                  filter:
-                    'tag' satisfies MultiSelectFilters as MultiSelectFilters,
-                  value: t.name.toLowerCase(),
-                })),
-              ];
-
-              if (minPrice) {
-                activeFilters.push({
-                  id: 'minPrice' satisfies SingleValueFilters as SingleValueFilters,
-                  filter:
-                    'minPrice' satisfies SingleValueFilters as SingleValueFilters,
-                  value: minPrice.toString(),
-                });
-              }
-
-              if (maxPrice) {
-                activeFilters.push({
-                  id: 'maxPrice' satisfies SingleValueFilters as SingleValueFilters,
-                  filter:
-                    'maxPrice' satisfies SingleValueFilters as SingleValueFilters,
-                  value: maxPrice.toString(),
-                });
-              }
-
-              patchState(
-                store,
-                removeAllEntities(activeFilterConfig),
-                addEntities(activeFilters, activeFilterConfig),
-                (state) => ({
-                  ...(page && { page: Number(page) }),
-                  ...(size && { size: Number(size) }),
-                  filters: {
-                    multiSelect: {
-                      ...state.filters.multiSelect,
-                      category: {
-                        ...state.filters.multiSelect.category,
-                        selectedItems: categories,
-                      },
-                      author: {
-                        ...state.filters.multiSelect.author,
-                        selectedItems: authors,
-                      },
-                      tag: {
-                        ...state.filters.multiSelect.tag,
-                        selectedItems: tags,
-                      },
-                    },
-                    singleValue: {
-                      search,
-                      minPrice,
-                      maxPrice,
-                    },
-                  },
-                }),
-              );
-
-              store.getBooks();
-            },
-            error: (error: ResponseError) => {
-              console.error(error?.error?.message);
-            },
-          }),
-        ),
-      ),
-      restoreQueryParamsFilters: () => {
-        const {
-          page,
-          size,
-          filters: { multiSelect, singleValue },
-        } = getState(store);
-
-        const selectedTags = multiSelect.tag.selectedItems;
-        const selectedAuthors = multiSelect.author.selectedItems;
-        const selectedCategories = multiSelect.category.selectedItems;
-        const search = singleValue.search;
-        const minPrice = singleValue.minPrice;
-        const maxPrice = singleValue.maxPrice;
-
-        store.setQueryParams({
-          selectedTags,
-          selectedCategories,
-          selectedAuthors,
-          search,
-          minPrice,
-          maxPrice,
-          page,
-          size,
-        });
-      },
-      _serializeQueryParamsFilters: rxMethod<{
-        selectedTags: { id: BookTag; name: BookTag }[];
-        selectedAuthors: Author[];
-        selectedCategories: Category[];
-        search: string | null;
-        minPrice: number | null;
-        maxPrice: number | null;
-        page: number;
-        size: number;
-      }>(
-        pipe(
-          skip(1),
-          distinctUntilChanged((prev, curr) => isEqual(prev, curr)),
-          tap(
-            ({
+            size,
+          }) => {
+            store.setQueryParams({
               selectedTags,
-              selectedAuthors,
               selectedCategories,
+              selectedAuthors,
               search,
               minPrice,
               maxPrice,
               page,
               size,
-            }) => {
-              store.setQueryParams({
-                selectedTags,
-                selectedCategories,
-                selectedAuthors,
-                search,
-                minPrice,
-                maxPrice,
-                page,
-                size,
-              });
-            },
-          ),
+            });
+            store.getBooks();
+          },
         ),
       ),
-      getAllFilters: () => {
-        store.getTags('');
-        store.getCategories({ search: '' });
-        store.getAuthors({ search: '' });
-      },
-    }),
-  ),
+    ),
+    getAllFilters: () => {
+      store.getTags('');
+      store.getCategories({ search: '' });
+      store.getAuthors({ search: '' });
+    },
+  })),
   withHooks({
-    onInit(store, router = inject(Router)) {
-      store._deserializeQueryParamsFilters();
-
+    onInit(store, _destroyRef = inject(DestroyRef)) {
       store.getAllFilters();
+      store.getBooks();
+
+      store._deserializeQueryParamsFilters({
+        queryParam: store._route.snapshot.queryParamMap,
+      });
 
       afterNextRender(() => {
-        router.events
+        store._router.events
           .pipe(
             filter(
               (event): event is NavigationEnd => event instanceof NavigationEnd,
@@ -843,33 +758,28 @@ export const BooksStore = signalStore(
                 store.restoreQueryParamsFilters();
               }
             }),
+            map(() => store._route.snapshot.queryParamMap),
+            takeUntilDestroyed(_destroyRef),
           )
-          .subscribe(() => {
-            store._deserializeQueryParamsFilters();
+          .subscribe((queryParam) => {
+            store._deserializeQueryParamsFilters({ queryParam });
           });
       });
 
       effect(() => {
-        const selectedTags = store.selectedTags();
-        const selectedAuthors = store.selectedAuthors();
-        const selectedCategories = store.selectedCategories();
-        const search = store.search();
-        const minPrice = store.minPrice();
-        const maxPrice = store.maxPrice();
-        const page = store.page();
-        const size = store.size();
+        const filters = {
+          selectedTags: store.selectedTags(),
+          selectedAuthors: store.selectedAuthors(),
+          selectedCategories: store.selectedCategories(),
+          search: store.search(),
+          minPrice: store.minPrice(),
+          maxPrice: store.maxPrice(),
+          page: store.page(),
+          size: store.size(),
+        };
 
         untracked(() => {
-          store._serializeQueryParamsFilters({
-            selectedTags,
-            selectedAuthors,
-            selectedCategories,
-            search,
-            minPrice,
-            maxPrice,
-            page,
-            size,
-          });
+          store._serializeQueryParamsFilters(filters);
         });
       });
     },

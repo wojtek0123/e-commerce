@@ -11,7 +11,7 @@ import {
   MultiSelectFilters,
 } from '@e-commerce/client-web/browse/data-access';
 import { FilterComponent } from '../filter/filter.component';
-import { debounce, of, timer, Unsubscribable } from 'rxjs';
+import { debounce, of, timer } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Directive({})
@@ -23,7 +23,7 @@ export abstract class AbstractSelectItemsFilterDirective<
   protected booksStore = inject(BooksStore);
   private destroyRef = inject(DestroyRef);
 
-  abstract triggerGetItems: (search: string) => Unsubscribable | void;
+  abstract triggerGetItems: (search: string) => void;
   abstract items: () => Item[];
   abstract trackFn: (_: number, item: Item) => number | string;
   abstract getItemLabel: (item: Item) => string;
