@@ -37,12 +37,13 @@
     class="grid gap-base grid-cols-1 w-full xl:grid-cols-2 4xl:grid-cols-[1fr_1fr_0.4fr]"
   >
     <div
-      class="rounded-base w-full flex items-center justify-center xl:h-content overflow-hidden xl:sticky xl:top-4"
+      class="relative rounded-base w-full flex items-center justify-center xl:h-content overflow-hidden xl:sticky xl:top-4"
     >
       <img
         class="rounded-base w-full h-full"
-        [src]="book()?.coverImage"
+        [ngSrc]="book()?.coverImage ?? ''"
         [alt]="book()?.title + ' cover image'"
+        fill
       />
     </div>
     <div class="flex flex-col gap-base">
