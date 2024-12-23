@@ -12,7 +12,6 @@ export interface Book {
   pages?: number;
   categoryId: Category['id'];
   coverImage?: string;
-  coverImagePath?: string;
   language?: string;
   tag?: BookTag;
   price: number;

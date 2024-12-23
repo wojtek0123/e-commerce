@@ -109,7 +109,7 @@ export const useBooksStore = defineStore('books', () => {
       });
 
       const coverImagePaths = selectedBooks.value
-        .map((selectBook) => selectBook.coverImagePath ?? '')
+        .map((selectBook) => selectBook.coverImage ?? '')
         .filter((path) => !!path);
 
       const { error } = await supabase.storage

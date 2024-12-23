@@ -14,6 +14,7 @@ import {
   CurrencyPipe,
   DatePipe,
   NgClass,
+  NgOptimizedImage,
   NgTemplateOutlet,
 } from '@angular/common';
 import { InputNumberModule } from 'primeng/inputnumber';
@@ -48,6 +49,7 @@ import { MessageModule } from 'primeng/message';
     MessageModule,
     NgTemplateOutlet,
     FormsModule,
+    NgOptimizedImage,
   ],
   templateUrl: './book.component.html',
   styleUrl: './book.component.scss',
