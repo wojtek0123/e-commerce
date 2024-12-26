@@ -17,6 +17,7 @@ import { CountriesModule } from '../countries/countries.module';
 import { ShippingMethodsModule } from '../shipping-methods/shipping-methods.module';
 import { OrderDetailsModule } from '../order-details/order-details.module';
 import { OrderItemsModule } from '../order-items/order-items.module';
+import { FavouriteBooksListsModule } from '../favourite-books-lists/favourite-books-lists.module';
 import { CreditCardsModule } from '../credit-cards/credit-cards.module';
 
 @Module({
@@ -39,6 +40,7 @@ import { CreditCardsModule } from '../credit-cards/credit-cards.module';
     OrderDetailsModule,
     OrderItemsModule,
     CreditCardsModule,
+    FavouriteBooksListsModule,
   ],
 })
 export class AppModule {}

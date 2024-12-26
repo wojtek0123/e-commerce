@@ -17,7 +17,6 @@ export class BooksService {
         publishedDate: data.publishedDate,
         price: data.price,
         coverImage: data.coverImage,
-        coverImagePath: data.coverImagePath,
         tag: data.tag,
         authors: {
           createMany: {

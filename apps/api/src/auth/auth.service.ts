@@ -13,7 +13,7 @@ import { compare, hash } from 'bcrypt';
 import { roundsOfHashing } from '../users/users.service';
 import { Prisma, Role, User } from '@prisma/client';
 import { ConfigService } from '@nestjs/config';
-import { omit } from 'lodash';
+import { omit, set } from 'lodash';
 
 @Injectable()
 export class AuthService {
@@ -84,6 +84,11 @@ export class AuthService {
     await this._updateRefreshToken(createdUser.id, tokens.refreshToken);
 
     const user = omit(createdUser, 'password');
+
+    await this.prisma.favouriteBooksList.create({
+      data: { userId: user.id },
+    });
+
     return { tokens, user };
   }
 
