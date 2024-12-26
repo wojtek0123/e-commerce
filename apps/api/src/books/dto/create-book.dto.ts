@@ -21,11 +21,6 @@ export class CreateBookDto {
   @ApiProperty({ type: String, required: false })
   @IsString()
   @IsOptional()
-  coverImagePath?: string;
-
-  @ApiProperty({ type: String, required: false })
-  @IsString()
-  @IsOptional()
   description?: string;
 
   @ApiProperty({ type: String, required: false })
