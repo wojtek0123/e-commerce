@@ -20,8 +20,10 @@
       [books]="books()"
       [loading]="loading()"
       [error]="error()"
+      [favouriteBooks]="favouriteBooks()"
       (addToCartEvent)="addToCart($event)"
-      (onRefetch)="refetchBooks()"
+      (onAddToFavourite)="addToFavourite($event)"
+      (onRetry)="retry()"
     />
     <div
       class="flex items-center justify-center bg-content-background rounded-base w-full"

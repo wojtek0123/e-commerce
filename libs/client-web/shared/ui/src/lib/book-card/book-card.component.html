@@ -26,16 +26,26 @@
       </div>
     </div>
     <div class="flex items-center justify-between">
-      <span class="text-lg font-bold">{{
-        book().price | currency: 'USD'
-      }}</span>
-      <p-button
-        title="Add to cart"
-        icon="pi pi-cart-plus"
-        size="large"
-        [loading]="awaitingBookIdsToAddToCart().includes(book().id)"
-        (onClick)="addToCart($event, book())"
-      />
+      <span class="text-lg font-bold">
+        {{ book().price | currency: 'USD' }}
+      </span>
+      <div class="flex items-center gap-2">
+        <p-button
+          title="Add to favourite"
+          [text]="true"
+          severity="danger"
+          [icon]="book() | isBookFavourite: favouriteBooks()"
+          size="large"
+          (onClick)="$event.stopImmediatePropagation(); addToFavourite(book())"
+        />
+        <p-button
+          title="Add to cart"
+          icon="pi pi-cart-plus"
+          size="large"
+          [loading]="awaitingBookIdsToAddToCart().includes(book().id)"
+          (onClick)="addToCart($event, book())"
+        />
+      </div>
     </div>
   </div>
 </div>

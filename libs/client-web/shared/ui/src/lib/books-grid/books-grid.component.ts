@@ -9,6 +9,7 @@ import { Book } from '@e-commerce/shared/api-models';
 import { BookCardComponent } from '../book-card/book-card.component';
 import { BookCardSkeletonComponent } from '../book-card-skeleton/book-card-skeleton.component';
 import { Button } from 'primeng/button';
+import { InputText } from 'primeng/inputtext';
 
 @Component({
   selector: 'lib-books-grid',
@@ -24,6 +25,7 @@ export class BooksGridComponent {
   public error = input<string | string[] | null>(null);
   public skeletonsCount = input<number>(8);
   public pendingBookIds = input<Book['id'][]>([]);
+  public favouriteBooks = input.required<Book[]>();
 
   public skeleconts = computed(() => new Array(this.skeletonsCount()));
 
@@ -32,9 +34,14 @@ export class BooksGridComponent {
   );
 
   public addToCartEvent = output<Book>();
-  onRefetch = output<void>();
+  onRetry = output<void>();
+  onAddToFavourite = output<Book>();
 
-  refetchData() {
-    this.onRefetch.emit();
+  retry() {
+    this.onRetry.emit();
+  }
+
+  addToFavourite(book: Book) {
+    this.onAddToFavourite.emit(book);
   }
 }

@@ -11,3 +11,4 @@ export * from './lib/api-services/shipping-method-api.service';
 export * from './lib/api-services/shopping-session-api.service';
 export * from './lib/api-services/product-inventory-api.service';
 export * from './lib/api-services/user-api.service';
+export * from './lib/api-services/favourite-books-list.service';

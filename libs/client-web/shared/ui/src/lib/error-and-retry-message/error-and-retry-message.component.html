@@ -1,0 +1,12 @@
+<div class="flex flex-col items-center gap-4 mt-10">
+  <p class="text-5xl text-center">{{ error() }}</p>
+  <p class="text-xl text-muted-color">
+    Unable to load {{ unableToLoad() }}. Please try again.
+  </p>
+  <p-button
+    label="Retry"
+    icon="pi pi-refresh"
+    (onClick)="retry()"
+    severity="secondary"
+  />
+</div>

@@ -22,6 +22,7 @@ import { ActiveFiltersComponent } from '@e-commerce/client-web/browse/ui';
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 import { FiltersComponent } from './components/filters/filters.component';
 import { CartService } from '@e-commerce/client-web/cart/api';
+import { FavouriteBooksListService } from '@e-commerce/client-web/account/api';
 
 @Component({
   selector: 'lib-books',
@@ -41,6 +42,7 @@ import { CartService } from '@e-commerce/client-web/cart/api';
 export class BooksComponent implements OnInit {
   #booksStore = inject(BooksStore);
   #cartService = inject(CartService);
+  #favouriteBooksListService = inject(FavouriteBooksListService);
   #viewport = inject(ViewportScroller);
 
   breadcrumbs = signal<MenuItem[]>([
@@ -60,6 +62,7 @@ export class BooksComponent implements OnInit {
   first = computed(() => this.page() - 1 * this.size());
   sizes = signal(sizes);
   activeFilters = this.#booksStore.activeFilters;
+  favouriteBooks = this.#favouriteBooksListService.favouriteBooks;
 
   ngOnInit(): void {
     this.#booksStore.restoreQueryParamsFilters();
@@ -87,7 +90,11 @@ export class BooksComponent implements OnInit {
     this.#booksStore.removeActiveFilters();
   }
 
-  refetchBooks() {
+  retry() {
     this.#booksStore.getBooks();
+  }
+
+  addToFavourite({ id }: Book) {
+    this.#favouriteBooksListService.addToFavourite(id);
   }
 }
