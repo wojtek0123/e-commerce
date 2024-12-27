@@ -16,6 +16,7 @@ import { CartService } from '@e-commerce/client-web/cart/api';
 import { HomeStore } from '@e-commerce/client-web/home/data-acess';
 import { fromEvent, map, startWith, throttleTime } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { FavouriteBooksListService } from '@e-commerce/client-web/account/api';
 
 @Component({
   selector: 'lib-home',
@@ -33,11 +34,15 @@ export class HomeComponent {
   private readonly homeStore = inject(HomeStore);
   private readonly injector = inject(Injector);
 
+  #favouriteBooksListService = inject(FavouriteBooksListService);
+
   public bestsellerBooks = this.homeStore.bestsellersBooks;
   public incomingBooks = this.homeStore.incomingBooks;
   public newBooks = this.homeStore.newBooks;
   public loading = this.homeStore.loading;
   public error = this.homeStore.error;
+
+  favouriteBooks = this.#favouriteBooksListService.favouriteBooks;
 
   public columnsCount?: Signal<any>;
 
@@ -101,5 +106,9 @@ export class HomeComponent {
 
   public addToCart(book: Book) {
     this.cartService.addBook(book, 1);
+  }
+
+  addBookToFavourite({ id }: Book) {
+    this.#favouriteBooksListService.addToFavourite(id);
   }
 }

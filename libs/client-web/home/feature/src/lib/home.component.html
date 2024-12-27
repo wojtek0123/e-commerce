@@ -40,8 +40,10 @@
       </div>
       <lib-books-grid
         (addToCartEvent)="addToCart($event)"
+        (onAddToFavourite)="addBookToFavourite($event)"
         class="w-full"
         [books]="section.books"
+        [favouriteBooks]="favouriteBooks()"
         [loading]="loading()"
         [error]="error()"
         [skeletonsCount]="6"

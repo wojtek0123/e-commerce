@@ -22,6 +22,13 @@ export const accountShellRoutes: Route[] = [
           ),
       },
       {
+        path: APP_ROUTES_FEATURE.ACCOUNT.FAVOURITE_BOOKS_LIST,
+        loadChildren: () =>
+          import(
+            '@e-commerce/client-web/account/feature/favourite-books-list'
+          ).then((r) => r.favouriteBooksListRoutes),
+      },
+      {
         path: '**',
         redirectTo: APP_ROUTES_FEATURE.ACCOUNT.ORDERS,
       },

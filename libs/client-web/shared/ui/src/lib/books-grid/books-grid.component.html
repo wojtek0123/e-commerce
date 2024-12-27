@@ -15,16 +15,18 @@
         <p-button
           label="Retry"
           icon="pi pi-refresh"
-          (onClick)="refetchData()"
+          (onClick)="retry()"
           severity="secondary"
-        ></p-button>
+        />
       </div>
     } @else if (books()) {
       @for (book of books(); track book.id) {
         <lib-book-card
           [book]="book"
           [awaitingBookIdsToAddToCart]="pendingBookIds()"
+          [favouriteBooks]="favouriteBooks()"
           (onAddToCart)="addToCartEvent.emit($event)"
+          (onAddToFavourite)="addToFavourite($event)"
         />
       } @empty {
         <div

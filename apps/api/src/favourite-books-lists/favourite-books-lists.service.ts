@@ -7,14 +7,29 @@ import { PrismaService } from '../prisma/prisma.service';
 export class FavouriteBooksListsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  findOne(authHeader: string) {
+  async findOne(authHeader: string) {
     const userId = getUserIdFromAccessToken(authHeader);
 
     if (!userId) {
       throw new UnauthorizedException();
     }
 
-    return this.prisma.favouriteBooksList.findUnique({ where: { userId } });
+    const favouriteBooksList = await this.prisma.favouriteBooksList.findUnique({
+      where: { userId },
+      include: {
+        books: {
+          include: { authors: { include: { author: true } } },
+        },
+      },
+    });
+
+    return {
+      ...favouriteBooksList,
+      books: favouriteBooksList.books.map((book) => ({
+        ...book,
+        authors: book.authors.map((a) => a.author),
+      })),
+    };
   }
 
   async update(authHeader: string, { bookId }: UpdateFavouriteBooksListDto) {
@@ -33,15 +48,29 @@ export class FavouriteBooksListsService {
       (book) => book.id === bookId,
     );
 
-    return this.prisma.favouriteBooksList.update({
-      where: { userId },
-      data: {
-        books: {
-          ...(isFavourite
-            ? { disconnect: { id: bookId } }
-            : { connect: { id: bookId } }),
+    const updatedFavouriteBooksList =
+      await this.prisma.favouriteBooksList.update({
+        where: { userId },
+        data: {
+          books: {
+            ...(isFavourite
+              ? { disconnect: { id: bookId } }
+              : { connect: { id: bookId } }),
+          },
         },
-      },
-    });
+        include: {
+          books: {
+            include: { authors: { include: { author: true } } },
+          },
+        },
+      });
+
+    return {
+      ...updatedFavouriteBooksList,
+      books: updatedFavouriteBooksList.books.map((book) => ({
+        ...book,
+        authors: book.authors.map((a) => a.author),
+      })),
+    };
   }
 }

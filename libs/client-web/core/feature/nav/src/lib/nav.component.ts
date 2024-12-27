@@ -26,6 +26,7 @@ import { CartSidebarComponent } from '@e-commerce/client-web/cart/feature/cart-s
 import {
   APP_LOCAL_STORAGE_KEYS_TOKEN,
   APP_ROUTE_PATHS_TOKEN,
+  APP_ROUTES_FEATURE,
 } from '@e-commerce/client-web/shared/app-config';
 import { Category } from '@e-commerce/shared/api-models';
 import {
@@ -85,8 +86,9 @@ export class NavComponent implements OnDestroy {
   #categoriesStore = inject(CategoryStore);
   #authService = inject(AuthService);
   #appLocalStorageKeys = inject(APP_LOCAL_STORAGE_KEYS_TOKEN);
-
   #appRoutePaths = inject(APP_ROUTE_PATHS_TOKEN);
+
+  #appRouteFeatures = APP_ROUTES_FEATURE;
 
   isAuthenticated = this.#authService.isAuthenticated;
   categories = this.#categoriesStore.categories;
@@ -106,6 +108,7 @@ export class NavComponent implements OnDestroy {
     orders: this.#appRoutePaths.ORDERS(),
     login: this.#appRoutePaths.LOGIN(),
     register: this.#appRoutePaths.REGISTER(),
+    favouriteBooksList: this.#appRoutePaths.FAVOURITE_BOOKS_LIST(),
   }).asReadonly();
 
   resizeObserver = signal<ResizeObserver | null>(null);
@@ -157,7 +160,7 @@ export class NavComponent implements OnDestroy {
   isAccountRouteActive = toSignal(
     inject(Router).events.pipe(
       filter((events) => events instanceof NavigationEnd),
-      map((event) => event.url.includes('account')),
+      map((event) => event.url.includes(this.#appRouteFeatures.ACCOUNT.BASE)),
     ),
   );
 
@@ -172,6 +175,12 @@ export class NavComponent implements OnDestroy {
       label: 'Information',
       icon: 'pi pi-cog',
       routerLink: this.#appRoutePaths.INFORMATION(),
+      routerLinkActive: 'bg-surface-100 dark:bg-surface-700 rounded-base',
+    },
+    {
+      label: 'Favourite books',
+      icon: 'pi pi-heart',
+      routerLink: this.#appRoutePaths.FAVOURITE_BOOKS_LIST(),
       routerLinkActive: 'bg-surface-100 dark:bg-surface-700 rounded-base',
     },
   ]);

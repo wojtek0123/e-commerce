@@ -84,6 +84,15 @@
       <lib-cart-sidebar [isLabelShowed]="isLabelShowed()" />
       @if (isAuthenticated()) {
         <a
+          [routerLink]="urls().favouriteBooksList"
+          class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700"
+        >
+          <i class="pi pi-heart"></i>
+          @if (isLabelShowed()) {
+            <span>Favourite books</span>
+          }
+        </a>
+        <a
           [routerLink]="urls().orders"
           class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700"
         >
