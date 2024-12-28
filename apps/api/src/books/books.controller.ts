@@ -23,11 +23,8 @@ import { BookEntity } from './entities/book.entity';
 import { UpdateBookBodyDto } from './dto/update-body.dto';
 import { CreateBookDto } from './dto/create-book.dto';
 import { Role, Tag } from '@prisma/client';
-import { RolesGuard } from '../common/guards/role.guard';
-
-import { Reflector } from '@nestjs/core';
-
-export const Roles = Reflector.createDecorator<Role[]>();
+import { Roles, RolesGuard } from '../common/guards/role.guard';
+import { Pagination } from '../common/entities/pagination.entity';
 
 @ApiTags('books')
 @Controller('books')
@@ -47,7 +44,7 @@ export class BooksController {
 
   @Get()
   @ApiOperation({ summary: 'Get books' })
-  @ApiOkResponse({ type: BookEntity, isArray: true })
+  @ApiOkResponse({ type: Pagination<BookEntity>, isArray: true })
   @ApiQuery({ type: String, name: 'page', required: false })
   @ApiQuery({ type: String, name: 'size', required: false })
   @ApiQuery({ type: String, name: 'priceFrom', required: false })

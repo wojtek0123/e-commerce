@@ -134,11 +134,15 @@ function submit(event: FormSubmitEvent) {
       pages: pageCount.value,
       price: price.value,
       publishedDate: publishedDate.value.toISOString(),
-      publisherId: publisher.value?.id,
       quantity: quantity.value,
       ...(tag.value && { tag: tag.value }),
       authorsId: authors.value.map((author: Author) => author.id),
-      publisherName: publisherName.value ?? undefined,
+      ...(publisherInputType.value === 'Add' && {
+        publisherName: publisherName.value ?? undefined,
+      }),
+      ...(publisherInputType.value === 'Select' && {
+        publisherId: publisher.value?.id,
+      }),
     })
     .then(() => {
       visible.value = false;
@@ -217,10 +221,12 @@ onUnmounted(() => {
         <FormField
           v-slot="$field"
           class="flex flex-col gap-1"
-          name="Published date"
+          name="publishedDate"
         >
-          <label for="price" class="text-muted-color">Published date</label>
-          <DatePicker id="publish_date" name="publishDate" fluid />
+          <label for="publish_date" class="text-muted-color">
+            Published date
+          </label>
+          <DatePicker id="publish_date" name="publishedDate" fluid />
           <Message
             v-if="$field.invalid"
             severity="error"
@@ -268,10 +274,10 @@ onUnmounted(() => {
           class="flex flex-col gap-1"
           name="publisherName"
         >
-          <label for="publisherName" class="text-muted-color"
-            >Publisher name</label
-          >
-          <InputText fluid id="publisherName" name="publisherName" />
+          <label for="publisherName" class="text-muted-color">
+            Publisher name
+          </label>
+          <InputText fluid id="publisher-name" name="publisherName" />
           <Message
             v-if="$field.invalid"
             severity="error"

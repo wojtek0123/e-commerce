@@ -3,6 +3,7 @@ import { shellRouter } from '@e-commerce/admin-dashboard/book/feature/shell';
 import { shellRouter as authRouter } from '@e-commerce/admin-dashboard/auth/feature/shell';
 import { useAuthService } from '@e-commerce/admin-dashboard/auth/api';
 import MainLayout from '../views/main-layout.vue';
+import { categoriesShellRoutes } from '@e-commerce/admin-dashboard/category/feature/shell';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -16,6 +17,11 @@ const router = createRouter({
           path: '/books',
           name: 'books',
           children: shellRouter,
+        },
+        {
+          path: '/categories',
+          name: 'categories',
+          children: categoriesShellRoutes,
         },
       ],
     },

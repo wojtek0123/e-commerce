@@ -26,26 +26,11 @@ const authService = useAuthService();
             class="text-muted-color h-10 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700"
           />
           <RouterLink
-            to="/books/list"
-            active-class="bg-surface-50 dark:bg-surface-800 rounded-base"
-            class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700 cursorpointer"
-          >
-            <i class="pi pi-book"></i>
-          </RouterLink>
-          <RouterLink
             to="/"
             active-class="bg-surface-50 dark:bg-surface-800 rounded-base"
             class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700 cursorpointer"
           >
             <i class="pi pi-home"></i>
-          </RouterLink>
-
-          <RouterLink
-            to="/account"
-            active-class="bg-surface-50 dark:bg-surface-800 rounded-base"
-            class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700 cursorpointer"
-          >
-            <i class="pi pi-user"></i>
           </RouterLink>
         </div>
       </template>
@@ -74,7 +59,7 @@ const authService = useAuthService();
             <RouterLink
               v-if="!store.shouldLabelBeShowed"
               to="/"
-              active-class="bg-surface-50 dark:bg-surface-800 rounded-base"
+              exact-active-class="bg-surface-50 dark:bg-surface-800 rounded-base"
               class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700"
             >
               <i class="pi pi-home"></i>
@@ -89,6 +74,15 @@ const authService = useAuthService();
             >
               <i class="pi pi-book"></i>
               <span v-if="store.isExpanded">Books</span>
+            </RouterLink>
+
+            <RouterLink
+              to="/categories"
+              activeClass="bg-surface-50 dark:bg-surface-800"
+              class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700 cursorpointer"
+            >
+              <i class="pi pi-objects-column"></i>
+              <span v-if="store.isExpanded">Categories</span>
             </RouterLink>
           </ul>
         </div>

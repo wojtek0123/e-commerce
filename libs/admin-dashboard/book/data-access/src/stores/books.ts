@@ -1,6 +1,12 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import { Author, Book, BookTag, Category } from '@e-commerce/shared/api-models';
+import {
+  Author,
+  Book,
+  BookTag,
+  Category,
+  Paginated,
+} from '@e-commerce/shared/api-models';
 import axios, { AxiosError } from 'axios';
 import { Publisher } from '@prisma/client';
 import { supabase } from './supabase';
@@ -135,6 +141,7 @@ export const useBooksStore = defineStore('books', () => {
         summary: 'Error',
         detail: message,
         severity: 'error',
+        life: 5000,
       });
     } finally {
       loading.value = false;
@@ -143,7 +150,7 @@ export const useBooksStore = defineStore('books', () => {
 
   async function getCategories(search: string | undefined) {
     try {
-      const response = await axios.get<Category[]>(
+      const { data } = await axios.get<Paginated<Category>>(
         `${import.meta.env.VITE_API_URL}/categories`,
         {
           params: {
@@ -152,7 +159,7 @@ export const useBooksStore = defineStore('books', () => {
         },
       );
 
-      categories.value = response.data;
+      categories.value = data.items;
     } catch (e: unknown) {
       console.log(e);
     }

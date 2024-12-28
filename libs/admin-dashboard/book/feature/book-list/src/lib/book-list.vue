@@ -69,7 +69,6 @@ onMounted(() => {
       <Breadcrumb :home="home" :model="breadcrumbs" />
       <InputText
         v-model="store.search"
-        size="medium"
         type="text"
         placeholder="Search book by title..."
         class="w-full h-fit 2xl:max-w-[30rem]"
@@ -103,7 +102,7 @@ onMounted(() => {
           :outlined="true"
           icon="pi pi-trash"
           @click="deleteBooks()"
-        ></Button>
+        />
       </div>
       <DataTable
         v-model:selection="store.selectedBooks"
