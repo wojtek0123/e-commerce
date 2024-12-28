@@ -36,6 +36,15 @@
       "@e-commerce/admin-dashboard/book/feature/shell": [
         "libs/admin-dashboard/book/feature/shell/src/index.ts"
       ],
+      "@e-commerce/admin-dashboard/category/data-access": [
+        "libs/admin-dashboard/category/data-access/src/index.ts"
+      ],
+      "@e-commerce/admin-dashboard/category/feature/categories-list": [
+        "libs/admin-dashboard/category/feature/categories-list/src/index.ts"
+      ],
+      "@e-commerce/admin-dashboard/category/feature/shell": [
+        "libs/admin-dashboard/category/feature/shell/src/index.ts"
+      ],
       "@e-commerce/admin-dashboard/core/data-access": [
         "libs/admin-dashboard/core/data-access/src/index.ts"
       ],

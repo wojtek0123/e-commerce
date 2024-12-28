@@ -1,16 +1,16 @@
 {
-  "name": "admin-dashboard-auth-feature-shell",
-  "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/admin-dashboard/auth/feature/shell/src",
+  "name": "admin-dashboard-category-data-access",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/admin-dashboard/category/data-access/src",
   "projectType": "library",
-  "tags": ["scope:admin-dashboard", "domain:auth", "type:shell"],
+  "tags": ["scope:admin-dashboard", "type:data-access", "domain:category"],
   "targets": {
     "build": {
       "executor": "@nx/vite:build",
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "outputPath": "dist/libs/admin-dashboard/auth/feature/shell"
+        "outputPath": "dist/libs/admin-dashboard/category/data-access"
       },
       "configurations": {
         "development": {
@@ -25,7 +25,7 @@
       "executor": "@nx/vite:test",
       "outputs": ["{options.reportsDirectory}"],
       "options": {
-        "reportsDirectory": "../../../../../coverage/libs/admin-dashboard/auth/feature/shell"
+        "reportsDirectory": "../../../../coverage/libs/admin-dashboard/category/data-access"
       }
     }
   }
