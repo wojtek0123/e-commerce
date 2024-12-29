@@ -12,17 +12,18 @@ import { SearchComponent } from './components/search/search.component';
 import { Book } from '@e-commerce/shared/api-models';
 import {
   ActiveFilter,
+  BooksSort,
   BooksStore,
   sizes,
 } from '@e-commerce/client-web/browse/data-access';
 import { BooksGridComponent } from '@e-commerce/client-web/shared/ui';
 import { ViewportScroller } from '@angular/common';
 import { ActiveFiltersComponent } from '@e-commerce/client-web/browse/ui';
-
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 import { FiltersComponent } from './components/filters/filters.component';
 import { CartService } from '@e-commerce/client-web/cart/api';
 import { FavouriteBooksListService } from '@e-commerce/client-web/account/api';
+import { SortComponent } from '@e-commerce/client-web/browse/ui';
 
 @Component({
   selector: 'lib-books',
@@ -34,6 +35,7 @@ import { FavouriteBooksListService } from '@e-commerce/client-web/account/api';
     PaginatorModule,
     FiltersComponent,
     ActiveFiltersComponent,
+    SortComponent,
   ],
   templateUrl: './books.component.html',
   styleUrl: './books.component.scss',
@@ -55,10 +57,19 @@ export class BooksComponent implements OnInit {
   books = this.#booksStore.books;
   loading = this.#booksStore.loading;
   error = this.#booksStore.error;
+  sort = this.#booksStore.sort;
   count = this.#booksStore.count;
   total = this.#booksStore.total;
   page = this.#booksStore.page;
   size = this.#booksStore.size;
+  sortOptions = signal<BooksSort[]>([
+    { key: 'title', direction: 'asc' },
+    { key: 'title', direction: 'desc' },
+    { key: 'price', direction: 'asc' },
+    { key: 'price', direction: 'desc' },
+    { key: 'publishedDate', direction: 'asc' },
+    { key: 'publishedDate', direction: 'desc' },
+  ]);
   first = computed(() => this.page() - 1 * this.size());
   sizes = signal(sizes);
   activeFilters = this.#booksStore.activeFilters;
@@ -96,5 +107,9 @@ export class BooksComponent implements OnInit {
 
   addToFavourite({ id }: Book) {
     this.#favouriteBooksListService.addToFavourite(id);
+  }
+
+  changeSort(booksSort: BooksSort) {
+    this.#booksStore.setSort(booksSort);
   }
 }

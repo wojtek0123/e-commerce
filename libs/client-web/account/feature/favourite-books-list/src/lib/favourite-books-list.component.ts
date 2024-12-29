@@ -1,16 +1,12 @@
 import { Component, inject } from '@angular/core';
 import { FavouriteBooksListStore } from '@e-commerce/client-web/account/data-access';
-import {
-  BooksGridComponent,
-  ErrorAndRetryMessageComponent,
-} from '@e-commerce/client-web/shared/ui';
-import { Skeleton } from 'primeng/skeleton';
+import { BooksGridComponent } from '@e-commerce/client-web/shared/ui';
 import { CartService } from '@e-commerce/client-web/cart/api';
 import { Book } from '@e-commerce/shared/api-models';
 
 @Component({
   selector: 'lib-favourite-books-list',
-  imports: [ErrorAndRetryMessageComponent, Skeleton, BooksGridComponent],
+  imports: [BooksGridComponent],
   templateUrl: './favourite-books-list.component.html',
 })
 export class FavouriteBooksListComponent {

@@ -47,6 +47,8 @@ export class BooksService {
     size,
     page,
     authorIdIn,
+    sortBy,
+    sortByMode,
   }: {
     categoryIdIn?: string;
     tagIn?: string;
@@ -56,6 +58,8 @@ export class BooksService {
     size?: string;
     page?: string;
     authorIdIn?: string;
+    sortBy?: string;
+    sortByMode?: string;
   }) {
     try {
       const pageNumber = this.parseNumber(page, 1);
@@ -64,6 +68,14 @@ export class BooksService {
       const parsedCategories = this._parseQueryParams(categoryIdIn);
       const parsedTags = this._parseQueryParams(tagIn);
       const parsedAuthors = this._parseQueryParams(authorIdIn);
+
+      const parsedSortByMode = ['asc', 'desc'].includes(sortByMode)
+        ? sortByMode
+        : 'asc';
+
+      const parsedSortBy = ['title', 'price', 'publishedDate'].includes(sortBy)
+        ? sortBy
+        : 'title';
 
       const whereClause: Prisma.BookWhereInput = {
         AND: [
@@ -94,7 +106,7 @@ export class BooksService {
           },
           skip: (pageNumber - 1) * sizeNumber,
           take: sizeNumber,
-          orderBy: { title: 'asc' },
+          orderBy: { [parsedSortBy]: parsedSortByMode },
         }),
         this.prisma.book.count({ where: whereClause }),
       ]);

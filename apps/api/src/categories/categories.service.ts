@@ -22,8 +22,6 @@ export class CategoriesService {
     const pageNumber = this.parseNumber(opts.page, 1);
     const sizeNumber = this.parseNumber(opts.size, 20);
 
-    console.log(pageNumber, sizeNumber);
-
     const whereClause: Prisma.CategoryWhereInput = {
       AND: [
         opts.nameLike

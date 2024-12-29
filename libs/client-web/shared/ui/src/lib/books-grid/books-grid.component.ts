@@ -9,7 +9,6 @@ import { Book } from '@e-commerce/shared/api-models';
 import { BookCardComponent } from '../book-card/book-card.component';
 import { BookCardSkeletonComponent } from '../book-card-skeleton/book-card-skeleton.component';
 import { Button } from 'primeng/button';
-import { InputText } from 'primeng/inputtext';
 
 @Component({
   selector: 'lib-books-grid',

@@ -50,6 +50,8 @@ export class BooksController {
   @ApiQuery({ type: String, name: 'priceFrom', required: false })
   @ApiQuery({ type: String, name: 'priceTo', required: false })
   @ApiQuery({ type: String, name: 'titleLike', required: false })
+  @ApiQuery({ type: String, name: 'sortBy', required: false })
+  @ApiQuery({ type: String, name: 'sortByMode', required: false })
   @ApiQuery({ name: 'tagsIn', isArray: true, enum: Tag, required: false })
   @ApiQuery({
     name: 'categoryNamesIn',
@@ -72,6 +74,8 @@ export class BooksController {
     @Query('titleLike') titleLike: string,
     @Query('priceFrom') priceFrom: string,
     @Query('priceTo') priceTo: string,
+    @Query('sortBy') sortBy: string,
+    @Query('sortByMode') sortByMode: string,
   ) {
     return this.booksService.findMany({
       page,
@@ -82,6 +86,8 @@ export class BooksController {
       titleLike,
       priceFrom,
       priceTo,
+      sortBy,
+      sortByMode,
     });
   }
 
