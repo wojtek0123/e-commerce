@@ -69,11 +69,26 @@ import {
 } from '@e-commerce/client-web/browse/utils';
 import { Tag } from '../../models/tag.model';
 import { MessageService } from 'primeng/api';
+import {
+  BooksSort,
+  BooksSortDirection,
+  BooksSortKey,
+} from '../../models/books-sort.model';
+import {
+  BooksQueryParam,
+  BooksQueryParamKey,
+} from '../../models/books-query-param.model';
 
 const FILTER_PAGE = 1 as const;
 const FILTER_SIZE = 20 as const;
 
 export const sizes = [20, 40, 60];
+const allBooksSortKeys: BooksSortKey[] = [
+  'title',
+  'price',
+  'publishedDate',
+] as const;
+const allBooksSortDirections: BooksSortDirection[] = ['asc', 'desc'] as const;
 
 export interface BooksState {
   books: Book[];
@@ -84,6 +99,7 @@ export interface BooksState {
   count: number;
   loading: boolean;
   error: string | string[] | null;
+  sort: BooksSort;
   filters: {
     multiSelect: {
       tag: Filter<{ id: BookTag; name: BookTag }>;
@@ -123,6 +139,10 @@ export const initialBooksState: BooksState = {
   count: 0,
   loading: false,
   error: null,
+  sort: {
+    key: 'title',
+    direction: 'asc',
+  },
   filters: {
     multiSelect: {
       tag: { items: [], selectedItems: [] },
@@ -167,10 +187,13 @@ export const BooksStore = signalStore(
   withMethods((store) => ({
     getBooks: rxMethod<void>(
       pipe(
-        tap(() => patchState(store, { loading: true })),
         switchMap(() => {
+          patchState(store, { loading: true });
           const {
             filters: { multiSelect, singleValue },
+            sort,
+            page,
+            size,
           } = getState(store);
 
           const priceMin = singleValue.minPrice;
@@ -193,8 +216,10 @@ export const BooksStore = signalStore(
               tagIn: selectedTags,
               authorIdIn: selectedAuthorsId,
               categoryIdIn: selectedCategoriesId,
-              page: store.page(),
-              size: store.size(),
+              page,
+              size,
+              sortBy: sort.key,
+              sortByMode: sort.direction,
             })
             .pipe(
               tapResponse({
@@ -325,6 +350,15 @@ export const BooksStore = signalStore(
     },
     setSize: (size: number) => {
       patchState(store, { size });
+    },
+    setSort: (sort: BooksSort) => {
+      patchState(store, { sort });
+    },
+    setSortKey: (key: BooksSortKey) => {
+      patchState(store, (state) => ({ sort: { ...state.sort, key } }));
+    },
+    setSortDirection: (direction: BooksSortDirection) => {
+      patchState(store, (state) => ({ sort: { ...state.sort, direction } }));
     },
     selectItem: <T extends { id: string; name: string }>(
       item: T,
@@ -490,16 +524,7 @@ export const BooksStore = signalStore(
         },
       }));
     },
-    setQueryParams: ({
-      selectedTags,
-      selectedAuthors,
-      selectedCategories,
-      search,
-      minPrice,
-      maxPrice,
-      page,
-      size,
-    }: {
+    _setQueryParam: (queryParam: {
       selectedTags: Tag[];
       selectedAuthors: Author[];
       selectedCategories: Category[];
@@ -508,21 +533,31 @@ export const BooksStore = signalStore(
       maxPrice: number | null;
       page: number;
       size: number;
+      sortBy: BooksSortKey;
+      sortByMode: BooksSortDirection;
     }) => {
       store._router.navigate([], {
         relativeTo: store._route,
         queryParams: {
           tags: buildSelectedItemsQueryParam(
-            selectedTags,
+            queryParam.selectedTags,
             'name',
           )?.toLowerCase(),
-          categories: buildSelectedItemsQueryParam(selectedCategories, 'name'),
-          authors: buildSelectedItemsQueryParam(selectedAuthors, 'name'),
-          search: search || null,
-          min_price: minPrice,
-          max_price: maxPrice,
-          size,
-          page,
+          categories: buildSelectedItemsQueryParam(
+            queryParam.selectedCategories,
+            'name',
+          ),
+          authors: buildSelectedItemsQueryParam(
+            queryParam.selectedAuthors,
+            'name',
+          ),
+          search: queryParam.search || null,
+          min_price: queryParam.minPrice,
+          max_price: queryParam.maxPrice,
+          size: queryParam.size,
+          page: queryParam.page,
+          sortBy: queryParam.sortBy,
+          sortByMode: queryParam.sortByMode,
         },
         replaceUrl: true,
       });
@@ -534,14 +569,16 @@ export const BooksStore = signalStore(
         tap(() => patchState(store, { loading: true })),
         map(({ queryParam }) => {
           return {
-            categories: queryParam.get('categories'),
-            authors: queryParam.get('authors'),
-            tags: queryParam.get('tags'),
-            page: queryParam.get('page'),
-            size: queryParam.get('size'),
-            minPrice: queryParam.get('min_price'),
-            maxPrice: queryParam.get('max_price'),
-            search: queryParam.get('search'),
+            categories: queryParam.get(BooksQueryParamKey.CATEGORIES),
+            authors: queryParam.get(BooksQueryParamKey.AUTHORS),
+            tags: queryParam.get(BooksQueryParamKey.TAGS),
+            page: queryParam.get(BooksQueryParamKey.PAGE),
+            size: queryParam.get(BooksQueryParamKey.SIZE),
+            minPrice: queryParam.get(BooksQueryParamKey.MIN_PRICE),
+            maxPrice: queryParam.get(BooksQueryParamKey.MAX_PRICE),
+            search: queryParam.get(BooksQueryParamKey.SEARCH),
+            sortBy: queryParam.get(BooksQueryParamKey.SORT_BY),
+            sortByMode: queryParam.get(BooksQueryParamKey.SORT_BY_MODE),
           };
         }),
         switchMap((params) => {
@@ -574,14 +611,29 @@ export const BooksStore = signalStore(
                 ? Number(params.size)
                 : FILTER_SIZE,
             ),
+            sortBy$: of(
+              (allBooksSortKeys as string[]).includes(params.sortBy ?? '')
+                ? params.sortBy
+                : ('title' satisfies BooksSortKey),
+            ),
+
+            sortByMode$: of(
+              (allBooksSortDirections as string[]).includes(
+                params.sortByMode ?? '',
+              )
+                ? params.sortByMode
+                : ('asc' satisfies BooksSortDirection),
+            ),
           };
 
           return forkJoin(requests).pipe(
-            map(({ categories$, authors$, tags$, size$ }) => ({
-              categories: categories$,
-              authors: authors$,
-              tags: tags$,
-              size: size$,
+            map((requests) => ({
+              categories: requests.categories$,
+              authors: requests.authors$,
+              tags: requests.tags$,
+              size: requests.size$,
+              sortBy: requests.sortBy$,
+              sortByMode: requests.sortByMode$,
               page: Number(params.page) || 1,
               search: params.search || null,
               minPrice: params.minPrice ? Number(params.minPrice) : null,
@@ -633,8 +685,16 @@ export const BooksStore = signalStore(
               removeAllEntities(activeFilterConfig),
               addEntities(activeFilters, activeFilterConfig),
               (state) => ({
+                loading: false,
                 ...(params.page && { page: Number(params.page) }),
                 ...(params.size && { size: Number(params.size) }),
+                ...(params.sortBy &&
+                  params.sortByMode && {
+                    sort: {
+                      direction: params.sortByMode as BooksSortDirection,
+                      key: params.sortBy as BooksSortKey,
+                    },
+                  }),
                 filters: {
                   multiSelect: {
                     ...state.filters.multiSelect,
@@ -670,6 +730,7 @@ export const BooksStore = signalStore(
       const {
         page,
         size,
+        sort,
         filters: { multiSelect, singleValue },
       } = getState(store);
 
@@ -679,8 +740,10 @@ export const BooksStore = signalStore(
       const search = singleValue.search;
       const minPrice = singleValue.minPrice;
       const maxPrice = singleValue.maxPrice;
+      const sortBy = sort.key;
+      const sortByMode = sort.direction;
 
-      store.setQueryParams({
+      store._setQueryParam({
         selectedTags,
         selectedCategories,
         selectedAuthors,
@@ -689,45 +752,29 @@ export const BooksStore = signalStore(
         maxPrice,
         page,
         size,
+        sortBy,
+        sortByMode,
       });
     },
-    _serializeQueryParamsFilters: rxMethod<{
-      selectedTags: { id: BookTag; name: BookTag }[];
-      selectedAuthors: Author[];
-      selectedCategories: Category[];
-      search: string | null;
-      minPrice: number | null;
-      maxPrice: number | null;
-      page: number;
-      size: number;
-    }>(
+    _serializeQueryParamsFilters: rxMethod<{ queryParam: BooksQueryParam }>(
       pipe(
         skip(1),
         distinctUntilChanged((prev, curr) => isEqual(prev, curr)),
-        tap(
-          ({
-            selectedTags,
-            selectedAuthors,
-            selectedCategories,
-            search,
-            minPrice,
-            maxPrice,
-            page,
-            size,
-          }) => {
-            store.setQueryParams({
-              selectedTags,
-              selectedCategories,
-              selectedAuthors,
-              search,
-              minPrice,
-              maxPrice,
-              page,
-              size,
-            });
-            store.getBooks();
-          },
-        ),
+        tap(({ queryParam }) => {
+          store._setQueryParam({
+            selectedTags: queryParam.selectedTags,
+            selectedCategories: queryParam.selectedCategories,
+            selectedAuthors: queryParam.selectedAuthors,
+            search: queryParam.search,
+            minPrice: queryParam.minPrice,
+            maxPrice: queryParam.maxPrice,
+            page: queryParam.page,
+            size: queryParam.size,
+            sortBy: queryParam.sortBy,
+            sortByMode: queryParam.sortByMode,
+          });
+          store.getBooks();
+        }),
       ),
     ),
     getAllFilters: () => {
@@ -767,7 +814,7 @@ export const BooksStore = signalStore(
       });
 
       effect(() => {
-        const filters = {
+        const filters: BooksQueryParam = {
           selectedTags: store.selectedTags(),
           selectedAuthors: store.selectedAuthors(),
           selectedCategories: store.selectedCategories(),
@@ -776,10 +823,12 @@ export const BooksStore = signalStore(
           maxPrice: store.maxPrice(),
           page: store.page(),
           size: store.size(),
+          sortBy: store.sort().key,
+          sortByMode: store.sort().direction,
         };
 
         untracked(() => {
-          store._serializeQueryParamsFilters(filters);
+          store._serializeQueryParamsFilters({ queryParam: filters });
         });
       });
     },

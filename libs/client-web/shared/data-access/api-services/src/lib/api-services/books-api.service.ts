@@ -28,6 +28,8 @@ export class BooksApiService {
     authorIdIn?: Author['id'][];
     size?: number;
     page?: number;
+    sortBy?: string;
+    sortByMode?: 'asc' | 'desc';
   }) {
     const convertedParams = {
       ...params,

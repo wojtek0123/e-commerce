@@ -11,7 +11,7 @@ import { Book } from '@e-commerce/shared/api-models';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { RouterLink } from '@angular/router';
-import { CurrencyPipe, NgOptimizedImage } from '@angular/common';
+import { CurrencyPipe, NgClass, NgOptimizedImage } from '@angular/common';
 import { APP_ROUTE_PATHS_TOKEN } from '@e-commerce/client-web/shared/app-config';
 
 @Pipe({ standalone: true, name: 'isBookFavourite' })
@@ -33,6 +33,7 @@ export class IsBookFavouritePipe implements PipeTransform {
     CurrencyPipe,
     NgOptimizedImage,
     IsBookFavouritePipe,
+    NgClass,
   ],
   templateUrl: './book-card.component.html',
   styleUrl: './book-card.component.scss',
@@ -47,6 +48,7 @@ export class BookCardComponent {
   public book = input.required<Book>();
   public awaitingBookIdsToAddToCart = input<Book['id'][]>([]);
   favouriteBooks = input.required<Book[]>();
+  loading = input(false);
 
   public onAddToCart = output<Book>();
   onAddToFavourite = output<Book>();
