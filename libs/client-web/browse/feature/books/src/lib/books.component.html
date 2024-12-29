@@ -14,7 +14,11 @@
               [sort]="sort()"
               (onChangeSort)="changeSort($event)"
             />
-            <lib-search class="w-full" />
+            <lib-search
+              [search]="search()"
+              (debouncedSearchChange)="changeSearch($event)"
+              class="w-full"
+            />
           </div>
           <lib-filters class="xl:hidden" />
         </div>

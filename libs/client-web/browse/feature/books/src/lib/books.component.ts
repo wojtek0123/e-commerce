@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
-import { SearchComponent } from './components/search/search.component';
+import { SearchComponent } from '@e-commerce/client-web/browse/ui';
 import { Book } from '@e-commerce/shared/api-models';
 import {
   ActiveFilter,
@@ -58,6 +58,7 @@ export class BooksComponent implements OnInit {
   loading = this.#booksStore.loading;
   error = this.#booksStore.error;
   sort = this.#booksStore.sort;
+  search = this.#booksStore.search;
   count = this.#booksStore.count;
   total = this.#booksStore.total;
   page = this.#booksStore.page;
@@ -111,5 +112,9 @@ export class BooksComponent implements OnInit {
 
   changeSort(booksSort: BooksSort) {
     this.#booksStore.setSort(booksSort);
+  }
+
+  changeSearch(search: string | null) {
+    this.#booksStore.setSingleValueFilter(search, 'search');
   }
 }
