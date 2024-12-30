@@ -38,19 +38,32 @@
           See more
         </a>
       </div>
-      <lib-books-grid
-        (addToCartEvent)="addToCart($event)"
-        (onAddToFavourite)="addBookToFavourite($event)"
-        class="w-full"
-        [books]="section.books"
-        [favouriteBooks]="favouriteBooks()"
-        [loading]="loading()"
-        [error]="error()"
-        [skeletonsCount]="6"
-      />
+      @defer (hydrate on hover) {
+        <lib-books-grid
+          (addToCartEvent)="addToCart($event)"
+          (onAddToFavourite)="addBookToFavourite($event)"
+          (onRetry)="retry()"
+          class="w-full"
+          [books]="section.books"
+          [favouriteBooks]="favouriteBooks()"
+          [loading]="loading()"
+          [error]="error()"
+          [skeletonsCount]="4"
+        />
+      } @placeholder {
+        <lib-books-grid
+          class="w-full"
+          [books]="[]"
+          [favouriteBooks]="[]"
+          [loading]="true"
+          [error]="null"
+          [skeletonsCount]="4"
+        />
+      }
     </section>
   }
 </main>
+
 <footer
   class="bg-content-background w-full p-4 gap-10 rounded-base grid grid-cols-1 place-items-center"
 >

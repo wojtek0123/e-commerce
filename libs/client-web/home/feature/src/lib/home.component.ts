@@ -84,23 +84,19 @@ export class HomeComponent {
       name: this.bookTag.INCOMING.toLowerCase(),
       routerLink: this.appRoutePaths.BOOKS(),
       queryParams: { tags: this.bookTag.INCOMING },
-      books: computed(() =>
-        this.incomingBooks().slice(0, this.columnsCount?.()),
-      )(),
+      books: this.incomingBooks().slice(0, this.columnsCount?.()),
     },
     {
       name: this.bookTag.BESTSELLER.toLowerCase(),
       routerLink: this.appRoutePaths.BOOKS(),
       queryParams: { tags: this.bookTag.BESTSELLER },
-      books: computed(() =>
-        this.bestsellerBooks().slice(0, this.columnsCount?.()),
-      )(),
+      books: this.bestsellerBooks().slice(0, this.columnsCount?.()),
     },
     {
       name: this.bookTag.NEW.toLowerCase(),
       routerLink: this.appRoutePaths.BOOKS(),
       queryParams: { tags: this.bookTag.NEW },
-      books: computed(() => this.newBooks().slice(0, this.columnsCount?.()))(),
+      books: this.newBooks().slice(0, this.columnsCount?.()),
     },
   ]);
 
@@ -110,5 +106,9 @@ export class HomeComponent {
 
   addBookToFavourite({ id }: Book) {
     this.#favouriteBooksListService.addToFavourite(id);
+  }
+
+  retry() {
+    this.homeStore.getBooks();
   }
 }

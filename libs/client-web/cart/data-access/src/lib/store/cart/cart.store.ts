@@ -165,7 +165,6 @@ export const CartStore = signalStore(
             const isInCart = !!getState(store)._cartItemsIds.find(
               (id) => id === book.id,
             );
-            console.log(isInCart);
             patchState(
               store,
               (state) => ({
