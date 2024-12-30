@@ -135,8 +135,6 @@ export const useAuthStore = defineStore('auth', () => {
         error.value = e.response?.data?.message ?? 'Error occurred';
       }
 
-      console.log('here', e);
-
       logout();
       removeSessionFromStorage();
 
