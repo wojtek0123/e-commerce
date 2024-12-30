@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { PublishersService } from './publishers.service';
 import {
@@ -16,7 +17,8 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { PublisherDto } from './dto/publisher.dto';
-import { Prisma } from '@prisma/client';
+import { Prisma, Role } from '@prisma/client';
+import { Roles, RolesGuard } from '../common/guards/role.guard';
 
 @ApiTags('publishers')
 @Controller('publishers')
@@ -27,6 +29,8 @@ export class PublishersController {
   @ApiOperation({ summary: 'Create a publisher' })
   @ApiCreatedResponse({ type: PublisherDto })
   @ApiBody({ description: '', type: PublisherDto })
+  @UseGuards(RolesGuard)
+  @Roles([Role.ADMIN])
   create(@Body() data: Prisma.PublisherCreateInput) {
     return this.publishersService.create(data);
   }
@@ -49,6 +53,8 @@ export class PublishersController {
   @ApiOperation({ summary: 'Update a publisher' })
   @ApiCreatedResponse({ type: PublisherDto })
   @ApiBody({ description: '', type: PublisherDto })
+  @UseGuards(RolesGuard)
+  @Roles([Role.ADMIN])
   update(@Param('id') id: string, @Body() data: Prisma.PublisherUpdateInput) {
     return this.publishersService.update({ id }, data);
   }
@@ -56,6 +62,8 @@ export class PublishersController {
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a publisher' })
   @ApiOkResponse({ type: PublisherDto })
+  @UseGuards(RolesGuard)
+  @Roles([Role.ADMIN])
   remove(@Param('id') id: string) {
     return this.publishersService.remove({ id });
   }

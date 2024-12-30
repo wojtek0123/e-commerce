@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { ShippingMethodsService } from './shipping-methods.service';
 import { CreateShippingMethodDto } from './dto/create-shipping-method.dto';
@@ -17,6 +18,8 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { ShippingMethod } from './entities/shipping-method.entity';
+import { Roles, RolesGuard } from '../common/guards/role.guard';
+import { Role } from '@prisma/client';
 
 @ApiTags('shipping-methods')
 @Controller('shipping-methods')
@@ -28,6 +31,8 @@ export class ShippingMethodsController {
   @Post()
   @ApiOperation({ summary: 'Create shipping methd' })
   @ApiCreatedResponse({ type: ShippingMethod })
+  @UseGuards(RolesGuard)
+  @Roles([Role.ADMIN])
   create(@Body() createShippingMethodDto: CreateShippingMethodDto) {
     return this.shippingMethodsService.create(createShippingMethodDto);
   }
@@ -49,6 +54,8 @@ export class ShippingMethodsController {
   @Patch(':id')
   @ApiOperation({ summary: 'Update specific shipping method' })
   @ApiCreatedResponse({ type: ShippingMethod })
+  @UseGuards(RolesGuard)
+  @Roles([Role.ADMIN])
   update(
     @Param('id') id: string,
     @Body() updateShippingMethodDto: UpdateShippingMethodDto,
@@ -59,6 +66,8 @@ export class ShippingMethodsController {
   @Delete(':id')
   @ApiOkResponse({ type: ShippingMethod })
   @ApiOperation({ summary: 'Remove specific shipping method' })
+  @UseGuards(RolesGuard)
+  @Roles([Role.ADMIN])
   remove(@Param('id') id: string) {
     return this.shippingMethodsService.remove(id);
   }

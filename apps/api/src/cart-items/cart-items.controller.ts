@@ -20,6 +20,8 @@ import {
 } from '@nestjs/swagger';
 import { CartItemEntity } from './entities/cart-item.entity';
 import { AccessTokenGuard } from '../common/guards/access-token.guard';
+import { Roles, RolesGuard } from '../common/guards/role.guard';
+import { Role } from '@prisma/client';
 
 @ApiTags('cart-items')
 @Controller('cart-items')
@@ -27,7 +29,8 @@ export class CartItemsController {
   constructor(private readonly cartItemsService: CartItemsService) {}
 
   @Post()
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles([Role.USER])
   @ApiOperation({ summary: 'Create a cart item' })
   @ApiCreatedResponse({ type: CartItemEntity })
   @ApiBearerAuth()
@@ -69,6 +72,8 @@ export class CartItemsController {
   // }
 
   @Patch(':shoppingSessionId/:bookId')
+  @UseGuards(RolesGuard)
+  @Roles([Role.USER])
   @ApiOperation({ summary: 'Update amount of the book' })
   @ApiOkResponse({ type: CartItemEntity })
   @ApiBearerAuth()
@@ -87,7 +92,8 @@ export class CartItemsController {
   }
 
   @Delete(':shoppingSessionId/:bookId')
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles([Role.USER])
   @ApiOperation({ summary: 'Delete a cart item' })
   @ApiOkResponse({ type: CartItemEntity })
   @ApiBearerAuth()

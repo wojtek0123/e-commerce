@@ -19,6 +19,8 @@ import {
 import { AccessTokenGuard } from '../common/guards/access-token.guard';
 import { OrderDetail } from './entities/order-detail.entity';
 import { OrderDetailList } from './entities/order-detail-list.dto';
+import { Roles, RolesGuard } from '../common/guards/role.guard';
+import { Role } from '@prisma/client';
 
 @ApiTags('order-details')
 @ApiBearerAuth()
@@ -30,6 +32,8 @@ export class OrderDetailsController {
   @Post()
   @ApiCreatedResponse({ type: OrderDetail })
   @ApiOperation({ summary: 'Create an order details' })
+  @UseGuards(RolesGuard)
+  @Roles([Role.USER])
   create(
     @Body() data: CreateOrderDetailDto,
     @Headers('authorization') authHeader: string,
@@ -40,6 +44,8 @@ export class OrderDetailsController {
   @Get()
   @ApiOperation({ summary: 'Get all orders details for a specific user' })
   @ApiOkResponse({ type: OrderDetailList, isArray: true })
+  @UseGuards(RolesGuard)
+  @Roles([Role.USER, Role.ADMIN])
   findAll(@Headers('authorization') authHeader: string) {
     return this.orderDetailsService.findAll(authHeader);
   }
@@ -47,6 +53,8 @@ export class OrderDetailsController {
   @Get(':id')
   @ApiOperation({ summary: 'Get a specific order details for a specific user' })
   @ApiOkResponse({ type: OrderDetail })
+  @UseGuards(RolesGuard)
+  @Roles([Role.USER, Role.ADMIN])
   findOne(
     @Headers('authorization') authHeader: string,
     @Param('id') id: string,

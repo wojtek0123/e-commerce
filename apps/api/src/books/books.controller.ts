@@ -22,9 +22,11 @@ import {
 import { BookEntity } from './entities/book.entity';
 import { UpdateBookBodyDto } from './dto/update-body.dto';
 import { CreateBookDto } from './dto/create-book.dto';
-import { Role, Tag } from '@prisma/client';
+import { Role } from '@prisma/client';
 import { Roles, RolesGuard } from '../common/guards/role.guard';
 import { Pagination } from '../common/entities/pagination.entity';
+import { SortKey } from './models/sort-key.enum';
+import { SortOrder } from './models/sort-order.enum';
 
 @ApiTags('books')
 @Controller('books')
@@ -45,26 +47,26 @@ export class BooksController {
   @Get()
   @ApiOperation({ summary: 'Get books' })
   @ApiOkResponse({ type: Pagination<BookEntity>, isArray: true })
-  @ApiQuery({ type: String, name: 'page', required: false })
-  @ApiQuery({ type: String, name: 'size', required: false })
+  @ApiQuery({ type: String, default: '1', name: 'page', required: false })
+  @ApiQuery({ type: String, default: '20', name: 'size', required: false })
   @ApiQuery({ type: String, name: 'priceFrom', required: false })
   @ApiQuery({ type: String, name: 'priceTo', required: false })
   @ApiQuery({ type: String, name: 'titleLike', required: false })
-  @ApiQuery({ type: String, name: 'sortBy', required: false })
-  @ApiQuery({ type: String, name: 'sortByMode', required: false })
-  @ApiQuery({ name: 'tagsIn', isArray: true, enum: Tag, required: false })
   @ApiQuery({
-    name: 'categoryNamesIn',
-    isArray: true,
-    type: String,
+    enum: SortKey,
+    default: SortKey.TITLE,
+    name: 'sortBy',
     required: false,
   })
   @ApiQuery({
-    name: 'authorNamesIn',
-    isArray: true,
-    type: String,
+    enum: SortOrder,
+    default: SortOrder.ASC,
+    name: 'sortByMode',
     required: false,
   })
+  @ApiQuery({ name: 'tagIn', type: String, required: false })
+  @ApiQuery({ name: 'categoryIdIn', type: String, required: false })
+  @ApiQuery({ name: 'authorIdIn', type: String, required: false })
   findAll(
     @Query('page') page: string,
     @Query('size') size: string,
@@ -101,6 +103,9 @@ export class BooksController {
   @Patch(':id')
   @ApiOperation({ summary: 'Update a book' })
   @ApiCreatedResponse({ type: BookEntity })
+  @UseGuards(RolesGuard)
+  @Roles([Role.ADMIN])
+  @ApiBearerAuth()
   update(@Param('id') id: string, @Body() data: UpdateBookBodyDto) {
     return this.booksService.update(id, data);
   }
@@ -110,6 +115,8 @@ export class BooksController {
   @ApiOkResponse({ type: BookEntity })
   @ApiBearerAuth()
   @ApiQuery({ name: 'ids', required: true })
+  @UseGuards(RolesGuard)
+  @Roles([Role.ADMIN])
   remove(@Query('ids') ids: string) {
     return this.booksService.remove(ids);
   }
