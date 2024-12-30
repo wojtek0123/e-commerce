@@ -4,6 +4,8 @@ import { CreateOrderItemDto } from './dto/create-order-item.dto';
 import { ApiBearerAuth, ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
 import { AccessTokenGuard } from '../common/guards/access-token.guard';
 import { OrderItem } from './entities/order-item.entity';
+import { Roles, RolesGuard } from '../common/guards/role.guard';
+import { Role } from '@prisma/client';
 
 @ApiTags('order-items')
 @Controller('order-items')
@@ -14,6 +16,8 @@ export class OrderItemsController {
   @ApiBearerAuth()
   @UseGuards(AccessTokenGuard)
   @ApiCreatedResponse({ type: OrderItem })
+  @UseGuards(RolesGuard)
+  @Roles([Role.USER])
   create(@Body() createOrderItemDto: CreateOrderItemDto) {
     return this.orderItemsService.create(createOrderItemDto);
   }

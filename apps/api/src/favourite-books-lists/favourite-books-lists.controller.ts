@@ -17,6 +17,8 @@ import {
 } from '@nestjs/swagger';
 import { AccessTokenGuard } from '../common/guards/access-token.guard';
 import { FavouriteBooksList } from './entities/favourite-books-list.entity';
+import { Roles, RolesGuard } from '../common/guards/role.guard';
+import { Role } from '@prisma/client';
 
 @ApiTags('favourite-books-lists')
 @Controller('favourite-books-lists')
@@ -36,7 +38,8 @@ export class FavouriteBooksListsController {
 
   @Patch()
   @ApiOperation({ summary: 'Update favourite books list for specific user' })
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles([Role.USER])
   @ApiBearerAuth()
   @ApiCreatedResponse({ type: FavouriteBooksList })
   update(

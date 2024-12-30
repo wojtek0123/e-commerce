@@ -22,6 +22,8 @@ import { UserAddressCreateDto } from './dto/user-address-create.dto';
 import { UserAddress } from './entities/user-addresses.entity';
 import { AccessTokenGuard } from '../common/guards/access-token.guard';
 import { UserAddressUpdateDto } from './dto/user-address-update.dto';
+import { Roles, RolesGuard } from '../common/guards/role.guard';
+import { Role } from '@prisma/client';
 
 @ApiTags('user-addresses')
 @Controller('user-addresses')
@@ -29,7 +31,8 @@ export class UserAddressesController {
   constructor(private readonly userAddressesService: UserAddressesService) {}
 
   @Post()
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles([Role.USER])
   @ApiBearerAuth()
   @ApiCreatedResponse({ type: UserAddress })
   @ApiOperation({ summary: 'create user address' })
@@ -62,7 +65,8 @@ export class UserAddressesController {
   }
 
   @Patch(':id')
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles([Role.USER])
   @ApiBearerAuth()
   @ApiCreatedResponse({ type: UserAddressDto })
   @ApiOperation({ summary: 'update user address' })
@@ -75,7 +79,8 @@ export class UserAddressesController {
   }
 
   @Delete(':id')
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles([Role.USER])
   @ApiBearerAuth()
   @ApiOkResponse({ type: UserAddressDto })
   @ApiOperation({ summary: 'delete user address' })

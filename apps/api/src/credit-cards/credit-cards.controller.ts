@@ -21,6 +21,8 @@ import {
 } from '@nestjs/swagger';
 import { AccessTokenGuard } from '../common/guards/access-token.guard';
 import { CreditCard } from './entities/credit-card.entity';
+import { Roles, RolesGuard } from '../common/guards/role.guard';
+import { Role } from '@prisma/client';
 
 @Controller('credit-cards')
 @ApiTags('credit-cards')
@@ -28,7 +30,8 @@ export class CreditCardsController {
   constructor(private readonly creditCardsService: CreditCardsService) {}
 
   @Post()
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles([Role.USER])
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Add credit card' })
   @ApiCreatedResponse({ type: CreditCard })
@@ -40,7 +43,8 @@ export class CreditCardsController {
   }
 
   @Get()
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles([Role.USER])
   @ApiBearerAuth()
   @ApiOkResponse({ type: CreditCard })
   findOne(@Headers('authorization') authHeader: string) {
@@ -48,7 +52,8 @@ export class CreditCardsController {
   }
 
   @Patch(':id')
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles([Role.USER])
   @ApiBearerAuth()
   @ApiCreatedResponse({ type: CreditCard })
   update(
@@ -60,7 +65,8 @@ export class CreditCardsController {
   }
 
   @Delete(':id')
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles([Role.USER])
   @ApiBearerAuth()
   @ApiOkResponse({ type: CreditCard })
   remove(

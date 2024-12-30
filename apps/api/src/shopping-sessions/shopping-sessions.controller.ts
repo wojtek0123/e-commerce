@@ -18,6 +18,8 @@ import {
 import { AccessTokenGuard } from '../common/guards/access-token.guard';
 import { ShoppingSessionEntity } from './entities/shopping-session.entity';
 import { CreateCartItemDto } from '../cart-items/dto/create-cart-item.dto';
+import { Roles, RolesGuard } from '../common/guards/role.guard';
+import { Role } from '@prisma/client';
 
 @ApiTags('shopping-sessions')
 @Controller('shopping-sessions')
@@ -27,7 +29,8 @@ export class ShoppingSessionsController {
   ) {}
 
   @Get()
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles([Role.USER])
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Get the shopping session' })
   @ApiOkResponse({ type: ShoppingSessionEntity })
@@ -36,7 +39,8 @@ export class ShoppingSessionsController {
   }
 
   @Delete()
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles([Role.USER, Role.ADMIN])
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Remove the shopping session' })
   @ApiOkResponse({ type: ShoppingSessionEntity })
@@ -45,10 +49,11 @@ export class ShoppingSessionsController {
   }
 
   @Post(':id')
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(AccessTokenGuard, RolesGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Create many cart items' })
   @ApiOkResponse({ type: ShoppingSessionEntity })
+  @Roles([Role.USER])
   createManyCartItems(
     @Body() body: { cartItems: CreateCartItemDto[] },
     @Headers('authorization') authHeader: string,

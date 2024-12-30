@@ -7,9 +7,10 @@ import {
   Param,
   Delete,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { AuthorsService } from './authors.service';
-import { Prisma, Author } from '@prisma/client';
+import { Prisma, Author, Role } from '@prisma/client';
 import {
   ApiBody,
   ApiCreatedResponse,
@@ -19,6 +20,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { AuthorDto } from './dto/author.dto';
+import { Roles, RolesGuard } from '../common/guards/role.guard';
 
 @ApiTags('authors')
 @Controller('authors')
@@ -29,6 +31,8 @@ export class AuthorsController {
   @ApiOperation({ summary: 'Create an author' })
   @ApiCreatedResponse({ type: AuthorDto })
   @ApiBody({ description: 'Create an author', type: AuthorDto })
+  @UseGuards(RolesGuard)
+  @Roles([Role.ADMIN])
   create(@Body() data: Prisma.AuthorCreateInput): Promise<Author> {
     return this.authorsService.create(data);
   }
@@ -65,6 +69,8 @@ export class AuthorsController {
   @ApiOperation({ summary: 'Update an author' })
   @ApiCreatedResponse({ type: AuthorDto })
   @ApiBody({ description: 'Update an author', type: AuthorDto })
+  @UseGuards(RolesGuard)
+  @Roles([Role.ADMIN])
   update(@Param('id') id: string, @Body() data: { name: string }) {
     return this.authorsService.update({ id }, data);
   }
@@ -72,6 +78,8 @@ export class AuthorsController {
   @Delete(':id')
   @ApiOperation({ summary: 'Delete an author' })
   @ApiOkResponse({ type: AuthorDto })
+  @UseGuards(RolesGuard)
+  @Roles([Role.ADMIN])
   remove(@Param('id') id: string) {
     return this.authorsService.remove({ id });
   }
