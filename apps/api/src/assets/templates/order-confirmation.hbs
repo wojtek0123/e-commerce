@@ -1,0 +1,119 @@
+<html lang='en'>
+  <head>
+    <meta charset='UTF-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <title>Order Confirmation</title>
+    <style>
+      h1,h2,h3 {
+        margin: 0;
+      }
+      body { font-family: Arial, sans-serif; line-height: 1.6; padding: 20px;
+      background-color: #f4f4f4; } .container { max-width: 600px; margin: auto;
+      background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 2px
+      5px rgba(0, 0, 0, 0.1); } .header { text-align: center; padding: 10px 0; }
+      .header h1 { margin: 0; } .order-summary { margin: 20px 0; }
+      .order-summary h2 { border-bottom: 1px solid #ddd; padding-bottom: 5px; }
+      .order-details { margin: 10px 0; } .order-details th, .order-details td {
+      text-align: left; padding: 2px 0; } .order-details th { width: 150px; }
+      .items { margin-top: 20px; } .items table { width: 100%; border-collapse:
+      collapse; } .items th, .items td { border: 1px solid #ddd; padding: 8px;
+      text-align: left; } .items th { background: #f9f9f9; } .book-cover {
+      width: 80px; height: 120px; padding: 4px; }
+      .cost-summary {
+        margin-top: 12px;
+      }
+      .cost-summary td {
+        min-width: 100px;
+        font-size: 16px;
+      }
+      .total {
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class='container'>
+      <div class='header'>
+        <h1>Thank You for Your Order!</h1>
+        <p>Order Confirmation #: {{orderId}}</p>
+      </div>
+      <div class='order-summary'>
+        <h2>Customer Information</h2>
+        <table class='order-details'>
+          <tr>
+            <th>Name:</th>
+             <td>{{orderDetails.firstName}} {{orderDetails.lastName}}</td>
+           </tr>
+          <tr>
+            <th>Email:</th>
+            <td>{{customer.email}}</td>
+          </tr>
+          <tr>
+            <th>Phone:</th>
+            <td>{{orderDetails.phone}}</td>
+          </tr>
+          <tr>
+            <th>Address:</th>
+             <td>{{orderDetails.address}}</td>
+          </tr>
+          <tr>
+            <th>Payment method:</th>
+             <td>{{orderDetails.paymentMethod}}</td>
+          </tr>
+          <tr>
+            <th>Payment status:</th>
+             <td>{{orderDetails.paymentStatus}}</td>
+          </tr>
+        </table>
+      </div>
+      <div class="items">
+        <h2>Order Details</h2>
+        <table>
+          <thead>
+            <tr>
+              <th class="cover-col">Cover</th>
+              <th>Title</th>
+              <th>Authors</th>
+              <th>Quantity</th>
+              <th>Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each items}}
+              <tr>
+                <td>
+                  <img class='book-cover' src='{{this.book.coverImage}}' />
+                </td>
+                <td>{{this.book.title}}</td>
+                <td>
+                  {{#each this.book.authors}}
+                    <span>{{ this.name }}</span>
+                  {{/each}}
+                </td>
+                <td>{{this.quantity}}</td>
+                <td>${{this.book.price}}</td>
+              </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
+      <div class="cost-summary">
+        <table>
+          <tbody>
+            <tr>
+              <td>Books</td>
+              <td>${{bookCost}}</td>
+            </tr>
+            <tr>
+              <td>Shipping</td>
+              <td>${{shippingCost}}</td>
+            </tr>
+            <tr class="total">
+              <td>Total</td>
+              <td>${{total}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+  </body>
+</html>

@@ -8,10 +8,15 @@ import { CreateOrderDetailDto } from './dto/create-order-detail.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { decode } from 'jsonwebtoken';
 import { OrderDetail } from './entities/order-detail.entity';
+import { MailerService } from '@nestjs-modules/mailer';
+import { PaymentMethod } from '@prisma/client';
 
 @Injectable()
 export class OrderDetailsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly mailerService: MailerService,
+  ) {}
 
   async create(
     { shippingMethodId, paymentMethod, orderAddress }: CreateOrderDetailDto,
@@ -26,7 +31,7 @@ export class OrderDetailsService {
 
     const shoppingSession = await this.prisma.shoppingSession.findUnique({
       where: { userId },
-      include: { cartItems: true },
+      include: { cartItems: true, user: true },
     });
 
     if (!shoppingSession) {
@@ -88,7 +93,7 @@ export class OrderDetailsService {
       street,
     } = orderAddress;
 
-    return this.prisma.orderDetails.create({
+    const order = await this.prisma.orderDetails.create({
       data: {
         shippingMethod: {
           connect: { id: shippingMethodId },
@@ -130,7 +135,48 @@ export class OrderDetailsService {
           },
         },
       },
+      include: {
+        orderItems: { include: { book: true } },
+        orderAddress: { include: { country: true } },
+        paymentDetails: true,
+      },
     });
+
+    try {
+      await this.mailerService.sendMail({
+        from: 'client-web@e-commerce.com',
+        to: shoppingSession.user.email,
+        subject: `Order no. ${order.id}`,
+        template: './order-confirmation',
+        context: {
+          orderId: order.id,
+          customer: {
+            email: shoppingSession.user.email,
+          },
+          items: order.orderItems,
+          orderDetails: {
+            firstName: order.orderAddress.firstName,
+            lastName: order.orderAddress.lastName,
+            address: `${order.orderAddress.street} ${order.orderAddress.homeNumber}${order.orderAddress.houseNumber ? '/' + order.orderAddress.houseNumber : ''}, ${order.orderAddress.postcode} ${order.orderAddress.city}, ${order.orderAddress.country.name}`,
+            phone: order.orderAddress.phone,
+            paymentMethod: order.paymentDetails.method
+              .replaceAll('_', ' ')
+              .toLowerCase(),
+            paymentStatus: order.paymentDetails.status,
+          },
+          total: order.total,
+          shippingCost: shippingMethod.price,
+          bookCost: order.orderItems.reduce(
+            (acc, cur) => acc + cur.book.price,
+            0,
+          ),
+        },
+      });
+    } catch (error: unknown) {
+      console.log(error);
+    }
+
+    return order;
   }
 
   findAll(authHeader: string) {

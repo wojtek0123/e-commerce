@@ -19,6 +19,10 @@ import { OrderDetailsModule } from '../order-details/order-details.module';
 import { OrderItemsModule } from '../order-items/order-items.module';
 import { FavouriteBooksListsModule } from '../favourite-books-lists/favourite-books-lists.module';
 import { CreditCardsModule } from '../credit-cards/credit-cards.module';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { join } from 'path';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+import { EmailModule } from '../email/email.module';
 
 @Module({
   controllers: [AppController],
@@ -41,6 +45,24 @@ import { CreditCardsModule } from '../credit-cards/credit-cards.module';
     OrderItemsModule,
     CreditCardsModule,
     FavouriteBooksListsModule,
+    MailerModule.forRoot({
+      transport: {
+        host: process.env.MAIL_HOST,
+        auth: {
+          user: process.env.MAIL_USER,
+          pass: process.env.MAIL_PASS,
+        },
+        port: +process.env.MAIL_PORT,
+        secure: false,
+      },
+      template: {
+        dir: join(__dirname, 'assets/templates'),
+        adapter: new HandlebarsAdapter(),
+        options: {
+          strict: true,
+        },
+      },
+    }),
   ],
 })
 export class AppModule {}
