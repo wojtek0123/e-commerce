@@ -187,7 +187,7 @@ export const BooksStore = signalStore(
   withMethods((store) => ({
     getBooks: rxMethod<void>(
       pipe(
-        tap(() => patchState(store, { loading: true })),
+        tap(() => patchState(store, { loading: true, error: null })),
         switchMap(() => {
           const {
             filters: { multiSelect, singleValue },
