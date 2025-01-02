@@ -176,6 +176,10 @@ export class OrderDetailsService {
       console.log(error);
     }
 
+    await this.prisma.shoppingSession.delete({ where: { userId } });
+
+    await this.prisma.shoppingSession.create({ data: { userId, total: 0 } });
+
     return order;
   }
 
@@ -184,6 +188,7 @@ export class OrderDetailsService {
 
     return this.prisma.orderDetails.findMany({
       where: { userId },
+      orderBy: { createdAt: 'desc' },
     });
   }
 

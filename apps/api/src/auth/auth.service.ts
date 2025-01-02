@@ -10,10 +10,9 @@ import {
 import { PrismaService } from '../prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import { compare, hash } from 'bcrypt';
-import { roundsOfHashing } from '../users/users.service';
 import { Prisma, Role, User } from '@prisma/client';
 import { ConfigService } from '@nestjs/config';
-import { omit, set } from 'lodash';
+import { omit } from 'lodash';
 
 @Injectable()
 export class AuthService {
@@ -156,6 +155,6 @@ export class AuthService {
   }
 
   private _hashData(data: string) {
-    return hash(data, roundsOfHashing);
+    return hash(data, this.configService.get<string>('ROUNDS_OF_HASHING'));
   }
 }

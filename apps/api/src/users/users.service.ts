@@ -10,16 +10,20 @@ import { getUserIdFromAccessToken } from '../common/utils/get-user-id-from-acces
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ExceptionsHandler } from '@nestjs/core/exceptions/exceptions-handler';
-
-export const roundsOfHashing = 10;
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly config: ConfigService,
+  ) {}
 
   async create(body: CreateUserDto) {
-    const hashedPassword = await hash(body.password, roundsOfHashing);
+    const hashedPassword = await hash(
+      body.password,
+      this.config.get<string>('ROUNDS_OF_HASHING'),
+    );
 
     return this.prisma.user.create({
       data: { ...body, password: hashedPassword },
@@ -85,7 +89,10 @@ export class UsersService {
         throw new BadRequestException('Incorrect password');
       }
 
-      hashedPassword = await hash(body.newPassword.toString(), roundsOfHashing);
+      hashedPassword = await hash(
+        body.newPassword.toString(),
+        this.config.get<string>('ROUNDS_OF_HASHING'),
+      );
     }
 
     if (body.email) {
