@@ -9,6 +9,19 @@ Monorepo includes 3 apps, 2 front-end and 1 back-end.
 - Admin-dashboard is written in vuejs, pinia, primevue, priem forms. This app is exactle what name of it suggest. This dashboard for admin to manage the book store app.
 - Api is written in nestjs, prisma. This is a API for all front-end apps. App has swagger.
 
+## Features:
+### Client-web:
+- books browser
+- favourite books
+
+### Admin-dashboard:
+- books managment
+- category management
+
+### API
+- email sending
+- swagger
+
 ## Types of libs:
 - data-access - stuff related with http calls, state, stores, etc.
 - feature - smart components
@@ -27,6 +40,7 @@ Monorepo includes 3 apps, 2 front-end and 1 back-end.
 - tailwindcss
 - prime ui lib
 - electron
+- supabase storage
 
 ## How to run?
 **You need to install bun on your machine** [Bun installation](https://bun.sh/docs/installation)
