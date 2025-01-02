@@ -32,12 +32,13 @@ export const AddressStore = signalStore(
   })),
   withHooks({
     onInit: (store) => {
-      // TODO: can i do this better?
       effect(() => {
         const addresses = store.addresses();
 
         untracked(() => {
-          if (addresses.length === 0) return;
+          const selectedAddress = store.selectedAddress();
+
+          if (addresses.length === 0 || selectedAddress) return;
 
           store.selectAddress(addresses[0]);
         });
