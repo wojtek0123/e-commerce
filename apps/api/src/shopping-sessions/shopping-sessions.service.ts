@@ -2,13 +2,12 @@ import {
   ForbiddenException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
-// import { CreateShoppingSessionDto } from './dto/create-shopping-session.dto';
-// import { UpdateShoppingSessionDto } from './dto/update-shopping-session.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { decode } from 'jsonwebtoken';
-import { ShoppingSessionEntity } from './entities/shopping-session.entity';
 import { Book, ShoppingSession } from '@prisma/client';
+import { getUserIdFromAccessToken } from '../common/utils/get-user-id-from-access-token';
 
 interface CartItem {
   bookId: Book['id'];
@@ -19,12 +18,27 @@ interface CartItem {
 export class ShoppingSessionsService {
   constructor(private prisma: PrismaService) {}
 
-  // create(data: CreateShoppingSessionDto) {
-  //   return 'This action adds a new shoppingSession';
-  // }
+  async create(authHeader: string) {
+    const userId = getUserIdFromAccessToken(authHeader);
 
-  findAll() {
-    return `This action returns all shoppingSessions`;
+    if (!userId) {
+      throw new UnauthorizedException('You should log in');
+    }
+
+    const shoppingSession = await this.prisma.shoppingSession.create({
+      data: {
+        total: 0,
+        userId,
+      },
+      include: {
+        cartItems: true,
+      },
+    });
+
+    return {
+      ...shoppingSession,
+      cartItems: [],
+    };
   }
 
   async createManyCartItems(
@@ -55,98 +69,56 @@ export class ShoppingSessionsService {
 
     const uniqueCartItems = new Set([...existingCartItem, ...cartItems]);
 
-    return this.prisma.shoppingSession
-      .update({
-        where: { id: shoppingSessionId },
-        data: {
-          cartItems: {
-            deleteMany: {},
-            createMany: {
-              data: [...uniqueCartItems].map(({ bookId, quantity }) => ({
-                bookId,
-                quantity,
-              })),
-              skipDuplicates: true,
-            },
+    const updatedShoppingSession = await this.prisma.shoppingSession.update({
+      where: { id: shoppingSessionId },
+      data: {
+        cartItems: {
+          deleteMany: {},
+          createMany: {
+            data: [...uniqueCartItems].map(({ bookId, quantity }) => ({
+              bookId,
+              quantity,
+            })),
+            skipDuplicates: true,
           },
         },
-        include: {
-          cartItems: {
-            include: {
-              book: {
-                include: {
-                  authors: {
-                    include: {
-                      author: true,
-                    },
+      },
+      include: {
+        cartItems: {
+          include: {
+            book: {
+              include: {
+                authors: {
+                  include: {
+                    author: true,
                   },
-                  category: true,
                 },
+                category: true,
               },
             },
           },
         },
-      })
-      .then((shoppingSession) => ({
-        ...shoppingSession,
-        cartItems: shoppingSession?.cartItems.map((ct) => ({
-          ...ct,
-          book: { ...ct.book, authors: ct.book.authors.map((a) => a.author) },
-        })),
-      }));
-
-    // this.prisma.shoppingSession.update({
-    //   where: { id: shoppingSessionId },
-    //   data: {
-    //     cartItems: {
-    //       connectOrCreate: [
-    //         {
-    //           where: {
-    //             bookId_shoppingSessionId: {
-    //               bookId,
-    //               shoppingSessionId: shoppingSession.id,
-    //             },
-    //           },
-    //           create: {
-    //             bookId,
-    //             quantity,
-    //           },
-    //           connect: {},
-    //         },
-    //       ],
-    //     },
-    //   },
-    // });
-  }
-
-  async updateTotal(shoppingSessionId: ShoppingSessionEntity['id']) {
-    const shoppingSession = await this.prisma.shoppingSession.findUnique({
-      where: { id: shoppingSessionId },
-      include: {
-        cartItems: {
-          include: {
-            book: true,
-          },
-        },
       },
     });
 
-    return this.prisma.shoppingSession.update({
-      where: { id: shoppingSessionId },
-      data: {
-        total: shoppingSession.cartItems.reduce(
-          (acc, ct) => acc + ct.book.price * ct.quantity,
-          0,
-        ),
-      },
-    });
+    return {
+      ...updatedShoppingSession,
+      cartItems: updatedShoppingSession?.cartItems.map((ct) => ({
+        ...ct,
+        book: { ...ct.book, authors: ct.book.authors.map((a) => a.author) },
+      })),
+    };
   }
 
   async findOne(authHeader: string) {
-    const decodedAccessToken = decode(authHeader.split(' ')[1]);
+    const userId = getUserIdFromAccessToken(authHeader);
+
+    if (!userId) {
+      throw new UnauthorizedException('You should log in');
+    }
 
     const shoppingSession = await this.prisma.shoppingSession.findUnique({
-      where: { userId: String(decodedAccessToken.sub) },
+      where: { userId },
       include: {
         cartItems: {
           include: {
@@ -163,34 +135,9 @@ export class ShoppingSessionsService {
     });
 
     if (!shoppingSession) {
-      return this.prisma.shoppingSession
-        .create({
-          data: {
-            total: 0,
-            userId: String(decodedAccessToken.sub),
-          },
-          include: {
-            cartItems: {
-              include: {
-                book: {
-                  include: {
-                    authors: {
-                      include: { author: true },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        })
-        .then((shoppingSession) => ({
-          ...shoppingSession,
-          cartItems: shoppingSession?.cartItems.map((ct) => ({
-            ...ct,
-            book: { ...ct.book, authors: ct.book.authors.map((a) => a.author) },
-          })),
-        }));
+      return this.create(authHeader);
     }
+
     return {
       ...shoppingSession,
       cartItems: shoppingSession?.cartItems.map((ct) => ({
@@ -200,12 +147,13 @@ export class ShoppingSessionsService {
     };
   }
 
-  // update(id: number, updateShoppingSessionDto: UpdateShoppingSessionDto) {
-  //   return `This action updates a #${id} shoppingSession`;
-  // }
-
   async remove(authHeader: string) {
-    const userId = String(decode(authHeader.split(' ')[1]).sub);
+    const userId = getUserIdFromAccessToken(authHeader);
+
+    if (!userId) {
+      throw new UnauthorizedException('You should log in');
+    }
+
     return this.prisma.shoppingSession.delete({ where: { userId } });
   }
 }

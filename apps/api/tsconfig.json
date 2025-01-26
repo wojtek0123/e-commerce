@@ -12,5 +12,14 @@
   ],
   "compilerOptions": {
     "esModuleInterop": true
+    // "assets": ["mail/templates/**/*"]
+    // "watchAssets": true
+    // "assets": [
+    //   {
+    //     "include": "mail/templates/**/*",
+    //     "outDir": "dist/",
+    //     "watchAssets": true
+    //   }
+    // ]
   }
 }
