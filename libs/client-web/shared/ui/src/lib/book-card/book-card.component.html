@@ -3,10 +3,10 @@
   class="flex flex-col rounded-base cursor-pointer sm:max-w-book-card w-full bg-content-background"
   [ngClass]="{ 'pointer-events-none animate-pulse': loading() }"
 >
-  <div class="w-full h-96 rounded-base relative">
+  <div class="w-full h-80 4xl:h-96 rounded-base relative">
     <img
       alt="Card"
-      class="w-full h-96 object-cover rounded-base"
+      class="w-full h-80 4xl:h-96 object-cover rounded-base"
       [ngSrc]="
         book().coverImage ? book().coverImage! : 'assets/images/not-found.png'
       "

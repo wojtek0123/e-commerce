@@ -3,7 +3,11 @@ import {
   provideExperimentalZonelessChangeDetection,
   isDevMode,
 } from '@angular/core';
-import { provideRouter, withComponentInputBinding } from '@angular/router';
+import {
+  provideRouter,
+  withComponentInputBinding,
+  withInMemoryScrolling,
+} from '@angular/router';
 import { appRoutes } from './app.routes';
 import {
   provideHttpClient,
@@ -32,7 +36,11 @@ export const appConfig: ApplicationConfig = {
     provideAppRoutePaths,
     provideLocalStorageKeys,
     provideApiUrl,
-    provideRouter(appRoutes, withComponentInputBinding()),
+    provideRouter(
+      appRoutes,
+      withComponentInputBinding(),
+      withInMemoryScrolling({ scrollPositionRestoration: 'top' }),
+    ),
     provideStore(),
     provideAnimationsAsync(),
     provideHttpClient(withInterceptors([authInterceptor]), withFetch()),
