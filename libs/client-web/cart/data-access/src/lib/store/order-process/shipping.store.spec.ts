@@ -1,11 +1,8 @@
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { ShippingStore } from './shipping.store';
 import { ShippingMethodApiService } from '@e-commerce/client-web/shared/data-access/api-services';
-import { delay, of, startWith, switchMap, tap, throwError, timer } from 'rxjs';
-import {
-  ResponseError,
-  ShippingMethod,
-} from '@e-commerce/client-web/shared/data-access/api-models';
+import { delay, of, switchMap, throwError, timer } from 'rxjs';
+import { ResponseError, ShippingMethod } from '@e-commerce/shared/api-models';
 
 describe('ShippingStore', () => {
   it('should fetch shippings and update state', fakeAsync(() => {

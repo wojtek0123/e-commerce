@@ -63,7 +63,7 @@ export class CreditCardFormComponent {
 
     const { cardNumber, expirationDate, securityCode } = this.form.value;
 
-    this.paymentStore.addCreditCard$({
+    this.paymentStore.addCreditCard({
       number: cardNumber ?? '',
       expirationDate: expirationDate ?? '',
       securityCode: securityCode ?? '',

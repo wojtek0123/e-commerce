@@ -7,6 +7,7 @@ import {
   signalStore,
   withHooks,
   withMethods,
+  withProps,
   withState,
 } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
@@ -28,39 +29,40 @@ const initialShippingState: ShippingState = {
 
 export const ShippingStore = signalStore(
   withState(initialShippingState),
-  withMethods(
-    (store, shippingMethodApi = inject(ShippingMethodApiService)) => ({
-      getShippings: rxMethod<void>(
-        pipe(
-          tap(() => patchState(store, { loading: true })),
-          switchMap(() =>
-            shippingMethodApi.getAll$().pipe(
-              tapResponse({
-                next: (shippings) => {
-                  patchState(store, {
-                    shippings,
-                    loading: false,
-                    selectedShipping: shippings.at(0) ?? null,
-                  });
-                },
-                error: (error: ResponseError) => {
-                  patchState(store, {
-                    error:
-                      error?.error?.message ||
-                      'Error occurred while getting shippings',
-                    loading: false,
-                  });
-                },
-              }),
-            ),
+  withProps(() => ({
+    shippingMethodApi: inject(ShippingMethodApiService),
+  })),
+  withMethods((store) => ({
+    getShippings: rxMethod<void>(
+      pipe(
+        tap(() => patchState(store, { loading: true })),
+        switchMap(() =>
+          store.shippingMethodApi.getAll$().pipe(
+            tapResponse({
+              next: (shippings) => {
+                patchState(store, {
+                  shippings,
+                  loading: false,
+                  selectedShipping: shippings.at(0) ?? null,
+                });
+              },
+              error: (error: ResponseError) => {
+                patchState(store, {
+                  error:
+                    error?.error?.message ||
+                    'Error occurred while getting shippings',
+                  loading: false,
+                });
+              },
+            }),
           ),
         ),
       ),
-      selectShipping: (selectedShipping: ShippingMethod) => {
-        patchState(store, { selectedShipping });
-      },
-    }),
-  ),
+    ),
+    selectShipping: (selectedShipping: ShippingMethod) => {
+      patchState(store, { selectedShipping });
+    },
+  })),
   withHooks({
     onInit: (store) => {
       store.getShippings();

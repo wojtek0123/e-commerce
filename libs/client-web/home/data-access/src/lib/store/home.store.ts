@@ -41,7 +41,7 @@ export const HomeStore = signalStore(
     newBooks: computed(() => books()[BookTag.NEW]),
   })),
   withMethods((store, booksApi = inject(BooksApiService)) => ({
-    getBooks$: rxMethod<void>(
+    getBooks: rxMethod<void>(
       pipe(
         tap(() => patchState(store, { loading: true })),
         switchMap(() =>
@@ -99,7 +99,7 @@ export const HomeStore = signalStore(
   })),
   withHooks({
     onInit: (store) => {
-      store.getBooks$();
+      store.getBooks();
     },
   }),
 );

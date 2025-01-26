@@ -165,7 +165,6 @@ export function withAddress() {
             tap({
               next: ({ data }) => {
                 const id = store.updatingAddress()?.id ?? '';
-                console.log(id);
                 patchState(
                   store,
                   (state) => ({
