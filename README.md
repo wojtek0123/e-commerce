@@ -11,7 +11,13 @@ Monorepo includes 3 apps, 2 front-end and 1 back-end.
 
 ## Features:
 ### Client-web:
-- books browser
+- books browser:
+  - sort
+  - filter
+  - search
+- account managment
+  - email and password change
+  - CRUD operation on user addresses 
 - favourite books
 
 ### Admin-dashboard:
@@ -54,6 +60,10 @@ bun install
 ```
 cd apps/api
 bunx prisma generate
+```
+- Migrate schema to database
+```
+bunx prisma migrate dev --name init
 ```
 - Run dev configuration
 ```
