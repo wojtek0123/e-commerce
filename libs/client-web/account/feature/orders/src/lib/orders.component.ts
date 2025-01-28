@@ -5,7 +5,7 @@ import {
   OrdersStore,
 } from '@e-commerce/client-web/account/data-access';
 import { OrderDetails, OrderDetailsBase } from '@e-commerce/shared/api-models';
-import { CurrencyPipe, DatePipe } from '@angular/common';
+import { CurrencyPipe, DatePipe, NgTemplateOutlet } from '@angular/common';
 import { SkeletonModule } from 'primeng/skeleton';
 import { OrderComponent } from '@e-commerce/client-web/account/ui';
 import { TagModule } from 'primeng/tag';
@@ -15,6 +15,7 @@ import { ButtonModule } from 'primeng/button';
 import { DrawerLeftDirective } from '@e-commerce/client-web/shared/utils';
 import { DrawerModule } from 'primeng/drawer';
 import { StatusToServerityPipe } from './pipes/status-to-severity.pipe';
+import { ErrorAndRetryMessageComponent } from '@e-commerce/client-web/shared/ui';
 
 @Component({
   selector: 'lib-orders',
@@ -31,6 +32,8 @@ import { StatusToServerityPipe } from './pipes/status-to-severity.pipe';
     StatusToServerityPipe,
     DialogModule,
     ButtonModule,
+    ErrorAndRetryMessageComponent,
+    NgTemplateOutlet,
   ],
   templateUrl: './orders.component.html',
   styleUrl: './orders.component.scss',
