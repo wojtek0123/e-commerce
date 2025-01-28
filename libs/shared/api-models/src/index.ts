@@ -19,3 +19,4 @@ export * from './lib/api-models/product-inventory.model';
 export * from './lib/api-models/payment-method.model';
 export * from './lib/api-models/credit-card.model';
 export * from './lib/api-models/favourite-books-list.model';
+export * from './lib/api-models/book-review.model';

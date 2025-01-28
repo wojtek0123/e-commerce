@@ -1,6 +1,6 @@
 @if (loading()) {
   <div
-    class="grid gap-base grid-cols-1 w-full xl:grid-cols-2 4xl:grid-cols-[1fr_1fr_0.4fr]"
+    class="grid gap-base grid-cols-1 w-full xl:grid-cols-[2fr_3fr] 4xl:grid-cols-[2fr_3fr_1.2fr]"
   >
     <div class="rounded-base xl:h-content overflow-hidden xl:sticky xl:top-4">
       <p-skeleton libSkeleton width="100%" height="100%" />
@@ -34,10 +34,10 @@
   </div>
 } @else if (book()) {
   <div
-    class="grid gap-base grid-cols-1 w-full xl:grid-cols-2 4xl:grid-cols-[1fr_1fr_0.4fr]"
+    class="grid gap-base grid-cols-1 w-full lg:grid-cols-[2fr_3fr] 4xl:grid-cols-[2fr_3fr_1.2fr]"
   >
     <div
-      class="relative rounded-base w-full flex items-center justify-center xl:h-content overflow-hidden xl:sticky xl:top-4"
+      class="relative rounded-base hidden lg:flex items-center h-96 justify-center lg:h-[calc(100svh-2*1rem-5rem)] xl:h-content overflow-hidden lg:sticky lg:top-1 xl:top-4"
     >
       <img
         class="rounded-base w-full h-full"
@@ -47,50 +47,109 @@
       />
     </div>
     <div class="flex flex-col gap-base">
-      <div class="flex flex-col gap-base w-full">
-        <p-breadcrumb [model]="breadcrumbs()" />
-        <h3 class="text-3xl md:text-4xl lg:text-5xl xl:text-8xl">
-          {{ book()?.title }}
-        </h3>
-        <div class="flex flex-wrap gap-4 mb-8">
-          @for (author of book()?.authors; track author.id) {
-            <div class="text-xl text-muted-color">
-              {{ author.name }}
+      <div class="flex items-center">
+        <div class="flex flex-col gap-base w-full">
+          <p-breadcrumb [model]="breadcrumbs()" />
+          <div class="grid grid-cols-[1fr_2fr] gap-base lg:grid-cols-1">
+            <div
+              class="relative rounded-base flex lg:hidden items-center h-96 justify-center lg:h-[calc(100svh-2*1rem-5rem)] xl:h-content overflow-hidden lg:sticky lg:top-1 xl:top-4"
+            >
+              <img
+                class="rounded-base !w-fit lg:!w-full h-full"
+                [ngSrc]="book()?.coverImage ?? ''"
+                [alt]="book()?.title + ' cover image'"
+                width="350"
+                height="500"
+              />
             </div>
-          }
-        </div>
-        @if (book()?.tag) {
-          <p-tag class="w-fit" [value]="book()?.tag" />
-        }
-        <div
-          class="flex flex-col justify-start my-8 gap-4 bg-content-background p-4 rounded-base xl:gap-8 4xl:hidden"
-        >
-          <ng-container [ngTemplateOutlet]="price" />
-        </div>
-        <div class="flex flex-col gap-2">
-          <lib-detail-row
-            label="Category"
-            [value]="book()?.category?.name ?? ''"
-          />
-          @if (book()?.pages) {
-            <lib-detail-row label="Pages" [value]="book()?.pages ?? 0" />
-          }
-          @if (book()?.language) {
-            <lib-detail-row label="Language" [value]="book()?.language ?? ''" />
-          }
-          @if (book()?.publishedDate) {
+            <div class="flex flex-col gap-base w-full">
+              <h3 class="text-3xl md:text-4xl lg:text-5xl xl:text-8xl">
+                {{ book()?.title }}
+              </h3>
+              <div class="flex flex-wrap gap-4 mb-8">
+                @for (author of book()?.authors; track author.id) {
+                  <div class="text-xl text-muted-color">
+                    {{ author.name }}
+                  </div>
+                }
+              </div>
+              @if (book()?.tag) {
+                <p-tag class="w-fit" [value]="book()?.tag" />
+              }
+              <div
+                class="flex flex-col justify-start my-8 gap-4 bg-content-background p-4 rounded-base xl:gap-8 4xl:hidden"
+              >
+                <ng-container [ngTemplateOutlet]="price" />
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-col gap-2">
             <lib-detail-row
-              label="Publish date"
-              [value]="book()?.publishedDate | date"
+              label="Category"
+              [value]="book()?.category?.name ?? ''"
             />
-          }
+            @if (book()?.pages) {
+              <lib-detail-row label="Pages" [value]="book()?.pages ?? 0" />
+            }
+            @if (book()?.language) {
+              <lib-detail-row
+                label="Language"
+                [value]="book()?.language ?? ''"
+              />
+            }
+            @if (book()?.publishedDate) {
+              <lib-detail-row
+                label="Publish date"
+                [value]="book()?.publishedDate | date"
+              />
+            }
+          </div>
         </div>
       </div>
-      <div class="flex flex-col gap-4">
-        <span class="font-medium w-32 text-muted-color">Description</span>
-        <p>
-          {{ book()?.description }}
-        </p>
+      @if (book()?.description) {
+        <div class="flex flex-col gap-4">
+          <h3 class="text-3xl font-bold">Description</h3>
+          <p>
+            {{ book()?.description }}
+          </p>
+        </div>
+      }
+
+      <div class="mt-4 flex flex-col gap-4">
+        <h3 class="text-3xl font-bold">Reviews</h3>
+        <div
+          class="flex items-center justify-between gap-4 bg-content-background p-4 rounded-base"
+        >
+          <div class="flex flex-col justify-center gap-4">
+            <span>
+              <span class="text-7xl text-primary">{{ averageRating() }}</span>
+              <span class="text-muted-color text-3xl">/5</span>
+            </span>
+            <p-rating [ngModel]="averageRating()" [readonly]="true" />
+            <span class="text-muted-color">
+              ({{ reviews().length }}
+              {{ reviews().length > 1 ? 'reviews' : 'review' }})
+            </span>
+          </div>
+          <div class="flex flex-col gap-4 items-end justify-end">
+            <span class="text-end">
+              Rate and share your opinion on this book if you bought this book.
+            </span>
+            <lib-review-form-dialog />
+          </div>
+        </div>
+        @for (review of reviews(); track review.id) {
+          <div class="bg-content-background gap-2 p-4 rounded-base">
+            <p-rating [ngModel]="review.rating" [readonly]="true" />
+            <div
+              class="flex items-center justify-between gap-4 text-muted-color"
+            >
+              <span>{{ review.user.email }}</span>
+              <span>{{ review.createdAt | date }}</span>
+            </div>
+            <p class="mt-2">{{ review.message }}</p>
+          </div>
+        }
       </div>
     </div>
 

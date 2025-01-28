@@ -26,6 +26,18 @@ model ProductInventory {
   book      Book?
 }
 
+model BookReview {
+  id        String   @id @default(uuid())
+  rating    Int
+  message String?
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId    String
+  book      Book     @relation(fields: [bookId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  bookId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model Book {
   id                 String               @id @default(uuid())
   title              String
@@ -47,7 +59,8 @@ model Book {
   productInventory   ProductInventory     @relation(fields: [productInventoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   productInventoryId String               @unique
   orderItem          OrderItem[]
-  FavouriteBooksList FavouriteBooksList[]
+  favouriteBooksList FavouriteBooksList[]
+  reviews            BookReview[]
 }
 
 model BookAuthor {
@@ -86,6 +99,7 @@ model User {
   shoppingSessions   ShoppingSession?
   orderDetails       OrderDetails[]
   favouriteBooksList FavouriteBooksList?
+  bookReviews        BookReview[]
 }
 
 model FavouriteBooksList {

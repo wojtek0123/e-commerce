@@ -92,6 +92,16 @@ export class AuthService {
   }
 
   async logout(id: User['id']) {
+    const user = await this.prisma.user.findUnique({ where: { id } });
+
+    if (!user) {
+      throw new NotFoundException(`Not found user with id: ${id}`);
+    }
+
+    if (!user.refreshToken) {
+      throw new NotFoundException("User doesn't have active session");
+    }
+
     return this.prisma.user.update({
       where: { id },
       data: { refreshToken: null },
@@ -155,6 +165,6 @@ export class AuthService {
   }
 
   private _hashData(data: string) {
-    return hash(data, this.configService.get<string>('ROUNDS_OF_HASHING'));
+    return hash(data, +this.configService.get('ROUNDS_OF_HASHING'));
   }
 }

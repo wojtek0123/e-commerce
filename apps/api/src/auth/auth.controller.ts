@@ -37,11 +37,11 @@ export class AuthController {
     return this.authService.register(email, password);
   }
 
-  @UseGuards(AccessTokenGuard)
+  // @UseGuards(AccessTokenGuard)
   @Post('logout')
   @ApiCreatedResponse({ type: User })
   @ApiOperation({ summary: 'Log out from the user account' })
-  @ApiBearerAuth()
+  // @ApiBearerAuth()
   logout(@Body() { id }: { id: User['id'] }) {
     return this.authService.logout(id);
   }
