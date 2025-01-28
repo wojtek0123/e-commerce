@@ -22,29 +22,13 @@ import { CreditCardsModule } from '../credit-cards/credit-cards.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { join } from 'path';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
-import { EmailModule } from '../email/email.module';
+import { BookReviewsModule } from '../book-reviews/book-reviews.module';
 
 @Module({
   controllers: [AppController],
   providers: [AppService],
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-    UsersModule,
-    AuthModule,
-    BooksModule,
-    AuthorsModule,
-    PublishersModule,
-    CategoriesModule,
-    CartItemsModule,
-    UserAddressesModule,
-    ShoppingSessionsModule,
-    ProductInventoriesModule,
-    CountriesModule,
-    ShippingMethodsModule,
-    OrderDetailsModule,
-    OrderItemsModule,
-    CreditCardsModule,
-    FavouriteBooksListsModule,
     MailerModule.forRoot({
       transport: {
         host: process.env.MAIL_HOST,
@@ -63,6 +47,23 @@ import { EmailModule } from '../email/email.module';
         },
       },
     }),
+    UsersModule,
+    AuthModule,
+    BooksModule,
+    AuthorsModule,
+    PublishersModule,
+    CategoriesModule,
+    CartItemsModule,
+    UserAddressesModule,
+    ShoppingSessionsModule,
+    ProductInventoriesModule,
+    CountriesModule,
+    ShippingMethodsModule,
+    OrderDetailsModule,
+    OrderItemsModule,
+    CreditCardsModule,
+    FavouriteBooksListsModule,
+    BookReviewsModule,
   ],
 })
 export class AppModule {}

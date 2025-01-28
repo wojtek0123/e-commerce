@@ -1,0 +1,38 @@
+<p-button label="Add review" (onClick)="openDialog()" />
+<p-dialog
+  header="Add review"
+  styleClass="w-full max-w-[48rem] mx-4 w-full"
+  [(visible)]="visible"
+  [modal]="true"
+>
+  <form class="flex flex-col gap-2" (ngSubmit)="submit()">
+    <lib-form-field>
+      <lib-label idFor="rating">Rating</lib-label>
+      <p-rating id="rating" [formControl]="form.controls.rating" />
+    </lib-form-field>
+    <lib-form-field>
+      <lib-label idFor="message">Review</lib-label>
+      <textarea
+        pTextarea
+        class="min-h-32"
+        [formControl]="form.controls.message"
+      ></textarea>
+    </lib-form-field>
+
+    <div class="grid grid-cols-2 gap-4 mt-4">
+      <p-button
+        severity="secondary"
+        [outlined]="true"
+        styleClass="w-full"
+        label="Cancel"
+        (onClick)="cancel()"
+      />
+      <p-button
+        type="submit"
+        severity="secondary"
+        styleClass="w-full"
+        label="Save"
+      />
+    </div>
+  </form>
+</p-dialog>

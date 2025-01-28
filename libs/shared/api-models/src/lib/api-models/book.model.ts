@@ -1,4 +1,5 @@
 import { Author } from './author.model';
+import { BookReview } from './book-review.model';
 import { Category } from './category.model';
 import { ProductInventory } from './product-inventory.model';
 
@@ -21,6 +22,7 @@ export interface Book {
 
 export interface BookDetails extends Book {
   productInventory: ProductInventory;
+  reviews: BookReview[];
 }
 
 export enum BookTag {

@@ -22,7 +22,7 @@ export class UsersService {
   async create(body: CreateUserDto) {
     const hashedPassword = await hash(
       body.password,
-      this.config.get<string>('ROUNDS_OF_HASHING'),
+      +this.config.get<string>('ROUNDS_OF_HASHING'),
     );
 
     return this.prisma.user.create({
@@ -91,7 +91,7 @@ export class UsersService {
 
       hashedPassword = await hash(
         body.newPassword.toString(),
-        this.config.get<string>('ROUNDS_OF_HASHING'),
+        +this.config.get<string>('ROUNDS_OF_HASHING'),
       );
     }
 

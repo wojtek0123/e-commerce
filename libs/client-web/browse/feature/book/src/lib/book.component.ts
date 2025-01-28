@@ -30,6 +30,9 @@ import { APP_ROUTE_PATHS_TOKEN } from '@e-commerce/client-web/shared/app-config'
 import { TooltipModule } from 'primeng/tooltip';
 import { TagModule } from 'primeng/tag';
 import { MessageModule } from 'primeng/message';
+import { RatingModule } from 'primeng/rating';
+import { ReviewFormDialogComponent } from './components/review-form-dialog/review-form-dialog.component';
+import { curry } from 'lodash-es';
 
 @Component({
   selector: 'lib-book',
@@ -50,6 +53,8 @@ import { MessageModule } from 'primeng/message';
     NgTemplateOutlet,
     FormsModule,
     NgOptimizedImage,
+    RatingModule,
+    ReviewFormDialogComponent,
   ],
   templateUrl: './book.component.html',
   styleUrl: './book.component.scss',
@@ -64,6 +69,33 @@ export class BookComponent {
   loading = this.#bookStore.loading;
   error = this.#bookStore.error;
   availableQuantity = this.#bookStore.availableQuantity;
+  reviews = computed(() => this.book()?.reviews ?? []);
+  averageRating = computed(() => {
+    const reviews = this.reviews();
+
+    if (reviews.length === 0) return 0;
+
+    return (
+      reviews.reduce((acc, curr) => acc + curr.rating, 0) / reviews.length
+    ).toFixed(1);
+  });
+
+  groupedRating = computed(() =>
+    this.reviews().reduce(
+      (acc, review) => {
+        acc[review.rating as 1 | 2 | 3 | 4 | 5] += 1;
+        return acc;
+      },
+      {
+        1: 0,
+        2: 0,
+        3: 0,
+        4: 0,
+        5: 0,
+      },
+    ),
+  );
+
   breadcrumbs = computed<MenuItem[]>(() => [
     { label: 'Home', routerLink: '/' },
     {
@@ -87,7 +119,7 @@ export class BookComponent {
       const bookId = this.bookId();
 
       untracked(() => {
-        this.#bookStore.getBook$({ bookId });
+        this.#bookStore.getBook({ bookId });
       });
     });
   }
@@ -117,7 +149,7 @@ export class BookComponent {
   getBook() {
     const bookId = this.bookId();
 
-    this.#bookStore.getBook$({ bookId });
+    this.#bookStore.getBook({ bookId });
   }
 
   buyNow() {

@@ -145,6 +145,7 @@ export class BooksService {
         productInventory: true,
         authors: { include: { author: true } },
         category: true,
+        reviews: { include: { user: true } },
       },
     });
 
