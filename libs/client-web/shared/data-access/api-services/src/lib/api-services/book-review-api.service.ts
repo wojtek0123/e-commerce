@@ -8,7 +8,12 @@ export class BookReviewApiService {
   #http = inject(HttpClient);
   #apiUrl = inject(API_URL);
 
-  create(body: { bookId: Book['id']; rating: number; message: string }) {
+  create(body: {
+    bookId: Book['id'];
+    rating: number;
+    name: string;
+    message: string;
+  }) {
     return this.#http.post<BookReview>(`${this.#apiUrl}/book-reviews`, body);
   }
 

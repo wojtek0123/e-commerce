@@ -13,6 +13,7 @@ import { BreadcrumbModule } from 'primeng/breadcrumb';
 import {
   CurrencyPipe,
   DatePipe,
+  KeyValuePipe,
   NgClass,
   NgOptimizedImage,
   NgTemplateOutlet,
@@ -32,7 +33,6 @@ import { TagModule } from 'primeng/tag';
 import { MessageModule } from 'primeng/message';
 import { RatingModule } from 'primeng/rating';
 import { ReviewFormDialogComponent } from './components/review-form-dialog/review-form-dialog.component';
-import { curry } from 'lodash-es';
 
 @Component({
   selector: 'lib-book',
@@ -55,6 +55,7 @@ import { curry } from 'lodash-es';
     NgOptimizedImage,
     RatingModule,
     ReviewFormDialogComponent,
+    KeyValuePipe,
   ],
   templateUrl: './book.component.html',
   styleUrl: './book.component.scss',
