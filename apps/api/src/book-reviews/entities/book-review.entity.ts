@@ -9,6 +9,9 @@ export class BookReview {
   @ApiProperty({ type: Number })
   rating: number;
 
+  @ApiProperty({ type: String })
+  name: string;
+
   @ApiProperty({ type: String, required: false })
   message?: string;
 

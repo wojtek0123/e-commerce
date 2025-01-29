@@ -11,6 +11,10 @@ export class CreateBookReviewDto {
   @IsNumber()
   rating: number;
 
+  @ApiProperty({ type: String })
+  @IsString()
+  name: string;
+
   @ApiProperty({ type: String, required: false })
   @IsString()
   message: string;

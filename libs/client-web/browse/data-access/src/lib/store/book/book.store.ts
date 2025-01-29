@@ -71,6 +71,7 @@ export const BookStore = signalStore(
       ),
     ),
     addReview: rxMethod<{
+      name: string;
       rating: number;
       message: string;
     }>(

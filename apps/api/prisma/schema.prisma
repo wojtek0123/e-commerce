@@ -29,7 +29,8 @@ model ProductInventory {
 model BookReview {
   id        String   @id @default(uuid())
   rating    Int
-  message String?
+  message   String?
+  name      String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId    String
   book      Book     @relation(fields: [bookId], references: [id], onUpdate: Cascade, onDelete: Cascade)
