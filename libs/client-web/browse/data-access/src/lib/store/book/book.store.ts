@@ -1,9 +1,5 @@
 import { computed, inject } from '@angular/core';
-import {
-  Book,
-  BookDetails,
-  ResponseError,
-} from '@e-commerce/shared/api-models';
+import { BookDetails, ResponseError } from '@e-commerce/shared/api-models';
 import {
   BookReviewApiService,
   BooksApiService,
@@ -26,20 +22,29 @@ export interface BookState {
   book: BookDetails | null;
   loading: boolean;
   error: string | string[] | null;
-  reviewLoading: boolean;
+  reviewDialog: {
+    loading: boolean;
+    visible: boolean;
+    error: string | null;
+  };
 }
 
 export const initialBookState: BookState = {
   book: null,
   loading: false,
   error: null,
-  reviewLoading: false,
+  reviewDialog: {
+    loading: false,
+    visible: false,
+    error: null,
+  },
 };
 
 export const BookStore = signalStore(
   withState(initialBookState),
   withComputed(({ book }) => ({
     availableQuantity: computed(() => book()?.productInventory.quantity ?? 0),
+    reviews: computed(() => book()?.reviews ?? []),
   })),
   withProps(() => ({
     bookApi: inject(BooksApiService),
@@ -78,7 +83,11 @@ export const BookStore = signalStore(
       pipe(
         map((body) => ({ bookId: getState(store).book!.id, ...body })),
         filter(({ bookId }) => !!bookId),
-        tap(() => patchState(store, { reviewLoading: true })),
+        tap(() =>
+          patchState(store, (state) => ({
+            reviewDialog: { ...state.reviewDialog, loading: true },
+          })),
+        ),
         switchMap((body) =>
           store.bookReviewApi.create({ ...body }).pipe(
             tapResponse({
@@ -91,7 +100,11 @@ export const BookStore = signalStore(
                         reviews: [...state.book.reviews, bookReview],
                       }
                     : null,
-                  reviewLoading: false,
+                  reviewDialog: {
+                    ...state.reviewDialog,
+                    loading: false,
+                    visible: false,
+                  },
                 }));
 
                 store.messageService.add({
@@ -101,7 +114,10 @@ export const BookStore = signalStore(
                 });
               },
               error: (error: ResponseError) => {
-                patchState(store, { reviewLoading: false });
+                patchState(store, (state) => ({
+                  ...state.reviewDialog,
+                  loading: false,
+                }));
                 store.messageService.add({
                   summary: 'Error',
                   detail:
@@ -115,5 +131,13 @@ export const BookStore = signalStore(
         ),
       ),
     ),
+    toggleReviewDialog: () => {
+      patchState(store, (state) => ({
+        reviewDialog: {
+          ...state.reviewDialog,
+          visible: !state.reviewDialog.visible,
+        },
+      }));
+    },
   })),
 );

@@ -44,151 +44,16 @@
         [ngSrc]="book()?.coverImage ?? ''"
         [alt]="book()?.title + ' cover image'"
         fill
+        priority
       />
     </div>
-    <div class="flex flex-col gap-base">
-      <div class="flex items-center">
-        <div class="flex flex-col gap-base w-full">
-          <p-breadcrumb [model]="breadcrumbs()" />
-          <div
-            class="grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-base lg:grid-cols-1"
-          >
-            <div
-              class="relative rounded-base flex lg:hidden items-center h-96 justify-center lg:h-[calc(100svh-2*1rem-5rem)] xl:h-content overflow-hidden lg:sticky lg:top-1 xl:top-4"
-            >
-              <img
-                class="rounded-base !w-fit lg:!w-full h-full"
-                [ngSrc]="book()?.coverImage ?? ''"
-                [alt]="book()?.title + ' cover image'"
-                width="350"
-                height="500"
-              />
-            </div>
-            <div class="flex flex-col gap-base w-full">
-              <h3 class="text-3xl md:text-4xl lg:text-5xl xl:text-8xl">
-                {{ book()?.title }}
-              </h3>
-              <div class="flex flex-wrap gap-4 mb-8">
-                @for (author of book()?.authors; track author.id) {
-                  <div class="text-xl text-muted-color">
-                    {{ author.name }}
-                  </div>
-                }
-              </div>
-              @if (book()?.tag) {
-                <p-tag class="w-fit" [value]="book()?.tag" />
-              }
-              <div
-                class="flex flex-col justify-start my-8 gap-4 bg-content-background p-4 rounded-base xl:gap-8 4xl:hidden"
-              >
-                <ng-container [ngTemplateOutlet]="price" />
-              </div>
-            </div>
-          </div>
-          <div class="flex flex-col gap-2">
-            <h3 class="text-3xl font-bold">Details</h3>
-            <lib-detail-row
-              label="Category"
-              [value]="book()?.category?.name ?? ''"
-            />
-            @if (book()?.pages) {
-              <lib-detail-row label="Pages" [value]="book()?.pages ?? 0" />
-            }
-            @if (book()?.language) {
-              <lib-detail-row
-                label="Language"
-                [value]="book()?.language ?? ''"
-              />
-            }
-            @if (book()?.publishedDate) {
-              <lib-detail-row
-                label="Publish date"
-                [value]="book()?.publishedDate | date"
-              />
-            }
-          </div>
-        </div>
-      </div>
-      @if (book()?.description) {
-        <div class="flex flex-col gap-4">
-          <h3 class="text-3xl font-bold">Description</h3>
-          <p>
-            {{ book()?.description }}
-          </p>
-        </div>
-      }
+    <div class="flex flex-col">
+      <lib-book-details />
 
-      <div class="@container mt-4 flex flex-col gap-4">
-        <h3 class="text-3xl font-bold">Reviews</h3>
-        <div
-          class="flex flex-col @3xl:flex-row items-center justify-between gap-12 bg-content-background p-4 rounded-base"
-        >
-          <div
-            class="flex items-center justify-center xl:justify-start gap-12 w-full"
-          >
-            <div class="flex flex-col justify-center gap-4">
-              <span>
-                <span class="text-7xl text-primary">{{ averageRating() }}</span>
-                <span class="text-muted-color text-3xl">/5</span>
-              </span>
-              <p-rating
-                class="mx-auto"
-                [ngModel]="averageRating()"
-                [readonly]="true"
-              />
-              <span class="text-muted-color mx-auto">
-                ({{ reviews().length }}
-                {{ reviews().length > 1 ? 'reviews' : 'review' }})
-              </span>
-            </div>
-
-            <div class="flex flex-col w-full max-w-[34rem]">
-              @for (rate of groupedRating() | keyvalue; track rate.key) {
-                <div class="flex items-center w-full gap-4">
-                  <div class="flex items-center gap-2">
-                    <span class="pi pi-star-fill text-surface-200"></span>
-                    <span>{{ rate.key }}</span>
-                  </div>
-                  <div class="flex items-center w-full">
-                    <span
-                      [style.width]="
-                        (rate.value / reviews().length) * 100 + '%'
-                      "
-                      class="bg-surface-700 h-2 rounded-l-base"
-                    ></span>
-                    <span
-                      [style.width]="
-                        100 - (rate.value / reviews().length || 0) * 100 + '%'
-                      "
-                      class="bg-surface-200 h-2 rounded-r-base"
-                      [ngClass]="{ 'rounded-l-base': rate.value === 0 }"
-                    ></span>
-                  </div>
-                  <span>{{ rate.value }}</span>
-                </div>
-              }
-            </div>
-          </div>
-
-          <div class="flex flex-col gap-4 items-center justify-center">
-            <span>
-              Rate and share your opinion on this book if you bought this book.
-            </span>
-            <lib-review-form-dialog class="w-full" />
-          </div>
-        </div>
-        @for (review of reviews(); track review.id) {
-          <div class="bg-content-background gap-2 p-4 rounded-base">
-            <p-rating [ngModel]="review.rating" [readonly]="true" />
-            <div
-              class="flex items-center justify-between gap-4 text-muted-color"
-            >
-              <span>{{ review.name }}</span>
-              <span>{{ review.createdAt | date }}</span>
-            </div>
-            <p class="mt-2">{{ review.message }}</p>
-          </div>
-        }
+      <div class="@container flex flex-col gap-4">
+        <h3 libSectionHeader>Reviews</h3>
+        <lib-reviews-summary />
+        <lib-reviews />
       </div>
     </div>
 
@@ -196,84 +61,8 @@
       <div
         class="4xl:sticky 4xl:top-4 flex flex-col gap-12 overflow-y-auto h-fit w-full p-base bg-content-background rounded-base"
       >
-        <ng-container [ngTemplateOutlet]="price" />
+        <lib-price-section />
       </div>
     </div>
   </div>
 }
-
-<ng-template #price>
-  <h4 class="text-4xl font-bold md:text-5xl lg:text-6xl xl:text-7xl">
-    {{ book()?.price | currency: 'USD' }}
-  </h4>
-  <div class="flex flex-col gap-base w-full">
-    @if (availableQuantity() === 0) {
-      <div class="flex gap-4">
-        <div class="flex items-center">
-          <span class="pi pi-history text-2xl text-muted-color"></span>
-        </div>
-        <div>
-          <h3 class="text-2xl font-bold">Temporarly unavailable</h3>
-          <small class="text-muted-color">
-            Currently, we don't have more piceses of this book in our warehouse
-          </small>
-        </div>
-      </div>
-    } @else {
-      <div class="flex flex-col gap-base w-full">
-        <p-inputnumber
-          [showButtons]="true"
-          [(ngModel)]="amount"
-          size="large"
-          [min]="1"
-          [max]="availableQuantity"
-          (onBlur)="onBlurInput()"
-          buttonLayout="horizontal"
-          spinnerMode="horizontal"
-          inputId="integeronly"
-          class="max-w-80 w-full"
-          inputStyleClass="w-full"
-          decrementButtonClass="p-button-text p-button-secondary"
-          incrementButtonClass="p-button-text p-button-secondary"
-          incrementButtonIcon="pi pi-plus"
-          decrementButtonIcon="pi pi-minus"
-          [ngClass]="{ 'ng-invalid ng-dirty': isAmountInvalid() }"
-        />
-        @if (isMinAmountInvalid()) {
-          <p-message severity="error" variant="simple">
-            Amount is too small. Should be at least 1.
-          </p-message>
-        }
-        @if (isMaxAmountInvalid()) {
-          <p-message severity="error" variant="simple">
-            Available quantity are smaller than provided amount. Adjust amount.
-          </p-message>
-        }
-        <small class="text-sm font-semibold text-muted-color">
-          {{ availableQuantityMessage() }}
-        </small>
-      </div>
-
-      <div class="flex items-center gap-4">
-        <p-button
-          label="Buy now"
-          outlined
-          icon="pi pi-shopping-bag"
-          styleClass="w-full"
-          class="w-full"
-          size="large"
-          (onClick)="buyNow()"
-        />
-        <p-button
-          styleClass="w-full"
-          class="w-full"
-          label="Add to cart"
-          icon="pi pi-cart-plus"
-          size="large"
-          [loading]="loading()"
-          (onClick)="addToCart()"
-        />
-      </div>
-    }
-  </div>
-</ng-template>

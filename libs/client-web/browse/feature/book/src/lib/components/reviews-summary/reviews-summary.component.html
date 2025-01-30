@@ -1,0 +1,49 @@
+<div
+  class="flex flex-col @3xl:flex-row items-center justify-between gap-12 bg-content-background p-4 rounded-base"
+>
+  <div class="flex items-center justify-center xl:justify-start gap-12 w-full">
+    <div class="flex flex-col justify-center gap-4">
+      <span>
+        <span class="text-7xl text-primary">{{ averageRating() }}</span>
+        <span class="text-muted-color text-3xl">/5</span>
+      </span>
+      <p-rating class="mx-auto" [ngModel]="averageRating()" [readonly]="true" />
+      <span class="text-muted-color mx-auto">
+        ({{ reviews().length }}
+        {{ reviews().length > 1 ? 'reviews' : 'review' }})
+      </span>
+    </div>
+
+    <div class="flex flex-col w-full max-w-[34rem]">
+      @for (rate of groupedRating() | keyvalue; track rate.key) {
+        <div class="flex items-center w-full gap-4">
+          <div class="flex items-center gap-2">
+            <span class="pi pi-star-fill text-surface-200"></span>
+            <span>{{ rate.key }}</span>
+          </div>
+          <div class="flex items-center w-full">
+            <span
+              [style.width]="(rate.value / reviews().length) * 100 + '%'"
+              class="bg-surface-700 h-2 rounded-l-base"
+            ></span>
+            <span
+              [style.width]="
+                100 - (rate.value / reviews().length || 0) * 100 + '%'
+              "
+              class="bg-surface-200 h-2 rounded-r-base"
+              [ngClass]="{ 'rounded-l-base': rate.value === 0 }"
+            ></span>
+          </div>
+          <span>{{ rate.value }}</span>
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="flex flex-col gap-4 items-center justify-center">
+    <span>
+      Rate and share your opinion on this book if you bought this book.
+    </span>
+    <lib-review-form-dialog class="w-full" />
+  </div>
+</div>

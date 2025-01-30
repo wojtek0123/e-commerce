@@ -1,8 +1,11 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  effect,
   inject,
+  OnInit,
   signal,
+  untracked,
 } from '@angular/core';
 import {
   FormControl,
@@ -45,22 +48,31 @@ import { InputTextModule } from 'primeng/inputtext';
 export class ReviewFormDialogComponent {
   #bookStore = inject(BookStore);
 
-  visible = signal(false);
+  visible = this.#bookStore.reviewDialog.visible;
+  loading = this.#bookStore.reviewDialog.loading;
+
+  constructor() {
+    effect(() => {
+      const visible = this.visible();
+
+      untracked(() => {
+        if (visible) {
+          this.form.reset();
+        }
+      });
+    });
+  }
 
   form = new FormGroup({
     name: new FormControl<string | null>(null, Validators.required),
-    rating: new FormControl<number>(0, {
+    rating: new FormControl<number | null>(0, {
       validators: [Validators.required, Validators.min(1)],
     }),
     message: new FormControl<string>(''),
   });
 
-  openDialog() {
-    this.visible.set(true);
-  }
-
-  cancel() {
-    this.visible.set(false);
+  toggleDialog() {
+    this.#bookStore.toggleReviewDialog();
   }
 
   submit() {
