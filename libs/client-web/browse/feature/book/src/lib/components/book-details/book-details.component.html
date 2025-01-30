@@ -1,0 +1,64 @@
+<div class="flex items-center">
+  <div class="flex flex-col gap-base w-full">
+    <p-breadcrumb [model]="breadcrumbs()" />
+    <div
+      class="grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-base lg:grid-cols-1"
+    >
+      <div
+        class="relative rounded-base flex lg:hidden items-center h-96 justify-center lg:h-[calc(100svh-2*1rem-5rem)] xl:h-content overflow-hidden lg:sticky lg:top-1 xl:top-4"
+      >
+        <img
+          class="rounded-base !w-fit lg:!w-full h-full"
+          [ngSrc]="book()?.coverImage ?? ''"
+          [alt]="book()?.title + ' cover image'"
+          width="350"
+          height="500"
+        />
+      </div>
+      <div class="flex flex-col gap-base w-full">
+        <h3 class="text-3xl md:text-4xl lg:text-5xl xl:text-8xl">
+          {{ book()?.title }}
+        </h3>
+        <div class="flex flex-wrap gap-4 mb-8">
+          @for (author of book()?.authors; track author.id) {
+            <div class="text-xl text-muted-color">
+              {{ author.name }}
+            </div>
+          }
+        </div>
+        @if (book()?.tag) {
+          <p-tag class="w-fit" [value]="book()?.tag" />
+        }
+        <div
+          class="flex flex-col justify-start my-8 gap-4 bg-content-background p-4 rounded-base xl:gap-8 4xl:hidden"
+        >
+          <lib-price-section />
+        </div>
+      </div>
+    </div>
+    <div class="flex flex-col gap-2">
+      <h3 libSectionHeader>Details</h3>
+      <lib-detail-row label="Category" [value]="book()?.category?.name ?? ''" />
+      @if (book()?.pages) {
+        <lib-detail-row label="Pages" [value]="book()?.pages ?? 0" />
+      }
+      @if (book()?.language) {
+        <lib-detail-row label="Language" [value]="book()?.language ?? ''" />
+      }
+      @if (book()?.publishedDate) {
+        <lib-detail-row
+          label="Publish date"
+          [value]="book()?.publishedDate | date"
+        />
+      }
+    </div>
+  </div>
+</div>
+@if (book()?.description) {
+  <div class="flex flex-col gap-4">
+    <h3 libSectionHeader>Description</h3>
+    <p>
+      {{ book()?.description }}
+    </p>
+  </div>
+}

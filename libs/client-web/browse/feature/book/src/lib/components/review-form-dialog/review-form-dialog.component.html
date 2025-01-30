@@ -2,12 +2,13 @@
   styleClass="w-full"
   severity="secondary"
   label="Add review"
-  (onClick)="openDialog()"
+  (onClick)="toggleDialog()"
 />
 <p-dialog
   header="Add review"
   styleClass="w-full max-w-[48rem] mx-4 w-full"
-  [(visible)]="visible"
+  [visible]="visible()"
+  (visibleChange)="toggleDialog()"
   [modal]="true"
 >
   <form class="flex flex-col gap-2" (ngSubmit)="submit()">
@@ -23,7 +24,11 @@
     <lib-form-field>
       <lib-label idFor="rating">Rating *</lib-label>
       <p-rating id="rating" [formControl]="form.controls.rating" />
-      @if (form.controls.rating.errors?.['min'] && form.controls.rating.dirty) {
+      @if (
+        (form.controls.rating.errors?.['required'] ||
+          form.controls.rating.errors?.['min']) &&
+        form.controls.rating.dirty
+      ) {
         <p-message libErrorMessage>Rating is required</p-message>
       }
     </lib-form-field>
@@ -42,13 +47,15 @@
         [outlined]="true"
         styleClass="w-full"
         label="Cancel"
-        (onClick)="cancel()"
+        [disabled]="loading()"
+        (onClick)="toggleDialog()"
       />
       <p-button
         type="submit"
         severity="secondary"
         styleClass="w-full"
         label="Save"
+        [loading]="loading()"
       />
     </div>
   </form>

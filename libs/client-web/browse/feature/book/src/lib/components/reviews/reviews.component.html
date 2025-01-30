@@ -1,0 +1,12 @@
+<div class="flex flex-col gap-4">
+  @for (review of reviews(); track review.id) {
+    <div class="bg-content-background gap-2 p-4 rounded-base">
+      <p-rating [ngModel]="review.rating" [readonly]="true" />
+      <div class="flex items-center justify-between gap-4 text-muted-color">
+        <span>{{ review.name }}</span>
+        <span>{{ review.createdAt | date }}</span>
+      </div>
+      <p class="mt-2">{{ review.message }}</p>
+    </div>
+  }
+</div>

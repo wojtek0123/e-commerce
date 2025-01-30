@@ -10,7 +10,6 @@
     />
   } @else {
     <p-table
-      class="h-content overflow-y-auto 2xl:sticky 2xl:top-4"
       [value]="orders()"
       selectionMode="single"
       [selection]="selectedOrder()"
@@ -71,7 +70,7 @@
       <ng-container *ngTemplateOutlet="orderLoading" />
     } @else if (selectedOrderError()) {
       <lib-error-and-retry-message
-        class="bg-content-background p-4 rounded-base"
+        class="bg-content-background p-4 rounded-base h-fit"
         [error]="selectedOrderError()"
         unableToLoad="order"
         (onRetry)="getOrderDetails()"
@@ -81,7 +80,9 @@
     }
   </p-drawer>
 
-  <div class="hidden 2xl:flex w-full">
+  <div
+    class="hidden 2xl:flex w-full h-content overflow-y-auto 2xl:sticky 2xl:top-4"
+  >
     @if (selectedOrderLoading()) {
       <ng-container *ngTemplateOutlet="orderLoading" />
     } @else if (selectedOrderError()) {
