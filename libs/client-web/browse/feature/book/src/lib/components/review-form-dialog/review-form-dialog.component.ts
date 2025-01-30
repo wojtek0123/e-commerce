@@ -26,6 +26,8 @@ import { TextareaModule } from 'primeng/textarea';
 import { ErrorMessageDirective } from '@e-commerce/client-web/shared/utils';
 import { MessageModule } from 'primeng/message';
 import { InputTextModule } from 'primeng/inputtext';
+import { AuthService } from '@e-commerce/client-web/auth/api';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'lib-review-form-dialog',
@@ -41,12 +43,19 @@ import { InputTextModule } from 'primeng/inputtext';
     ErrorMessageDirective,
     MessageModule,
     InputTextModule,
+    RouterLink,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './review-form-dialog.component.html',
 })
 export class ReviewFormDialogComponent {
   #bookStore = inject(BookStore);
+  #authService = inject(AuthService);
+  #router = inject(Router);
+
+  isLoggedIn = this.#authService.isAuthenticated;
+
+  url = this.#router.url;
 
   visible = this.#bookStore.reviewDialog.visible;
   loading = this.#bookStore.reviewDialog.loading;

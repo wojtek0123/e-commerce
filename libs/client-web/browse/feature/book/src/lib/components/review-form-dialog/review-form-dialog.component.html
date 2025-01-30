@@ -11,52 +11,89 @@
   (visibleChange)="toggleDialog()"
   [modal]="true"
 >
-  <form class="flex flex-col gap-2" (ngSubmit)="submit()">
-    <lib-form-field>
-      <lib-label idFor="name">Name *</lib-label>
-      <input pInputText id="name" [formControl]="form.controls.name" />
-      @if (
-        form.controls.name.errors?.['required'] && form.controls.name.dirty
-      ) {
-        <p-message libErrorMessage>Name is required</p-message>
-      }
-    </lib-form-field>
-    <lib-form-field>
-      <lib-label idFor="rating">Rating *</lib-label>
-      <p-rating id="rating" [formControl]="form.controls.rating" />
-      @if (
-        (form.controls.rating.errors?.['required'] ||
-          form.controls.rating.errors?.['min']) &&
-        form.controls.rating.dirty
-      ) {
-        <p-message libErrorMessage>Rating is required</p-message>
-      }
-    </lib-form-field>
-    <lib-form-field>
-      <lib-label idFor="message">Review</lib-label>
-      <textarea
-        pTextarea
-        class="min-h-32"
-        [formControl]="form.controls.message"
-      ></textarea>
-    </lib-form-field>
+  @if (isLoggedIn()) {
+    <form class="flex flex-col gap-2" (ngSubmit)="submit()">
+      <lib-form-field>
+        <lib-label idFor="name">Name *</lib-label>
+        <input
+          pInputText
+          id="name"
+          class="max-w-96"
+          [formControl]="form.controls.name"
+        />
+        @if (
+          form.controls.name.errors?.['required'] && form.controls.name.dirty
+        ) {
+          <p-message libErrorMessage>Name is required</p-message>
+        }
+      </lib-form-field>
+      <lib-form-field>
+        <lib-label idFor="rating">Rating *</lib-label>
+        <p-rating id="rating" [formControl]="form.controls.rating" />
+        @if (
+          (form.controls.rating.errors?.['required'] ||
+            form.controls.rating.errors?.['min']) &&
+          form.controls.rating.dirty
+        ) {
+          <p-message libErrorMessage>Rating is required</p-message>
+        }
+      </lib-form-field>
+      <lib-form-field>
+        <lib-label idFor="message">Review</lib-label>
+        <textarea
+          pTextarea
+          class="min-h-32 max-h-96"
+          [formControl]="form.controls.message"
+        ></textarea>
+      </lib-form-field>
 
-    <div class="grid grid-cols-2 gap-4 mt-4">
-      <p-button
-        severity="secondary"
-        [outlined]="true"
-        styleClass="w-full"
-        label="Cancel"
-        [disabled]="loading()"
-        (onClick)="toggleDialog()"
-      />
-      <p-button
-        type="submit"
-        severity="secondary"
-        styleClass="w-full"
-        label="Save"
-        [loading]="loading()"
-      />
+      <div class="grid grid-cols-2 gap-4 mt-4">
+        <p-button
+          severity="secondary"
+          [outlined]="true"
+          styleClass="w-full"
+          label="Cancel"
+          [disabled]="loading()"
+          (onClick)="toggleDialog()"
+        />
+        <p-button
+          type="submit"
+          severity="secondary"
+          styleClass="w-full"
+          label="Save"
+          [loading]="loading()"
+        />
+      </div>
+    </form>
+  } @else {
+    <div class="flex flex-col gap-2">
+      <span class="text-xl font-semibold">
+        Do you want to add a review to this book?
+      </span>
+      <span class="text-lg">
+        You have to be logged in. Don't worry. You will be redirect to this page
+        after successfuly log in or register.
+      </span>
     </div>
-  </form>
+    <div class="grid grid-cols-2 gap-4 mt-4">
+      <a
+        class="p-button p-button-outlined p-button-secondary"
+        icon="pi pi-sign-in"
+        routerLink="/auth/register"
+        [queryParams]="{ 'redirect-to': url }"
+      >
+        <span class="pi pi-user-plus"></span>
+        <span>Register</span>
+      </a>
+      <a
+        class="p-button p-button-secondary"
+        icon="pi pi-sign-in"
+        routerLink="/auth/login"
+        [queryParams]="{ 'redirect-to': url }"
+      >
+        <span class="pi pi-sign-in"></span>
+        <span>Log in</span>
+      </a>
+    </div>
+  }
 </p-dialog>
