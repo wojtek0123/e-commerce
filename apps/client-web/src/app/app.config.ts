@@ -27,11 +27,12 @@ import { provideServiceWorker } from '@angular/service-worker';
 import {
   provideClientHydration,
   withEventReplay,
+  withIncrementalHydration,
 } from '@angular/platform-browser';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideClientHydration(withEventReplay()),
+    provideClientHydration(withEventReplay(), withIncrementalHydration()),
     provideExperimentalZonelessChangeDetection(),
     provideAppRoutePaths,
     provideLocalStorageKeys,

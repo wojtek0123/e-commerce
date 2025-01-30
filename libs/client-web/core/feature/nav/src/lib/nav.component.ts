@@ -93,7 +93,7 @@ export class NavComponent implements OnDestroy {
   isAuthenticated = this.#authService.isAuthenticated;
   categories = this.#categoriesStore.categories;
   isMobileDrawerOpened = signal(false);
-  isExpanded = signal(true);
+  isExpanded = signal(false);
   isLabelShowed = toSignal(
     toObservable(this.isExpanded).pipe(
       debounce((isExpanded) => (isExpanded ? timer(150) : of({}))),
@@ -124,26 +124,26 @@ export class NavComponent implements OnDestroy {
         this.isExpanded.set(JSON.parse(isExpanded));
       }
 
-      const mediaQueryList = matchMedia('(min-width: 1280px)');
-
-      this.resizeObserver.set(
-        new ResizeObserver(() => {
-          if (mediaQueryList.matches && this.shouldRestoreExpanded()) {
-            const isExpanded = JSON.parse(
-              localStorage.getItem(this.#appLocalStorageKeys.IS_EXPANDED) ||
-                'false',
-            );
-
-            this.isExpanded.set(isExpanded);
-            this.shouldRestoreExpanded.set(false);
-          } else if (!mediaQueryList.matches) {
-            this.isExpanded.set(true);
-            this.shouldRestoreExpanded.set(true);
-          }
-        }),
-      );
-
-      this.resizeObserver()?.observe(document.body);
+      // const mediaQueryList = matchMedia('(min-width: 1280px)');
+      //
+      // this.resizeObserver.set(
+      //   new ResizeObserver(() => {
+      //     if (mediaQueryList.matches && this.shouldRestoreExpanded()) {
+      //       const isExpanded = JSON.parse(
+      //         localStorage.getItem(this.#appLocalStorageKeys.IS_EXPANDED) ||
+      //           'false',
+      //       );
+      //
+      //       this.isExpanded.set(isExpanded);
+      //       this.shouldRestoreExpanded.set(false);
+      //     } else if (!mediaQueryList.matches) {
+      //       this.isExpanded.set(true);
+      //       this.shouldRestoreExpanded.set(true);
+      //     }
+      //   }),
+      // );
+      //
+      // this.resizeObserver()?.observe(document.body);
     });
   }
 

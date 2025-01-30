@@ -1,12 +1,33 @@
 <div class="flex flex-col gap-4">
-  @for (review of reviews(); track review.id) {
-    <div class="bg-content-background gap-2 p-4 rounded-base">
-      <p-rating [ngModel]="review.rating" [readonly]="true" />
-      <div class="flex items-center justify-between gap-4 text-muted-color">
-        <span>{{ review.name }}</span>
-        <span>{{ review.createdAt | date }}</span>
+  @defer (on viewport) {
+    @for (review of reviews(); track review.id) {
+      <div class="bg-content-background gap-2 p-4 rounded-base">
+        <p-rating [ngModel]="review.rating" [readonly]="true" />
+        <div class="flex items-center justify-between gap-4 text-muted-color">
+          <span>{{ review.name }}</span>
+          <span>{{ review.createdAt | date }}</span>
+        </div>
+        <p class="mt-2">{{ review.message }}</p>
       </div>
-      <p class="mt-2">{{ review.message }}</p>
+    } @empty {
+      <div
+        class="flex flex-col items-center text-center gap-4 p-4 rounded-base bg-content-background"
+      >
+        <span class="text-2xl">This book doesn't have any reviews!</span>
+        <span class="text-lg text-muted-color">
+          Let's change it. If you already have purchased this book you can
+          freely do it. If you haven't you can always do it right now.
+        </span>
+      </div>
+    }
+  } @placeholder {
+    <div class="bg-content-background flex flex-col gap-2 p-4 rounded-base">
+      <p-skeleton width="8rem" />
+      <div class="flex items-center justify-between gap-4 text-muted-color">
+        <p-skeleton width="13rem" />
+        <p-skeleton width="6rem" />
+      </div>
+      <p-skeleton width="100%" height="6rem" />
     </div>
   }
 </div>
