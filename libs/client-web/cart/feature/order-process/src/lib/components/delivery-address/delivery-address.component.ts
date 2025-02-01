@@ -14,6 +14,7 @@ import { OrderProcessItemDirective } from '@e-commerce/client-web/shared/utils';
 import {
   AddressInformationComponent,
   DeleteAddressConfirmationDialogComponent,
+  ErrorAndRetryMessageComponent,
 } from '@e-commerce/client-web/shared/ui';
 import { DialogModule } from 'primeng/dialog';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
@@ -31,6 +32,7 @@ import { delay } from 'rxjs';
     AddressInformationComponent,
     DeleteAddressConfirmationDialogComponent,
     DialogModule,
+    ErrorAndRetryMessageComponent,
   ],
   templateUrl: './delivery-address.component.html',
   styleUrl: './delivery-address.component.scss',
@@ -58,6 +60,10 @@ export class DeliveryAddressComponent implements OnInit {
     this.#addressStore.resetState();
   }
 
+  getAddresses() {
+    this.#addressStore.getAddresses();
+  }
+
   showForm(address?: UserAddress) {
     this.#addressStore.showForm(address);
   }
@@ -71,7 +77,7 @@ export class DeliveryAddressComponent implements OnInit {
   }
 
   delete() {
-    this.#addressStore.deleteAddress$();
+    this.#addressStore.deleteAddress();
   }
 
   showDeleteDialog(address: UserAddress) {

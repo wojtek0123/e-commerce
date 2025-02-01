@@ -19,10 +19,13 @@
 }
 
 html {
-  scroll-behavior: smooth;
   font-size: 100%;
   scrollbar-width: thin;
   /* scrollbar-color: var(--text-color-secondary) var(--surface-hover); */
+}
+
+.scrollbar-thin {
+  scrollbar-width: thin;
 }
 
 body {

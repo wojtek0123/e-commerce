@@ -1,21 +1,26 @@
 <lib-section-wrapper header="Address information">
-  @if (loading() && !addresses().length) {
+  @if (loading()) {
     <div libOrderProcessItem class="flex flex-col gap-4">
-      <div class="flex items-center gap-4">
+      <div class="flex items-center justify-between gap-4">
         <p-skeleton width="10rem" height="2rem" />
         <p-skeleton width="12rem" height="2rem" />
       </div>
-      <div class="flex items-center gap-4">
+      <div class="flex items-center justify-between gap-4">
         <p-skeleton width="8rem" height="2rem" />
         <p-skeleton width="15rem" height="2rem" />
       </div>
-      <div class="flex items-center gap-4">
+      <div class="flex items-center justify-between gap-4">
         <p-skeleton width="12rem" height="2rem" />
         <p-skeleton width="20rem" height="2rem" />
       </div>
     </div>
   } @else if (error()) {
-    <div>{{ error() }}</div>
+    <lib-error-and-retry-message
+      size="small"
+      [error]="error()"
+      unableToLoad="addresses"
+      (onRetry)="getAddresses()"
+    />
   } @else {
     @for (address of addresses(); track address.id) {
       <lib-address-information

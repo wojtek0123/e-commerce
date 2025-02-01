@@ -11,7 +11,7 @@
       (onClick)="showForm()"
     />
   </div>
-  @if (loading() && !addresses().length) {
+  @if (loading()) {
     <div libOrderProcessItem class="flex flex-col gap-4">
       <div class="flex items-center gap-4">
         <p-skeleton width="10rem" height="2rem" />

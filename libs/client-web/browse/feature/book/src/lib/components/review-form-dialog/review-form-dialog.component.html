@@ -11,7 +11,38 @@
   (visibleChange)="toggleDialog()"
   [modal]="true"
 >
-  @if (isLoggedIn()) {
+  @if (!isUserBoughtThisBook()) {
+    <div class="flex flex-col gap-4">
+      <div class="flex flex-col gap-2">
+        <span class="text-xl">
+          Sorry but you have to buy this book to be able to add review.
+        </span>
+        <span class="text-muted-color">
+          If you want to add a review you can go back and buy it.
+        </span>
+      </div>
+      <p-button
+        severity="secondary"
+        label="Go back"
+        styleClass="w-full"
+        (onClick)="toggleDialog()"
+      />
+    </div>
+  } @else if (isUserAddedReview()) {
+    <div class="flex flex-col gap-4">
+      <div class="flex flex-col gap-2">
+        <span class="text-xl">
+          Sorry but you have already added a review.
+        </span>
+      </div>
+      <p-button
+        severity="secondary"
+        label="Go back"
+        styleClass="w-full"
+        (onClick)="toggleDialog()"
+      />
+    </div>
+  } @else if (isLoggedIn()) {
     <form class="flex flex-col gap-2" (ngSubmit)="submit()">
       <lib-form-field>
         <lib-label idFor="name">Name *</lib-label>

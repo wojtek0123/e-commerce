@@ -53,7 +53,7 @@ export class AddressesComponent implements OnInit {
   }
 
   delete() {
-    this.#addressesStore.deleteAddress$();
+    this.#addressesStore.deleteAddress();
   }
 
   showForm(address?: UserAddress) {

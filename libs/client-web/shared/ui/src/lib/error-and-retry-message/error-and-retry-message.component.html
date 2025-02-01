@@ -1,6 +1,16 @@
 <div class="flex flex-col items-center gap-4 mt-10">
-  <p class="text-5xl text-center">{{ error() }}</p>
-  <p class="text-xl text-muted-color">
+  <p
+    class="text-5xl text-center"
+    [class.text-5xl]="size() === 'large'"
+    [class.text-2xl]="size() === 'small'"
+  >
+    {{ error() }}
+  </p>
+  <p
+    class="text-xl text-muted-color"
+    [class.text-xl]="size() === 'large'"
+    [class.text-lg]="size() === 'small'"
+  >
     Unable to load {{ unableToLoad() }}. Please try again.
   </p>
   <p-button

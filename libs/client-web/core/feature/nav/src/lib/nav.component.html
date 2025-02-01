@@ -51,7 +51,7 @@
     <nav class="h-content flex flex-col justify-between">
       <div class="flex flex-col">
         <div class="h-9 flex items-center justify-center">
-          @if (isLabelShowed()) {
+          @if (isLabelShowed?.()) {
             <ng-container [ngTemplateOutlet]="logo" />
           } @else {
             <a
@@ -73,7 +73,7 @@
             [state]="{ clearFilters: true }"
           >
             <i class="pi pi-search"></i>
-            @if (isLabelShowed()) {
+            @if (isLabelShowed?.()) {
               <span>Browse</span>
             }
           </a>
@@ -82,14 +82,14 @@
       </div>
 
       <div class="flex flex-col">
-        <lib-cart-sidebar [isLabelShowed]="isLabelShowed()" />
+        <lib-cart-sidebar [isLabelShowed]="!!isLabelShowed?.()" />
         @if (isAuthenticated()) {
           <a
             [routerLink]="urls().favouriteBooksList"
             class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700"
           >
             <i class="pi pi-heart"></i>
-            @if (isLabelShowed()) {
+            @if (isLabelShowed?.()) {
               <span>Favourite books</span>
             }
           </a>
@@ -98,7 +98,7 @@
             class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700"
           >
             <i class="pi pi-user"></i>
-            @if (isLabelShowed()) {
+            @if (isLabelShowed?.()) {
               <span>Account</span>
             }
           </a>
@@ -107,7 +107,7 @@
             class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700"
           >
             <i class="pi pi-sign-in"></i>
-            @if (isLabelShowed()) {
+            @if (isLabelShowed?.()) {
               <span>Log out</span>
             }
           </button>
@@ -118,7 +118,7 @@
             class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700"
           >
             <i class="pi pi-sign-in"></i>
-            @if (isLabelShowed()) {
+            @if (isLabelShowed?.()) {
               <span>Log in</span>
             }
           </a>
@@ -128,7 +128,7 @@
             class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700"
           >
             <i class="pi pi-user-plus"></i>
-            @if (isLabelShowed()) {
+            @if (isLabelShowed?.()) {
               <span>Register</span>
             }
           </a>
@@ -144,7 +144,7 @@
             } @else {
               <i class="pi pi-sun"></i>
             }
-            @if (isLabelShowed()) {
+            @if (isLabelShowed?.()) {
               <span>{{ isDark() ? 'Dark' : 'Light' }}</span>
             }
           </button>
@@ -157,7 +157,7 @@
             } @else {
               <i class="pi pi-arrow-right"></i>
             }
-            @if (isLabelShowed()) {
+            @if (isLabelShowed?.()) {
               <span>Collapse</span>
             }
           </button>
@@ -187,7 +187,7 @@
         class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700"
       >
         <i [class]="menuItem.icon"></i>
-        @if (isLabelShowed()) {
+        @if (isLabelShowed?.()) {
           <span>{{ menuItem.label }}</span>
         }
       </a>
@@ -202,7 +202,7 @@
         [state]="{ clearFilters: true }"
       >
         <span>
-          {{ category.name | getName: isLabelShowed() }}
+          {{ category.name | getName: !!isLabelShowed?.() }}
         </span>
       </a>
     }

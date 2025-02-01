@@ -1,5 +1,5 @@
 <div
-  class="grid gap-base grid-cols-1 w-full xl:grid-cols-[2fr_3fr] 4xl:grid-cols-[2fr_3fr_1.2fr]"
+  class="grid gap-base grid-cols-1 w-full 2xl:grid-cols-[2fr_3fr] 4xl:grid-cols-[2fr_3fr_1.2fr]"
 >
   @if (loading()) {
     <div class="rounded-base xl:h-content overflow-hidden xl:sticky xl:top-4">
@@ -33,14 +33,15 @@
     </div>
   } @else if (book()) {
     <div
-      class="relative rounded-base hidden lg:flex items-center h-96 justify-center lg:h-[calc(100svh-2*1rem-5rem)] xl:h-content overflow-hidden lg:sticky lg:top-1 xl:top-4"
+      class="relative rounded-base hidden 2xl:flex justify-center h-96 2xl:h-content overflow-hidden lg:sticky lg:top-1 xl:top-4"
     >
       @defer {
         <img
-          class="rounded-base w-full h-full"
+          class="rounded-base w-full object-fill"
           [ngSrc]="book()?.coverImage ?? ''"
           [alt]="book()?.title + ' cover image'"
-          fill
+          width="480"
+          height="640"
           priority
         />
       }
