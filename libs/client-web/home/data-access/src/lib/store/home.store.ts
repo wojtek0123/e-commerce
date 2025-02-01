@@ -48,7 +48,7 @@ export const HomeStore = signalStore(
           booksApi
             .getBooks$({
               tagIn: [BookTag.BESTSELLER, BookTag.INCOMING, BookTag.NEW],
-              size: 12,
+              size: 33,
             })
             .pipe(
               tapResponse({

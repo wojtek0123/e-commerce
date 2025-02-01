@@ -25,6 +25,7 @@ export class BooksGridComponent {
   public skeletonsCount = input<number>(8);
   public pendingBookIds = input<Book['id'][]>([]);
   public favouriteBooks = input.required<Book[]>();
+  displayOneRow = input<boolean>(false);
 
   public skeleconts = computed(() => new Array(this.skeletonsCount()));
 
