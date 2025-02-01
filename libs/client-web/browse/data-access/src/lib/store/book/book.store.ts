@@ -1,8 +1,14 @@
 import { computed, inject } from '@angular/core';
-import { BookDetails, ResponseError } from '@e-commerce/shared/api-models';
+import {
+  Book,
+  BookDetails,
+  ResponseError,
+  User,
+} from '@e-commerce/shared/api-models';
 import {
   BookReviewApiService,
   BooksApiService,
+  OrderDetailsApiService,
 } from '@e-commerce/client-web/shared/data-access/api-services';
 import { tapResponse } from '@ngrx/operators';
 import {
@@ -22,6 +28,7 @@ export interface BookState {
   book: BookDetails | null;
   loading: boolean;
   error: string | string[] | null;
+  purchased: boolean;
   reviewDialog: {
     loading: boolean;
     visible: boolean;
@@ -33,6 +40,7 @@ export const initialBookState: BookState = {
   book: null,
   loading: false,
   error: null,
+  purchased: false,
   reviewDialog: {
     loading: false,
     visible: false,
@@ -49,6 +57,7 @@ export const BookStore = signalStore(
   withProps(() => ({
     bookApi: inject(BooksApiService),
     bookReviewApi: inject(BookReviewApiService),
+    orderDetailsApi: inject(OrderDetailsApiService),
     messageService: inject(MessageService),
   })),
   withMethods((store) => ({
@@ -131,6 +140,29 @@ export const BookStore = signalStore(
         ),
       ),
     ),
+    getOrderByBook: rxMethod<void>(
+      pipe(
+        map(() => getState(store).book?.id),
+        filter((bookId): bookId is Book['id'] => !!bookId),
+        switchMap((bookId) =>
+          store.orderDetailsApi.getOrderByBook(bookId).pipe(
+            tapResponse({
+              next: () => {
+                patchState(store, { purchased: true });
+              },
+              error: () => {
+                patchState(store, { purchased: false });
+              },
+            }),
+          ),
+        ),
+      ),
+    ),
+    isUserAddedReview: (userId: User['id']) => {
+      return !!getState(store).book?.reviews.find(
+        (review) => review.user.id === userId,
+      );
+    },
     toggleReviewDialog: () => {
       patchState(store, (state) => ({
         reviewDialog: {
