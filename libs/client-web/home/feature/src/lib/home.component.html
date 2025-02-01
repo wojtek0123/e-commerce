@@ -38,28 +38,18 @@
           See more
         </a>
       </div>
-      @defer (hydrate on hover) {
-        <lib-books-grid
-          (addToCartEvent)="addToCart($event)"
-          (onAddToFavourite)="addBookToFavourite($event)"
-          (onRetry)="retry()"
-          class="w-full"
-          [books]="section.books"
-          [favouriteBooks]="favouriteBooks()"
-          [loading]="loading()"
-          [error]="error()"
-          [skeletonsCount]="4"
-        />
-      } @placeholder {
-        <lib-books-grid
-          class="w-full"
-          [books]="[]"
-          [favouriteBooks]="[]"
-          [loading]="true"
-          [error]="null"
-          [skeletonsCount]="4"
-        />
-      }
+      <lib-books-grid
+        (addToCartEvent)="addToCart($event)"
+        (onAddToFavourite)="addBookToFavourite($event)"
+        (onRetry)="retry()"
+        class="w-full"
+        [books]="section.books"
+        [favouriteBooks]="favouriteBooks()"
+        [loading]="loading()"
+        [error]="error()"
+        [displayOneRow]="true"
+        [skeletonsCount]="columnsCount()"
+      />
     </section>
   }
 </main>
