@@ -14,6 +14,7 @@ import {
   ApiCreatedResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
 import { AccessTokenGuard } from '../common/guards/access-token.guard';
@@ -60,5 +61,19 @@ export class OrderDetailsController {
     @Param('id') id: string,
   ) {
     return this.orderDetailsService.findOne(authHeader, id);
+  }
+
+  @Get('/book/:id')
+  @ApiOperation({ summary: 'Get order details for a specific user and book' })
+  @ApiOkResponse({ type: OrderDetail })
+  @UseGuards(RolesGuard)
+  @Roles([Role.USER])
+  @ApiParam({ name: 'id', type: String, required: true })
+  @ApiBearerAuth()
+  findOrder(
+    @Headers('authorization') authHeader: string,
+    @Param('id') bookId: string,
+  ) {
+    return this.orderDetailsService.findOrder(authHeader, bookId);
   }
 }

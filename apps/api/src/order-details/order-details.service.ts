@@ -9,7 +9,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { decode } from 'jsonwebtoken';
 import { OrderDetail } from './entities/order-detail.entity';
 import { MailerService } from '@nestjs-modules/mailer';
-import { PaymentMethod } from '@prisma/client';
+import { BookEntity } from '../books/entities/book.entity';
 
 @Injectable()
 export class OrderDetailsService {
@@ -212,5 +212,23 @@ export class OrderDetailsService {
         },
       },
     });
+  }
+
+  async findOrder(authHeader: string, bookId: BookEntity['id']) {
+    const userId = String(decode(authHeader.split(' ')[1]).sub);
+
+    if (!userId) {
+      throw new UnauthorizedException('You have to log in');
+    }
+
+    const order = await this.prisma.orderDetails.findFirst({
+      where: { AND: { userId, orderItems: { some: { bookId } } } },
+    });
+
+    if (!order) {
+      throw new NotFoundException('Not found order details');
+    }
+
+    return order;
   }
 }

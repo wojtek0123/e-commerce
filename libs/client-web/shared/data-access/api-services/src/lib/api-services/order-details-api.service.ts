@@ -5,6 +5,7 @@ import {
   OrderDetails,
   PaymentMethod,
   OrderDetailsBase,
+  Book,
 } from '@e-commerce/shared/api-models';
 import { API_URL } from '@e-commerce/client-web/shared/app-config';
 
@@ -39,5 +40,11 @@ export class OrderDetailsApiService {
 
   getUnique(id: OrderDetails['id']) {
     return this.http.get<OrderDetails>(`${this.apiUrl}/order-details/${id}`);
+  }
+
+  getOrderByBook(bookId: Book['id']) {
+    return this.http.get<OrderDetails>(
+      `${this.apiUrl}/order-details/book/${bookId}`,
+    );
   }
 }
