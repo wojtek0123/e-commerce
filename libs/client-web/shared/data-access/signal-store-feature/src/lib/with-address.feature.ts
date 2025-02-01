@@ -44,7 +44,7 @@ interface AddressState {
 }
 
 const initialAddressState: AddressState = {
-  loading: false,
+  loading: true,
   error: null,
   cachedAddress: null,
   formInfo: {
@@ -81,9 +81,11 @@ export function withAddress() {
         userAddressApi = inject(UserAddressApiService),
         messageService = inject(MessageService),
       ) => ({
-        getAddresses$: rxMethod<void>(
+        getAddresses: rxMethod<void>(
           pipe(
-            tap(() => patchState(store, { loading: true })),
+            tap(() => {
+              patchState(store, { loading: true });
+            }),
             switchMap(() =>
               userAddressApi.getAll$().pipe(
                 tapResponse({
@@ -114,7 +116,7 @@ export function withAddress() {
             ),
           ),
         ),
-        addAddress$: rxMethod<{ data: CreateUserAddressBody }>(
+        addAddress: rxMethod<{ data: CreateUserAddressBody }>(
           pipe(
             tap(() => {
               patchState(store, { loading: true });
@@ -158,7 +160,7 @@ export function withAddress() {
             ),
           ),
         ),
-        updateAddress$: rxMethod<{
+        updateAddress: rxMethod<{
           data: CreateUserAddressBody;
         }>(
           pipe(
@@ -235,7 +237,7 @@ export function withAddress() {
             ),
           ),
         ),
-        deleteAddress$: rxMethod<void>(
+        deleteAddress: rxMethod<void>(
           pipe(
             map(() => getState(store).deleteDialogInfo.id),
             filter((id): id is UserAddress['id'] => !!id),
@@ -327,7 +329,7 @@ export function withAddress() {
     ),
     withHooks({
       onInit: (store) => {
-        store.getAddresses$();
+        store.getAddresses();
       },
     }),
   );

@@ -61,7 +61,7 @@
 
   <p-drawer
     libDrawerLeft
-    class="2xl:hidden"
+    class="2xl:hidden scrollbar-thin"
     [visible]="drawerVisible()"
     header="Order details"
     (onHide)="unselectOrder()"
@@ -81,7 +81,7 @@
   </p-drawer>
 
   <div
-    class="hidden 2xl:flex w-full h-content overflow-y-auto 2xl:sticky 2xl:top-4"
+    class="hidden 2xl:flex w-full h-content overflow-y-auto scrollbar-thin 2xl:sticky 2xl:top-4"
   >
     @if (selectedOrderLoading()) {
       <ng-container *ngTemplateOutlet="orderLoading" />

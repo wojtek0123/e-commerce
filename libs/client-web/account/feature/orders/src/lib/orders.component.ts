@@ -57,7 +57,7 @@ export class OrdersComponent implements OnInit {
   protected drawerVisible = computed(() => {
     const selectedOrderId = this.selectedOrderId();
 
-    if (window.innerWidth > 1536) {
+    if (window.innerWidth >= 1536) {
       return false;
     }
 

@@ -10,7 +10,9 @@ import {
   afterNextRender,
   Component,
   inject,
-  OnDestroy,
+  Injector,
+  runInInjectionContext,
+  Signal,
   signal,
 } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
@@ -37,7 +39,17 @@ import { ButtonModule } from 'primeng/button';
 import { DividerModule } from 'primeng/divider';
 import { MenuModule } from 'primeng/menu';
 import { ToolbarModule } from 'primeng/toolbar';
-import { debounce, filter, map, of, timer } from 'rxjs';
+import {
+  combineLatest,
+  debounce,
+  filter,
+  fromEvent,
+  map,
+  of,
+  startWith,
+  throttleTime,
+  timer,
+} from 'rxjs';
 import { ThemeService } from '@e-commerce/client-web/core/data-access';
 import { CategoryStore } from '@e-commerce/client-web/shared/data-access/stores';
 import { DrawerModule } from 'primeng/drawer';
@@ -81,12 +93,13 @@ import { GetNamePipe } from './pipes/get-name.pipe';
     ]),
   ],
 })
-export class NavComponent implements OnDestroy {
+export class NavComponent {
   #themeService = inject(ThemeService);
   #categoriesStore = inject(CategoryStore);
   #authService = inject(AuthService);
   #appLocalStorageKeys = inject(APP_LOCAL_STORAGE_KEYS_TOKEN);
   #appRoutePaths = inject(APP_ROUTE_PATHS_TOKEN);
+  #injector = inject(Injector);
 
   #appRouteFeatures = APP_ROUTES_FEATURE;
 
@@ -94,12 +107,7 @@ export class NavComponent implements OnDestroy {
   categories = this.#categoriesStore.categories;
   isMobileDrawerOpened = signal(false);
   isExpanded = signal(false);
-  isLabelShowed = toSignal(
-    toObservable(this.isExpanded).pipe(
-      debounce((isExpanded) => (isExpanded ? timer(150) : of({}))),
-    ),
-    { initialValue: true },
-  );
+  isLabelShowed: Signal<boolean> | undefined;
   isDark = this.#themeService.isDark;
 
   urls = signal({
@@ -124,33 +132,23 @@ export class NavComponent implements OnDestroy {
         this.isExpanded.set(JSON.parse(isExpanded));
       }
 
-      // const mediaQueryList = matchMedia('(min-width: 1280px)');
-      //
-      // this.resizeObserver.set(
-      //   new ResizeObserver(() => {
-      //     if (mediaQueryList.matches && this.shouldRestoreExpanded()) {
-      //       const isExpanded = JSON.parse(
-      //         localStorage.getItem(this.#appLocalStorageKeys.IS_EXPANDED) ||
-      //           'false',
-      //       );
-      //
-      //       this.isExpanded.set(isExpanded);
-      //       this.shouldRestoreExpanded.set(false);
-      //     } else if (!mediaQueryList.matches) {
-      //       this.isExpanded.set(true);
-      //       this.shouldRestoreExpanded.set(true);
-      //     }
-      //   }),
-      // );
-      //
-      // this.resizeObserver()?.observe(document.body);
+      runInInjectionContext(this.#injector, () => {
+        this.isLabelShowed = toSignal(
+          combineLatest([
+            toObservable(this.isExpanded).pipe(
+              debounce((isExpanded) => (isExpanded ? timer(150) : of({}))),
+            ),
+            fromEvent(window, 'resize').pipe(
+              startWith(undefined),
+              throttleTime(500),
+            ),
+          ]).pipe(
+            map(([isExpanded]) => window.innerWidth < 1280 || isExpanded),
+          ),
+          { initialValue: this.isExpanded() },
+        );
+      });
     });
-  }
-
-  timer: any;
-
-  ngOnDestroy() {
-    this.resizeObserver()?.unobserve(document.body);
   }
 
   stringifyCategory(category: Category) {

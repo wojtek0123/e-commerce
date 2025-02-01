@@ -1,10 +1,10 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   effect,
   inject,
   OnInit,
-  signal,
   untracked,
 } from '@angular/core';
 import {
@@ -48,17 +48,23 @@ import { Router, RouterLink } from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './review-form-dialog.component.html',
 })
-export class ReviewFormDialogComponent {
+export class ReviewFormDialogComponent implements OnInit {
   #bookStore = inject(BookStore);
   #authService = inject(AuthService);
   #router = inject(Router);
 
   isLoggedIn = this.#authService.isAuthenticated;
+  userId = this.#authService.userId;
+  isUserBoughtThisBook = this.#bookStore.purchased;
 
   url = this.#router.url;
 
   visible = this.#bookStore.reviewDialog.visible;
   loading = this.#bookStore.reviewDialog.loading;
+
+  isUserAddedReview = computed(() =>
+    this.#bookStore.isUserAddedReview(this.userId() ?? ''),
+  );
 
   constructor() {
     effect(() => {
@@ -70,6 +76,12 @@ export class ReviewFormDialogComponent {
         }
       });
     });
+  }
+
+  ngOnInit(): void {
+    if (this.isLoggedIn()) {
+      this.#bookStore.getOrderByBook();
+    }
   }
 
   form = new FormGroup({

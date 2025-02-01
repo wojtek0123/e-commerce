@@ -10,6 +10,8 @@ import { Button } from 'primeng/button';
 export class ErrorAndRetryMessageComponent {
   error = input.required<string | null>();
   unableToLoad = input<string>();
+  size = input<'small' | 'large'>('large');
+  showRetry = input(true);
 
   onRetry = output<void>();
 

@@ -23,10 +23,10 @@ export class AccountDataAddressFormComponent {
   }
 
   add(formValues: CreateUserAddressBody) {
-    this.#addressStore.addAddress$({ data: formValues });
+    this.#addressStore.addAddress({ data: formValues });
   }
 
   edit(formValues: CreateUserAddressBody) {
-    this.#addressStore.updateAddress$({ data: formValues });
+    this.#addressStore.updateAddress({ data: formValues });
   }
 }
