@@ -2,6 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma, Tag } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateBookDto } from './dto/create-book.dto';
+import { parseQueryParams } from '../common/utils/parse-query-params';
+import { parseNumber } from '../common/utils/parse-number';
 
 @Injectable()
 export class BooksService {
@@ -62,12 +64,12 @@ export class BooksService {
     sortByMode?: string;
   }) {
     try {
-      const pageNumber = this.parseNumber(page, 1);
-      const sizeNumber = this.parseNumber(size, 20);
+      const pageNumber = parseNumber(page, 1);
+      const sizeNumber = parseNumber(size, 20);
 
-      const parsedCategories = this._parseQueryParams(categoryIdIn);
-      const parsedTags = this._parseQueryParams(tagIn);
-      const parsedAuthors = this._parseQueryParams(authorIdIn);
+      const parsedCategories = parseQueryParams(categoryIdIn);
+      const parsedTags = parseQueryParams(tagIn);
+      const parsedAuthors = parseQueryParams(authorIdIn);
 
       const parsedSortByMode = ['asc', 'desc'].includes(sortByMode)
         ? sortByMode
@@ -88,8 +90,8 @@ export class BooksService {
             : {},
           {
             price: {
-              gte: this.parseNumber(priceFrom, 0),
-              lte: this.parseNumber(priceTo, Number.MAX_SAFE_INTEGER),
+              gte: parseNumber(priceFrom, 0),
+              lte: parseNumber(priceTo, Number.MAX_SAFE_INTEGER),
             },
           },
           parsedAuthors.length > 0
@@ -125,19 +127,6 @@ export class BooksService {
     }
   }
 
-  private _parseQueryParams(param?: string): string[] {
-    return (
-      param
-        ?.split(',')
-        .filter(Boolean)
-        .map((item) => item.trim()) || []
-    );
-  }
-
-  private parseNumber(value: string | undefined, fallback: number): number {
-    const parsedValue = value ? parseInt(value, 10) : NaN;
-    return isNaN(parsedValue) ? fallback : parsedValue;
-  }
   async findOne(id: string) {
     const book = await this.prisma.book.findUnique({
       where: { id },

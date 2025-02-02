@@ -539,25 +539,25 @@ export const BooksStore = signalStore(
       store._router.navigate([], {
         relativeTo: store._route,
         queryParams: {
-          tags: buildSelectedItemsQueryParam(
+          [BooksQueryParamKey.TAGS]: buildSelectedItemsQueryParam(
             queryParam.selectedTags,
             'name',
           )?.toLowerCase(),
-          categories: buildSelectedItemsQueryParam(
+          [BooksQueryParamKey.CATEGORIES]: buildSelectedItemsQueryParam(
             queryParam.selectedCategories,
             'name',
           ),
-          authors: buildSelectedItemsQueryParam(
+          [BooksQueryParamKey.AUTHORS]: buildSelectedItemsQueryParam(
             queryParam.selectedAuthors,
             'name',
           ),
-          search: queryParam.search || null,
-          min_price: queryParam.minPrice,
-          max_price: queryParam.maxPrice,
-          size: queryParam.size,
-          page: queryParam.page,
-          sortBy: queryParam.sortBy,
-          sortByMode: queryParam.sortByMode,
+          [BooksQueryParamKey.SEARCH]: queryParam.search || null,
+          [BooksQueryParamKey.MIN_PRICE]: queryParam.minPrice,
+          [BooksQueryParamKey.MAX_PRICE]: queryParam.maxPrice,
+          [BooksQueryParamKey.SIZE]: queryParam.size,
+          [BooksQueryParamKey.PAGE]: queryParam.page,
+          [BooksQueryParamKey.SORT_BY]: queryParam.sortBy,
+          [BooksQueryParamKey.SORT_BY_MODE]: queryParam.sortByMode,
         },
         replaceUrl: true,
       });
@@ -568,6 +568,7 @@ export const BooksStore = signalStore(
       pipe(
         tap(() => patchState(store, { loading: true })),
         map(({ queryParam }) => {
+          console.log(queryParam);
           return {
             categories: queryParam.get(BooksQueryParamKey.CATEGORIES),
             authors: queryParam.get(BooksQueryParamKey.AUTHORS),
@@ -625,6 +626,7 @@ export const BooksStore = signalStore(
                 : ('asc' satisfies BooksSortDirection),
             ),
           };
+          console.log(allBooksSortKeys, params.sortBy);
 
           return forkJoin(requests).pipe(
             map((requests) => ({
