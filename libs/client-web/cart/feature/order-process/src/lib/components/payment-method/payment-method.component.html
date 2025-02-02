@@ -23,11 +23,20 @@
       >
         <div class="flex items-center justify-between p-4">
           <div class="flex items-center gap-4">
-            <img class="bg-white w-6" src="assets/icons/visa-card.svg" />
-            <img class="bg-white w-6" src="assets/icons/mastercard.svg" />
+            <img
+              class="bg-white w-6"
+              src="assets/icons/visa-card.svg"
+              alt="Visa card"
+            />
+            <img
+              class="bg-white w-6"
+              src="assets/icons/mastercard.svg"
+              alt="Mastercard"
+            />
             <span> {{ creditCard().data?.number }}</span>
           </div>
           <p-button
+            ariaLabel="Update creadit card information"
             icon="pi pi-pencil"
             (onClick)="showCreditCardForm('update')"
           />

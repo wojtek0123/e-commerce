@@ -1,6 +1,8 @@
 <button
   (click)="openDrawer()"
   class="text-muted-color w-full px-3 h-10 flex items-center gap-4 !rounded-base hover:bg-surface-200 hover:dark:bg-surface-600"
+  aria-label="Cart"
+  name="Cart"
 >
   <p-overlayBadge [value]="count()" badgeSize="small">
     <i class="pi pi-shopping-cart"></i>

@@ -11,6 +11,7 @@ import {
   Component,
   inject,
   Injector,
+  OnDestroy,
   runInInjectionContext,
   Signal,
   signal,
@@ -30,7 +31,6 @@ import {
   APP_ROUTE_PATHS_TOKEN,
   APP_ROUTES_FEATURE,
 } from '@e-commerce/client-web/shared/app-config';
-import { Category } from '@e-commerce/shared/api-models';
 import {
   DrawerLeftDirective,
   NavButtonDirective,
@@ -39,17 +39,7 @@ import { ButtonModule } from 'primeng/button';
 import { DividerModule } from 'primeng/divider';
 import { MenuModule } from 'primeng/menu';
 import { ToolbarModule } from 'primeng/toolbar';
-import {
-  combineLatest,
-  debounce,
-  filter,
-  fromEvent,
-  map,
-  of,
-  startWith,
-  throttleTime,
-  timer,
-} from 'rxjs';
+import { combineLatest, debounce, filter, map, of, timer } from 'rxjs';
 import { ThemeService } from '@e-commerce/client-web/core/data-access';
 import { CategoryStore } from '@e-commerce/client-web/shared/data-access/stores';
 import { DrawerModule } from 'primeng/drawer';
@@ -93,7 +83,7 @@ import { GetNamePipe } from './pipes/get-name.pipe';
     ]),
   ],
 })
-export class NavComponent {
+export class NavComponent implements OnDestroy {
   #themeService = inject(ThemeService);
   #categoriesStore = inject(CategoryStore);
   #authService = inject(AuthService);
@@ -105,9 +95,6 @@ export class NavComponent {
 
   isAuthenticated = this.#authService.isAuthenticated;
   categories = this.#categoriesStore.categories;
-  isMobileDrawerOpened = signal(false);
-  isExpanded = signal(false);
-  isLabelShowed: Signal<boolean> | undefined;
   isDark = this.#themeService.isDark;
 
   urls = signal({
@@ -118,9 +105,34 @@ export class NavComponent {
     register: this.#appRoutePaths.REGISTER(),
     favouriteBooksList: this.#appRoutePaths.FAVOURITE_BOOKS_LIST(),
   }).asReadonly();
-
-  resizeObserver = signal<ResizeObserver | null>(null);
-  shouldRestoreExpanded = signal(false);
+  mobileBreakpoint = signal(1280).asReadonly();
+  isMobileDrawerOpened = signal(false);
+  isExpanded = signal(false);
+  menuItems = signal([
+    {
+      label: 'Orders',
+      icon: 'pi pi-book',
+      routerLink: this.#appRoutePaths.ORDERS(),
+    },
+    {
+      label: 'Information',
+      icon: 'pi pi-cog',
+      routerLink: this.#appRoutePaths.INFORMATION(),
+    },
+    {
+      label: 'Favourite books',
+      icon: 'pi pi-heart',
+      routerLink: this.#appRoutePaths.FAVOURITE_BOOKS_LIST(),
+    },
+  ]);
+  isLabelShowed: Signal<boolean> | undefined;
+  isAccountRouteActive = toSignal(
+    inject(Router).events.pipe(
+      filter((events) => events instanceof NavigationEnd),
+      map((event) => event.url.includes(this.#appRouteFeatures.ACCOUNT.BASE)),
+    ),
+  );
+  resizeObserver = signal<ResizeObserver | undefined>(undefined);
 
   constructor() {
     afterNextRender(() => {
@@ -132,18 +144,30 @@ export class NavComponent {
         this.isExpanded.set(JSON.parse(isExpanded));
       }
 
+      this.resizeObserver.set(
+        new ResizeObserver(() => {
+          if (window.innerWidth > this.mobileBreakpoint()) {
+            this.isMobileDrawerOpened.set(false);
+          }
+        }),
+      );
+
+      this.resizeObserver()?.observe(document.body);
+
       runInInjectionContext(this.#injector, () => {
         this.isLabelShowed = toSignal(
           combineLatest([
             toObservable(this.isExpanded).pipe(
               debounce((isExpanded) => (isExpanded ? timer(150) : of({}))),
             ),
-            fromEvent(window, 'resize').pipe(
-              startWith(undefined),
-              throttleTime(500),
-            ),
+            toObservable(this.isMobileDrawerOpened),
           ]).pipe(
-            map(([isExpanded]) => window.innerWidth < 1280 || isExpanded),
+            map(
+              ([isExpanded, isMobileDrawerOpened]) =>
+                (isMobileDrawerOpened &&
+                  window.innerWidth < this.mobileBreakpoint()) ||
+                isExpanded,
+            ),
           ),
           { initialValue: this.isExpanded() },
         );
@@ -151,43 +175,13 @@ export class NavComponent {
     });
   }
 
-  stringifyCategory(category: Category) {
-    return JSON.stringify(category);
-  }
-
-  isAccountRouteActive = toSignal(
-    inject(Router).events.pipe(
-      filter((events) => events instanceof NavigationEnd),
-      map((event) => event.url.includes(this.#appRouteFeatures.ACCOUNT.BASE)),
-    ),
-  );
-
-  menuItems = signal([
-    {
-      label: 'Orders',
-      icon: 'pi pi-book',
-      routerLink: this.#appRoutePaths.ORDERS(),
-      routerLinkActive: 'bg-surface-100 dark:bg-surface-700 rounded-base',
-    },
-    {
-      label: 'Information',
-      icon: 'pi pi-cog',
-      routerLink: this.#appRoutePaths.INFORMATION(),
-      routerLinkActive: 'bg-surface-100 dark:bg-surface-700 rounded-base',
-    },
-    {
-      label: 'Favourite books',
-      icon: 'pi pi-heart',
-      routerLink: this.#appRoutePaths.FAVOURITE_BOOKS_LIST(),
-      routerLinkActive: 'bg-surface-100 dark:bg-surface-700 rounded-base',
-    },
-  ]);
-
   toggleDarkMode() {
     this.#themeService.toggleDarkMode();
   }
 
-  toggleMobileDrawer() {
+  toggleMobileMenuDrawer() {
+    if (this.mobileBreakpoint() <= window.innerWidth) return;
+
     this.isMobileDrawerOpened.update((isOpen) => !isOpen);
   }
 
@@ -203,7 +197,7 @@ export class NavComponent {
     this.#authService.logout();
   }
 
-  closeMobileDrawer() {
-    this.isMobileDrawerOpened.set(false);
+  ngOnDestroy(): void {
+    this.resizeObserver()?.disconnect();
   }
 }
