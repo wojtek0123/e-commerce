@@ -57,6 +57,30 @@ export const useBooksStore = defineStore('books', () => {
     }
   }
 
+  async function addAuthor(body: { name: string }) {
+    addLoading.value = true;
+
+    try {
+      await axios.post(`${import.meta.env.VITE_API_URL}/authors`, body);
+    } catch (e: unknown) {
+      let message: string;
+      if (e instanceof AxiosError) {
+        message =
+          e.response?.data?.message ?? 'Error occurred while adding book';
+      } else {
+        message = 'An unexpected error occurred';
+      }
+
+      toast.add({
+        summary: 'Error',
+        detail: message,
+        severity: 'error',
+      });
+    } finally {
+      addLoading.value = false;
+    }
+  }
+
   async function addBook(body: {
     title: string;
     description: string;
@@ -154,7 +178,7 @@ export const useBooksStore = defineStore('books', () => {
         `${import.meta.env.VITE_API_URL}/categories`,
         {
           params: {
-            titleLike: search,
+            nameLike: search,
           },
         },
       );
@@ -280,6 +304,7 @@ export const useBooksStore = defineStore('books', () => {
     search,
     error,
     getBooks,
+    addAuthor,
     addBook,
     getCategories,
     categories,
