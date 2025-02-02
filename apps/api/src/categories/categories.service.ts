@@ -3,7 +3,8 @@ import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { Category, Prisma } from '@prisma/client';
-import { isUUID } from 'class-validator';
+import { parseNumber } from '../common/utils/parse-number';
+import { parseQueryParams } from '../common/utils/parse-query-params';
 
 @Injectable()
 export class CategoriesService {
@@ -19,14 +20,16 @@ export class CategoriesService {
     page?: string;
     size?: string;
   }) {
-    const pageNumber = this.parseNumber(opts.page, 1);
-    const sizeNumber = this.parseNumber(opts.size, 20);
+    const pageNumber = parseNumber(opts.page, 1);
+    const sizeNumber = parseNumber(opts.size, 20);
+    const nameIn = parseQueryParams(opts.nameIn);
 
     const whereClause: Prisma.CategoryWhereInput = {
       AND: [
         opts.nameLike
           ? { name: { contains: opts.nameLike, mode: 'insensitive' } }
           : {},
+        nameIn.length > 0 ? { name: { in: nameIn } } : {},
       ],
     };
 
@@ -77,10 +80,5 @@ export class CategoriesService {
     return this.prisma.category.deleteMany({
       where: { id: { in: parsedIds } },
     });
-  }
-
-  private parseNumber(value: string | undefined, fallback: number): number {
-    const parsedValue = value ? parseInt(value, 10) : NaN;
-    return isNaN(parsedValue) ? fallback : parsedValue;
   }
 }
