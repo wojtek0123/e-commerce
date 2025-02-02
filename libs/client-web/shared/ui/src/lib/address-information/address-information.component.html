@@ -36,7 +36,11 @@
     </div>
   </button>
   <div class="flex flex-col gap-4 absolute top-1/2 right-2 -translate-y-1/2">
-    <p-button icon="pi pi-pencil" (onClick)="edit()" />
-    <p-button icon="pi pi-trash" (onClick)="delete()" />
+    <p-button ariaLabel="Edit address" icon="pi pi-pencil" (onClick)="edit()" />
+    <p-button
+      ariaLabel="Delete address"
+      icon="pi pi-trash"
+      (onClick)="delete()"
+    />
   </div>
 </div>

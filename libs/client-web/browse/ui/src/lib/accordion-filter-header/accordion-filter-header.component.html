@@ -10,6 +10,7 @@
     icon="pi pi-trash"
     [disabled]="selectedItemsCount() === 0"
     [text]="true"
+    ariaLabel="Clear filter"
     (onClick)="$event.stopImmediatePropagation(); clearFilter()"
   />
 </div>

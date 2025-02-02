@@ -13,6 +13,10 @@ export const serverRoutes: ServerRoute[] = [
     renderMode: RenderMode.Server,
   },
   {
+    path: APP_ROUTES_FEATURE.BROWSE.BOOKS,
+    renderMode: RenderMode.Server,
+  },
+  {
     path: `${APP_ROUTES_FEATURE.BROWSE.BASE}/${APP_ROUTES_FEATURE.BROWSE.BOOK}/:${APP_ROUTES_PARAMS.BROWSE_BOOK_ID}`,
     renderMode: RenderMode.Prerender,
     async getPrerenderParams() {

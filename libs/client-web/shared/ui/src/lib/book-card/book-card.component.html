@@ -38,11 +38,13 @@
           severity="danger"
           [icon]="book() | isBookFavourite: favouriteBooks()"
           size="large"
+          ariaLabel="Add to favourite"
           (onClick)="$event.stopImmediatePropagation(); addToFavourite(book())"
         />
         <p-button
           title="Add to cart"
           icon="pi pi-cart-plus"
+          ariaLabel="Add to cart"
           size="large"
           [loading]="awaitingBookIdsToAddToCart().includes(book().id)"
           (onClick)="addToCart($event, book())"

@@ -1,8 +1,8 @@
 <div class="flex items-end gap-2 p-base">
   <lib-form-field>
-    <lib-label idFor="min">Min</lib-label>
+    <lib-label idFor="min-price-filter">Min</lib-label>
     <p-inputnumber
-      id="min"
+      inputId="min-price-filter"
       #minPriceInput
       slot="input"
       [min]="0"
@@ -20,9 +20,9 @@
   </div>
 
   <lib-form-field>
-    <lib-label idFor="max">Max</lib-label>
+    <lib-label idFor="max-price-filter">Max</lib-label>
     <p-inputnumber
-      id="max"
+      inputId="max-price-filter"
       #maxPriceInput
       slot="input"
       [min]="0"
