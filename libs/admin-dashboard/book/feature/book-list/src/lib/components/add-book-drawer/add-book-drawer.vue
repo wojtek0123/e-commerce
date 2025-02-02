@@ -29,7 +29,14 @@ const publisherOptions = ref<PublisherOption[]>(['Add', 'Select']);
 const publisherInputType = ref<PublisherOption>('Select');
 const successed = ref(false);
 const visible = ref(false);
+const authorFormVisibility = ref(false);
 const bookTags = ref(allBookTags);
+
+const authorsResolver = zodResolver(
+  z.object({
+    name: z.string().min(1, { message: 'Name is required' }),
+  }),
+);
 
 const resolver = zodResolver(
   z.object({
@@ -150,6 +157,16 @@ function submit(event: FormSubmitEvent) {
     });
 }
 
+function addAuthor(event: FormSubmitEvent) {
+  if (!event.valid) return;
+
+  const { name } = event.values;
+
+  store.addAuthor({ name }).then(() => {
+    authorFormVisibility.value = false;
+  });
+}
+
 onUnmounted(() => {
   if (!successed.value && uploadFileState.value) {
     store.deleteUploadedCoverImage();
@@ -158,6 +175,32 @@ onUnmounted(() => {
 </script>
 
 <template>
+  <Drawer
+    v-model:visible="authorFormVisibility"
+    class="max-w-[40rem] w-full rounded-r-base"
+  >
+    <Form
+      @submit="addAuthor"
+      :resolver="authorsResolver"
+      class="flex flex-col h-full justify-between gap-2 w-full max-w-[120rem]"
+    >
+      <div class="flex flex-col gap-4">
+        <FormField v-slot="$field" class="flex flex-col gap-1" name="name">
+          <label class="text-muted-color">Name</label>
+          <InputText fluid id="name" />
+          <Message
+            v-if="$field.invalid"
+            severity="error"
+            variant="simple"
+            size="small"
+          >
+            {{ $field.error.message }}
+          </Message>
+        </FormField>
+      </div>
+      <Button :loading="store.addLoading" type="submit">Add author</Button>
+    </Form>
+  </Drawer>
   <Button text icon="pi pi-plus" @click="visible = true" />
   <Drawer v-model:visible="visible" class="max-w-[40rem] w-full rounded-r-base">
     <Form
@@ -334,31 +377,50 @@ onUnmounted(() => {
           </Message>
         </FormField>
 
-        <FormField v-slot="$field" class="flex flex-col gap-1" name="authors">
-          <label for="authors" class="text-muted-color">Author *</label>
-          <AutoComplete
-            id="authors"
+        <div class="flex gap-4">
+          <FormField
+            v-slot="$field"
+            class="flex flex-col gap-1 w-full"
             name="authors"
-            :suggestions="store.authors"
-            fluid
-            option-label="name"
-            @complete="searchAuthors"
-            dropdown
-            multiple
-          />
-          <Message
-            v-if="$field.invalid"
-            severity="error"
-            variant="simple"
-            size="small"
           >
-            {{ $field.error.message }}
-          </Message>
-        </FormField>
+            <label for="authors" class="text-muted-color">Author *</label>
+            <AutoComplete
+              id="authors"
+              name="authors"
+              :suggestions="store.authors"
+              fluid
+              option-label="name"
+              @complete="searchAuthors"
+              dropdown
+              multiple
+            />
+            <Message
+              v-if="$field.invalid"
+              severity="error"
+              variant="simple"
+              size="small"
+            >
+              {{ $field.error.message }}
+            </Message>
+          </FormField>
 
+          <Button
+            class="h-fit mt-7"
+            aria-label="Add author"
+            v-tooltip="'Add author'"
+            icon="pi pi-plus"
+            @click="authorFormVisibility = true"
+            severity="secondary"
+          />
+        </div>
         <FormField class="flex flex-col gap-1" name="description">
           <label for="description" class="text-muted-color">Description</label>
-          <Textarea id="description" name="description" fluid />
+          <Textarea
+            id="description"
+            name="description"
+            class="min-h-56 max-h-[48rem]"
+            fluid
+          />
         </FormField>
 
         <div class="flex flex-col gap-4">

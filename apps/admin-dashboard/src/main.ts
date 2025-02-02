@@ -12,6 +12,7 @@ import { createApp } from 'vue';
 import App from './app/App.vue';
 import { useAuthService } from '@e-commerce/admin-dashboard/auth/api';
 import { Tokens } from '@e-commerce/shared/api-models';
+import Tooltip from 'primevue/tooltip';
 
 const app = createApp(App);
 const pinia = createPinia();
@@ -32,6 +33,7 @@ app.use(PrimeConfig, {
 app.use(ToastService);
 app.use(ConfirmationService);
 app.use(pinia);
+app.directive('tooltip', Tooltip);
 
 axios.interceptors.request.use(
   function (config) {
