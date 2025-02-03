@@ -52,14 +52,20 @@
 
 <p-dialog
   [header]="dialogHeader()"
-  [visible]="isDialogVisible()"
+  [visible]="isDialogVisible() && editingField() === 'password'"
   [modal]="true"
   styleClass="w-full max-w-[48rem] mx-4 w-full"
   (visibleChange)="setEditingField(null)"
 >
-  @if (editingField() === 'password') {
-    <lib-new-password-form class="w-full" />
-  } @else if (editingField() === 'email') {
-    <lib-new-email-form class="w-full" />
-  }
+  <lib-new-password-form class="w-full" />
+</p-dialog>
+
+<p-dialog
+  [header]="dialogHeader()"
+  [visible]="isDialogVisible() && editingField() === 'email'"
+  [modal]="true"
+  styleClass="w-full max-w-[48rem] mx-4 w-full"
+  (visibleChange)="setEditingField(null)"
+>
+  <lib-new-email-form class="w-full" />
 </p-dialog>

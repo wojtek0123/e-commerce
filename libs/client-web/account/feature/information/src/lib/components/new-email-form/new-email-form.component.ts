@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  untracked,
+} from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -46,6 +53,18 @@ export class NewEmailFormComponent {
   });
   public userEmail = this.informationStore.email;
   public loading = this.informationStore.loading;
+
+  isDialogVisible = computed(() => !!this.informationStore.editingField());
+
+  constructor() {
+    effect(() => {
+      const isDialogVisible = this.isDialogVisible();
+
+      untracked(() => {
+        if (!isDialogVisible) this.form.reset();
+      });
+    });
+  }
 
   public setEditingField(editingField: EditingField) {
     this.informationStore.setEditingField(editingField);

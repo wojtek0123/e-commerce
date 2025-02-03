@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, effect, inject, untracked } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -63,6 +63,18 @@ export class NewPasswordFormComponent {
       ],
     },
   );
+
+  isDialogVisible = computed(() => !!this.informationStore.editingField());
+
+  constructor() {
+    effect(() => {
+      this.isDialogVisible();
+
+      untracked(() => {
+        if (!this.isDialogVisible()) this.form.reset();
+      });
+    });
+  }
 
   public setEditingField(editingField: EditingField) {
     this.informationStore.setEditingField(editingField);

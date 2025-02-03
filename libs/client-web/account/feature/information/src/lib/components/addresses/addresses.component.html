@@ -58,9 +58,7 @@
   [dismissableMask]="true"
   (visibleChange)="hideForm()"
 >
-  @if (isFormVisibleDelayedToResetForm()) {
-    <lib-account-data-address-form class="w-full" />
-  }
+  <lib-account-data-address-form class="w-full" />
 </p-dialog>
 
 <lib-delete-address-confirmation-dialog

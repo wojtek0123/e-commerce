@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  viewChild,
+} from '@angular/core';
 import { AddressStore } from '@e-commerce/client-web/account/data-access';
 import { CreateUserAddressBody } from '@e-commerce/client-web/shared/data-access/api-services';
 import { AddressFormComponent } from '@e-commerce/client-web/shared/feature';
@@ -17,6 +22,8 @@ export class AccountDataAddressFormComponent {
   loading = this.#addressStore.loading;
   updatingAddress = this.#addressStore.updatingAddress;
   isFormVisible = this.#addressStore.formVisibility;
+
+  formRef = viewChild.required(AddressFormComponent);
 
   cancel() {
     this.#addressStore.hideForm();
