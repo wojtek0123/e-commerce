@@ -52,17 +52,17 @@ import { Country, UserAddress } from '@e-commerce/shared/api-models';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddressFormComponent {
-  private readonly addressStore = inject(CountryStore);
+  #addressStore = inject(CountryStore);
 
-  public loading = input.required<boolean>();
-  public initialAddress = input<UserAddress>();
-  public isEditMode = computed(() => !!this.initialAddress());
+  loading = input.required<boolean>();
+  initialAddress = input<UserAddress>();
+  isEditMode = computed(() => !!this.initialAddress());
 
   onAdd = output<CreateUserAddressBody>();
   onEdit = output<CreateUserAddressBody>();
   onCancel = output<void>();
 
-  protected form = new FormGroup({
+  form = new FormGroup({
     firstName: new FormControl<string | null>(null, Validators.required),
     lastName: new FormControl<string | null>(null, Validators.required),
     city: new FormControl<string | null>(null, Validators.required),
@@ -74,13 +74,9 @@ export class AddressFormComponent {
     country: new FormControl<Country | null>(null, Validators.required),
   });
 
-  public countries = this.addressStore.countries;
+  countries = this.#addressStore.countries;
 
-  public isFormInvalid = toSignal(
-    this.form.statusChanges.pipe(map((status) => status === 'INVALID')),
-    { initialValue: false },
-  );
-  public isFormChanged = toSignal(
+  isFormChanged = toSignal(
     combineLatest([
       this.form.valueChanges,
       toObservable(this.initialAddress),
@@ -96,50 +92,35 @@ export class AddressFormComponent {
     { initialValue: false },
   );
 
-  public tooltipMessage = computed(() => {
-    if (!this.isFormChanged()) {
-      return 'No changes detected. Make an update to enable the Save button.';
-    }
-
-    if (this.isFormInvalid()) {
-      return 'Please review the form to make sure all required fields are filled.';
-    }
-
-    return '';
-  });
-
   constructor() {
     effect(() => {
       const address = this.initialAddress();
 
       untracked(() => {
-        this.form.setValue(
-          {
-            firstName: address?.firstName ?? null,
-            lastName: address?.lastName ?? null,
-            country: address?.country ?? null,
-            street: address?.street ?? null,
-            homeNumber: address?.homeNumber ?? null,
-            houseNumber: address?.houseNumber ?? null,
-            postcode: address?.postcode ?? null,
-            phone: address?.phone ?? null,
-            city: address?.city ?? null,
-          },
-          { emitEvent: false },
-        );
+        this.form.setValue({
+          firstName: address?.firstName ?? null,
+          lastName: address?.lastName ?? null,
+          country: address?.country ?? null,
+          street: address?.street ?? null,
+          homeNumber: address?.homeNumber ?? null,
+          houseNumber: address?.houseNumber ?? null,
+          postcode: address?.postcode ?? null,
+          phone: address?.phone ?? null,
+          city: address?.city ?? null,
+        });
       });
     });
   }
 
-  public filterCountries(event: AutoCompleteCompleteEvent) {
-    this.addressStore.getCountries$({ name: event.query });
+  filterCountries(event: AutoCompleteCompleteEvent) {
+    this.#addressStore.getCountries$({ name: event.query });
   }
 
-  public cancel() {
+  cancel() {
     this.onCancel.emit();
   }
 
-  public submit() {
+  submit() {
     Object.keys(this.form.controls).forEach((control) =>
       this.form.get(control)?.markAsDirty(),
     );

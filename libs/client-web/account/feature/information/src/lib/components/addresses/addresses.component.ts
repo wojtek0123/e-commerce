@@ -2,8 +2,11 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  effect,
   inject,
   OnInit,
+  untracked,
+  viewChild,
 } from '@angular/core';
 import { AddressStore } from '@e-commerce/client-web/account/data-access';
 import {
@@ -16,8 +19,6 @@ import { DialogModule } from 'primeng/dialog';
 import { AccountDataAddressFormComponent } from '../address-form/address-form.component';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { delay } from 'rxjs';
 
 @Component({
   selector: 'lib-addresses',
@@ -44,9 +45,18 @@ export class AddressesComponent implements OnInit {
   formType = this.#addressesStore.formType;
 
   isFormVisible = computed(() => this.#addressesStore.formInfo().isVisible);
-  isFormVisibleDelayedToResetForm = toSignal(
-    toObservable(this.isFormVisible).pipe(delay(50)),
-  );
+
+  addressFormRef = viewChild.required(AccountDataAddressFormComponent);
+
+  constructor() {
+    effect(() => {
+      const isFormVisible = this.isFormVisible();
+
+      untracked(() => {
+        if (!isFormVisible) this.addressFormRef().formRef().form.reset();
+      });
+    });
+  }
 
   ngOnInit(): void {
     this.#addressesStore.resetState();
