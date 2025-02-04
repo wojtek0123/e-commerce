@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { PublishersService } from './publishers.service';
 import {
@@ -14,6 +15,8 @@ import {
   ApiCreatedResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiParam,
+  ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
 import { PublisherDto } from './dto/publisher.dto';
@@ -38,8 +41,9 @@ export class PublishersController {
   @Get()
   @ApiOkResponse({ type: PublisherDto, isArray: true })
   @ApiOperation({ summary: 'Get publishers' })
-  findAll() {
-    return this.publishersService.findAll();
+  @ApiQuery({ name: 'nameLike', type: String, required: false })
+  findAll(@Query('nameLike') nameLike?: string) {
+    return this.publishersService.findAll({ nameLike });
   }
 
   @Get(':id')
