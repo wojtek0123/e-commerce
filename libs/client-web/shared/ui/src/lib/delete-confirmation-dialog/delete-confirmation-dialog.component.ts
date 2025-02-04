@@ -9,7 +9,6 @@ import { DialogModule } from 'primeng/dialog';
 
 @Component({
   selector: 'lib-delete-address-confirmation-dialog',
-  standalone: true,
   imports: [DialogModule, ButtonModule],
   templateUrl: './delete-confirmation-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -20,4 +19,12 @@ export class DeleteAddressConfirmationDialogComponent {
 
   public onDelete = output<void>();
   public onHide = output<void>();
+
+  hide() {
+    this.onHide.emit();
+  }
+
+  delete() {
+    this.onDelete.emit();
+  }
 }

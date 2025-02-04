@@ -1,6 +1,6 @@
 <p-dialog
   [visible]="isVisible()"
-  (visibleChange)="onHide.emit()"
+  (visibleChange)="hide()"
   [modal]="true"
   [closeOnEscape]="true"
   header="Delete confirmation"
@@ -12,16 +12,17 @@
     <p-button
       [outlined]="true"
       label="Cancel"
-      (onClick)="onHide.emit()"
+      (onClick)="hide()"
       styleClass="w-full"
     />
     <p-button
+      data-testId="confirm-button"
       severity="danger"
       [loading]="loading()"
       label="Delete"
       type="submit"
       styleClass="w-full"
-      (onClick)="onDelete.emit()"
+      (onClick)="delete()"
     />
   </div>
 </p-dialog>

@@ -26,9 +26,9 @@
       <lib-address-information
         [address]="address"
         [isActive]="address.id === selectedAddressId()"
-        (onEdit)="showForm($event)"
-        (onSelect)="selectAddress($event)"
-        (onDelete)="showDeleteDialog($event)"
+        (onEdit)="showForm(address)"
+        (onSelect)="selectAddress(address)"
+        (onDelete)="showDeleteDialog(address)"
       />
     }
     <p-button

@@ -27,11 +27,7 @@ export class BooksGridComponent {
   public favouriteBooks = input.required<Book[]>();
   displayOneRow = input<boolean>(false);
 
-  public skeleconts = computed(() => new Array(this.skeletonsCount()));
-
-  public errors = computed(() =>
-    typeof this.error() === 'string' ? [this.error()] : this.error(),
-  );
+  public skeletons = computed(() => new Array(this.skeletonsCount()));
 
   public addToCartEvent = output<Book>();
   onRetry = output<void>();
