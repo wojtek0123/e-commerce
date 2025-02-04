@@ -13,7 +13,7 @@ import { UserAddress } from '@e-commerce/shared/api-models';
 import { OrderProcessItemDirective } from '@e-commerce/client-web/shared/utils';
 import {
   AddressInformationComponent,
-  DeleteAddressConfirmationDialogComponent,
+  ConfirmationDialogComponent,
   ErrorAndRetryMessageComponent,
 } from '@e-commerce/client-web/shared/ui';
 import { DialogModule } from 'primeng/dialog';
@@ -22,7 +22,6 @@ import { delay } from 'rxjs';
 
 @Component({
   selector: 'lib-delivery-address',
-  standalone: true,
   imports: [
     UserAddressFormComponent,
     SectionWrapperComponent,
@@ -30,7 +29,7 @@ import { delay } from 'rxjs';
     SkeletonModule,
     OrderProcessItemDirective,
     AddressInformationComponent,
-    DeleteAddressConfirmationDialogComponent,
+    ConfirmationDialogComponent,
     DialogModule,
     ErrorAndRetryMessageComponent,
   ],

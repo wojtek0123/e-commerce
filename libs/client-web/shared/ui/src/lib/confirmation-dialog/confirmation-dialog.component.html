@@ -1,28 +1,28 @@
 <p-dialog
   [visible]="isVisible()"
-  (visibleChange)="hide()"
+  (visibleChange)="cancel()"
   [modal]="true"
   [closeOnEscape]="true"
-  header="Delete confirmation"
+  [header]="header()"
 >
-  <div>
-    Are you sure you want to <strong>pernamently</strong> delete this address?
-  </div>
+  <ng-content />
   <div class="grid grid-cols-2 gap-4 mt-4">
     <p-button
+      data-testId="cancel-button"
+      severity="secondary"
       [outlined]="true"
       label="Cancel"
-      (onClick)="hide()"
+      (onClick)="cancel()"
       styleClass="w-full"
     />
     <p-button
       data-testId="confirm-button"
-      severity="danger"
+      severity="secondary"
       [loading]="loading()"
-      label="Delete"
+      label="Confirm"
       type="submit"
       styleClass="w-full"
-      (onClick)="delete()"
+      (onClick)="confirm()"
     />
   </div>
 </p-dialog>

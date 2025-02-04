@@ -11,7 +11,7 @@ import {
 import { AddressStore } from '@e-commerce/client-web/account/data-access';
 import {
   AddressInformationComponent,
-  DeleteAddressConfirmationDialogComponent,
+  ConfirmationDialogComponent,
 } from '@e-commerce/client-web/shared/ui';
 import { SkeletonModule } from 'primeng/skeleton';
 import { UserAddress } from '@e-commerce/shared/api-models';
@@ -22,7 +22,6 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 @Component({
   selector: 'lib-addresses',
-  standalone: true,
   imports: [
     SkeletonModule,
     AddressInformationComponent,
@@ -30,7 +29,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
     AccountDataAddressFormComponent,
     ButtonModule,
     ConfirmDialogModule,
-    DeleteAddressConfirmationDialogComponent,
+    ConfirmationDialogComponent,
   ],
   templateUrl: './addresses.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

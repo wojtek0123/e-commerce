@@ -62,8 +62,11 @@
   <lib-account-data-address-form class="w-full" />
 </p-dialog>
 
-<lib-delete-address-confirmation-dialog
+<lib-confirmation-dialog
   [isVisible]="isDeleteDialogVisible()"
-  (onHide)="hideDeleteDialog()"
-  (onDelete)="delete()"
-/>
+  header="Address deletion"
+  (onCancel)="hideDeleteDialog()"
+  (onConfirm)="delete()"
+>
+  <div>Are you sure you want to <strong>delete</strong> this address?</div>
+</lib-confirmation-dialog>

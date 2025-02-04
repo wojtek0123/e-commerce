@@ -40,11 +40,14 @@
   }
 </lib-section-wrapper>
 
-<lib-delete-address-confirmation-dialog
+<lib-confirmation-dialog
+  header="Address deletion"
   [isVisible]="isDeleteDialogVisible()"
-  (onHide)="hideDeleteDialog()"
-  (onDelete)="delete()"
-/>
+  (onCancel)="hideDeleteDialog()"
+  (onConfirm)="delete()"
+>
+  <div>Are you sure you want to <strong>delete</strong> this address?</div>
+</lib-confirmation-dialog>
 
 <p-dialog
   header="Address form"
