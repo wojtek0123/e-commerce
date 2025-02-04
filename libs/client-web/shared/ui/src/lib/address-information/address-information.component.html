@@ -3,15 +3,16 @@
     libOrderProcessItem
     [isActive]="isActive()"
     class="flex flex-col items-start !justify-start gap-4 pr-14"
+    [class.pointer-events-none]="!clickable()"
     (click)="select()"
   >
-    <div class="flex gap-4 justify-start">
+    <span class="flex gap-4 justify-start">
       <span class="text-sm text-muted-color font-semibold w-24 text-start">
         Phone
       </span>
       <span class="text-base !text-start">{{ address()?.phone }}</span>
-    </div>
-    <div class="flex gap-4 justify-start">
+    </span>
+    <span class="flex gap-4 justify-start">
       <span class="text-sm text-muted-color font-semibold w-24 text-start">
         Name
       </span>
@@ -19,12 +20,12 @@
         {{ address()?.firstName }}
         {{ address()?.lastName }}
       </span>
-    </div>
-    <div class="flex gap-4">
+    </span>
+    <span class="flex gap-4">
       <span class="text-sm text-muted-color font-semibold min-w-24 text-start">
         Address
       </span>
-      <div class="flex flex-col items-start">
+      <span class="flex flex-col items-start">
         <span class="text-base !text-start">
           {{ address()?.street }}
           {{ address()?.homeNumber }}
@@ -32,12 +33,18 @@
           {{ address()?.postcode }}, {{ address()?.city }},
           {{ address()?.country?.name }}
         </span>
-      </div>
-    </div>
+      </span>
+    </span>
   </button>
   <div class="flex flex-col gap-4 absolute top-1/2 right-2 -translate-y-1/2">
-    <p-button ariaLabel="Edit address" icon="pi pi-pencil" (onClick)="edit()" />
     <p-button
+      data-testId="edit-button"
+      ariaLabel="Edit address"
+      icon="pi pi-pencil"
+      (onClick)="edit()"
+    />
+    <p-button
+      data-testId="delete-button"
       ariaLabel="Delete address"
       icon="pi pi-trash"
       (onClick)="delete()"

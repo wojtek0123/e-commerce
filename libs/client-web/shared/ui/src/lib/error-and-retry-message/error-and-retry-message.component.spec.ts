@@ -12,6 +12,7 @@ describe('ErrorAndRetryMessageComponent', () => {
 
     fixture = TestBed.createComponent(ErrorAndRetryMessageComponent);
     component = fixture.componentInstance;
+    fixture.componentRef.setInput('error', '');
     fixture.detectChanges();
   });
 

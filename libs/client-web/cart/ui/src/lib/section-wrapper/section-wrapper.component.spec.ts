@@ -19,4 +19,13 @@ describe('SectionWrapperComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should display header', () => {
+    fixture.componentRef.setInput('header', 'BookStash');
+    fixture.detectChanges();
+
+    const headerElement = fixture.nativeElement.querySelector('h3');
+
+    expect(headerElement.textContent).toMatch(/BookStash/g);
+  });
 });

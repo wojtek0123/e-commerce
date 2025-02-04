@@ -36,9 +36,10 @@
   } @else {
     @for (address of addresses(); track address.id) {
       <lib-address-information
+        [clickable]="false"
         [address]="address"
-        (onEdit)="showForm($event)"
-        (onDelete)="showDeleteDialog($event)"
+        (onEdit)="showForm(address)"
+        (onDelete)="showDeleteDialog(address)"
       />
     } @empty {
       <div class="flex items-center flex-col text-center">

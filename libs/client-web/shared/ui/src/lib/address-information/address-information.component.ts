@@ -16,34 +16,23 @@ import { ButtonModule } from 'primeng/button';
   imports: [OrderProcessItemDirective, ButtonModule],
 })
 export class AddressInformationComponent {
-  public isActive = input<boolean>();
-  public address = input.required<UserAddress | null>();
+  isActive = input<boolean>();
+  address = input.required<UserAddress | null>();
+  clickable = input(true);
 
-  public onSelect = output<UserAddress>();
-  public onEdit = output<UserAddress>();
-  public onDelete = output<UserAddress>();
+  onSelect = output<void>();
+  onEdit = output<void>();
+  onDelete = output<void>();
 
-  public select() {
-    const address = this.address();
-
-    if (!address) return;
-
-    this.onSelect.emit(address);
+  select() {
+    this.onSelect.emit();
   }
 
-  public edit() {
-    const address = this.address();
-
-    if (!address) return;
-
-    this.onEdit.emit(address);
+  edit() {
+    this.onEdit.emit();
   }
 
-  public delete() {
-    const address = this.address();
-
-    if (!address) return;
-
-    this.onDelete.emit(address);
+  delete() {
+    this.onDelete.emit();
   }
 }

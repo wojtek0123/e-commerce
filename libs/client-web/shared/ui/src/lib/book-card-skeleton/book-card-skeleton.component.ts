@@ -1,15 +1,13 @@
-import { Component, ChangeDetectionStrategy, HostBinding } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { SkeletonModule } from 'primeng/skeleton';
 
 @Component({
   selector: 'lib-book-card-skeleton',
-  standalone: true,
   imports: [SkeletonModule],
   templateUrl: './book-card-skeleton.component.html',
-  styleUrl: './book-card-skeleton.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'max-w-[34rem] w-full',
+  },
 })
-export class BookCardSkeletonComponent {
-  @HostBinding('style.maxWidth') maxWidth = '34rem';
-  @HostBinding('style.width') width = '100%';
-}
+export class BookCardSkeletonComponent {}
