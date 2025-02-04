@@ -10,8 +10,15 @@ export class PublishersService {
     return this.prisma.publisher.create({ data });
   }
 
-  findAll() {
-    return this.prisma.publisher.findMany();
+  findAll(opts: { nameLike?: string }) {
+    return this.prisma.publisher.findMany({
+      where: {
+        name: {
+          contains: opts.nameLike ? opts.nameLike : '',
+          mode: 'insensitive',
+        },
+      },
+    });
   }
 
   findOne(where: Prisma.PublisherWhereUniqueInput) {
