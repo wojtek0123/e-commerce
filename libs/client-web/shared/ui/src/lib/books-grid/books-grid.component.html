@@ -22,14 +22,20 @@
       </div>
     } @else if (books()) {
       @for (book of books(); track book.id) {
-        <lib-book-card
-          [loading]="loading()"
-          [book]="book"
-          [awaitingBookIdsToAddToCart]="pendingBookIds()"
-          [favouriteBooks]="favouriteBooks()"
-          (onAddToCart)="addToCartEvent.emit($event)"
-          (onAddToFavourite)="addToFavourite($event)"
-        />
+        @defer (on viewport) {
+          <lib-book-card
+            [loading]="loading()"
+            [book]="book"
+            [awaitingBookIdsToAddToCart]="pendingBookIds()"
+            [favouriteBooks]="favouriteBooks()"
+            (onAddToCart)="addToCartEvent.emit($event)"
+            (onAddToFavourite)="addToFavourite($event)"
+          />
+        } @placeholder {
+          <lib-book-card-skeleton />
+        } @loading {
+          <lib-book-card-skeleton />
+        }
       } @empty {
         <div
           data-testId="no-books"

@@ -159,8 +159,9 @@ export const BookStore = signalStore(
       ),
     ),
     isUserAddedReview: (userId: User['id']) => {
+      console.log(userId);
       return !!getState(store).book?.reviews.find(
-        (review) => review.user.id === userId,
+        (review) => review.userId === userId,
       );
     },
     toggleReviewDialog: () => {
