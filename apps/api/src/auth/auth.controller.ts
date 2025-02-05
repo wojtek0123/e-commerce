@@ -9,7 +9,6 @@ import {
 import { AuthDto } from './dto/auth.dto';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
-import { AccessTokenGuard } from '../common/guards/access-token.guard';
 import { RefreshTokenGuard } from '../common/guards/refresh-token.guard';
 import { User } from '../users/entities/user.entity';
 import { TokenDto } from './dto/token.dto';

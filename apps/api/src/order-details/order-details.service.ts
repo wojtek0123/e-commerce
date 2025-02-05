@@ -58,7 +58,6 @@ export class OrderDetailsService {
         const cartItem = shoppingSession.cartItems.find(
           (ci) => ci.bookId === pi.book.id,
         );
-        if (!cartItem) return;
 
         const newQuantity = pi.quantity - cartItem.quantity;
 

@@ -5,7 +5,7 @@ export interface BookReview {
   rating: number;
   name: string;
   message?: string;
-  user: User;
+  userId: User['id'];
   createdAt: string;
   updatedAt: string;
 }
