@@ -14,7 +14,7 @@
       } @else {
         @for (cartItem of cartItems(); track cartItem.book.id) {
           <lib-cart-item
-            [item]="cartItem"
+            [cartItem]="cartItem"
             (onDelete)="remove(cartItem.book.id)"
             (onUpdateQuantity)="updateQuantity($event, cartItem.book.id)"
           />

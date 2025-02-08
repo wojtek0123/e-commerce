@@ -27,7 +27,7 @@
     >
       @for (item of cartItems(); track item.book.id) {
         <lib-cart-item
-          [item]="item"
+          [cartItem]="item"
           (onUpdateQuantity)="updateQuantity($event, item.book.id)"
           (onDelete)="remove(item.book.id)"
         />

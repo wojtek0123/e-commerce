@@ -11,8 +11,8 @@
         appendTo="body"
         [preview]="true"
         styleClass="h-full"
-        [src]="item().book.coverImage ?? ''"
-        [alt]="item().book.title + ' cover image'"
+        [src]="cartItem().book.coverImage ?? ''"
+        [alt]="cartItem().book.title + ' cover image'"
       />
     </div>
     <div
@@ -20,14 +20,14 @@
     >
       <a
         class="text-base @md/cart-item:font-bold @lg/cart-item:text-2xl @4xl/book-details:text-3xl"
-        [routerLink]="appRoutePaths.BOOK(item().book.id)"
+        [routerLink]="bookDetailsUrl()"
       >
-        {{ item().book.title }}
+        {{ cartItem().book.title }}
       </a>
 
       <div clas="flex flex-wrap gap-4">
         @for (
-          author of item().book.authors;
+          author of cartItem().book.authors;
           track author.id;
           let last = $last
         ) {
@@ -46,7 +46,7 @@
     <span
       class="@md/cart-item:font-bold @lg/cart-item:text-xl @4xl/cart-item:text-3xl"
     >
-      {{ item().book.price | currency: 'USD' }}
+      {{ cartItem().book.price | currency: 'USD' }}
     </span>
     <div class="flex items-center @lg/cart-item:gap-3">
       @if (quantity() === 1) {

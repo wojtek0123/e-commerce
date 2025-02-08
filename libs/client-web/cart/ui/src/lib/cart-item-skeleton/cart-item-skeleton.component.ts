@@ -32,7 +32,6 @@ import { SkeletonModule } from 'primeng/skeleton';
       </div>
     </div>
   `,
-  standalone: true,
   imports: [SkeletonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {

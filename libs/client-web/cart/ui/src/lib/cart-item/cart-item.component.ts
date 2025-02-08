@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   inject,
   input,
   linkedSignal,
@@ -31,13 +32,18 @@ export const WAIT_TIME = 300 as const;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CartItemComponent {
-  item = input.required<CartItemBase>();
-  appRoutePaths = inject(APP_ROUTE_PATHS_TOKEN);
+  #appRoutePaths = inject(APP_ROUTE_PATHS_TOKEN);
+
+  cartItem = input.required<CartItemBase>();
 
   onUpdateQuantity = output<number>();
   onDelete = output<void>();
 
-  quantity = linkedSignal(() => this.item().quantity);
+  bookDetailsUrl = computed(() =>
+    this.#appRoutePaths.BOOK(this.cartItem().book.id),
+  );
+
+  quantity = linkedSignal(() => this.cartItem().quantity);
   #timer?: ReturnType<typeof setTimeout>;
 
   remove() {

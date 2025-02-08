@@ -10,7 +10,6 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 @Component({
   selector: 'lib-toggleable-content',
   templateUrl: './toggleable-content.component.html',
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     trigger('contentExpansion', [
@@ -27,5 +26,5 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
   ],
 })
 export class ToggleableContentComponent {
-  public isExpanded = input.required<boolean>();
+  isExpanded = input.required<boolean>();
 }
