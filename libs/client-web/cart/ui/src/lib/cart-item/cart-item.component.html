@@ -49,57 +49,30 @@
       {{ item().book.price | currency: 'USD' }}
     </span>
     <div class="flex items-center @lg/cart-item:gap-3">
-      @if (item().quantity === 1) {
+      @if (quantity() === 1) {
         <p-button
+          data-testId="remove-btn"
           (onClick)="remove()"
           [text]="true"
           ariaLabel="Remove"
           icon="pi pi-trash"
-          size="small"
-          class="@xl/cart-item:hidden"
-        />
-        <p-button
-          ariaLabel="Remove"
-          (onClick)="remove()"
-          [text]="true"
-          icon="pi pi-trash"
-          size="large"
-          class="hidden @xl/cart-item:block"
         />
       } @else {
         <p-button
+          data-testId="decrease-btn"
           ariaLabel="Decrease quantity"
           (onClick)="decrease()"
           [text]="true"
           icon="pi pi-minus"
-          size="small"
-          class="@xl/cart-item:hidden"
-        />
-        <p-button
-          ariaLabel="Decrease quantity"
-          (onClick)="decrease()"
-          [text]="true"
-          icon="pi pi-minus"
-          size="large"
-          class="hidden @xl/cart-item:block"
         />
       }
-      <span>{{ item().quantity }}</span>
+      <span>{{ quantity() }}</span>
       <p-button
+        data-testId="increase-btn"
         ariaLabel="Increase quantity"
         (onClick)="increase()"
         [text]="true"
         icon="pi pi-plus"
-        size="small"
-        class="@xl/cart-item:hidden"
-      />
-      <p-button
-        ariaLabel="Increase quantity"
-        (onClick)="increase()"
-        [text]="true"
-        icon="pi pi-plus"
-        size="large"
-        class="hidden @xl/cart-item:block"
       />
     </div>
   </div>

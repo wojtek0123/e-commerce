@@ -15,8 +15,8 @@
         @for (cartItem of cartItems(); track cartItem.book.id) {
           <lib-cart-item
             [item]="cartItem"
-            (onDelete)="remove($event)"
-            (onUpdateQuantity)="updateQuantity($event)"
+            (onDelete)="remove(cartItem.book.id)"
+            (onUpdateQuantity)="updateQuantity($event, cartItem.book.id)"
           />
         } @empty {
           <div class="flex flex-col items-center justify-center xl:mt-20">
