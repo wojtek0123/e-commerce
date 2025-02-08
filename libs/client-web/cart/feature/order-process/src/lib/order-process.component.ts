@@ -5,7 +5,7 @@ import {
   CartItemComponent,
   CartItemSkeletonComponent,
 } from '@e-commerce/client-web/cart/ui';
-import { Book, CartItem } from '@e-commerce/shared/api-models';
+import { Book, CartItem, CartItemBase } from '@e-commerce/shared/api-models';
 import { ButtonModule } from 'primeng/button';
 import { StepsModule } from 'primeng/steps';
 import { ToastModule } from 'primeng/toast';
@@ -38,17 +38,14 @@ export class OrderProcessComponent {
   public cartItemsLoading = this.cartStore.loading;
   public total = this.cartStore.total;
 
-  public updateQuantity({
-    book,
-    quantity,
-  }: {
-    quantity: CartItem['quantity'];
-    book: Book;
-  }) {
-    this.cartStore.updateQuantity({ bookId: book.id, quantity });
+  public updateQuantity(
+    quantity: CartItemBase['quantity'],
+    bookId: Book['id'],
+  ) {
+    this.cartStore.updateQuantity({ bookId, quantity });
   }
 
-  public remove(arg: { bookId: Book['id'] }) {
-    this.cartStore.removeBook(arg);
+  public remove(bookId: Book['id']) {
+    this.cartStore.removeBook({ bookId });
   }
 }

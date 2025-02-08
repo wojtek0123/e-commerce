@@ -13,7 +13,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ToastModule } from 'primeng/toast';
 import { CartItemComponent } from '@e-commerce/client-web/cart/ui';
 import { CartStore } from '@e-commerce/client-web/cart/data-access';
-import { Book } from '@e-commerce/shared/api-models';
+import { Book, CartItemBase } from '@e-commerce/shared/api-models';
 import { OverlayBadgeModule } from 'primeng/overlaybadge';
 import { DrawerModule } from 'primeng/drawer';
 import { APP_ROUTE_PATHS_TOKEN } from '@e-commerce/client-web/shared/app-config';
@@ -53,12 +53,12 @@ export class CartSidebarComponent {
   error = this.#cartStore.error;
   visible = this.#cartStore.isDrawerVisible;
 
-  updateQuantity({ book, quantity }: { book: Book; quantity: number }) {
-    this.#cartStore.updateQuantity({ bookId: book.id, quantity });
+  updateQuantity(quantity: CartItemBase['quantity'], bookId: Book['id']) {
+    this.#cartStore.updateQuantity({ bookId, quantity });
   }
 
-  remove(args: { bookId: Book['id'] }) {
-    this.#cartStore.removeBook(args);
+  remove(bookId: Book['id']) {
+    this.#cartStore.removeBook({ bookId });
   }
 
   openDrawer() {
