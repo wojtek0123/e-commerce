@@ -60,11 +60,12 @@
       </lib-form-field>
       <lib-form-field>
         <lib-label idFor="rating">Rating *</lib-label>
-        <p-rating id="rating" [formControl]="form.controls.rating" />
+        <lib-rating-input
+          [formControl]="form.controls.rating"
+          [invalid]="form.controls.rating.invalid && form.controls.rating.dirty"
+        />
         @if (
-          (form.controls.rating.errors?.['required'] ||
-            form.controls.rating.errors?.['min']) &&
-          form.controls.rating.dirty
+          form.controls.rating.errors?.['min'] && form.controls.rating.dirty
         ) {
           <p-message libErrorMessage>Rating is required</p-message>
         }

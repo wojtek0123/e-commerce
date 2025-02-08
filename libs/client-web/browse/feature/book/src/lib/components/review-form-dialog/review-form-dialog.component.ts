@@ -28,6 +28,7 @@ import { MessageModule } from 'primeng/message';
 import { InputTextModule } from 'primeng/inputtext';
 import { AuthService } from '@e-commerce/client-web/auth/api';
 import { Router, RouterLink } from '@angular/router';
+import { RatingInputComponent } from '@e-commerce/client-web/shared/ui';
 
 @Component({
   selector: 'lib-review-form-dialog',
@@ -44,6 +45,7 @@ import { Router, RouterLink } from '@angular/router';
     MessageModule,
     InputTextModule,
     RouterLink,
+    RatingInputComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './review-form-dialog.component.html',
@@ -86,8 +88,9 @@ export class ReviewFormDialogComponent implements OnInit {
 
   form = new FormGroup({
     name: new FormControl<string | null>(null, Validators.required),
-    rating: new FormControl<number | null>(0, {
-      validators: [Validators.required, Validators.min(1)],
+    rating: new FormControl<number>(0, {
+      nonNullable: true,
+      validators: [Validators.min(1)],
     }),
     message: new FormControl<string>(''),
   });
