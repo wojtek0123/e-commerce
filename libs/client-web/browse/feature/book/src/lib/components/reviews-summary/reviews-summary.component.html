@@ -7,7 +7,11 @@
         <span class="text-7xl text-primary">{{ averageRating() }}</span>
         <span class="text-muted-color text-3xl">/5</span>
       </span>
-      <p-rating class="mx-auto" [ngModel]="averageRating()" [readonly]="true" />
+      <lib-rating-input
+        class="mx-auto"
+        [rate]="averageRating()"
+        [readonly]="true"
+      />
       <span class="text-muted-color mx-auto">
         ({{ reviews().length }}
         {{ reviews().length > 1 ? 'reviews' : 'review' }})

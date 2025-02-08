@@ -1,22 +1,22 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { DeleteAddressConfirmationDialogComponent } from './delete-confirmation-dialog.component';
+import { ConfirmationDialogComponent } from './confirmation-dialog.component';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { By } from '@angular/platform-browser';
 
 describe('DeleteAddressConfirmationDialogComponent', () => {
-  let component: DeleteAddressConfirmationDialogComponent;
-  let fixture: ComponentFixture<DeleteAddressConfirmationDialogComponent>;
+  let component: ConfirmationDialogComponent;
+  let fixture: ComponentFixture<ConfirmationDialogComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DeleteAddressConfirmationDialogComponent],
+      imports: [ConfirmationDialogComponent],
       providers: [provideAnimations()],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(DeleteAddressConfirmationDialogComponent);
+    fixture = TestBed.createComponent(ConfirmationDialogComponent);
     component = fixture.componentInstance;
-    fixture.componentRef.setInput('isVisible', false);
+    fixture.componentRef.setInput('isVisible', true);
+    fixture.componentRef.setInput('header', 'Confirmation');
     fixture.detectChanges();
   });
 
@@ -48,47 +48,30 @@ describe('DeleteAddressConfirmationDialogComponent', () => {
     expect(divElement).toBeNull();
   });
 
-  // it('should emit value when confirm', () => {
-  //   const { fixture, debugEl } = setup();
-  //   const hostComponent = fixture.componentInstance;
-  //   jest.spyOn(hostComponent, 'delete');
-  //
-  //   const button = debugEl.query(By.css('[data-testId="confirm-button"]'));
-  //
-  //   button.componentInstance.onClick.emit();
-  //
-  //   fixture.detectChanges();
-  //
-  //   expect(hostComponent.delete).toHaveBeenCalled();
-  // });
+  it('should emit value when confirm', () => {
+    const spy = jest.spyOn(component.onConfirm, 'emit');
+
+    const button = fixture.debugElement.query(
+      By.css('[data-testId="confirm-btn"]'),
+    );
+
+    button.triggerEventHandler('onClick', null);
+
+    fixture.detectChanges();
+
+    expect(spy).toHaveBeenCalledTimes(1);
+  });
+
+  it('should emit value when cancel', () => {
+    const spy = jest.spyOn(component.onCancel, 'emit');
+
+    const button = fixture.debugElement.query(
+      By.css('[data-testId="cancel-btn"]'),
+    );
+
+    button.triggerEventHandler('onClick', null);
+
+    fixture.detectChanges();
+    expect(spy).toHaveBeenCalledTimes(1);
+  });
 });
-
-function setup() {
-  @Component({
-    imports: [DeleteAddressConfirmationDialogComponent],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    template: `
-      <lib-delete-address-confirmation-dialog
-        [isVisible]="isVisible()"
-        (onDelete)="delete()"
-        (onHide)="hide()"
-      />
-    `,
-  })
-  class HostComponent {
-    isVisible = signal(false);
-
-    hide() {}
-
-    delete() {}
-  }
-
-  const fixture = TestBed.createComponent(HostComponent);
-  const debugEl = fixture.debugElement.query(
-    By.directive(DeleteAddressConfirmationDialogComponent),
-  );
-
-  fixture.detectChanges();
-
-  return { fixture, debugEl };
-}

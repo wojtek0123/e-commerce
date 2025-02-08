@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { BookStore } from '@e-commerce/client-web/browse/data-access';
 import { RatingModule } from 'primeng/rating';
 import { ReviewFormDialogComponent } from '../review-form-dialog/review-form-dialog.component';
+import { RatingInputComponent } from '@e-commerce/client-web/shared/ui';
 
 @Component({
   selector: 'lib-reviews-summary',
@@ -18,6 +19,7 @@ import { ReviewFormDialogComponent } from '../review-form-dialog/review-form-dia
     KeyValuePipe,
     NgClass,
     ReviewFormDialogComponent,
+    RatingInputComponent,
   ],
   templateUrl: './reviews-summary.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -35,7 +37,7 @@ export class ReviewsSummaryComponent {
 
     if (reviews.length === 0) return 0;
 
-    return (
+    return +(
       reviews.reduce((acc, curr) => acc + curr.rating, 0) / reviews.length
     ).toFixed(1);
   });
