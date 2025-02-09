@@ -4,6 +4,7 @@ import { shellRouter as authRouter } from '@e-commerce/admin-dashboard/auth/feat
 import { useAuthService } from '@e-commerce/admin-dashboard/auth/api';
 import MainLayout from '../views/main-layout.vue';
 import { categoriesShellRoutes } from '@e-commerce/admin-dashboard/category/feature/shell';
+import { homeShellRoutes } from '@e-commerce/admin-dashboard/home/feature/shell';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -13,6 +14,11 @@ const router = createRouter({
       component: MainLayout,
       redirect: { name: 'book-list' },
       children: [
+        {
+          path: '',
+          name: 'home',
+          children: homeShellRoutes,
+        },
         {
           path: '/books',
           name: 'books',
