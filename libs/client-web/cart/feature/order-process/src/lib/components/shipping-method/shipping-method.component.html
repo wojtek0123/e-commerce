@@ -4,7 +4,12 @@
       <p-skeleton libOrderProcessItem width="100%" height="3rem" />
       <p-skeleton libOrderProcessItem width="100%" height="3rem" />
     } @else if (error()) {
-      <div>{{ error() }}</div>
+      <lib-error-and-retry-message
+        [error]="error()"
+        size="small"
+        unableToLoad="shipping methods"
+        (onRetry)="getShippingMethods()"
+      />
     } @else if (shippings().length > 0) {
       @for (shipping of shippings(); track shipping.id) {
         <button

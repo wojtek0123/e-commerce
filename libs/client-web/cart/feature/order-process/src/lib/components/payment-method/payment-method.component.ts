@@ -18,10 +18,10 @@ import { SixDigitCodeFormComponent } from './six-digit-code-form/six-digit-code-
 import { PaymentMethod } from '@e-commerce/shared/api-models';
 import { OrderProcessItemDirective } from '@e-commerce/client-web/shared/utils';
 import { DialogModule } from 'primeng/dialog';
+import { ErrorAndRetryMessageComponent } from '@e-commerce/client-web/shared/ui';
 
 @Component({
   selector: 'lib-payment-method',
-  standalone: true,
   imports: [
     RadioButtonModule,
     ButtonModule,
@@ -33,35 +33,39 @@ import { DialogModule } from 'primeng/dialog';
     SixDigitCodeFormComponent,
     DialogModule,
     ToggleableContentComponent,
+    ErrorAndRetryMessageComponent,
   ],
   templateUrl: './payment-method.component.html',
   styleUrl: './payment-method.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PaymentMethodComponent {
-  private readonly paymentStore = inject(PaymentStore);
+  #paymentStore = inject(PaymentStore);
 
-  public readonly creditCardType: Extract<PaymentMethod, 'CREDIT_CARD'> =
-    'CREDIT_CARD';
-  public readonly sixDigitCodeType: Extract<PaymentMethod, 'SIX_DIGIT_CODE'> =
-    'SIX_DIGIT_CODE';
-  public selectedPaymentMethod = this.paymentStore.selectedPayment;
-  public creditCard = this.paymentStore.creditCard;
-  public loading = this.paymentStore.creditCard.loading;
-  public payments = signal<PaymentMethod[]>(['CREDIT_CARD', 'SIX_DIGIT_CODE']);
+  creditCardType: Extract<PaymentMethod, 'CREDIT_CARD'> = 'CREDIT_CARD';
+  sixDigitCodeType: Extract<PaymentMethod, 'SIX_DIGIT_CODE'> = 'SIX_DIGIT_CODE';
+  selectedPaymentMethod = this.#paymentStore.selectedPayment;
+  creditCard = this.#paymentStore.creditCard;
+  loading = this.#paymentStore.creditCard.loading;
+  error = this.#paymentStore.creditCard.error;
+  payments = signal<PaymentMethod[]>(['CREDIT_CARD', 'SIX_DIGIT_CODE']);
 
-  public isCreditCardFormVisible = this.paymentStore.isCreditCardFormVisible;
-  public creditCardFormType = this.paymentStore.creditCardFormType;
+  isCreditCardFormVisible = this.#paymentStore.isCreditCardFormVisible;
+  creditCardFormType = this.#paymentStore.creditCardFormType;
 
-  public hideCreditCardForm() {
-    this.paymentStore.hideCreditCardForm();
+  hideCreditCardForm() {
+    this.#paymentStore.hideCreditCardForm();
   }
 
-  public showCreditCardForm(type: 'add' | 'update') {
-    this.paymentStore.showCreditCardForm(type);
+  showCreditCardForm(type: 'add' | 'update') {
+    this.#paymentStore.showCreditCardForm(type);
   }
 
-  public selectPaymentMethod(paymentMethod: PaymentMethod) {
-    this.paymentStore.selectPaymentMethod(paymentMethod);
+  selectPaymentMethod(paymentMethod: PaymentMethod) {
+    this.#paymentStore.selectPaymentMethod(paymentMethod);
+  }
+
+  getCreditCard() {
+    this.#paymentStore.getCreditCard();
   }
 }

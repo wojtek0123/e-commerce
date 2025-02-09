@@ -5,7 +5,7 @@ import {
   CartItemComponent,
   CartItemSkeletonComponent,
 } from '@e-commerce/client-web/cart/ui';
-import { Book, CartItem, CartItemBase } from '@e-commerce/shared/api-models';
+import { Book, CartItemBase } from '@e-commerce/shared/api-models';
 import { ButtonModule } from 'primeng/button';
 import { StepsModule } from 'primeng/steps';
 import { ToastModule } from 'primeng/toast';
@@ -15,7 +15,6 @@ import { APP_ROUTE_PATHS_TOKEN } from '@e-commerce/client-web/shared/app-config'
 
 @Component({
   selector: 'lib-order-process',
-  standalone: true,
   imports: [
     StepsModule,
     ToastModule,
@@ -31,21 +30,20 @@ import { APP_ROUTE_PATHS_TOKEN } from '@e-commerce/client-web/shared/app-config'
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OrderProcessComponent {
-  private readonly cartStore = inject(CartStore);
-  protected readonly appRoutePaths = inject(APP_ROUTE_PATHS_TOKEN);
+  #cartStore = inject(CartStore);
+  #appRoutePaths = inject(APP_ROUTE_PATHS_TOKEN);
 
-  public cartItems = this.cartStore.cartItems;
-  public cartItemsLoading = this.cartStore.loading;
-  public total = this.cartStore.total;
+  booksUrl = this.#appRoutePaths.BOOKS();
 
-  public updateQuantity(
-    quantity: CartItemBase['quantity'],
-    bookId: Book['id'],
-  ) {
-    this.cartStore.updateQuantity({ bookId, quantity });
+  cartItems = this.#cartStore.cartItems;
+  cartItemsLoading = this.#cartStore.loading;
+  total = this.#cartStore.total;
+
+  updateQuantity(quantity: CartItemBase['quantity'], bookId: Book['id']) {
+    this.#cartStore.updateQuantity({ bookId, quantity });
   }
 
-  public remove(bookId: Book['id']) {
-    this.cartStore.removeBook({ bookId });
+  remove(bookId: Book['id']) {
+    this.#cartStore.removeBook({ bookId });
   }
 }

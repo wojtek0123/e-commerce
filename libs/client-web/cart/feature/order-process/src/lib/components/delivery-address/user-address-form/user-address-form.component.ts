@@ -11,23 +11,23 @@ import { AddressFormComponent } from '@e-commerce/client-web/shared/feature';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserAddressFormComponent {
-  private readonly addressStore = inject(AddressStore);
+  #addressStore = inject(AddressStore);
 
-  public loading = this.addressStore.loading;
+  loading = this.#addressStore.loading;
 
-  public formType = this.addressStore.formType;
-  public isFormVisible = this.addressStore.formVisibility;
-  public updatingAddress = this.addressStore.updatingAddress;
+  formType = this.#addressStore.formType;
+  isFormVisible = this.#addressStore.formVisibility;
+  updatingAddress = this.#addressStore.updatingAddress;
 
-  public cancel() {
-    this.addressStore.hideForm();
+  cancel() {
+    this.#addressStore.hideForm();
   }
 
   add(formValues: CreateUserAddressBody) {
-    this.addressStore.addAddress({ data: formValues });
+    this.#addressStore.addAddress({ data: formValues });
   }
 
   edit(formValues: CreateUserAddressBody) {
-    this.addressStore.updateAddress({ data: formValues });
+    this.#addressStore.updateAddress({ data: formValues });
   }
 }

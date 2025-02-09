@@ -7,10 +7,10 @@ import { SectionWrapperComponent } from '@e-commerce/client-web/cart/ui';
 import { SkeletonModule } from 'primeng/skeleton';
 import { OrderProcessItemDirective } from '@e-commerce/client-web/shared/utils';
 import { ShippingMethod } from '@e-commerce/shared/api-models';
+import { ErrorAndRetryMessageComponent } from '@e-commerce/client-web/shared/ui';
 
 @Component({
   selector: 'lib-shipping-method',
-  standalone: true,
   imports: [
     RadioButtonModule,
     ReactiveFormsModule,
@@ -18,6 +18,7 @@ import { ShippingMethod } from '@e-commerce/shared/api-models';
     SectionWrapperComponent,
     SkeletonModule,
     OrderProcessItemDirective,
+    ErrorAndRetryMessageComponent,
   ],
   templateUrl: './shipping-method.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -32,5 +33,9 @@ export class ShippingMethodComponent {
 
   selectShipping(shipping: ShippingMethod) {
     this.#shippingStore.selectShipping(shipping);
+  }
+
+  getShippingMethods() {
+    this.#shippingStore.getShippings();
   }
 }

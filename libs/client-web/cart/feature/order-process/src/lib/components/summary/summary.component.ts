@@ -22,7 +22,6 @@ import { Message } from 'primeng/message';
 
 @Component({
   selector: 'lib-summary',
-  standalone: true,
   imports: [
     CurrencyPipe,
     ButtonModule,
@@ -37,43 +36,39 @@ import { Message } from 'primeng/message';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SummaryComponent {
-  private readonly orderProcessStore = inject(OrderProcessStore);
-  private readonly cartStore = inject(CartStore);
-  private readonly addressStore = inject(AddressStore);
-  private readonly shippingStore = inject(ShippingStore);
-  private readonly paymentStore = inject(PaymentStore);
+  #orderProcessStore = inject(OrderProcessStore);
+  #cartStore = inject(CartStore);
+  #addressStore = inject(AddressStore);
+  #shippingStore = inject(ShippingStore);
+  #paymentStore = inject(PaymentStore);
 
-  public cartItemsTotal = this.cartStore.total;
-  public shippingMethodPrice = computed(
-    () => this.shippingStore.selectedShipping()?.price ?? 0,
+  cartItemsTotal = this.#cartStore.total;
+  shippingMethodPrice = computed(
+    () => this.#shippingStore.selectedShipping()?.price ?? 0,
   );
-  public total = computed(
-    () => this.cartItemsTotal() + this.shippingMethodPrice(),
-  );
-  public isCartEmpty = computed(() => this.cartStore.cartItems().length === 0);
+  total = computed(() => this.cartItemsTotal() + this.shippingMethodPrice());
+  isCartEmpty = computed(() => this.#cartStore.cartItems().length === 0);
 
-  public selectedUserAddress = this.addressStore.selectedAddress;
-  public selectedShippingMethod = this.shippingStore.selectedShipping;
-  public selectedPaymentMethod = this.paymentStore.selectedPayment;
-  public initialLoading = computed(
+  selectedUserAddress = this.#addressStore.selectedAddress;
+  selectedShippingMethod = this.#shippingStore.selectedShipping;
+  selectedPaymentMethod = this.#paymentStore.selectedPayment;
+  initialLoading = computed(
     () =>
-      this.addressStore.loading() ||
-      this.shippingStore.loading() ||
-      this.paymentStore.creditCard.loading(),
+      this.#addressStore.loading() ||
+      this.#shippingStore.loading() ||
+      this.#paymentStore.creditCard.loading(),
   );
-  public isSixDigitCodeInvalid = computed(
+  isSixDigitCodeInvalid = computed(
     () =>
-      this.paymentStore.sixDigitCode()?.length !== 6 &&
+      this.#paymentStore.sixDigitCode()?.length !== 6 &&
       this.selectedPaymentMethod() === 'SIX_DIGIT_CODE',
   );
-  public isAddressSelected = computed(
-    () => !!this.addressStore.selectedAddress(),
-  );
-  public creditCard = this.paymentStore.creditCard.data;
-  public isPaymentInvalid = signal(false);
-  public checkoutLoading = this.orderProcessStore.loading;
+  isAddressSelected = computed(() => !!this.#addressStore.selectedAddress());
+  creditCard = this.#paymentStore.creditCard.data;
+  isPaymentInvalid = signal(false);
+  checkoutLoading = this.#orderProcessStore.loading;
 
-  private orderProcessErrors = computed(() => [
+  orderProcessErrors = computed(() => [
     !this.selectedUserAddress(),
     !this.selectedShippingMethod(),
     !this.selectedPaymentMethod(),
@@ -81,9 +76,9 @@ export class SummaryComponent {
     this.isCartEmpty(),
   ]);
 
-  protected submitted = signal(false);
+  submitted = signal(false);
 
-  protected submit() {
+  submit() {
     this.submitted.set(true);
 
     const selectedUserAddress = this.selectedUserAddress();
@@ -103,7 +98,7 @@ export class SummaryComponent {
 
     if (isOrderProcessInvalid) return;
 
-    this.orderProcessStore.checkout({
+    this.#orderProcessStore.checkout({
       orderAddress: selectedUserAddress,
       shippingMethodId: selectedShippingMethod.id,
       paymentMethod: selectedPaymentMethod,
