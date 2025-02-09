@@ -1,0 +1,23 @@
+<div class="bg-content-background p-base rounded-base gap-base">
+  <div class="flex items-center justify-between gap-4">
+    <span class="text-muted-color font-semibold text-xl">Books</span>
+    <span class="text-xl text-end">
+      {{ cartItemsTotal() | currency: 'USD' }}
+    </span>
+  </div>
+  <div>
+    <div class="flex items-center justify-between gap-base">
+      <span class="text-muted-color font-semibold text-xl">Shipping</span>
+      <span class="text-xl text-end">
+        {{ shippingMethodPrice() | currency: 'USD' }}
+      </span>
+    </div>
+  </div>
+  <p-divider layout="horizontal" />
+  <div class="flex items-center justify-between gap-base">
+    <span class="text-muted-color font-semibold text-3xl">Total</span>
+    <span class="text-3xl text-end">
+      {{ total() | currency: 'USD' }}
+    </span>
+  </div>
+</div>
