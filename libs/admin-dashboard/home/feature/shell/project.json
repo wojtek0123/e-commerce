@@ -1,16 +1,16 @@
 {
-  "name": "admin-dashboard-category-feature-shell",
+  "name": "admin-dashboard-home-shell",
   "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/admin-dashboard/category/feature/shell/src",
+  "sourceRoot": "libs/admin-dashboard/home/feature/shell/src",
   "projectType": "library",
-  "tags": ["scope:admin-dashboard", "type:shell", "domain:category"],
+  "tags": ["scope:admin-dashboard", "type:shell", "domain:home"],
   "targets": {
     "build": {
       "executor": "@nx/vite:build",
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "outputPath": "dist/libs/admin-dashboard/category/feature/shell"
+        "outputPath": "dist/libs/admin-dashboard/home/feature/shell"
       },
       "configurations": {
         "development": {
@@ -25,7 +25,7 @@
       "executor": "@nx/vite:test",
       "outputs": ["{options.reportsDirectory}"],
       "options": {
-        "reportsDirectory": "../../../../../coverage/libs/admin-dashboard/category/feature/shell"
+        "reportsDirectory": "../../../../../coverage/libs/admin-dashboard/home/feature/shell"
       }
     }
   }
