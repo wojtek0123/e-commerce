@@ -14,13 +14,13 @@ export interface OrderDetailsBase {
 export interface OrderDetails extends OrderDetailsBase {
   paymentDetails: PaymentDetails;
   orderAddress: OrderAddress;
-  paymentDetailsId: number;
+  paymentDetailsId: PaymentDetails['id'];
   shippingMethod: ShippingMethod;
   orderItems: OrderDetailsItem[];
 }
 
 export interface OrderDetailsItem {
-  id: number;
+  id: string;
   book: Book;
   quantity: number;
 }

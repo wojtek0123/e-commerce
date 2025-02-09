@@ -35,7 +35,7 @@
                 100 - (rate.value / reviews().length || 0) * 100 + '%'
               "
               class="bg-surface-200 h-2 rounded-r-base"
-              [ngClass]="{ 'rounded-l-base': rate.value === 0 }"
+              [class.rounded-l-base]="rate.value === 0"
             ></span>
           </div>
           <span>{{ rate.value }}</span>
@@ -45,9 +45,7 @@
   </div>
 
   <div class="flex flex-col gap-4 items-center justify-center">
-    <span>
-      Rate and share your opinion on this book if you bought this book.
-    </span>
+    <span> Rate and share your opinion on this book if you have one. </span>
     <lib-review-form-dialog class="w-full" />
   </div>
 </div>

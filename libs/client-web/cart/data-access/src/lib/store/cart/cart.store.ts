@@ -393,32 +393,6 @@ export const CartStore = signalStore(
         ),
       ),
     ),
-    // deleteSession: rxMethod<void>(
-    //   pipe(
-    //     switchMap(() =>
-    //       shoppingSessionApi.delete().pipe(
-    //         tapResponse({
-    //           next: () => {
-    //             patchState(
-    //               store,
-    //               { shoppingSession: null, shoppingSessionId: null },
-    //               removeAllEntities(cartItemsConfig),
-    //             );
-    //           },
-    //           error: (error: ResponseError) => {
-    //             messageService.add({
-    //               summary: 'Error',
-    //               detail:
-    //                 error?.error?.message ??
-    //                 'An error occured while deleting shopping session',
-    //               severity: 'error',
-    //             });
-    //           },
-    //         }),
-    //       ),
-    //     ),
-    //   ),
-    // ),
     clearCartAndSession: () => {
       patchState(
         store,

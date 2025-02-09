@@ -1,4 +1,4 @@
-import { KeyValuePipe, NgClass } from '@angular/common';
+import { KeyValuePipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -17,7 +17,6 @@ import { RatingInputComponent } from '@e-commerce/client-web/shared/ui';
     RatingModule,
     FormsModule,
     KeyValuePipe,
-    NgClass,
     ReviewFormDialogComponent,
     RatingInputComponent,
   ],

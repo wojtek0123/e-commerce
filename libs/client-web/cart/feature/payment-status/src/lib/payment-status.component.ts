@@ -12,10 +12,11 @@ import { APP_ROUTE_PATHS_TOKEN } from '@e-commerce/client-web/shared/app-config'
   styleUrl: './payment-status.component.scss',
 })
 export class PaymentStatusComponent implements OnInit {
-  appRoutePaths = inject(APP_ROUTE_PATHS_TOKEN);
+  #appRoutePaths = inject(APP_ROUTE_PATHS_TOKEN);
 
   orderDetailsId = input<string>();
 
+  ordersUrl = this.#appRoutePaths.ORDERS();
   loading = signal(true);
 
   ngOnInit(): void {
