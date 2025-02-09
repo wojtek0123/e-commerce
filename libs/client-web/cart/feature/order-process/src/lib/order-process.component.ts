@@ -1,49 +1,22 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
-import { CartStore } from '@e-commerce/client-web/cart/data-access';
-import {
-  CartItemComponent,
-  CartItemSkeletonComponent,
-} from '@e-commerce/client-web/cart/ui';
-import { Book, CartItemBase } from '@e-commerce/shared/api-models';
-import { ButtonModule } from 'primeng/button';
-import { StepsModule } from 'primeng/steps';
-import { ToastModule } from 'primeng/toast';
-import { SummaryComponent } from './components/summary/summary.component';
-import { NgClass } from '@angular/common';
-import { APP_ROUTE_PATHS_TOKEN } from '@e-commerce/client-web/shared/app-config';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { DeliveryAddressComponent } from './components/delivery-address/delivery-address.component';
+import { ShippingMethodComponent } from './components/shipping-method/shipping-method.component';
+import { PaymentMethodComponent } from './components/payment-method/payment-method.component';
+import { OrderPriceComponent } from './components/order-price/order-price.component';
+import { OrderCheckoutComponent } from './components/order-checkout/order-checkout.component';
+import { CartItemsComponent } from './components/cart-items/cart-items.component';
 
 @Component({
   selector: 'lib-order-process',
   imports: [
-    StepsModule,
-    ToastModule,
-    ButtonModule,
-    CartItemComponent,
-    NgClass,
-    CartItemSkeletonComponent,
-    SummaryComponent,
-    RouterLink,
+    DeliveryAddressComponent,
+    ShippingMethodComponent,
+    PaymentMethodComponent,
+    OrderPriceComponent,
+    OrderCheckoutComponent,
+    CartItemsComponent,
   ],
   templateUrl: './order-process.component.html',
-  styleUrl: './order-process.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OrderProcessComponent {
-  #cartStore = inject(CartStore);
-  #appRoutePaths = inject(APP_ROUTE_PATHS_TOKEN);
-
-  booksUrl = this.#appRoutePaths.BOOKS();
-
-  cartItems = this.#cartStore.cartItems;
-  cartItemsLoading = this.#cartStore.loading;
-  total = this.#cartStore.total;
-
-  updateQuantity(quantity: CartItemBase['quantity'], bookId: Book['id']) {
-    this.#cartStore.updateQuantity({ bookId, quantity });
-  }
-
-  remove(bookId: Book['id']) {
-    this.#cartStore.removeBook({ bookId });
-  }
-}
+export class OrderProcessComponent {}

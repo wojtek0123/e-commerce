@@ -1,0 +1,52 @@
+@if (submitted()) {
+  <div class="flex flex-col gap-base">
+    @if (!isAddressSelected()) {
+      <p-message
+        severity="error"
+        icon="pi pi-exclamation-circle"
+        text="Fill in delivery address form"
+        styleClass="rounded-2xl"
+      />
+    }
+    @if (!isShippingMethodSelected()) {
+      <p-message
+        severity="error"
+        icon="pi pi-exclamation-circle"
+        text="Select shipping method"
+        styleClass="rounded-2xl"
+      />
+    }
+    @if (!isPaymentMethodSelected()) {
+      <p-message
+        severity="error"
+        icon="pi pi-exclamation-circle"
+        text="Select payment method"
+        styleClass="rounded-2xl"
+      />
+    }
+    @if (isSixDigitCodeInvalid()) {
+      <p-message
+        severity="error"
+        icon="pi pi-exclamation-circle"
+        text="Six digit code is invalid"
+        styleClass="rounded-2xl"
+      />
+    }
+    @if (isCartEmpty()) {
+      <p-message
+        severity="error"
+        icon="pi pi-exclamation-circle"
+        text="Cart is empty"
+        styleClass="rounded-2xl"
+      />
+    }
+  </div>
+}
+
+<p-button
+  styleClass="w-full"
+  (onClick)="submit()"
+  [loading]="initialLoading() || checkoutLoading()"
+  icon="pi pi-dollar"
+  label="Pay"
+/>
