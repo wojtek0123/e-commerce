@@ -5,7 +5,7 @@
     <lib-payment-method />
   </div>
 
-  <div class="bg-content-background p-4 rounded-base gap-4">
+  <div class="bg-content-background p-base rounded-base gap-base">
     <div class="flex items-center justify-between gap-4">
       <span class="text-muted-color font-semibold text-xl">Books</span>
       <span class="text-xl text-end">
@@ -13,7 +13,7 @@
       </span>
     </div>
     <div>
-      <div class="flex items-center justify-between gap-4">
+      <div class="flex items-center justify-between gap-base">
         <span class="text-muted-color font-semibold text-xl">Shipping</span>
         <span class="text-xl text-end">
           {{ shippingMethodPrice() | currency: 'USD' }}
@@ -21,7 +21,7 @@
       </div>
     </div>
     <p-divider layout="horizontal" />
-    <div class="flex items-center justify-between gap-4">
+    <div class="flex items-center justify-between gap-base">
       <span class="text-muted-color font-semibold text-3xl">Total</span>
       <span class="text-3xl text-end">
         {{ total() | currency: 'USD' }}
@@ -30,7 +30,7 @@
   </div>
 
   @if (submitted()) {
-    <div>
+    <div class="flex flex-col gap-base">
       @if (!selectedUserAddress()) {
         <p-message
           severity="error"

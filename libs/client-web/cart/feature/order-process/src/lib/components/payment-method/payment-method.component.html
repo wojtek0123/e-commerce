@@ -3,6 +3,14 @@
     <p-skeleton libOrderProcessItem width="100%" height="3rem" />
     <p-skeleton libOrderProcessItem width="100%" height="3rem" />
     <p-skeleton libOrderProcessItem width="100%" height="3rem" />
+  }
+  @if (error()) {
+    <lib-error-and-retry-message
+      [error]="error()"
+      size="small"
+      unableToLoad="credit card"
+      (onRetry)="getCreditCard()"
+    />
   } @else {
     <div>
       <button

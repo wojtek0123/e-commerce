@@ -764,9 +764,9 @@ export const BooksStore = signalStore(
         distinctUntilChanged((prev, curr) => isEqual(prev, curr)),
         tap(({ queryParam }) => {
           store._setQueryParam({
-            selectedTags: queryParam.selectedTags,
-            selectedCategories: queryParam.selectedCategories,
-            selectedAuthors: queryParam.selectedAuthors,
+            selectedTags: queryParam.tags,
+            selectedCategories: queryParam.categories,
+            selectedAuthors: queryParam.authors,
             search: queryParam.search,
             minPrice: queryParam.minPrice,
             maxPrice: queryParam.maxPrice,
@@ -817,9 +817,9 @@ export const BooksStore = signalStore(
 
       effect(() => {
         const filters: BooksQueryParam = {
-          selectedTags: store.selectedTags(),
-          selectedAuthors: store.selectedAuthors(),
-          selectedCategories: store.selectedCategories(),
+          tags: store.selectedTags(),
+          authors: store.selectedAuthors(),
+          categories: store.selectedCategories(),
           search: store.search(),
           minPrice: store.minPrice(),
           maxPrice: store.maxPrice(),
