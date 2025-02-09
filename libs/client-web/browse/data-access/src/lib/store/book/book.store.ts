@@ -124,8 +124,10 @@ export const BookStore = signalStore(
               },
               error: (error: ResponseError) => {
                 patchState(store, (state) => ({
-                  ...state.reviewDialog,
-                  loading: false,
+                  reviewDialog: {
+                    ...state.reviewDialog,
+                    loading: false,
+                  },
                 }));
                 store.messageService.add({
                   summary: 'Error',
@@ -159,7 +161,6 @@ export const BookStore = signalStore(
       ),
     ),
     isUserAddedReview: (userId: User['id']) => {
-      console.log(userId);
       return !!getState(store).book?.reviews.find(
         (review) => review.userId === userId,
       );
