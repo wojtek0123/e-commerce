@@ -10,6 +10,7 @@ import { decode } from 'jsonwebtoken';
 import { OrderDetail } from './entities/order-detail.entity';
 import { MailerService } from '@nestjs-modules/mailer';
 import { BookEntity } from '../books/entities/book.entity';
+import { Role } from '@prisma/client';
 
 @Injectable()
 export class OrderDetailsService {
@@ -182,11 +183,35 @@ export class OrderDetailsService {
     return order;
   }
 
-  findAll(authHeader: string) {
-    const userId = String(decode(authHeader.split(' ')[1]).sub);
+  findAll(
+    authHeader: string,
+    filters: { startDate?: string; endDate?: string },
+  ) {
+    const role = decode(authHeader.split(' ')[1])['role'] as Role | undefined;
+    const userId = authHeader
+      ? String(decode(authHeader.split(' ')[1]).sub)
+      : null;
+
+    console.log(filters.startDate, filters.endDate);
+
+    // Create date filter condition if dates are provided
+    const dateFilter =
+      filters.startDate || filters.endDate
+        ? {
+            createdAt: {
+              ...(filters.startDate && { gte: new Date(filters.startDate) }),
+              ...(filters.endDate && { lte: new Date(filters.endDate) }),
+            },
+          }
+        : {};
+
+    console.log(dateFilter);
 
     return this.prisma.orderDetails.findMany({
-      where: { userId },
+      where: {
+        ...dateFilter,
+        ...(userId && role !== Role.ADMIN && { userId }),
+      },
       orderBy: { createdAt: 'desc' },
     });
   }
@@ -229,5 +254,11 @@ export class OrderDetailsService {
     }
 
     return order;
+  }
+
+  async findAllOrders() {
+    const orders = await this.prisma.orderDetails.findMany();
+
+    return orders;
   }
 }

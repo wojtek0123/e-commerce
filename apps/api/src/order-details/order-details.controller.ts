@@ -6,6 +6,7 @@ import {
   Param,
   UseGuards,
   Headers,
+  Query,
 } from '@nestjs/common';
 import { OrderDetailsService } from './order-details.service';
 import { CreateOrderDetailDto } from './dto/create-order-detail.dto';
@@ -15,17 +16,17 @@ import {
   ApiOkResponse,
   ApiOperation,
   ApiParam,
+  ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
-import { AccessTokenGuard } from '../common/guards/access-token.guard';
 import { OrderDetail } from './entities/order-detail.entity';
 import { OrderDetailList } from './entities/order-detail-list.dto';
 import { Roles, RolesGuard } from '../common/guards/role.guard';
 import { Role } from '@prisma/client';
 
 @ApiTags('order-details')
-@ApiBearerAuth()
-@UseGuards(AccessTokenGuard)
+// @ApiBearerAuth()
+// @UseGuards(AccessTokenGuard)
 @Controller('order-details')
 export class OrderDetailsController {
   constructor(private readonly orderDetailsService: OrderDetailsService) {}
@@ -47,8 +48,14 @@ export class OrderDetailsController {
   @ApiOkResponse({ type: OrderDetailList, isArray: true })
   @UseGuards(RolesGuard)
   @Roles([Role.USER, Role.ADMIN])
-  findAll(@Headers('authorization') authHeader: string) {
-    return this.orderDetailsService.findAll(authHeader);
+  @ApiQuery({ name: 'startDate', type: String, required: false })
+  @ApiQuery({ name: 'endDate', type: String, required: false })
+  findUserOrders(
+    @Headers('authorization') authHeader: string,
+    @Query('startDate') startDate?: string,
+    @Query('endDate') endDate?: string,
+  ) {
+    return this.orderDetailsService.findAll(authHeader, { startDate, endDate });
   }
 
   @Get(':id')

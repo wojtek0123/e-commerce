@@ -180,7 +180,7 @@
       "@e-commerce/client-web/shared/utils": [
         "libs/client-web/shared/utils/src/index.ts"
       ],
-      "@e-commerce/data-access": [
+      "@e-commerce/admin-dashboard/home/data-access": [
         "libs/admin-dashboard/home/data-access/src/index.ts"
       ],
       "@e-commerce/shared/api-models": ["libs/shared/api-models/src/index.ts"]
