@@ -568,7 +568,6 @@ export const BooksStore = signalStore(
       pipe(
         tap(() => patchState(store, { loading: true })),
         map(({ queryParam }) => {
-          console.log(queryParam);
           return {
             categories: queryParam.get(BooksQueryParamKey.CATEGORIES),
             authors: queryParam.get(BooksQueryParamKey.AUTHORS),
@@ -626,7 +625,6 @@ export const BooksStore = signalStore(
                 : ('asc' satisfies BooksSortDirection),
             ),
           };
-          console.log(allBooksSortKeys, params.sortBy);
 
           return forkJoin(requests).pipe(
             map((requests) => ({
@@ -788,7 +786,6 @@ export const BooksStore = signalStore(
   withHooks({
     onInit(store, _destroyRef = inject(DestroyRef)) {
       store.getAllFilters();
-      store.getBooks();
 
       store._deserializeQueryParamsFilters({
         queryParam: store._route.snapshot.queryParamMap,

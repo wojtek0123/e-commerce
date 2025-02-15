@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   inject,
   input,
   output,
@@ -13,6 +14,8 @@ import { CardModule } from 'primeng/card';
 import { RouterLink } from '@angular/router';
 import { CurrencyPipe, NgClass, NgOptimizedImage } from '@angular/common';
 import { APP_ROUTE_PATHS_TOKEN } from '@e-commerce/client-web/shared/app-config';
+import { RatingInputComponent } from '../rating-input/rating-input.component';
+import { FormsModule } from '@angular/forms';
 
 @Pipe({ standalone: true, name: 'isBookFavourite' })
 export class IsBookFavouritePipe implements PipeTransform {
@@ -34,6 +37,8 @@ export class IsBookFavouritePipe implements PipeTransform {
     NgOptimizedImage,
     IsBookFavouritePipe,
     NgClass,
+    RatingInputComponent,
+    FormsModule,
   ],
   templateUrl: './book-card.component.html',
   styleUrl: './book-card.component.scss',
@@ -49,6 +54,16 @@ export class BookCardComponent {
   public awaitingBookIdsToAddToCart = input<Book['id'][]>([]);
   favouriteBooks = input.required<Book[]>();
   loading = input(false);
+
+  averageRating = computed(() => {
+    const reviews = this.book().reviews;
+
+    if (reviews.length === 0) return 0;
+
+    return +(
+      reviews.reduce((acc, curr) => acc + curr.rating, 0) / reviews.length
+    ).toFixed(1);
+  });
 
   public onAddToCart = output<Book>();
   onAddToFavourite = output<Book>();
