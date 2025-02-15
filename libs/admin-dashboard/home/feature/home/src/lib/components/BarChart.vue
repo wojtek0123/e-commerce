@@ -1,53 +1,47 @@
 <script lang="ts" setup>
 import { Chart } from 'chart.js/auto';
-import { onMounted } from 'vue';
-import { useTemplateRef } from 'vue';
+import { onMounted, useTemplateRef } from 'vue';
 
-const props = defineProps<{
-  labels: (string | number)[];
-  dataset: {
-    label: string;
-    data: number[];
-    backgroundColor: string;
-    borderColor: string;
-    borderWidth: number;
-  }[];
+const { data } = defineProps<{
+  data: {
+    labels: (string | number)[];
+    datasets: {
+      label: string;
+      data: number[];
+      backgroundColor: string;
+      borderColor: string;
+      borderWidth: number;
+    }[];
+    title: string;
+    stepSize?: number;
+    max?: number;
+  };
 }>();
 
 const ctx = useTemplateRef<HTMLCanvasElement>('bar-chart');
 
 onMounted(() => {
   if (ctx.value) {
-    const max = props.dataset.map(
-      (dataset) =>
-        dataset.data.reduce((acc, value) => {
-          if (value > acc) return value;
-
-          return acc;
-        }),
-      0,
-    );
-
-    const barChart = new Chart(ctx.value!, {
+    const barChart = new Chart(ctx.value, {
       type: 'bar',
       data: {
-        labels: props.labels,
-        datasets: props.dataset,
+        labels: data.labels,
+        datasets: data.datasets,
       },
       options: {
         plugins: {
           title: {
             display: true,
-            text: 'Orders from last 30 days',
+            text: data.title,
           },
         },
         scales: {
           y: {
             ticks: {
-              stepSize: 1,
+              ...(data.stepSize && { stepSize: data.stepSize }),
             },
             beginAtZero: true,
-            max: max[0] + 1,
+            ...(data.max && { max: data.max }),
           },
         },
       },

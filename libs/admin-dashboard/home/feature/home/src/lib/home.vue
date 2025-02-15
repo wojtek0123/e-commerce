@@ -1,18 +1,40 @@
 <script lang="ts" setup>
 import { useHomeStore } from '@e-commerce/admin-dashboard/home/data-access';
-import { onMounted, computed, ref } from 'vue';
+import { onMounted, computed } from 'vue';
 import BarChart from './components/BarChart.vue';
+import PieChart from './components/PieChart.vue';
 import Stat from './components/Stat.vue';
+import { Book } from '@e-commerce/shared/api-models';
 
 const store = useHomeStore();
 
-// const today = ref(new Date());
-// const priorDate = ref(
-//   new Date(today.value.getTime() - 30 * 24 * 60 * 60 * 1000),
-// );
+const groupedByOrderPrice = computed(() => {
+  const dates: string[] = [];
+  for (let i = 0; i < 30; i++) {
+    const date = new Date(store.priorDate.getTime() + i * 24 * 60 * 60 * 1000);
+    dates.push(date.toISOString().split('T')[0]);
+  }
+
+  const initialDates = dates.reduce(
+    (acc, date) => {
+      acc[date] = 0;
+      return acc;
+    },
+    {} as Record<string, number>,
+  );
+
+  return store.orders.reduce((acc, order) => {
+    const orderDate = new Date(order.createdAt);
+    const date = orderDate.toISOString().split('T')[0];
+
+    if (orderDate >= store.priorDate && orderDate <= store.today) {
+      acc[date] = (acc[date] || 0) + order.total;
+    }
+    return acc;
+  }, initialDates);
+});
 
 const groupedOrders = computed(() => {
-  // Create an array of the last 30 days
   const dates: string[] = [];
   for (let i = 0; i < 30; i++) {
     const date = new Date(store.priorDate.getTime() + i * 24 * 60 * 60 * 1000);
@@ -40,6 +62,13 @@ const groupedOrders = computed(() => {
 
 const chartData = computed(() => {
   const dates = Object.keys(groupedOrders.value).sort();
+
+  const max = Object.values(groupedOrders.value).reduce((acc, value) => {
+    if (value > acc) return value;
+
+    return acc;
+  }, 0);
+
   return {
     labels: dates.map((date) => {
       const d = new Date(date);
@@ -56,37 +85,165 @@ const chartData = computed(() => {
         borderWidth: 0,
       },
     ],
+    title: 'Orders from last 30 days',
+    stepSize: 1,
+    max: max + 1,
   };
 });
 
+const chartOrderPriceData = computed(() => {
+  const dates = Object.keys(groupedOrders.value).sort();
+  return {
+    labels: dates.map((date) => {
+      const d = new Date(date);
+      return (
+        d.getDate() + ' ' + d.toLocaleString('default', { month: 'short' })
+      );
+    }),
+    datasets: [
+      {
+        label: 'Income per day',
+        data: dates.map((date) => groupedByOrderPrice.value[date]),
+        backgroundColor: '#34d399',
+        borderColor: '#34d399',
+        borderWidth: 0,
+      },
+    ],
+    title: 'Income from last 30 days',
+  };
+});
+
+const totalIncome = computed(() => {
+  const today = new Date();
+
+  const todayIncome = store.orders.reduce((acc, order) => {
+    const orderDate = new Date(order.createdAt);
+    const date = orderDate.toISOString().split('T')[0];
+
+    if (date === today.toISOString().split('T')[0]) {
+      return acc + order.total;
+    }
+
+    return acc;
+  }, 0);
+
+  return {
+    total: store.orders.reduce((acc, order) => acc + order.total, 0),
+    todayIncome,
+  };
+});
+
+const todayOrders = computed(() => {
+  const today = new Date();
+
+  return store.orders.reduce((acc, order) => {
+    const orderDate = new Date(order.createdAt);
+    const date = orderDate.toISOString().split('T')[0];
+
+    if (date === today.toISOString().split('T')[0]) {
+      return acc + 1;
+    }
+
+    return acc;
+  }, 0);
+});
+
+const todayCustomers = computed(() => {
+  const today = new Date();
+
+  return store.customers.reduce((acc, customer) => {
+    const customerCreatedAt = new Date(customer.createdAt);
+    const date = customerCreatedAt.toISOString().split('T')[0];
+
+    if (date === today.toISOString().split('T')[0]) {
+      return acc + 1;
+    }
+
+    return acc;
+  }, 0);
+});
+
+const groupBooksByCategory = computed(() => {
+  const books = groupBy(store.books, (book: Book) => book.category.name);
+
+  return books;
+});
+
+const pieChartBooks = computed(() => {
+  // const dates = Object.(groupBooksByCategory.value).sort();
+
+  const groupByBooks = groupBooksByCategory.value;
+
+  return {
+    labels: [...groupByBooks.keys()],
+    datasets: [
+      {
+        data: [...groupByBooks.values()].map((books) => [...books].length),
+      },
+    ],
+    title: 'Books per category',
+  };
+});
+
+const groupBy = <T, Q>(
+  array: T[],
+  predicate: (value: T, index: number, array: T[]) => Q,
+) =>
+  array.reduce((map, value, index, array) => {
+    const key = predicate(value, index, array);
+    map.get(key)?.push(value) ?? map.set(key, [value]);
+    return map;
+  }, new Map<Q, T[]>());
+
 onMounted(() => {
   store.getOrders();
+  store.getCustomers();
+  store.getTotalOrders();
+  store.getBooks();
 });
 </script>
 
 <template>
   <div class="@container flex flex-col gap-base">
     <div class="grid grid-cols-2 @3xl:grid-cols-3 @6xl:grid-cols-6 gap-base">
-      <Stat header="Total revenue" :value="3000" />
-      <Stat header="Total orders" :value="2423" />
-      <Stat header="Total available books" :value="252" />
-      <Stat header="Total revenue" :value="123400" />
-      <Stat header="Total revenue" :value="12320" />
-      <Stat header="New customer" :value="5434" />
+      <Stat
+        header="Total income"
+        :value="store.totalIncome"
+        :change="totalIncome.todayIncome + '$'"
+        unit="$"
+      />
+      <Stat
+        header="Total orders"
+        :value="store.totalOrders"
+        :change="todayOrders"
+      />
+      <Stat header="Total books" :value="store.booksTotal" />
+      <Stat header="Total revenue" :value="123400" :change="10" />
+      <Stat
+        header="Total customers"
+        :value="store.customers.length"
+        :change="todayCustomers"
+      />
+      <Stat header="New customer" :value="5434" :change="10" />
     </div>
-    <div class="grid grid-cols-1 @3xl:grid-cols-2 gap-base">
+    <div class="grid grid-cols-1 @7xl:grid-cols-2 gap-base">
       <BarChart
         v-if="!store.loading && store.orders.length > 0"
+        :data="chartData"
         class="w-full"
-        :labels="chartData.labels"
-        :dataset="chartData.datasets"
       />
 
       <BarChart
         v-if="!store.loading && store.orders.length > 0"
         class="w-full"
-        :labels="chartData.labels"
-        :dataset="chartData.datasets"
+        :data="chartOrderPriceData"
+      />
+    </div>
+
+    <div class="grid grid-cols-1 @7xl:grid-cols-3 gap-base">
+      <PieChart
+        v-if="!store.loading && store.books.length > 0"
+        :data="pieChartBooks"
       />
     </div>
   </div>

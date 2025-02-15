@@ -20,8 +20,8 @@ export class CategoriesService {
     page?: string;
     size?: string;
   }) {
-    const pageNumber = parseNumber(opts.page, 1);
-    const sizeNumber = parseNumber(opts.size, 20);
+    const pageNumber = parseNumber(opts.page);
+    const sizeNumber = parseNumber(opts.size);
     const nameIn = parseQueryParams(opts.nameIn);
 
     const whereClause: Prisma.CategoryWhereInput = {
@@ -36,8 +36,9 @@ export class CategoriesService {
     const [categories, total] = await Promise.all([
       this.prisma.category.findMany({
         where: whereClause,
-        skip: sizeNumber * (pageNumber - 1),
-        take: sizeNumber,
+        ...(sizeNumber &&
+          pageNumber && { skip: sizeNumber * (pageNumber - 1) }),
+        ...(sizeNumber && { take: sizeNumber }),
         orderBy: { name: 'asc' },
       }),
       this.prisma.category.count({ where: whereClause }),
@@ -47,7 +48,7 @@ export class CategoriesService {
       items: categories,
       total,
       count: categories.length,
-      page: pageNumber,
+      page: pageNumber || 1,
     };
   }
 
