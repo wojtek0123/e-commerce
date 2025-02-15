@@ -42,7 +42,6 @@ export const authInterceptor: HttpInterceptorFn = (
 
   return next(clonedRequest).pipe(
     catchError((error) => {
-      console.log(error);
       if (error.status === 401 && error.url.includes('refresh')) {
         // TODO: Add text to toast that user session has expired.
         authStore.logout();

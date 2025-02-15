@@ -18,11 +18,11 @@ export interface Book {
   price: number;
   authors: Author[];
   category: Category;
+  reviews: BookReview[];
 }
 
 export interface BookDetails extends Book {
   productInventory: ProductInventory;
-  reviews: BookReview[];
 }
 
 export enum BookTag {

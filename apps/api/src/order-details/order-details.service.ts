@@ -192,8 +192,6 @@ export class OrderDetailsService {
       ? String(decode(authHeader.split(' ')[1]).sub)
       : null;
 
-    console.log(filters.startDate, filters.endDate);
-
     // Create date filter condition if dates are provided
     const dateFilter =
       filters.startDate || filters.endDate
@@ -204,8 +202,6 @@ export class OrderDetailsService {
             },
           }
         : {};
-
-    console.log(dateFilter);
 
     return this.prisma.orderDetails.findMany({
       where: {

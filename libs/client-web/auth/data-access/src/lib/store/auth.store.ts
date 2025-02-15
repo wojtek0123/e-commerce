@@ -228,7 +228,6 @@ export const AuthStore = signalStore(
           tap(() => patchState(store, { loading: true })),
           map(() => store.userId()),
           filter((userId): userId is User['id'] => !!userId),
-          tap(console.log),
           switchMap((userId) =>
             authApi.logout$(userId).pipe(
               tapResponse({
