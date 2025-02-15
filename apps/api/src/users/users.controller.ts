@@ -7,6 +7,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -14,6 +15,7 @@ import {
   ApiCreatedResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -43,8 +45,9 @@ export class UsersController {
   @UseGuards(RolesGuard)
   @Roles([Role.ADMIN])
   @ApiBearerAuth()
-  findAll() {
-    return this.usersService.findAll();
+  @ApiQuery({ name: 'roleIn', enum: Role, isArray: true, required: false })
+  findAll(@Query('roleIn') roleIn: string) {
+    return this.usersService.findAll({ roleIn });
   }
 
   @Get(':id')

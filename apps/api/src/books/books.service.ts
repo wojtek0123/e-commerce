@@ -64,8 +64,8 @@ export class BooksService {
     sortByMode?: string;
   }) {
     try {
-      const pageNumber = parseNumber(page, 1);
-      const sizeNumber = parseNumber(size, 20);
+      const pageNumber = parseNumber(page);
+      const sizeNumber = parseNumber(size);
 
       const parsedCategories = parseQueryParams(categoryIdIn);
       const parsedTags = parseQueryParams(tagIn);
@@ -90,8 +90,8 @@ export class BooksService {
             : {},
           {
             price: {
-              gte: parseNumber(priceFrom, 0),
-              lte: parseNumber(priceTo, Number.MAX_SAFE_INTEGER),
+              gte: parseNumber(priceFrom) || 0,
+              lte: parseNumber(priceTo) || Number.MAX_SAFE_INTEGER,
             },
           },
           parsedAuthors.length > 0
@@ -105,9 +105,12 @@ export class BooksService {
           where: whereClause,
           include: {
             authors: { include: { author: true } },
+            category: true,
+            reviews: true,
           },
-          skip: (pageNumber - 1) * sizeNumber,
-          take: sizeNumber,
+          ...(pageNumber &&
+            sizeNumber && { skip: (pageNumber - 1) * sizeNumber }),
+          ...(sizeNumber && { take: sizeNumber }),
           orderBy: { [parsedSortBy]: parsedSortByMode },
         }),
         this.prisma.book.count({ where: whereClause }),

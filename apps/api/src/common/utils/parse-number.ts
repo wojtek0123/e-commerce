@@ -1,7 +1,4 @@
-export function parseNumber(
-  value: string | undefined,
-  fallback: number,
-): number {
+export function parseNumber(value: string | undefined): number {
   const parsedValue = value ? parseInt(value, 10) : NaN;
-  return isNaN(parsedValue) ? fallback : parsedValue;
+  return isNaN(parsedValue) ? null : parsedValue;
 }

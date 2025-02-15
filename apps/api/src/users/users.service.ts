@@ -11,6 +11,8 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ConfigService } from '@nestjs/config';
+import { Role } from '@prisma/client';
+import { parseQueryParams } from '../common/utils/parse-query-params';
 
 @Injectable()
 export class UsersService {
@@ -30,7 +32,13 @@ export class UsersService {
     });
   }
 
-  findAll() {
+  findAll(filters: { roleIn: string }) {
+    let roles = parseQueryParams(filters.roleIn);
+
+    const validatedRoles = roles.filter((role) =>
+      ([Role.USER, Role.ADMIN] as string[]).includes(role),
+    );
+
     return this.prisma.user.findMany({
       select: {
         password: false,
@@ -39,6 +47,11 @@ export class UsersService {
         email: true,
         role: true,
         updatedAt: true,
+      },
+      where: {
+        ...(validatedRoles.length > 0 && {
+          role: { in: validatedRoles as Role[] },
+        }),
       },
     });
   }
