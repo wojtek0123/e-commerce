@@ -1,9 +1,10 @@
-<div class="flex flex-wrap gap-1 pb-1">
+<div class="flex flex-wrap gap-2">
   <p-button
     size="small"
     styleClass="min-w-max h-10"
     label="Clear filters"
     severity="contrast"
+    [badge]="activeFiltersCount()"
     (click)="clearFilters()"
   />
   @for (activeFilter of activeFilters(); track activeFilter.id) {

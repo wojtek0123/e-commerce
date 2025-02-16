@@ -1,5 +1,18 @@
 <div class="flex gap-base">
-  <lib-filters class="hidden xl:flex" />
+  <div
+    class="flex-col gap-base hidden xl:flex sticky top-4 h-content rounded-base overflow-y-auto"
+  >
+    <div
+      class="p-4 bg-content-background flex items-center justify-between gap-base rounded-base"
+    >
+      <div class="flex items-center gap-base">
+        <lib-save-filters />
+        <lib-load-filters />
+        <lib-remove-saved-filters />
+      </div>
+    </div>
+    <lib-filters />
+  </div>
   <div class="flex flex-col gap-base w-full overflow-x-hidden">
     <div
       class="flex flex-col bg-content-background pt-2 pb-4 xl:pb-2 xl:pl-2 xl:pr-4 rounded-base xl:flex-row justify-between gap-base"
@@ -31,11 +44,18 @@
         />
       </div>
     </div>
-    <lib-active-filters
-      [activeFilters]="activeFilters()"
-      (onClearFilter)="clearFilter($event)"
-      (onClearFilters)="clearFilters()"
-    />
+    <div class="flex flex-col gap-base">
+      <div class="flex items-center gap-base xl:hidden">
+        <lib-save-filters />
+        <lib-load-filters />
+        <lib-remove-saved-filters />
+      </div>
+      <lib-active-filters
+        [activeFilters]="activeFilters()"
+        (onClearFilter)="clearFilter($event)"
+        (onClearFilters)="clearFilters()"
+      />
+    </div>
 
     <lib-books-grid
       [books]="books()"

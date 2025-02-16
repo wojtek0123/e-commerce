@@ -3,9 +3,9 @@ import { BooksSortDirection, BooksSortKey } from './books-sort.model';
 import { Tag } from './tag.model';
 
 export interface BooksQueryParam {
-  tags: Tag[];
-  authors: Author[];
-  categories: Category[];
+  tags: string | null;
+  authors: string | null;
+  categories: string | null;
   search: string | null;
   minPrice: number | null;
   maxPrice: number | null;

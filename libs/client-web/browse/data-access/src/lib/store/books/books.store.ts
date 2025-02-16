@@ -67,7 +67,6 @@ import {
   getSelectedItemsFromQueryParam,
   buildSelectedItemsQueryParam,
 } from '@e-commerce/client-web/browse/utils';
-import { Tag } from '../../models/tag.model';
 import { MessageService } from 'primeng/api';
 import {
   BooksSort,
@@ -79,8 +78,8 @@ import {
   BooksQueryParamKey,
 } from '../../models/books-query-param.model';
 
-const FILTER_PAGE = 1 as const;
-const FILTER_SIZE = 20 as const;
+export const FILTER_PAGE = 1 as const;
+export const FILTER_SIZE = 20 as const;
 
 export const sizes = [20, 40, 60];
 const allBooksSortKeys: BooksSortKey[] = [
@@ -524,33 +523,13 @@ export const BooksStore = signalStore(
         },
       }));
     },
-    _setQueryParam: (queryParam: {
-      selectedTags: Tag[];
-      selectedAuthors: Author[];
-      selectedCategories: Category[];
-      search: string | null;
-      minPrice: number | null;
-      maxPrice: number | null;
-      page: number;
-      size: number;
-      sortBy: BooksSortKey;
-      sortByMode: BooksSortDirection;
-    }) => {
-      store._router.navigate([], {
+    setQueryParam: async (queryParam: BooksQueryParam) => {
+      await store._router.navigate([], {
         relativeTo: store._route,
         queryParams: {
-          [BooksQueryParamKey.TAGS]: buildSelectedItemsQueryParam(
-            queryParam.selectedTags,
-            'name',
-          )?.toLowerCase(),
-          [BooksQueryParamKey.CATEGORIES]: buildSelectedItemsQueryParam(
-            queryParam.selectedCategories,
-            'name',
-          ),
-          [BooksQueryParamKey.AUTHORS]: buildSelectedItemsQueryParam(
-            queryParam.selectedAuthors,
-            'name',
-          ),
+          [BooksQueryParamKey.TAGS]: queryParam.tags,
+          [BooksQueryParamKey.CATEGORIES]: queryParam.categories,
+          [BooksQueryParamKey.AUTHORS]: queryParam.authors,
           [BooksQueryParamKey.SEARCH]: queryParam.search || null,
           [BooksQueryParamKey.MIN_PRICE]: queryParam.minPrice,
           [BooksQueryParamKey.MAX_PRICE]: queryParam.maxPrice,
@@ -734,19 +713,25 @@ export const BooksStore = signalStore(
         filters: { multiSelect, singleValue },
       } = getState(store);
 
-      const selectedTags = multiSelect.tag.selectedItems;
-      const selectedAuthors = multiSelect.author.selectedItems;
-      const selectedCategories = multiSelect.category.selectedItems;
+      const tags = multiSelect.tag.selectedItems
+        .map(({ name }) => name)
+        .join(',');
+      const authors = multiSelect.author.selectedItems
+        .map(({ name }) => name)
+        .join(',');
+      const categories = multiSelect.category.selectedItems
+        .map(({ name }) => name)
+        .join(',');
       const search = singleValue.search;
       const minPrice = singleValue.minPrice;
       const maxPrice = singleValue.maxPrice;
       const sortBy = sort.key;
       const sortByMode = sort.direction;
 
-      store._setQueryParam({
-        selectedTags,
-        selectedCategories,
-        selectedAuthors,
+      store.setQueryParam({
+        tags,
+        categories,
+        authors,
         search,
         minPrice,
         maxPrice,
@@ -761,10 +746,10 @@ export const BooksStore = signalStore(
         skip(1),
         distinctUntilChanged((prev, curr) => isEqual(prev, curr)),
         tap(({ queryParam }) => {
-          store._setQueryParam({
-            selectedTags: queryParam.tags,
-            selectedCategories: queryParam.categories,
-            selectedAuthors: queryParam.authors,
+          store.setQueryParam({
+            tags: queryParam.tags,
+            categories: queryParam.categories,
+            authors: queryParam.authors,
             search: queryParam.search,
             minPrice: queryParam.minPrice,
             maxPrice: queryParam.maxPrice,
@@ -781,6 +766,30 @@ export const BooksStore = signalStore(
       store.getTags('');
       store.getCategories({ search: '' });
       store.getAuthors({ search: '' });
+    },
+  })),
+  withMethods((store) => ({
+    loadFilters: async (queryParam: BooksQueryParam) => {
+      await store._router.navigate([], {
+        relativeTo: store._route,
+        queryParams: {
+          [BooksQueryParamKey.TAGS]: queryParam.tags,
+          [BooksQueryParamKey.CATEGORIES]: queryParam.categories,
+          [BooksQueryParamKey.AUTHORS]: queryParam.authors,
+          [BooksQueryParamKey.SEARCH]: queryParam.search || null,
+          [BooksQueryParamKey.MIN_PRICE]: queryParam.minPrice,
+          [BooksQueryParamKey.MAX_PRICE]: queryParam.maxPrice,
+          [BooksQueryParamKey.SIZE]: queryParam.size,
+          [BooksQueryParamKey.PAGE]: queryParam.page,
+          [BooksQueryParamKey.SORT_BY]: queryParam.sortBy,
+          [BooksQueryParamKey.SORT_BY_MODE]: queryParam.sortByMode,
+        },
+        replaceUrl: true,
+      });
+
+      const queryParamMap = store._route.snapshot.queryParamMap;
+
+      store._deserializeQueryParamsFilters({ queryParam: queryParamMap });
     },
   })),
   withHooks({
@@ -814,9 +823,19 @@ export const BooksStore = signalStore(
 
       effect(() => {
         const filters: BooksQueryParam = {
-          tags: store.selectedTags(),
-          authors: store.selectedAuthors(),
-          categories: store.selectedCategories(),
+          tags:
+            buildSelectedItemsQueryParam(
+              store.selectedTags(),
+              'name',
+            )?.toLowerCase() ?? null,
+          authors: buildSelectedItemsQueryParam(
+            store.selectedAuthors(),
+            'name',
+          ),
+          categories: buildSelectedItemsQueryParam(
+            store.selectedCategories(),
+            'name',
+          ),
           search: store.search(),
           minPrice: store.minPrice(),
           maxPrice: store.maxPrice(),
