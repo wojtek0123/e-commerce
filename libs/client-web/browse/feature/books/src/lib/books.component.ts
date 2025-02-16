@@ -24,6 +24,9 @@ import { FiltersComponent } from './components/filters/filters.component';
 import { CartService } from '@e-commerce/client-web/cart/api';
 import { FavouriteBooksListService } from '@e-commerce/client-web/account/api';
 import { SortComponent } from '@e-commerce/client-web/browse/ui';
+import { SaveFiltersComponent } from './components/save-filters/save-filters.component';
+import { LoadFiltersComponent } from './components/load-filters/load-filters.component';
+import { RemoveSavedFiltersComponent } from './components/remove-saved-filters/remove-saved-filters.component';
 
 @Component({
   selector: 'lib-books',
@@ -36,6 +39,9 @@ import { SortComponent } from '@e-commerce/client-web/browse/ui';
     FiltersComponent,
     ActiveFiltersComponent,
     SortComponent,
+    SaveFiltersComponent,
+    LoadFiltersComponent,
+    RemoveSavedFiltersComponent,
   ],
   templateUrl: './books.component.html',
   styleUrl: './books.component.scss',
