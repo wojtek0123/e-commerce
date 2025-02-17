@@ -7,3 +7,5 @@ export * from './lib/confirmation-dialog/confirmation-dialog.component';
 export * from './lib/label/label.component';
 export * from './lib/error-and-retry-message/error-and-retry-message.component';
 export * from './lib/rating-input/rating-input.component';
+export * from './lib/accordion/accordion-panel.component';
+export * from './lib/accordion/accordion.component';
