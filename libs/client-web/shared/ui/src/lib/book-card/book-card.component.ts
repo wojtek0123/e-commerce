@@ -60,7 +60,7 @@ export class BookCardComponent {
   averageRating = computed(() => {
     const reviews = this.book().reviews;
 
-    if (reviews.length === 0) return 0;
+    if (!reviews?.length) return 0;
 
     return +(
       reviews.reduce((acc, curr) => acc + curr.rating, 0) / reviews.length
