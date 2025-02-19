@@ -30,15 +30,6 @@
               [value]="filter.value | getFiltersCount"
               severity="contrast"
             />
-
-            <p-button
-              icon="pi pi-trash"
-              ariaLabel="Remove saved filters"
-              [text]="true"
-              [outlined]="true"
-              title="Remove saved filters"
-              (onClick)="remove(filter.key, $event)"
-            />
           </div>
           <div class="flex flex-col gap-8" slot="content">
             <div>
@@ -53,12 +44,21 @@
               }
             </div>
 
-            <p-button
-              label="Load"
-              styleClass="w-full"
-              severity="contrast"
-              (onClick)="load(filter.value)"
-            />
+            <div class="grid grid-cols-2 gap-4">
+              <p-button
+                styleClass="w-full"
+                label="Remove"
+                severity="contrast"
+                [outlined]="true"
+                (onClick)="remove(filter.key, $event)"
+              />
+              <p-button
+                styleClass="w-full"
+                label="Load"
+                severity="contrast"
+                (onClick)="load(filter.value)"
+              />
+            </div>
           </div>
         </lib-accordion-panel>
       }

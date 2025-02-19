@@ -3,12 +3,10 @@
     class="flex-col gap-base hidden xl:flex sticky top-4 h-content rounded-base overflow-y-auto"
   >
     <div
-      class="p-4 bg-content-background flex items-center justify-between gap-base rounded-base"
+      class="p-4 bg-content-background flex items-center gap-base rounded-base"
     >
-      <div class="flex items-center gap-base">
-        <lib-save-filters />
-        <lib-load-filters />
-      </div>
+      <lib-save-filters />
+      <lib-load-filters />
     </div>
     <lib-filters />
   </div>
@@ -35,19 +33,21 @@
           <lib-filters class="xl:hidden" />
         </div>
 
-        <lib-sort
-          class="xl:hidden"
-          [options]="sortOptions()"
-          [sort]="sort()"
-          (onChangeSort)="changeSort($event)"
-        />
+        <div class="flex items-center justify-between gap-base xl:hidden">
+          <lib-sort
+            [options]="sortOptions()"
+            [sort]="sort()"
+            (onChangeSort)="changeSort($event)"
+          />
+
+          <div class="flex items-center gap-base">
+            <lib-save-filters />
+            <lib-load-filters />
+          </div>
+        </div>
       </div>
     </div>
     <div class="flex flex-col gap-base">
-      <div class="flex items-center gap-base xl:hidden">
-        <lib-save-filters />
-        <lib-load-filters />
-      </div>
       <lib-active-filters
         [activeFilters]="activeFilters()"
         (onClearFilter)="clearFilter($event)"
