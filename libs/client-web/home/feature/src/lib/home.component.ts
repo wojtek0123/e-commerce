@@ -3,7 +3,6 @@ import {
   afterNextRender,
   Component,
   computed,
-  effect,
   ElementRef,
   inject,
   OnDestroy,
@@ -29,22 +28,24 @@ import { ButtonModule } from 'primeng/button';
   },
 })
 export class HomeComponent implements OnDestroy {
-  protected readonly appRoutePaths = inject(APP_ROUTE_PATHS_TOKEN);
-  protected readonly bookTag = BookTag;
-  private readonly cartService = inject(CartService);
-  private readonly homeStore = inject(HomeStore);
+  #appRoutePaths = inject(APP_ROUTE_PATHS_TOKEN);
+  #cartService = inject(CartService);
+  #homeStore = inject(HomeStore);
 
   #favouriteBooksListService = inject(FavouriteBooksListService);
 
-  public bestsellerBooks = this.homeStore.bestsellersBooks;
-  public incomingBooks = this.homeStore.incomingBooks;
-  public newBooks = this.homeStore.newBooks;
-  public loading = this.homeStore.loading;
-  public error = this.homeStore.error;
+  booksUrl = this.#appRoutePaths.BOOKS();
+  bestsellerBooks = this.#homeStore.bestsellersBooks;
+  incomingBooks = this.#homeStore.incomingBooks;
+  newBooks = this.#homeStore.newBooks;
+  loading = this.#homeStore.loading;
+  error = this.#homeStore.error;
 
   favouriteBooks = this.#favouriteBooksListService.favouriteBooks;
 
-  public columnsCount = signal(0);
+  bookTag = BookTag;
+
+  columnsCount = signal(0);
 
   booksContainerRef = viewChild.required(BooksGridComponent, {
     read: ElementRef,
@@ -60,7 +61,7 @@ export class HomeComponent implements OnDestroy {
           if (this.resizeTimeout()) return;
           this.resizeTimeout.set(
             requestAnimationFrame(() => {
-              for (let entry of entries) {
+              for (const entry of entries) {
                 const width = entry.contentRect.width;
                 this.columnsCount.set(this.calculateColumns(width));
               }
@@ -81,7 +82,7 @@ export class HomeComponent implements OnDestroy {
     });
   }
 
-  public sections = computed<
+  sections = computed<
     Array<{
       name: string;
       books: Book[];
@@ -91,26 +92,26 @@ export class HomeComponent implements OnDestroy {
   >(() => [
     {
       name: this.bookTag.INCOMING.toLowerCase(),
-      routerLink: this.appRoutePaths.BOOKS(),
+      routerLink: this.#appRoutePaths.BOOKS(),
       queryParams: { tags: this.bookTag.INCOMING },
       books: this.incomingBooks().slice(0, this.columnsCount?.()),
     },
     {
       name: this.bookTag.BESTSELLER.toLowerCase(),
-      routerLink: this.appRoutePaths.BOOKS(),
+      routerLink: this.#appRoutePaths.BOOKS(),
       queryParams: { tags: this.bookTag.BESTSELLER },
       books: this.bestsellerBooks().slice(0, this.columnsCount?.()),
     },
     {
       name: this.bookTag.NEW.toLowerCase(),
-      routerLink: this.appRoutePaths.BOOKS(),
+      routerLink: this.#appRoutePaths.BOOKS(),
       queryParams: { tags: this.bookTag.NEW },
       books: this.newBooks().slice(0, this.columnsCount?.()),
     },
   ]);
 
-  public addToCart(book: Book) {
-    this.cartService.addBook(book, 1);
+  addToCart(book: Book) {
+    this.#cartService.addBook(book, 1);
   }
 
   addBookToFavourite({ id }: Book) {
@@ -118,7 +119,7 @@ export class HomeComponent implements OnDestroy {
   }
 
   retry() {
-    this.homeStore.getBooks();
+    this.#homeStore.getBooks();
   }
 
   calculateColumns(width: number) {

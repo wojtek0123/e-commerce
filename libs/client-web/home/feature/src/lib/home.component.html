@@ -1,18 +1,17 @@
 <header
-  class="w-full flex flex-col-reverse justify-center relative 2xl:grid 2xl:grid-cols-2 2xl:place-items-center"
+  class="@container w-full flex flex-col-reverse justify-center relative md:grid md:grid-cols-2 place-items-center"
 >
-  <div class="flex flex-col gap-4 lg:gap-8">
+  <div class="flex flex-col gap-4 lg:gap-8 2xl:gap-16">
     <h2
-      class="text-3xl sm:text-4xl md:text-6xl lg:text-8xl 5xl:text-[8rem] 8xl:text-[9rem] 9xl:text-[10rem] 9xl:leading-[12rem]"
+      class="text-3xl @2xl:text-4xl @3xl:text-5xl @5xl:text-6xl @8xl:text-7xl @10xl:text-8xl @12xl:text-[8rem] @14xl:text-[9rem]"
     >
       Unleash the power of your imagination with our books.
     </h2>
     <a
-      [routerLink]="appRoutePaths.BOOKS()"
-      class="p-button-large max-w-fit 2xl:text-4xl md:px-6 md:py-4 md:text-2xl lg:px-8 lg:py-5 lg:text-4xl"
+      [routerLink]="booksUrl"
+      class="p-button-large max-w-fit text-2xl xl:text-4xl xl:px-6 xl:py-4 3xl:px-8 3xl:py-5 3xl:text-4xl"
       pButton
       [raised]="true"
-      size="large"
     >
       Explore now
     </a>
@@ -31,7 +30,7 @@
       <div class="flex items-center justify-between w-full capitalize">
         <h2 class="text-4xl">{{ section.name }}</h2>
         <a
-          [routerLink]="appRoutePaths.BOOKS()"
+          [routerLink]="booksUrl"
           [queryParams]="section.queryParams"
           [state]="{ clearFilters: true }"
         >

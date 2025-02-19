@@ -100,7 +100,7 @@ module.exports = [
             },
             {
               sourceTag: 'scope:client-web',
-              onlyDependOnLibsWithTags: ['scope:client-web'],
+              onlyDependOnLibsWithTags: ['scope:client-web', 'scope:shared'],
             },
             {
               sourceTag: 'scope:api',
