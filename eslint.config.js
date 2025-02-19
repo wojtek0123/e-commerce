@@ -140,6 +140,7 @@ module.exports = [
       files: ['**/*.ts', '**/*.tsx'],
       rules: {
         ...config.rules,
+        // '@typescript-eslint/no-empty-function': 'off',
       },
     })),
   ...compat
