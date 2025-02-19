@@ -21,7 +21,7 @@ import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { Divider } from 'primeng/divider';
 import { InputText } from 'primeng/inputtext';
-import { MessageModule } from 'primeng/message';
+import { Message } from 'primeng/message';
 
 @Component({
   selector: 'lib-save-filters',
@@ -32,8 +32,8 @@ import { MessageModule } from 'primeng/message';
     DialogModule,
     InputText,
     LabelComponent,
+    Message,
     FormFieldComponent,
-    MessageModule,
     ErrorMessageDirective,
     ReactiveFormsModule,
     KeyValuePipe,

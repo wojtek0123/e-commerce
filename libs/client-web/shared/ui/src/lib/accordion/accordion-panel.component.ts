@@ -2,19 +2,25 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  effect,
   forwardRef,
   inject,
   input,
 } from '@angular/core';
 import { AccordionComponent } from './accordion.component';
-import { last } from 'rxjs';
+import { NgClass } from '@angular/common';
+
+export type AccordionPanelKey = string | number;
 
 @Component({
   selector: 'lib-accordion-panel',
+  imports: [NgClass],
   template: `
     <button
-      class="bg-surface-100 dark:bg-surface-950 p-6 flex items-center justify-between w-full"
+      class="p-6 flex items-center justify-between w-full"
+      [ngClass]="{
+        'bg-surface-100 dark:bg-surface-950': color() === 'surface',
+        'bg-content-background': color() === 'content',
+      }"
       (click)="toggle()"
     >
       <ng-content select="[slot='header']" />
@@ -25,15 +31,21 @@ import { last } from 'rxjs';
       ></span>
     </button>
     <div
-      class="bg-surface-100 dark:bg-surface-950 overflow-hidden transition-[height,visibility] duration-200 ease-in-out"
+      class="overflow-hidden transition-[height,visibility] duration-[400ms] ease-[cubic-bezier(0.86,0,0.07,1)]"
+      [ngClass]="{
+        'bg-surface-100 dark:bg-surface-950': color() === 'surface',
+        'bg-content-background': color() === 'content',
+      }"
       [class.h-0.invisible]="!extended()"
       [class.h-auto.visible]="extended()"
     >
-      <div class="  p-base">
+      <div class="px-base pb-base">
         <ng-content select="[slot='content']" />
       </div>
     </div>
-    <div class="bg-surface-100 dark:bg-surface-950 h-[1px] w-full"></div>
+    @if (!last()) {
+      <div class="bg-surface-200 dark:bg-surface-700 h-[1px] w-full"></div>
+    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
@@ -43,14 +55,17 @@ import { last } from 'rxjs';
 export class AccordionPanelComponent {
   accordion = inject<AccordionComponent>(forwardRef(() => AccordionComponent));
 
-  key = input.required<number>();
+  key = input.required<AccordionPanelKey>();
 
-  extended = computed(() => this.selected() === this.key());
+  extended = computed(
+    () => this.selected().filter((s) => s === this.key()).length > 0,
+  );
   selected = computed(() => this.accordion.selected());
+  color = computed(() => this.accordion.color());
+
+  last = computed(() => this.accordion.items().at(-1) === this);
 
   toggle() {
-    this.accordion.selected.update((selected) =>
-      selected === this.key() ? -1 : this.key(),
-    );
+    this.accordion.toggle(this.key());
   }
 }

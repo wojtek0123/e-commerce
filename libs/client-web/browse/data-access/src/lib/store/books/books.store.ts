@@ -795,6 +795,7 @@ export const BooksStore = signalStore(
   withHooks({
     onInit(store, _destroyRef = inject(DestroyRef)) {
       store.getAllFilters();
+      store.getBooks();
 
       store._deserializeQueryParamsFilters({
         queryParam: store._route.snapshot.queryParamMap,
