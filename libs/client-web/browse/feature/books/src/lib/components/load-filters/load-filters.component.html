@@ -1,58 +1,81 @@
 <p-button
-  icon="pi pi-upload"
-  ariaLabel="Upload filters"
+  icon="pi pi-download"
+  ariaLabel="Load filters"
   severity="secondary"
   size="large"
-  title="Upload filters"
+  title="Load filters"
   (onClick)="open()"
 />
 
 <p-dialog
   [(visible)]="visible"
-  header="Load filters"
   [modal]="true"
   styleClass="w-full max-w-[32rem] mx-4"
+  header="Load filters"
+  appendTo="body"
 >
-  <p-accordion>
-    @for (
-      filter of filters() | keyvalue;
-      track filter.key;
-      let index = $index
-    ) {
-      <p-accordion-panel [value]="index">
-        <p-accordion-header>
-          {{ filter.key }}
-        </p-accordion-header>
-        <p-accordion-content>
-          @for (
-            activeFilter of filter.value | keyvalue;
-            track activeFilter.key
-          ) {
-            <lib-display-active-filters
-              [filterName]="activeFilter.key"
-              [activeFilters]="activeFilter.value"
+  <div class="flex flex-col justify-between px-1 gap-4 overflow-y-hidden">
+    <lib-accordion color="surface" [(selected)]="initialAccordionState">
+      @for (
+        filter of filters() | keyvalue;
+        track filter.key;
+        let index = $index
+      ) {
+        <lib-accordion-panel [key]="index">
+          <div slot="header" class="flex items-center gap-4">
+            <span class="capitalize text-lg text-muted-color">
+              {{ filter.key }}
+            </span>
+            <p-badge
+              [value]="filter.value | getFiltersCount"
+              severity="contrast"
             />
-          }
 
-          <p-button
-            label="Save"
-            styleClass="w-full"
-            severity="secondary"
-            (onClick)="load(filter.value)"
-          />
-        </p-accordion-content>
-      </p-accordion-panel>
-    } @empty {
-      <span>You don't have any saved filters</span>
+            <p-button
+              icon="pi pi-trash"
+              ariaLabel="Remove saved filters"
+              [text]="true"
+              [outlined]="true"
+              title="Remove saved filters"
+              (onClick)="remove(filter.key, $event)"
+            />
+          </div>
+          <div class="flex flex-col gap-8" slot="content">
+            <div>
+              @for (
+                activeFilter of filter.value | keyvalue;
+                track activeFilter.key
+              ) {
+                <lib-display-active-filters
+                  [filterName]="activeFilter.key"
+                  [activeFilters]="activeFilter.value"
+                />
+              }
+            </div>
+
+            <p-button
+              label="Load"
+              styleClass="w-full"
+              severity="contrast"
+              (onClick)="load(filter.value)"
+            />
+          </div>
+        </lib-accordion-panel>
+      }
+    </lib-accordion>
+
+    @if (visible() && filters()?.size === 0) {
+      <p-message
+        icon="pi pi-info-circle"
+        text="You don't have any saved filters"
+      />
     }
-  </p-accordion>
-
-  <p-button
-    class="mt-4"
-    label="Cancel"
-    styleClass="w-full"
-    severity="secondary"
-    [outlined]="true"
-    (onClick)="cancel()"
-  />
+    <p-button
+      label="Cancel"
+      styleClass="w-full"
+      severity="secondary"
+      [outlined]="true"
+      (onClick)="cancel()"
+    />
+  </div>
 </p-dialog>

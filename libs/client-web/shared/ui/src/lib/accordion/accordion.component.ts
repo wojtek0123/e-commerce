@@ -1,13 +1,14 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  computed,
   contentChildren,
-  OnInit,
-  Signal,
-  signal,
+  input,
+  model,
 } from '@angular/core';
-import { AccordionPanelComponent } from './accordion-panel.component';
+import {
+  AccordionPanelComponent,
+  AccordionPanelKey,
+} from './accordion-panel.component';
 
 @Component({
   selector: 'lib-accordion',
@@ -18,7 +19,22 @@ import { AccordionPanelComponent } from './accordion-panel.component';
   },
 })
 export class AccordionComponent {
-  selected = signal<number>(-1);
+  selected = model<AccordionPanelKey[]>([]);
+
+  multiple = input(false);
+  color = input<'content' | 'surface'>('content');
 
   items = contentChildren(AccordionPanelComponent);
+
+  toggle(key: AccordionPanelKey) {
+    const extended = this.selected().includes(key);
+
+    if (this.multiple()) {
+      this.selected.update((selected) =>
+        extended ? selected.filter((s) => s !== key) : [...selected, key],
+      );
+    } else {
+      this.selected.set(extended ? [] : [key]);
+    }
+  }
 }

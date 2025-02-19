@@ -3,6 +3,7 @@ import {
   Component,
   computed,
   inject,
+  OnDestroy,
   OnInit,
   signal,
 } from '@angular/core';
@@ -26,7 +27,8 @@ import { FavouriteBooksListService } from '@e-commerce/client-web/account/api';
 import { SortComponent } from '@e-commerce/client-web/browse/ui';
 import { SaveFiltersComponent } from './components/save-filters/save-filters.component';
 import { LoadFiltersComponent } from './components/load-filters/load-filters.component';
-import { RemoveSavedFiltersComponent } from './components/remove-saved-filters/remove-saved-filters.component';
+import { ButtonModule } from 'primeng/button';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 
 @Component({
   selector: 'lib-books',
@@ -41,11 +43,12 @@ import { RemoveSavedFiltersComponent } from './components/remove-saved-filters/r
     SortComponent,
     SaveFiltersComponent,
     LoadFiltersComponent,
-    RemoveSavedFiltersComponent,
+    ButtonModule,
   ],
   templateUrl: './books.component.html',
   styleUrl: './books.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [DialogService, DynamicDialogRef],
 })
 export class BooksComponent implements OnInit {
   #booksStore = inject(BooksStore);

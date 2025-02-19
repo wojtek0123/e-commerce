@@ -14,42 +14,15 @@
   appendTo="body"
   styleClass="w-full max-w-[32rem] mx-4"
 >
-  <div class="flex flex-col gap-8">
-    <lib-form-field>
-      <lib-label idFor="name">
-        What do you want to name this set of filters?
-      </lib-label>
-      <input pInputText id="name" [formControl]="nameFc" />
-    </lib-form-field>
+  @if (filters().length === 0) {
+    <div class="flex flex-col gap-4 px-1 pt-1">
+      @if (visible()) {
+        <p-message
+          icon="pi pi-info-circle"
+          text="Pick some filters to be able to save them"
+        />
+      }
 
-    <div class="flex flex-col">
-      <span class="font-semibold text-xl">
-        Selected filters group by filter name
-      </span>
-
-      <p-divider />
-
-      <div class="flex flex-col gap-2">
-        @for (
-          groupedFilter of groupedFiltersByFilter() | keyvalue;
-          track groupedFilter.key
-        ) {
-          <lib-display-active-filters
-            [filterName]="groupedFilter.key"
-            [activeFilters]="groupedFilter.value"
-          />
-        }
-      </div>
-    </div>
-  </div>
-
-  <div class="flex flex-col mt-4 gap-4">
-    @if (nameFc.dirty && nameFc.invalid) {
-      <p-message libErrorMessage>
-        Name is required to save currently selected filters
-      </p-message>
-    }
-    <div class="grid grid-cols-2 gap-4">
       <p-button
         label="Cancel"
         styleClass="w-full"
@@ -57,12 +30,57 @@
         [outlined]="true"
         (onClick)="cancel()"
       />
-      <p-button
-        label="Save"
-        styleClass="w-full"
-        severity="secondary"
-        (onClick)="save()"
-      />
     </div>
-  </div>
+  } @else {
+    <div class="flex flex-col gap-8">
+      <lib-form-field>
+        <lib-label idFor="name">
+          What do you want to name this set of filters?
+        </lib-label>
+        <input pInputText id="name" [formControl]="nameFc" />
+      </lib-form-field>
+
+      <div class="flex flex-col">
+        <span class="font-semibold text-xl">
+          Selected filters group by filter name
+        </span>
+
+        <p-divider />
+
+        <div class="flex flex-col gap-2">
+          @for (
+            groupedFilter of groupedFiltersByFilter() | keyvalue;
+            track groupedFilter.key
+          ) {
+            <lib-display-active-filters
+              [filterName]="groupedFilter.key"
+              [activeFilters]="groupedFilter.value"
+            />
+          }
+        </div>
+      </div>
+    </div>
+    <div class="flex flex-col mt-4 gap-4">
+      @if (nameFc.dirty && nameFc.invalid) {
+        <p-message libErrorMessage>
+          Name is required to save currently selected filters
+        </p-message>
+      }
+      <div class="grid grid-cols-2 gap-4">
+        <p-button
+          label="Cancel"
+          styleClass="w-full"
+          severity="secondary"
+          [outlined]="true"
+          (onClick)="cancel()"
+        />
+        <p-button
+          label="Save"
+          styleClass="w-full"
+          severity="secondary"
+          (onClick)="save()"
+        />
+      </div>
+    </div>
+  }
 </p-dialog>

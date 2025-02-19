@@ -20,54 +20,43 @@
 </p-drawer>
 
 <ng-template #filters>
-  <p-accordion>
-    <p-accordion-panel [value]="0">
-      <p-accordion-header>
-        <lib-accordion-filter-header
-          header="Tags"
-          [selectedItemsCount]="selectedTags().length"
-          (onClearFilter)="clearSelectedItems('tag')"
-        />
-      </p-accordion-header>
-      <p-accordion-content>
-        <lib-filter libTags />
-      </p-accordion-content>
-    </p-accordion-panel>
-    <p-accordion-panel [value]="1">
-      <p-accordion-header>
-        <lib-accordion-filter-header
-          header="Authors"
-          [selectedItemsCount]="selectedAuthors().length"
-          (onClearFilter)="clearSelectedItems('author')"
-        />
-      </p-accordion-header>
-      <p-accordion-content>
-        <lib-filter libAuthors />
-      </p-accordion-content>
-    </p-accordion-panel>
-    <p-accordion-panel [value]="2">
-      <p-accordion-header>
-        <lib-accordion-filter-header
-          header="Categories"
-          [selectedItemsCount]="selectedCategories().length"
-          (onClearFilter)="clearSelectedItems('category')"
-        />
-      </p-accordion-header>
-      <p-accordion-content>
-        <lib-filter libCategories />
-      </p-accordion-content>
-    </p-accordion-panel>
-    <p-accordion-panel [value]="3">
-      <p-accordion-header>
-        <lib-accordion-filter-header
-          header="Price"
-          [selectedItemsCount]="selectedPrices().length"
-          (onClearFilter)="clearPriceFilter()"
-        />
-      </p-accordion-header>
-      <p-accordion-content>
-        <lib-price-filter />
-      </p-accordion-content>
-    </p-accordion-panel>
-  </p-accordion>
+  <lib-accordion>
+    <lib-accordion-panel [key]="0">
+      <lib-accordion-filter-header
+        slot="header"
+        header="Tags"
+        [selectedItemsCount]="selectedTags().length"
+        (onClearFilter)="clearSelectedItems('tag')"
+      />
+
+      <lib-filter slot="content" libTags />
+    </lib-accordion-panel>
+    <lib-accordion-panel [key]="1">
+      <lib-accordion-filter-header
+        slot="header"
+        header="Authors"
+        [selectedItemsCount]="selectedAuthors().length"
+        (onClearFilter)="clearSelectedItems('author')"
+      />
+      <lib-filter slot="content" libAuthors />
+    </lib-accordion-panel>
+    <lib-accordion-panel [key]="2">
+      <lib-accordion-filter-header
+        slot="header"
+        header="Categories"
+        [selectedItemsCount]="selectedCategories().length"
+        (onClearFilter)="clearSelectedItems('category')"
+      />
+      <lib-filter slot="content" libCategories />
+    </lib-accordion-panel>
+    <lib-accordion-panel [key]="3">
+      <lib-accordion-filter-header
+        slot="header"
+        header="Price"
+        [selectedItemsCount]="selectedPrices().length"
+        (onClearFilter)="clearPriceFilter()"
+      />
+      <lib-price-filter slot="content" />
+    </lib-accordion-panel>
+  </lib-accordion>
 </ng-template>

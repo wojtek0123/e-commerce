@@ -16,6 +16,7 @@ import { CurrencyPipe, NgClass, NgOptimizedImage } from '@angular/common';
 import { APP_ROUTE_PATHS_TOKEN } from '@e-commerce/client-web/shared/app-config';
 import { RatingInputComponent } from '../rating-input/rating-input.component';
 import { FormsModule } from '@angular/forms';
+import { Tag } from 'primeng/tag';
 
 @Pipe({ standalone: true, name: 'isBookFavourite' })
 export class IsBookFavouritePipe implements PipeTransform {
@@ -39,6 +40,7 @@ export class IsBookFavouritePipe implements PipeTransform {
     NgClass,
     RatingInputComponent,
     FormsModule,
+    Tag,
   ],
   templateUrl: './book-card.component.html',
   styleUrl: './book-card.component.scss',

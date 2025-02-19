@@ -20,6 +20,10 @@ import { CategoriesDirective } from './directives/category.directive';
 import { TagsDirective } from './directives/tags.directive';
 import { DrawerModule } from 'primeng/drawer';
 import { DrawerLeftDirective } from '@e-commerce/client-web/shared/utils';
+import {
+  AccordionComponent,
+  AccordionPanelComponent,
+} from '@e-commerce/client-web/shared/ui';
 
 @Component({
   selector: 'lib-filters',
@@ -36,6 +40,8 @@ import { DrawerLeftDirective } from '@e-commerce/client-web/shared/utils';
     CategoriesDirective,
     TagsDirective,
     DrawerLeftDirective,
+    AccordionComponent,
+    AccordionPanelComponent,
   ],
   templateUrl: './filters.component.html',
   styleUrl: './filters.component.scss',

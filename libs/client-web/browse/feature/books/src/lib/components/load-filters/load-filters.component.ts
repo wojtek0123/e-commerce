@@ -3,6 +3,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   inject,
+  Pipe,
+  PipeTransform,
   signal,
 } from '@angular/core';
 import {
@@ -16,6 +18,24 @@ import { DisplayActiveFiltersComponent } from '@e-commerce/client-web/browse/ui'
 import { AccordionModule } from 'primeng/accordion';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
+import {
+  AccordionComponent,
+  AccordionPanelComponent,
+  AccordionPanelKey,
+} from '@e-commerce/client-web/shared/ui';
+import { BadgeModule } from 'primeng/badge';
+import { MessageService } from 'primeng/api';
+import { Message } from 'primeng/message';
+
+@Pipe({
+  name: 'getFiltersCount',
+  standalone: true,
+})
+export class GetFiltersCount implements PipeTransform {
+  transform(filter: any) {
+    return [...filter.values()].reduce((acc, f) => acc + f.length, 0);
+  }
+}
 
 @Component({
   selector: 'lib-load-filters',
@@ -27,17 +47,24 @@ import { DialogModule } from 'primeng/dialog';
     AccordionModule,
     KeyValuePipe,
     DisplayActiveFiltersComponent,
+    AccordionModule,
+    AccordionComponent,
+    AccordionPanelComponent,
+    BadgeModule,
+    GetFiltersCount,
+    Message,
   ],
 })
 export class LoadFiltersComponent {
-  visible = signal(false);
   #booksStore = inject(BooksStore);
+  #meesageService = inject(MessageService);
 
   filters = signal<Map<string, Map<string, ActiveFilter[]>> | null>(null);
+  visible = signal(false);
+
+  initialAccordionState = signal<AccordionPanelKey[]>([]);
 
   open() {
-    this.visible.set(true);
-
     const rawFilters = new Map<string, ActiveFilter[]>(
       JSON.parse(localStorage.getItem('filters') || '[]'),
     );
@@ -59,6 +86,8 @@ export class LoadFiltersComponent {
     }
 
     this.filters.set(filters);
+    this.visible.set(true);
+    this.initialAccordionState.set([]);
   }
 
   cancel() {
@@ -79,8 +108,44 @@ export class LoadFiltersComponent {
       sortByMode: 'asc',
     };
 
-    this.#booksStore.loadFilters(queryParams);
     this.visible.set(false);
+    this.#booksStore.loadFilters(queryParams);
+  }
+
+  remove(filter: string, event: Event) {
+    event.stopImmediatePropagation();
+
+    const rawFilters = new Map<string, ActiveFilter[]>(
+      JSON.parse(localStorage.getItem('filters') || '[]'),
+    );
+
+    rawFilters.delete(filter);
+
+    localStorage.setItem('filters', JSON.stringify([...rawFilters]));
+
+    const filters = new Map<string, Map<string, ActiveFilter[]>>();
+    for (const [outerKey, activeFilters] of rawFilters) {
+      if (!filters.has(outerKey)) {
+        filters.set(outerKey, new Map());
+      }
+
+      const groupedActiveFilters = this.groupBy(
+        activeFilters,
+        (activeFilter: ActiveFilter) => activeFilter.filter,
+      );
+
+      [...groupedActiveFilters].forEach(([key, value]) => {
+        filters.get(outerKey)?.set(key, value);
+      });
+    }
+
+    this.filters.set(filters);
+
+    this.#meesageService.add({
+      summary: 'Info',
+      detail: 'Filters has been removed',
+      severity: 'info',
+    });
   }
 
   parseActiveFilterToQueryParam(activeFilters?: ActiveFilter[]) {
