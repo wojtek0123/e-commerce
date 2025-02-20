@@ -34,7 +34,12 @@
       </div>
       <lib-rating-input [readonly]="true" [ngModel]="averageRating()" />
       @if (book().tag) {
-        <p-tag class="w-fit" [value]="book().tag" styleClass="text-xs" />
+        <p-tag
+          class="w-fit"
+          [value]="book().tag"
+          [severity]="book().tag | bookTagToSeverity"
+          styleClass="text-xs"
+        />
       }
     </div>
     <div class="flex items-center justify-between">

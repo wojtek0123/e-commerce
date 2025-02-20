@@ -13,6 +13,7 @@ import { PriceSectionComponent } from '../price-section/price-section.component'
 import { MenuItem } from 'primeng/api';
 import { APP_ROUTE_PATHS_TOKEN } from '@e-commerce/client-web/shared/app-config';
 import { SectionHeaderDirective } from '../../directives/section-header.directive';
+import { BookTagToSeverityPipe } from '@e-commerce/client-web/shared/utils';
 
 @Component({
   selector: 'lib-book-details',
@@ -24,6 +25,7 @@ import { SectionHeaderDirective } from '../../directives/section-header.directiv
     DatePipe,
     PriceSectionComponent,
     SectionHeaderDirective,
+    BookTagToSeverityPipe,
   ],
   templateUrl: './book-details.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

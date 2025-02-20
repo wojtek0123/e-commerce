@@ -17,11 +17,12 @@ import { APP_ROUTE_PATHS_TOKEN } from '@e-commerce/client-web/shared/app-config'
 import { RatingInputComponent } from '../rating-input/rating-input.component';
 import { FormsModule } from '@angular/forms';
 import { Tag } from 'primeng/tag';
+import { BookTagToSeverityPipe } from '@e-commerce/client-web/shared/utils';
 
 @Pipe({ standalone: true, name: 'isBookFavourite' })
 export class IsBookFavouritePipe implements PipeTransform {
   transform(book: Book, favouriteBooks: Book[]) {
-    return !!favouriteBooks?.find(({ id }) => id === book.id)
+    return favouriteBooks?.find(({ id }) => id === book.id)
       ? 'pi pi-heart-fill'
       : 'pi pi-heart';
   }
@@ -41,6 +42,7 @@ export class IsBookFavouritePipe implements PipeTransform {
     RatingInputComponent,
     FormsModule,
     Tag,
+    BookTagToSeverityPipe,
   ],
   templateUrl: './book-card.component.html',
   styleUrl: './book-card.component.scss',
