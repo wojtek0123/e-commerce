@@ -1,6 +1,6 @@
 <div class="flex @container">
   <div
-    class="w-full grid grid-cols-1 gap-base @md:grid-cols-2 @2xl:grid-cols-3 @4xl:grid-cols-4 @6xl:grid-cols-5 @7xl:grid-cols-6 @10xl:grid-cols-7 @11xl:grid-cols-8 @12xl:grid-cols-9 @13xl:grid-cols-10 @14xl:grid-cols-11"
+    class="grid grid-cols-[repeat(auto-fill,minmax(min(14rem,100%),1fr))] gap-base w-full"
     [class.grid-flow-col]="displayOneRow()"
   >
     @if (loading() && books().length === 0) {

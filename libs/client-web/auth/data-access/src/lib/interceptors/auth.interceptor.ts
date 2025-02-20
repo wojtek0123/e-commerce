@@ -66,12 +66,11 @@ export const authInterceptor: HttpInterceptorFn = (
           catchError((error: ResponseError) => {
             if (
               error?.error?.statusCode === 401 ||
-              (error?.error?.statusCode === 403 &&
-                request.url !== appRoutePaths.LOGIN() &&
-                request.url !== appRoutePaths.REGISTER())
+              error?.error?.statusCode === 403
             ) {
-              authStore.logout();
+              authStore.removeLocalSession();
             }
+
             return throwError(() => error);
           }),
         );
