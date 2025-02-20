@@ -30,7 +30,7 @@ module.exports = [
                 'type:shared-data-access',
                 'type:shared-util',
                 'type:shared-ui',
-                'type:share-type',
+                'type:shared-type',
               ],
             },
             {
@@ -43,7 +43,7 @@ module.exports = [
                 'type:shared-data-access',
                 'type:shared-util',
                 'type:shared-ui',
-                'type:share-type',
+                'type:shared-type',
               ],
             },
             {
@@ -52,7 +52,7 @@ module.exports = [
                 'type:util',
                 'type:shared-data-access',
                 'type:shared-util',
-                'type:share-type',
+                'type:shared-type',
               ],
             },
             {
@@ -61,7 +61,7 @@ module.exports = [
                 'type:util',
                 'type:shared-util',
                 'type:shared-data-access',
-                'type:share-type',
+                'type:shared-type',
               ],
             },
             {
@@ -72,7 +72,7 @@ module.exports = [
                 'type:shared-data-access',
                 'type:shared-ui',
                 'type:shared-util',
-                'type:share-type',
+                'type:shared-type',
               ],
             },
             {
@@ -82,12 +82,15 @@ module.exports = [
                 'type:shared-util',
                 'type:data-access',
                 'type:shared-data-access',
-                'type:share-type',
+                'type:shared-type',
               ],
             },
             {
               sourceTag: 'type:util',
-              onlyDependOnLibsWithTags: ['type:shared-util', 'type:share-type'],
+              onlyDependOnLibsWithTags: [
+                'type:shared-util',
+                'type:shared-type',
+              ],
             },
             {
               sourceTag: 'type:shared-type',
