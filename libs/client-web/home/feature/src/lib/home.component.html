@@ -39,8 +39,8 @@
       </div>
       <lib-books-grid
         (addToCartEvent)="addToCart($event)"
-        (onAddToFavourite)="addBookToFavourite($event)"
-        (onRetry)="retry()"
+        (addToFavouriteEvent)="addBookToFavourite($event)"
+        (retryEvent)="retry()"
         class="w-full"
         [books]="section.books"
         [favouriteBooks]="favouriteBooks()"
