@@ -15,5 +15,5 @@
       }
     }
   },
-  "tags": ["type:shared-data-access", "scope:shared", "domain:shared"]
+  "tags": ["type:shared-type", "scope:shared", "domain:shared"]
 }
