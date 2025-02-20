@@ -223,6 +223,14 @@ export const AuthStore = signalStore(
           ),
         ),
       ),
+      removeLocalSession: () => {
+        store.removeSession();
+
+        patchState(store, {
+          loading: false,
+          event: 'logout-success',
+        });
+      },
       logout: rxMethod<void>(
         pipe(
           tap(() => patchState(store, { loading: true })),
