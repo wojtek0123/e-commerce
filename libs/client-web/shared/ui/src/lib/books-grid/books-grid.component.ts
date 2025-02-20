@@ -28,14 +28,14 @@ export class BooksGridComponent {
   skeletons = computed(() => new Array(this.skeletonsCount()));
 
   addToCartEvent = output<Book>();
-  onRetry = output<void>();
-  onAddToFavourite = output<Book>();
+  retryEvent = output<void>();
+  addToFavouriteEvent = output<Book>();
 
   retry() {
-    this.onRetry.emit();
+    this.retryEvent.emit();
   }
 
   addToFavourite(book: Book) {
-    this.onAddToFavourite.emit(book);
+    this.addToFavouriteEvent.emit(book);
   }
 }

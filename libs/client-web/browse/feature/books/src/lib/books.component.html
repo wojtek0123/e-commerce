@@ -62,8 +62,8 @@
       [skeletonsCount]="size()"
       [favouriteBooks]="favouriteBooks()"
       (addToCartEvent)="addToCart($event)"
-      (onAddToFavourite)="addToFavourite($event)"
-      (onRetry)="retry()"
+      (addToFavouriteEvent)="addToFavourite($event)"
+      (retryEvent)="retry()"
     />
     <div
       class="flex items-center justify-center bg-content-background rounded-base w-full"
