@@ -136,7 +136,7 @@ export const initialBooksState: BooksState = {
   size: 20,
   total: 0,
   count: 0,
-  loading: false,
+  loading: true,
   error: null,
   sort: {
     key: 'title',
@@ -795,11 +795,10 @@ export const BooksStore = signalStore(
   withHooks({
     onInit(store, _destroyRef = inject(DestroyRef)) {
       store.getAllFilters();
-      store.getBooks();
-
       store._deserializeQueryParamsFilters({
         queryParam: store._route.snapshot.queryParamMap,
       });
+      store.getBooks();
 
       afterNextRender(() => {
         store._router.events
