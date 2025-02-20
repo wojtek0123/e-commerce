@@ -26,36 +26,58 @@
             </div>
           }
         </div>
-        @if (book()?.tag) {
-          <p-tag class="w-fit" [value]="book()?.tag" />
-        }
-        <div
-          class="flex flex-col justify-start mt-8 gap-4 bg-content-background p-4 rounded-base xl:gap-8 4xl:hidden"
-        >
-          <lib-price-section />
+        <div class="grid grid-cols-1 lg:grid-cols-2">
+          <div class="flex flex-col gap-base">
+            @if (book()?.tag) {
+              <p-tag
+                class="w-fit"
+                [value]="book()?.tag"
+                [severity]="book()?.tag | bookTagToSeverity"
+              />
+            }
+
+            <div class="flex flex-col gap-2">
+              <h3 libSectionHeader>Details</h3>
+              <lib-detail-row
+                label="Category"
+                [value]="book()?.category?.name ?? ''"
+              />
+              @if (book()?.pages) {
+                <lib-detail-row label="Pages" [value]="book()?.pages ?? 0" />
+              }
+              @if (book()?.language) {
+                <lib-detail-row
+                  label="Language"
+                  [value]="book()?.language ?? ''"
+                />
+              }
+              @if (book()?.publishedDate) {
+                <lib-detail-row
+                  label="Publish date"
+                  [value]="book()?.publishedDate | date"
+                />
+              }
+            </div>
+          </div>
+
+          <div
+            class="hidden flex-col justify-start gap-base bg-content-background p-base rounded-base xl:gap-8 lg:flex 3xl:hidden"
+          >
+            <lib-price-section />
+          </div>
         </div>
       </div>
-    </div>
-    <div class="flex flex-col gap-2">
-      <h3 libSectionHeader>Details</h3>
-      <lib-detail-row label="Category" [value]="book()?.category?.name ?? ''" />
-      @if (book()?.pages) {
-        <lib-detail-row label="Pages" [value]="book()?.pages ?? 0" />
-      }
-      @if (book()?.language) {
-        <lib-detail-row label="Language" [value]="book()?.language ?? ''" />
-      }
-      @if (book()?.publishedDate) {
-        <lib-detail-row
-          label="Publish date"
-          [value]="book()?.publishedDate | date"
-        />
-      }
+
+      <div
+        class="flex justify-start gap-base bg-content-background col-span-full md:col-start-2 md:col-end-3 p-base rounded-base w-full lg:hidden"
+      >
+        <lib-price-section class="w-full" />
+      </div>
     </div>
   </div>
 </div>
 @if (book()?.description) {
-  <div class="flex flex-col gap-4">
+  <div class="flex flex-col gap-base">
     <h3 libSectionHeader>Description</h3>
     <p>
       {{ book()?.description }}
