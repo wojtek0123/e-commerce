@@ -99,7 +99,7 @@ export class AuthService {
     }
 
     if (!user.refreshToken) {
-      throw new NotFoundException("User doesn't have active session");
+      throw new UnauthorizedException("User doesn't have active session");
     }
 
     return this.prisma.user.update({
