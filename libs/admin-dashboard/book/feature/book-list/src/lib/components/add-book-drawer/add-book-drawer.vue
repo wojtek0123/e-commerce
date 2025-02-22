@@ -10,6 +10,7 @@ import InputNumber from 'primevue/inputnumber';
 import Drawer from 'primevue/drawer';
 import Button from 'primevue/button';
 import Message from 'primevue/message';
+import Divider from 'primevue/divider';
 import { Author, allBookTags } from '@e-commerce/shared/api-models';
 import { ref } from 'vue';
 
@@ -182,7 +183,7 @@ onUnmounted(() => {
     <Form
       @submit="addAuthor"
       :resolver="authorsResolver"
-      class="flex flex-col h-full justify-between gap-2 w-full max-w-[120rem]"
+      class="flex flex-col h-full justify-between gap-2 w-full max-w-[120rem] pb-4"
     >
       <div class="flex flex-col gap-4">
         <FormField v-slot="$field" class="flex flex-col gap-1" name="name">
@@ -201,198 +202,116 @@ onUnmounted(() => {
       <Button :loading="store.addLoading" type="submit">Add author</Button>
     </Form>
   </Drawer>
+
   <Button text icon="pi pi-plus" @click="visible = true" />
+
   <Drawer v-model:visible="visible" class="max-w-[40rem] w-full rounded-r-base">
-    <Form
-      @submit="submit"
-      :resolver="resolver"
-      class="flex flex-col h-full justify-between gap-2 w-full max-w-[120rem]"
-    >
-      <div class="flex flex-col gap-4">
-        <FormField v-slot="$field" class="flex flex-col gap-1" name="title">
-          <label class="text-muted-color">Title</label>
-          <InputText fluid id="title" />
-          <Message
-            v-if="$field.invalid"
-            severity="error"
-            variant="simple"
-            size="small"
-          >
-            {{ $field.error.message }}
-          </Message>
-        </FormField>
+    <div>
+      <Form
+        @submit="submit"
+        :resolver="resolver"
+        class="flex flex-col h-full justify-between gap-4 w-full max-w-[120rem]"
+      >
+        <div class="flex flex-col gap-4">
+          <FormField v-slot="$field" class="flex flex-col gap-1" name="title">
+            <label class="text-muted-color">Title</label>
+            <InputText fluid id="title" />
+            <Message
+              v-if="$field.invalid"
+              severity="error"
+              variant="simple"
+              size="small"
+            >
+              {{ $field.error.message }}
+            </Message>
+          </FormField>
 
-        <FormField v-slot="$field" class="flex flex-col gap-1" name="pageCount">
-          <label class="text-muted-color">Page count</label>
-          <InputNumber fluid id="pageCount" name="pageCount" />
-          <Message
-            v-if="$field.invalid"
-            severity="error"
-            variant="simple"
-            size="small"
-          >
-            {{ $field.error.message }}
-          </Message>
-        </FormField>
-
-        <FormField v-slot="$field" class="flex flex-col gap-1" name="price">
-          <label for="price" class="text-muted-color">Price</label>
-          <InputNumber fluid id="price" name="price" />
-          <Message
-            v-if="$field.invalid"
-            severity="error"
-            variant="simple"
-            size="small"
-          >
-            {{ $field.error.message }}
-          </Message>
-        </FormField>
-
-        <FormField v-slot="$field" class="flex flex-col gap-1" name="quantity">
-          <label for="quantity" class="text-muted-color">Quantity *</label>
-          <InputNumber id="quanity" name="quantity" fluid />
-          <Message
-            v-if="$field.invalid"
-            severity="error"
-            variant="simple"
-            size="small"
-          >
-            {{ $field.error.message }}
-          </Message>
-        </FormField>
-
-        <FormField
-          v-slot="$field"
-          class="flex flex-col gap-1"
-          name="publishedDate"
-        >
-          <label for="publish_date" class="text-muted-color">
-            Published date
-          </label>
-          <DatePicker id="publish_date" name="publishedDate" fluid />
-          <Message
-            v-if="$field.invalid"
-            severity="error"
-            variant="simple"
-            size="small"
-          >
-            {{ $field.error.message }}
-          </Message>
-        </FormField>
-
-        <SelectButton
-          :options="publisherOptions"
-          v-model="publisherInputType"
-        />
-
-        <FormField
-          v-if="publisherInputType === 'Select'"
-          v-slot="$field"
-          class="flex flex-col gap-1"
-          name="publisher"
-        >
-          <label for="price" class="text-muted-color">Publisher</label>
-          <AutoComplete
-            id="publisher"
-            dropdown
-            fluid
-            name="publisher"
-            option-label="name"
-            :suggestions="store.publishers"
-            @complete="searchPublisher"
-          />
-          <Message
-            v-if="$field.invalid"
-            severity="error"
-            variant="simple"
-            size="small"
-          >
-            {{ $field.error.message }}
-          </Message>
-        </FormField>
-
-        <FormField
-          v-if="publisherInputType === 'Add'"
-          v-slot="$field"
-          class="flex flex-col gap-1"
-          name="publisherName"
-        >
-          <label for="publisherName" class="text-muted-color">
-            Publisher name
-          </label>
-          <InputText fluid id="publisher-name" name="publisherName" />
-          <Message
-            v-if="$field.invalid"
-            severity="error"
-            variant="simple"
-            size="small"
-          >
-            {{ $field.error.message }}
-          </Message>
-        </FormField>
-
-        <FormField class="flex flex-col gap-1">
-          <label for="tag" class="text-muted-color">Tag</label>
-          <AutoComplete
-            id="tag"
-            dropdown
-            fluid
-            name="tag"
-            :suggestions="bookTags"
-            @complete="searchTag"
-          />
-        </FormField>
-
-        <FormField v-slot="$field" class="flex flex-col gap-1" name="category">
-          <label for="category" class="text-muted-color">Category *</label>
-          <AutoComplete
-            id="category"
-            name="category"
-            :suggestions="store.categories"
-            fluid
-            option-label="name"
-            @complete="searchCategories"
-            dropdown
-          />
-          <Message
-            v-if="$field.invalid"
-            severity="error"
-            variant="simple"
-            size="small"
-          >
-            {{ $field.error.message }}
-          </Message>
-        </FormField>
-
-        <FormField v-slot="$field" class="flex flex-col gap-1" name="language">
-          <label class="text-muted-color" for="language">Language *</label>
-          <InputText fluid id="language" name="language" />
-          <Message
-            v-if="$field.invalid"
-            severity="error"
-            variant="simple"
-            size="small"
-          >
-            {{ $field.error.message }}
-          </Message>
-        </FormField>
-
-        <div class="flex gap-4">
           <FormField
             v-slot="$field"
-            class="flex flex-col gap-1 w-full"
-            name="authors"
+            class="flex flex-col gap-1"
+            name="pageCount"
           >
-            <label for="authors" class="text-muted-color">Author *</label>
+            <label class="text-muted-color">Page count</label>
+            <InputNumber fluid id="pageCount" name="pageCount" />
+            <Message
+              v-if="$field.invalid"
+              severity="error"
+              variant="simple"
+              size="small"
+            >
+              {{ $field.error.message }}
+            </Message>
+          </FormField>
+
+          <FormField v-slot="$field" class="flex flex-col gap-1" name="price">
+            <label for="price" class="text-muted-color">Price</label>
+            <InputNumber fluid id="price" name="price" />
+            <Message
+              v-if="$field.invalid"
+              severity="error"
+              variant="simple"
+              size="small"
+            >
+              {{ $field.error.message }}
+            </Message>
+          </FormField>
+
+          <FormField
+            v-slot="$field"
+            class="flex flex-col gap-1"
+            name="quantity"
+          >
+            <label for="quantity" class="text-muted-color">Quantity *</label>
+            <InputNumber id="quanity" name="quantity" fluid />
+            <Message
+              v-if="$field.invalid"
+              severity="error"
+              variant="simple"
+              size="small"
+            >
+              {{ $field.error.message }}
+            </Message>
+          </FormField>
+
+          <FormField
+            v-slot="$field"
+            class="flex flex-col gap-1"
+            name="publishedDate"
+          >
+            <label for="publish_date" class="text-muted-color">
+              Published date
+            </label>
+            <DatePicker id="publish_date" name="publishedDate" fluid />
+            <Message
+              v-if="$field.invalid"
+              severity="error"
+              variant="simple"
+              size="small"
+            >
+              {{ $field.error.message }}
+            </Message>
+          </FormField>
+
+          <SelectButton
+            :options="publisherOptions"
+            v-model="publisherInputType"
+          />
+
+          <FormField
+            v-if="publisherInputType === 'Select'"
+            v-slot="$field"
+            class="flex flex-col gap-1"
+            name="publisher"
+          >
+            <label for="price" class="text-muted-color">Publisher</label>
             <AutoComplete
-              id="authors"
-              name="authors"
-              :suggestions="store.authors"
-              fluid
-              option-label="name"
-              @complete="searchAuthors"
+              id="publisher"
               dropdown
-              multiple
+              fluid
+              name="publisher"
+              option-label="name"
+              :suggestions="store.publishers"
+              @complete="searchPublisher"
             />
             <Message
               v-if="$field.invalid"
@@ -404,63 +323,170 @@ onUnmounted(() => {
             </Message>
           </FormField>
 
-          <Button
-            class="h-fit mt-7"
-            aria-label="Add author"
-            v-tooltip="'Add author'"
-            icon="pi pi-plus"
-            @click="authorFormVisibility = true"
-            severity="secondary"
-          />
-        </div>
-        <FormField class="flex flex-col gap-1" name="description">
-          <label for="description" class="text-muted-color">Description</label>
-          <Textarea
-            id="description"
-            name="description"
-            class="min-h-56 max-h-[48rem]"
-            fluid
-          />
-        </FormField>
-
-        <div class="flex flex-col gap-4">
-          <label for="file" class="text-muted-color">Cover image</label>
-          <FileUpload
-            id="file"
-            mode="basic"
-            class="mr-auto"
-            name="file"
-            ref="uploadFileState"
-            accept="image/*"
-            :maxFileSize="1000000"
-          />
-          <Message
-            v-if="!!uploadFileState?.files.length"
-            severity="warn"
-            variant="simple"
+          <FormField
+            v-if="publisherInputType === 'Add'"
+            v-slot="$field"
+            class="flex flex-col gap-1"
+            name="publisherName"
           >
-            Upload image to add cover
-          </Message>
-          <ButtonGroup class="flex items-center gap-4">
+            <label for="publisherName" class="text-muted-color">
+              Publisher name
+            </label>
+            <InputText fluid id="publisher-name" name="publisherName" />
+            <Message
+              v-if="$field.invalid"
+              severity="error"
+              variant="simple"
+              size="small"
+            >
+              {{ $field.error.message }}
+            </Message>
+          </FormField>
+
+          <FormField class="flex flex-col gap-1">
+            <label for="tag" class="text-muted-color">Tag</label>
+            <AutoComplete
+              id="tag"
+              dropdown
+              fluid
+              name="tag"
+              :suggestions="bookTags"
+              @complete="searchTag"
+            />
+          </FormField>
+
+          <FormField
+            v-slot="$field"
+            class="flex flex-col gap-1"
+            name="category"
+          >
+            <label for="category" class="text-muted-color">Category *</label>
+            <AutoComplete
+              id="category"
+              name="category"
+              :suggestions="store.categories"
+              fluid
+              option-label="name"
+              @complete="searchCategories"
+              dropdown
+            />
+            <Message
+              v-if="$field.invalid"
+              severity="error"
+              variant="simple"
+              size="small"
+            >
+              {{ $field.error.message }}
+            </Message>
+          </FormField>
+
+          <FormField
+            v-slot="$field"
+            class="flex flex-col gap-1"
+            name="language"
+          >
+            <label class="text-muted-color" for="language">Language *</label>
+            <InputText fluid id="language" name="language" />
+            <Message
+              v-if="$field.invalid"
+              severity="error"
+              variant="simple"
+              size="small"
+            >
+              {{ $field.error.message }}
+            </Message>
+          </FormField>
+
+          <div class="flex gap-4">
+            <FormField
+              v-slot="$field"
+              class="flex flex-col gap-1 w-full"
+              name="authors"
+            >
+              <label for="authors" class="text-muted-color">Author *</label>
+              <AutoComplete
+                id="authors"
+                name="authors"
+                :suggestions="store.authors"
+                fluid
+                option-label="name"
+                @complete="searchAuthors"
+                dropdown
+                multiple
+              />
+              <Message
+                v-if="$field.invalid"
+                severity="error"
+                variant="simple"
+                size="small"
+              >
+                {{ $field.error.message }}
+              </Message>
+            </FormField>
+
             <Button
-              icon="pi pi-upload"
-              :loading="store.uploadLoading"
+              class="h-fit mt-7"
+              aria-label="Add author"
+              v-tooltip="'Add author'"
+              icon="pi pi-plus"
+              @click="authorFormVisibility = true"
               severity="secondary"
-              label="Upload"
-              @click="uploadImageCover"
             />
-            <Button
-              label="Delete"
-              icon="pi pi-trash"
-              :loading="store.deleteLoading"
-              @click="deleteImageCover"
-              severity="danger"
-              outlined
+          </div>
+          <FormField class="flex flex-col gap-1" name="description">
+            <label for="description" class="text-muted-color"
+              >Description</label
+            >
+            <Textarea
+              id="description"
+              name="description"
+              class="min-h-56 max-h-[48rem]"
+              fluid
             />
-          </ButtonGroup>
+          </FormField>
+
+          <div class="flex flex-col gap-4">
+            <label for="file" class="text-muted-color">Cover image</label>
+            <FileUpload
+              id="file"
+              mode="basic"
+              class="mr-auto"
+              name="file"
+              ref="uploadFileState"
+              accept="image/*"
+              :maxFileSize="1000000"
+            />
+            <Message
+              v-if="!!uploadFileState?.files.length"
+              severity="warn"
+              variant="simple"
+            >
+              Upload image to add cover
+            </Message>
+            <ButtonGroup class="flex items-center gap-4">
+              <Button
+                icon="pi pi-upload"
+                :loading="store.uploadLoading"
+                severity="secondary"
+                label="Upload"
+                @click="uploadImageCover"
+              />
+              <Button
+                label="Delete"
+                icon="pi pi-trash"
+                :loading="store.deleteLoading"
+                @click="deleteImageCover"
+                severity="danger"
+                outlined
+              />
+            </ButtonGroup>
+          </div>
         </div>
-      </div>
-      <Button :loading="store.addLoading" type="submit">Add book</Button>
-    </Form>
+        <Divider />
+        <Button class="min-h-max" :loading="store.addLoading" type="submit">
+          Add book
+        </Button>
+      </Form>
+    </div>
   </Drawer>
 </template>

@@ -28,6 +28,12 @@ function onSubmit(event: FormSubmitEvent) {
 </script>
 
 <template>
+  <div class="flex flex-col w-full mb-8">
+    <h2 class="text-3xl xl:text-4xl">Welcome!</h2>
+    <div class="flex items-center text-base">
+      <span>You can log in into admin dashboard if you have access</span>
+    </div>
+  </div>
   <Form
     @submit="onSubmit"
     :resolver="resolver"
@@ -39,8 +45,8 @@ function onSubmit(event: FormSubmitEvent) {
       class="flex flex-col gap-1"
       name="email"
     >
-      <label class="text-muted-color">Email</label>
-      <InputText type="text" fluid />
+      <label class="text-muted-color">What is your email address?</label>
+      <InputText type="text" fluid placeholder="Email" />
       <Message
         v-if="$field.invalid"
         severity="error"
@@ -56,8 +62,14 @@ function onSubmit(event: FormSubmitEvent) {
       class="flex flex-col gap-1"
       name="password"
     >
-      <label class="text-muted-color">Password</label>
-      <Password name="password" :feedback="false" :toggle-mask="true" fluid />
+      <label class="text-muted-color">What is your password?</label>
+      <Password
+        name="password"
+        :feedback="false"
+        :toggle-mask="true"
+        fluid
+        placeholder="Password"
+      />
       <Message
         v-if="$field.invalid"
         severity="error"
@@ -66,6 +78,6 @@ function onSubmit(event: FormSubmitEvent) {
         >{{ $field.error?.message }}</Message
       >
     </FormField>
-    <Button type="submit" label="Log in" fluid />
+    <Button class="mt-2" type="submit" label="Log in" fluid />
   </Form>
 </template>

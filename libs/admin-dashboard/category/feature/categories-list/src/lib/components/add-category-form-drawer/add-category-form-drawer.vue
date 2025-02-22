@@ -47,13 +47,15 @@ function submit(event: FormSubmitEvent) {
             severity="error"
             variant="simple"
             size="small"
-            >{{ $field.error.message }}</Message
           >
+            {{ $field.error.message }}
+          </Message>
         </FormField>
       </div>
 
       <Button
         :loading="store.popupLoading"
+        class="min-h-max"
         label="Add category"
         type="submit"
       />

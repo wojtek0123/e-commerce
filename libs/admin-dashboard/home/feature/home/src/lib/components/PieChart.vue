@@ -33,7 +33,7 @@ onMounted(() => {
               const width = context.chart.width;
               return {
                 weight: 'bold',
-                size: Math.round(width / 26),
+                size: Math.round(width / 36),
               };
             },
             formatter: (value, context) => {
@@ -47,7 +47,7 @@ onMounted(() => {
                 0,
               );
 
-              return `${(value / total) * 100}%`;
+              return `${((value / total) * 100).toFixed(1)}%`;
             },
           },
           title: {
