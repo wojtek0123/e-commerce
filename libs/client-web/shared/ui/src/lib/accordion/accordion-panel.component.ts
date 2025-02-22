@@ -20,6 +20,8 @@ export type AccordionPanelKey = string | number;
       [ngClass]="{
         'bg-surface-100 dark:bg-surface-950': color() === 'surface',
         'bg-content-background': color() === 'content',
+        'focus:rounded-b-base': last() && !extended(),
+        'focus:rounded-t-base': first(),
       }"
       (click)="toggle()"
     >
@@ -31,15 +33,16 @@ export type AccordionPanelKey = string | number;
       ></span>
     </button>
     <div
-      class="overflow-hidden transition-[height,visibility] duration-[400ms] ease-[cubic-bezier(0.86,0,0.07,1)]"
+      class="overflow-hidden transition-[height,visibility] duration-[200ms] ease-[cubic-bezier(0.86,0,0.07,1)]"
       [ngClass]="{
         'bg-surface-100 dark:bg-surface-950': color() === 'surface',
         'bg-content-background': color() === 'content',
       }"
       [class.h-0.invisible]="!extended()"
       [class.h-auto.visible]="extended()"
+      [attr.tabindex]="!extended() ? -1 : null"
     >
-      <div class="px-base pb-base">
+      <div class="px-base pb-base" [inert]="!extended()">
         <ng-content select="[slot='content']" />
       </div>
     </div>
@@ -64,6 +67,7 @@ export class AccordionPanelComponent {
   color = computed(() => this.accordion.color());
 
   last = computed(() => this.accordion.items().at(-1) === this);
+  first = computed(() => this.accordion.items().at(0) === this);
 
   toggle() {
     this.accordion.toggle(this.key());

@@ -79,7 +79,7 @@ import { GetNamePipe } from './pipes/get-name.pipe';
           width: '3.5rem',
         }),
       ),
-      transition('in <=> out', [animate('300ms ease-in-out')]),
+      transition('in <=> out', [animate('200ms ease-in-out')]),
     ]),
   ],
 })
