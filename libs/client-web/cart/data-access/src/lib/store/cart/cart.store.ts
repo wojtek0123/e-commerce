@@ -1,10 +1,4 @@
-import {
-  afterNextRender,
-  computed,
-  DestroyRef,
-  inject,
-  PLATFORM_ID,
-} from '@angular/core';
+import { computed, DestroyRef, inject, PLATFORM_ID } from '@angular/core';
 import {
   Book,
   CartItemBase,
@@ -47,7 +41,6 @@ import { isPlatformBrowser } from '@angular/common';
 
 interface CartState {
   shoppingSession: ShoppingSession | null;
-  shoppingSessionId: ShoppingSession['id'] | null;
   cartItemsCached: CartItemBase[];
   isDrawerVisible: boolean;
 
@@ -57,7 +50,6 @@ interface CartState {
 
 const initialCartState: CartState = {
   shoppingSession: null,
-  shoppingSessionId: null,
   cartItemsCached: [],
   loading: false,
   error: null,
@@ -74,9 +66,10 @@ export const CartStore = signalStore(
   { providedIn: 'root' },
   withState(initialCartState),
   withEntities(cartItemsConfig),
-  withComputed(({ _cartItemsEntities }) => ({
+  withComputed(({ _cartItemsEntities, shoppingSession }) => ({
     itemsCount: computed(() => _cartItemsEntities().length),
     cartItems: computed(() => _cartItemsEntities()),
+    shoppingSessionId: computed(() => shoppingSession()?.id),
     total: computed(() =>
       _cartItemsEntities().reduce(
         (acc, ct) => acc + ct.book.price * ct.quantity,
@@ -94,6 +87,30 @@ export const CartStore = signalStore(
     platform: inject(PLATFORM_ID),
   })),
   withMethods((store) => ({
+    getShoppingSession: rxMethod<void>(
+      pipe(
+        switchMap(() =>
+          store.shoppingSessionApi.getShoppingSession().pipe(
+            tapResponse({
+              next: (shoppingSession) => {
+                patchState(store, {
+                  shoppingSession,
+                });
+              },
+              error: (error: ResponseError) => {
+                store.messageService.add({
+                  detail: 'Error',
+                  summary:
+                    error.error.message ||
+                    'Error occurred while getting session',
+                  severity: 'error',
+                });
+              },
+            }),
+          ),
+        ),
+      ),
+    ),
     // TODO: call after shopping session is done
     syncCartAndFetchSession: rxMethod<void>(
       pipe(
@@ -144,7 +161,6 @@ export const CartStore = signalStore(
                   store,
                   {
                     shoppingSession,
-                    shoppingSessionId: shoppingSession.id,
                     loading: false,
                   },
                   addEntities(
@@ -179,7 +195,6 @@ export const CartStore = signalStore(
                   store,
                   {
                     shoppingSession,
-                    shoppingSessionId: shoppingSession.id,
                   },
                   removeAllEntities(cartItemsConfig),
                 );
@@ -296,7 +311,7 @@ export const CartStore = signalStore(
         map(({ bookId, quantity }) => ({
           bookId,
           quantity,
-          shoppingSessionId: getState(store).shoppingSessionId,
+          shoppingSessionId: getState(store).shoppingSession?.id,
         })),
         filter(({ shoppingSessionId }) => !!shoppingSessionId),
         switchMap(({ bookId, quantity, shoppingSessionId }) =>
@@ -403,7 +418,7 @@ export const CartStore = signalStore(
     clearCartAndSession: () => {
       patchState(
         store,
-        { shoppingSessionId: null, shoppingSession: null },
+        { shoppingSession: null },
         removeAllEntities(cartItemsConfig),
       );
     },
@@ -427,7 +442,7 @@ export const CartStore = signalStore(
         store.getLocalCartItems();
 
         watchState(store, (state) => {
-          if (!state.shoppingSessionId) {
+          if (!state.shoppingSession?.id) {
             localStorage.setItem(
               store.appLocalStorageKeys.CART,
               JSON.stringify(Object.values(state._cartItemsEntityMap)),

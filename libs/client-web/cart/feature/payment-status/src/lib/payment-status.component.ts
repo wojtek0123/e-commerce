@@ -3,6 +3,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ButtonModule } from 'primeng/button';
 import { RouterLink } from '@angular/router';
 import { APP_ROUTE_PATHS_TOKEN } from '@e-commerce/client-web/shared/app-config';
+import { CartStore } from '@e-commerce/client-web/cart/data-access';
 
 @Component({
   selector: 'lib-payment-status',
@@ -13,6 +14,7 @@ import { APP_ROUTE_PATHS_TOKEN } from '@e-commerce/client-web/shared/app-config'
 })
 export class PaymentStatusComponent implements OnInit {
   #appRoutePaths = inject(APP_ROUTE_PATHS_TOKEN);
+  #cartStore = inject(CartStore);
 
   orderDetailsId = input<string>();
 
@@ -20,6 +22,8 @@ export class PaymentStatusComponent implements OnInit {
   loading = signal(true);
 
   ngOnInit(): void {
+    // this.#cartStore.clearCartAndSession();
+
     setTimeout(() => {
       this.loading.set(false);
     }, 3000);

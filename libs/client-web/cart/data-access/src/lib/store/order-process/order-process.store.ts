@@ -22,6 +22,7 @@ import {
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { MessageService } from 'primeng/api';
 import { pipe, switchMap, tap } from 'rxjs';
+import { MessageBusService } from '@e-commerce/client-web/shared/data-access/services';
 
 interface OrderProcessState {
   loading: boolean;
@@ -40,6 +41,7 @@ export const OrderProcessStore = signalStore(
     router: inject(Router),
     appRoutePaths: inject(APP_ROUTE_PATHS_TOKEN),
     messageService: inject(MessageService),
+    messageBusService: inject(MessageBusService),
   })),
   withMethods((store) => ({
     checkout: rxMethod<{
@@ -60,6 +62,8 @@ export const OrderProcessStore = signalStore(
               tapResponse({
                 next: async (orderDetails) => {
                   patchState(store, { orderDetails, loading: false });
+
+                  store.messageBusService.setEvent('checkout-success');
 
                   await store.router.navigate([
                     store.appRoutePaths.PAYMENT_STATUS(orderDetails.id),
