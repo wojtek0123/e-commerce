@@ -28,4 +28,12 @@ export class CartService {
   public openDrawer() {
     this.cartStore.openDrawerCart();
   }
+
+  getShoppingSession() {
+    this.cartStore.getShoppingSession();
+  }
+
+  removeSession() {
+    this.cartStore.clearCartAndSession();
+  }
 }

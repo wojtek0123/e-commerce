@@ -11,9 +11,9 @@ import { NavComponent } from '@e-commerce/client-web/core/feature/nav';
 import { ToastModule } from 'primeng/toast';
 import Aura from '@primeng/themes/aura';
 import { definePreset } from '@primeng/themes';
-import { AuthService } from '@e-commerce/client-web/auth/api';
 import { CartService } from '@e-commerce/client-web/cart/api';
 import { PrimeNG } from 'primeng/config';
+import { MessageBusService } from '@e-commerce/client-web/shared/data-access/services';
 
 const borderRadius = '1rem' as const;
 const MyPreset = definePreset(Aura, {
@@ -48,11 +48,11 @@ const MyPreset = definePreset(Aura, {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent implements OnInit {
-  #authService = inject(AuthService);
   #cartService = inject(CartService);
   #primeng = inject(PrimeNG);
+  #messageBusService = inject(MessageBusService);
 
-  event = this.#authService.event;
+  event = this.#messageBusService.event;
 
   constructor() {
     effect(() => {
@@ -67,6 +67,10 @@ export class AppComponent implements OnInit {
         }
         if (event === 'init-local') {
           this.#cartService.getLocalCartItems();
+        }
+        if (event === 'checkout-success') {
+          this.#cartService.removeSession();
+          this.#cartService.getShoppingSession();
         }
       });
     });

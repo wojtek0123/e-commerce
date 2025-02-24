@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { SkeletonModule } from 'primeng/skeleton';
 
 @Component({
-  selector: 'lib-cart-item-sekeleton',
+  selector: 'lib-cart-item-skeleton',
   template: `
     <div
       class="flex w-full items-center justify-between bg-content-background p-base rounded-base @container"

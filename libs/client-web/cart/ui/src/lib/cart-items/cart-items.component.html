@@ -3,7 +3,7 @@
   [class.animate-pulse.pointer-events-none]="loading() && items.length > 0"
 >
   @if (loading() && items().length === 0) {
-    <lib-cart-item-sekeleton />
+    <lib-cart-item-skeleton />
   } @else {
     @for (cartItem of items(); track cartItem.book.id) {
       <lib-cart-item

@@ -12,7 +12,6 @@ import { OrderDetail } from './entities/order-detail.entity';
 import { MailerService } from '@nestjs-modules/mailer';
 import { BookEntity } from '../books/entities/book.entity';
 import { Role } from '@prisma/client';
-import { throwDeprecation } from 'process';
 
 @Injectable()
 export class OrderDetailsService {
@@ -138,7 +137,11 @@ export class OrderDetailsService {
         },
       },
       include: {
-        orderItems: { include: { book: true } },
+        orderItems: {
+          include: {
+            book: { include: { authors: { include: { author: true } } } },
+          },
+        },
         orderAddress: { include: { country: true } },
         paymentDetails: true,
       },
@@ -181,13 +184,17 @@ export class OrderDetailsService {
     try {
       await this.prisma.shoppingSession.delete({ where: { userId } });
     } catch (error: unknown) {
-      throw new InternalServerErrorException(error);
+      throw new InternalServerErrorException(
+        'Failed to process order. Please try again.',
+      );
     }
 
     try {
       await this.prisma.shoppingSession.create({ data: { userId, total: 0 } });
     } catch (error: unknown) {
-      throw new InternalServerErrorException(error);
+      throw new InternalServerErrorException(
+        'Failed to initialize new shopping session.',
+      );
     }
 
     return order;
