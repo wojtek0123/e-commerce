@@ -5,7 +5,7 @@
   "
 >
   @if (cartItemsLoading() && cartItems().length === 0) {
-    <lib-cart-item-sekeleton />
+    <lib-cart-item-skeleton />
   } @else {
     @for (cartItem of cartItems(); track cartItem.book.id) {
       <lib-cart-item
