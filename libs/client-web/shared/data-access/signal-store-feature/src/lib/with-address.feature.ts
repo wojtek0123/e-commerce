@@ -44,7 +44,7 @@ interface AddressState {
 }
 
 const initialAddressState: AddressState = {
-  loading: true,
+  loading: false,
   error: null,
   cachedAddress: null,
   formInfo: {

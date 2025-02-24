@@ -43,11 +43,13 @@
       icon="pi pi-pencil"
       (onClick)="edit()"
     />
-    <p-button
-      data-testId="delete-button"
-      ariaLabel="Delete address"
-      icon="pi pi-trash"
-      (onClick)="delete()"
-    />
+    @if (removeable()) {
+      <p-button
+        data-testId="delete-button"
+        ariaLabel="Delete address"
+        icon="pi pi-trash"
+        (onClick)="delete()"
+      />
+    }
   </div>
 </div>

@@ -38,8 +38,8 @@
       <lib-address-information
         [clickable]="false"
         [address]="address"
-        (onEdit)="showForm(address)"
-        (onDelete)="showDeleteDialog(address)"
+        (editEvent)="showForm(address)"
+        (deleteEvent)="showDeleteDialog(address)"
       />
     } @empty {
       <div class="flex items-center flex-col text-center">

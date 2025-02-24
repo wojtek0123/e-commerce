@@ -1,4 +1,10 @@
-import { computed, DestroyRef, inject, PLATFORM_ID } from '@angular/core';
+import {
+  afterNextRender,
+  computed,
+  DestroyRef,
+  inject,
+  PLATFORM_ID,
+} from '@angular/core';
 import {
   Book,
   CartItemBase,
@@ -88,6 +94,7 @@ export const CartStore = signalStore(
     platform: inject(PLATFORM_ID),
   })),
   withMethods((store) => ({
+    // TODO: call after shopping session is done
     syncCartAndFetchSession: rxMethod<void>(
       pipe(
         tap(() => patchState(store, { loading: true })),
@@ -417,6 +424,8 @@ export const CartStore = signalStore(
   withHooks({
     onInit(store) {
       if (isPlatformBrowser(store.platform)) {
+        store.getLocalCartItems();
+
         watchState(store, (state) => {
           if (!state.shoppingSessionId) {
             localStorage.setItem(

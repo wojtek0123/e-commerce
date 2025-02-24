@@ -1,23 +1,14 @@
-<div
-  class="grid grid-cols-1 gap-base w-full xl:grid-cols-2 2xl:grid-cols-[1fr_0.5fr] 3xl:grid-cols-[1fr_0.4fr]"
->
+<lib-order-container>
+  <lib-cart-items />
+
   <div class="flex flex-col gap-base">
-    <h2 class="text-2xl xl:text-4xl">Cart items</h2>
-    <lib-cart-items />
-  </div>
-  <div class="w-full flex flex-col gap-base">
-    <h2 class="text-2xl xl:text-4xl">Checkout form</h2>
-
     <div class="flex flex-col gap-base">
-      <div class="flex flex-col gap-base">
-        <lib-delivery-address />
-        <lib-shipping-method />
-        <lib-payment-method />
-      </div>
-
-      <lib-order-price />
-
-      <lib-order-checkout />
+      <lib-delivery-address />
+      <lib-shipping-method />
+      <lib-payment-method />
     </div>
+
+    <lib-order-price-summary />
+    <lib-order-checkout />
   </div>
-</div>
+</lib-order-container>

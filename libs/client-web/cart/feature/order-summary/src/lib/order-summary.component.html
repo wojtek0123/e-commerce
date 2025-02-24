@@ -1,0 +1,82 @@
+<lib-order-container>
+  <lib-cart-items
+    [items]="cartItems()"
+    [readonly]="true"
+    [loading]="cartItemsLoading()"
+    [booksUrl]="booksUrl"
+  />
+
+  <div class="flex flex-col gap-base">
+    <lib-section-wrapper header="Address information">
+      <lib-address-information
+        [address]="selectedUserAddress()"
+        [removeable]="false"
+        (editEvent)="edit()"
+      />
+    </lib-section-wrapper>
+
+    <lib-section-wrapper header="Shipping method">
+      <div
+        class="flex items-center justify-between gap-base p-base bg-surface-100 dark:bg-surface-950 rounded-base"
+      >
+        <div class="flex items-center justify-between w-full gap-base">
+          <span class="flex items-center text-lg gap-4">
+            <span class="pi pi-truck"></span>
+            <span class="flex items-center gap-4">
+              <span>{{ selectedShippingMethod()?.name }}</span>
+              <span class="text-sm"
+                >({{ selectedShippingMethod()?.deliveryTime }})</span
+              >
+            </span>
+          </span>
+          <span>
+            {{
+              selectedShippingMethod()?.price === 0
+                ? 'Free'
+                : (selectedShippingMethod()?.price | currency: 'USD')
+            }}
+          </span>
+        </div>
+        <p-button icon="pi pi-pencil" (onClick)="edit()" />
+      </div>
+    </lib-section-wrapper>
+
+    <lib-section-wrapper header="Payment method">
+      <div
+        class="flex items-center justify-between gap-base p-base bg-surface-100 dark:bg-surface-950 rounded-base"
+      >
+        <div class="flex items-center gap-base">
+          <img
+            class="bg-white w-6"
+            src="assets/icons/visa-card.svg"
+            alt="Visa card"
+          />
+          <img
+            class="bg-white w-6"
+            src="assets/icons/mastercard.svg"
+            alt="Mastercard"
+          />
+          @if (selectedPaymentMethod() === creditCardType) {
+            <span> {{ creditCard()?.number ?? '-' }}</span>
+          } @else if (selectedPaymentMethod() === sixDigitCodeType) {
+            <span>Six digit code</span>
+          }
+        </div>
+        <p-button icon="pi pi-pencil" (onClick)="edit()" />
+      </div>
+    </lib-section-wrapper>
+
+    <lib-order-price
+      [cartTotal]="cartTotal()"
+      [shippingPrice]="selectedShippingMethod()?.price ?? 0"
+    />
+
+    <p-button
+      label="Pay"
+      [loading]="loading()"
+      icon="pi pi-dollar"
+      styleClass="w-full"
+      (onClick)="checkout()"
+    />
+  </div>
+</lib-order-container>

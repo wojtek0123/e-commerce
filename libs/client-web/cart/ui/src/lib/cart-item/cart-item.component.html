@@ -48,32 +48,34 @@
     >
       {{ cartItem().book.price | currency: 'USD' }}
     </span>
-    <div class="flex items-center @lg/cart-item:gap-3">
-      @if (quantity() === 1) {
+    @if (!readonly()) {
+      <div class="flex items-center @lg/cart-item:gap-3">
+        @if (quantity() === 1) {
+          <p-button
+            data-testId="remove-btn"
+            (onClick)="remove()"
+            [text]="true"
+            ariaLabel="Remove"
+            icon="pi pi-trash"
+          />
+        } @else {
+          <p-button
+            data-testId="decrease-btn"
+            ariaLabel="Decrease quantity"
+            (onClick)="decrease()"
+            [text]="true"
+            icon="pi pi-minus"
+          />
+        }
+        <span>{{ quantity() }}</span>
         <p-button
-          data-testId="remove-btn"
-          (onClick)="remove()"
+          data-testId="increase-btn"
+          ariaLabel="Increase quantity"
+          (onClick)="increase()"
           [text]="true"
-          ariaLabel="Remove"
-          icon="pi pi-trash"
+          icon="pi pi-plus"
         />
-      } @else {
-        <p-button
-          data-testId="decrease-btn"
-          ariaLabel="Decrease quantity"
-          (onClick)="decrease()"
-          [text]="true"
-          icon="pi pi-minus"
-        />
-      }
-      <span>{{ quantity() }}</span>
-      <p-button
-        data-testId="increase-btn"
-        ariaLabel="Increase quantity"
-        (onClick)="increase()"
-        [text]="true"
-        icon="pi pi-plus"
-      />
-    </div>
+      </div>
+    }
   </div>
 </div>

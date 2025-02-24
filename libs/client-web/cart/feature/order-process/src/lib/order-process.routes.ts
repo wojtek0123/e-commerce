@@ -1,18 +1,13 @@
 import { Route } from '@angular/router';
-import {
-  AddressStore,
-  OrderProcessStore,
-  PaymentStore,
-  ShippingStore,
-} from '@e-commerce/client-web/cart/data-access';
 import { cartItemsGuard } from './guards/cart-items.guard';
+import { authGuard } from '@e-commerce/client-web/shared/feature';
 
 export const orderProcessRoutes: Route[] = [
   {
     path: '',
-    canMatch: [cartItemsGuard],
+    canActivate: [authGuard, cartItemsGuard],
+    data: { redirectTo: 'order-process' },
     loadComponent: () =>
       import('./order-process.component').then((c) => c.OrderProcessComponent),
-    providers: [AddressStore, ShippingStore, PaymentStore, OrderProcessStore],
   },
 ];
