@@ -11,6 +11,10 @@ export const APP_ROUTES_PARAMS = {
   PAYMENT_STATUS_ORDER_DETAILS_ID: 'orderDetailsId',
 } as const;
 
+export const APP_QUERY_PARAMS = {
+  REDIRECT_TO: 'redirectTo',
+} as const;
+
 export const APP_ROUTES_FEATURE = {
   HOME: {
     BASE: 'home',
@@ -34,6 +38,7 @@ export const APP_ROUTES_FEATURE = {
   CART: {
     BASE: 'cart',
     ORDER_PROCESS: 'order-process',
+    ORDER_SUMMARY: 'order-summary',
     PAYMENT_STATUS: 'payment-status',
   } as const,
 } as const;
@@ -64,6 +69,8 @@ const ACCOUNT_FEATURE_PATHS = {
 const CART_FEATURE_PATHS = {
   ORDER_PROCESS: () =>
     `/${APP_ROUTES_FEATURE.CART.BASE}/${APP_ROUTES_FEATURE.CART.ORDER_PROCESS}`,
+  ORDER_SUMMARY: () =>
+    `/${APP_ROUTES_FEATURE.CART.BASE}/${APP_ROUTES_FEATURE.CART.ORDER_SUMMARY}`,
   PAYMENT_STATUS: (id: string) =>
     `/${APP_ROUTES_FEATURE.CART.BASE}/${APP_ROUTES_FEATURE.CART.PAYMENT_STATUS}/${id}`,
 } as const;

@@ -135,6 +135,9 @@
       "@e-commerce/client-web/cart/feature/order-process": [
         "libs/client-web/cart/feature/order-process/src/index.ts"
       ],
+      "@e-commerce/client-web/cart/feature/order-summary": [
+        "libs/client-web/cart/feature/order-summary/src/index.ts"
+      ],
       "@e-commerce/client-web/cart/feature/payment-status": [
         "libs/client-web/cart/feature/payment-status/src/index.ts"
       ],

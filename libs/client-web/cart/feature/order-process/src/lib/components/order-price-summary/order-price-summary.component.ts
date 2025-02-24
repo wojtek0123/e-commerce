@@ -1,4 +1,3 @@
-import { CurrencyPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -9,15 +8,15 @@ import {
   CartStore,
   ShippingStore,
 } from '@e-commerce/client-web/cart/data-access';
-import { Divider } from 'primeng/divider';
+import { OrderPriceComponent } from '@e-commerce/client-web/cart/ui';
 
 @Component({
-  selector: 'lib-order-price',
+  selector: 'lib-order-price-summary',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CurrencyPipe, Divider],
-  templateUrl: './order-price.component.html',
+  imports: [OrderPriceComponent],
+  templateUrl: './order-price-summary.component.html',
 })
-export class OrderPriceComponent {
+export class OrderPriceSummaryComponent {
   #cartStore = inject(CartStore);
   #shippingStore = inject(ShippingStore);
 

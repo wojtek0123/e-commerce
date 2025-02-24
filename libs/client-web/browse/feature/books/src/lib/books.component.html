@@ -55,16 +55,18 @@
       />
     </div>
 
-    <lib-books-grid
-      [books]="books()"
-      [loading]="loading()"
-      [error]="error()"
-      [skeletonsCount]="size()"
-      [favouriteBooks]="favouriteBooks()"
-      (addToCartEvent)="addToCart($event)"
-      (addToFavouriteEvent)="addToFavourite($event)"
-      (retryEvent)="retry()"
-    />
+    @defer (hydrate on hover) {
+      <lib-books-grid
+        [books]="books()"
+        [loading]="loading()"
+        [error]="error()"
+        [skeletonsCount]="size()"
+        [favouriteBooks]="favouriteBooks()"
+        (addToCartEvent)="addToCart($event)"
+        (addToFavouriteEvent)="addToFavourite($event)"
+        (retryEvent)="retry()"
+      />
+    }
     <div
       class="flex items-center justify-center bg-content-background rounded-base w-full"
     >

@@ -1,19 +1,21 @@
 import { inject } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
-import { CanMatchFn, Router } from '@angular/router';
+import { CanActivateFn, Router } from '@angular/router';
 import { CartService } from '@e-commerce/client-web/cart/api';
+import { APP_ROUTE_PATHS_TOKEN } from '@e-commerce/client-web/shared/app-config';
 import { MessageService } from 'primeng/api';
-import { filter, map, skipUntil } from 'rxjs';
+import { filter, map } from 'rxjs';
 
-export const cartItemsGuard: CanMatchFn = () => {
+export const cartItemsGuard: CanActivateFn = () => {
   const router = inject(Router);
   const cartService = inject(CartService);
   const messageService = inject(MessageService);
+  const appRoutePaths = inject(APP_ROUTE_PATHS_TOKEN);
   const itemsCount = cartService.itemsCount;
   const loading$ = toObservable(cartService.loading);
 
   return loading$.pipe(
-    skipUntil(loading$.pipe(filter((loading) => !loading))),
+    filter((loading) => !loading),
     map(() => {
       if (itemsCount() === 0) {
         messageService.add({
@@ -23,7 +25,7 @@ export const cartItemsGuard: CanMatchFn = () => {
           summary: 'No access',
           life: 5000,
         });
-        return router.createUrlTree(['/browse']);
+        return router.createUrlTree([appRoutePaths.BOOKS()]);
       } else {
         return true;
       }

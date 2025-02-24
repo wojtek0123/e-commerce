@@ -7,6 +7,7 @@ import {
   provideRouter,
   withComponentInputBinding,
   withInMemoryScrolling,
+  withViewTransitions,
 } from '@angular/router';
 import { appRoutes } from './app.routes';
 import {
@@ -40,6 +41,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(
       appRoutes,
       withComponentInputBinding(),
+      withViewTransitions(),
       withInMemoryScrolling({ scrollPositionRestoration: 'top' }),
     ),
     provideStore(),

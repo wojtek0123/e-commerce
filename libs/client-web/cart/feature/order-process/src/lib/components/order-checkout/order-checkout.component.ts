@@ -5,13 +5,14 @@ import {
   inject,
   signal,
 } from '@angular/core';
+import { Router } from '@angular/router';
 import {
   AddressStore,
   CartStore,
-  OrderProcessStore,
   PaymentStore,
   ShippingStore,
 } from '@e-commerce/client-web/cart/data-access';
+import { APP_ROUTE_PATHS_TOKEN } from '@e-commerce/client-web/shared/app-config';
 import { Button } from 'primeng/button';
 import { Message } from 'primeng/message';
 
@@ -29,19 +30,19 @@ export class OrderCheckoutComponent {
   #addressStore = inject(AddressStore);
   #shippingStore = inject(ShippingStore);
   #paymentStore = inject(PaymentStore);
-  #orderProcessStore = inject(OrderProcessStore);
+  #router = inject(Router);
+  #appRoutePaths = inject(APP_ROUTE_PATHS_TOKEN);
 
   selectedUserAddress = this.#addressStore.selectedAddress;
   selectedShippingMethod = this.#shippingStore.selectedShipping;
   selectedPaymentMethod = this.#paymentStore.selectedPayment;
 
-  initialLoading = computed(
+  loading = computed(
     () =>
       this.#addressStore.loading() ||
       this.#shippingStore.loading() ||
       this.#paymentStore.creditCard.loading(),
   );
-  checkoutLoading = this.#orderProcessStore.loading;
 
   isCartEmpty = computed(() => this.#cartStore.cartItems().length === 0);
   isAddressSelected = computed(() => this.selectedUserAddress());
@@ -69,16 +70,8 @@ export class OrderCheckoutComponent {
   submit() {
     this.submitted.set(true);
 
-    const selectedUserAddress = this.selectedUserAddress();
-    const selectedShippingMethod = this.selectedShippingMethod();
-    const selectedPaymentMethod = this.selectedPaymentMethod();
-
     if (this.isOrderInvalid()) return;
 
-    this.#orderProcessStore.checkout({
-      orderAddress: selectedUserAddress!,
-      shippingMethodId: selectedShippingMethod!.id,
-      paymentMethod: selectedPaymentMethod!,
-    });
+    this.#router.navigate([this.#appRoutePaths.ORDER_SUMMARY()]);
   }
 }

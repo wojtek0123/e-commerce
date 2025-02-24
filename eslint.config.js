@@ -40,6 +40,7 @@ module.exports = [
                 'type:data-access',
                 'type:util',
                 'type:api',
+                'type:shared-feature',
                 'type:shared-data-access',
                 'type:shared-util',
                 'type:shared-ui',
@@ -105,6 +106,7 @@ module.exports = [
               onlyDependOnLibsWithTags: [
                 'type:feature',
                 'type:api',
+                'type:shared-feature',
                 'type:data-access',
                 'type:util',
                 'type:shared-data-access',

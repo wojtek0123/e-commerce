@@ -1,4 +1,10 @@
 import { Route } from '@angular/router';
+import {
+  AddressStore,
+  OrderProcessStore,
+  PaymentStore,
+  ShippingStore,
+} from '@e-commerce/client-web/cart/data-access';
 import { APP_ROUTES_FEATURE } from '@e-commerce/client-web/shared/app-config';
 
 export const cartShellRoutes: Route[] = [
@@ -20,9 +26,17 @@ export const cartShellRoutes: Route[] = [
           ),
       },
       {
+        path: APP_ROUTES_FEATURE.CART.ORDER_SUMMARY,
+        loadChildren: () =>
+          import('@e-commerce/client-web/cart/feature/order-summary').then(
+            (r) => r.orderSummaryRoutes,
+          ),
+      },
+      {
         path: '**',
         redirectTo: APP_ROUTES_FEATURE.CART.ORDER_PROCESS,
       },
     ],
+    providers: [AddressStore, ShippingStore, PaymentStore, OrderProcessStore],
   },
 ];

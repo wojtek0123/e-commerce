@@ -2,14 +2,14 @@
   <div class="flex items-center justify-between gap-4">
     <span class="text-muted-color font-semibold text-xl">Books</span>
     <span class="text-xl text-end">
-      {{ cartItemsTotal() | currency: 'USD' }}
+      {{ cartTotal() | currency: 'USD' }}
     </span>
   </div>
   <div>
     <div class="flex items-center justify-between gap-base">
       <span class="text-muted-color font-semibold text-xl">Shipping</span>
       <span class="text-xl text-end">
-        {{ shippingMethodPrice() | currency: 'USD' }}
+        {{ shippingPrice() | currency: 'USD' }}
       </span>
     </div>
   </div>

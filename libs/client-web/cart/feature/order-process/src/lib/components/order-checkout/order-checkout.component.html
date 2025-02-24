@@ -1,4 +1,4 @@
-@if (submitted()) {
+@if (submitted() && isOrderInvalid()) {
   <div class="flex flex-col gap-base">
     @if (!isAddressSelected()) {
       <p-message
@@ -46,7 +46,7 @@
 <p-button
   styleClass="w-full"
   (onClick)="submit()"
-  [loading]="initialLoading() || checkoutLoading()"
-  icon="pi pi-dollar"
-  label="Pay"
+  [loading]="loading()"
+  icon="pi pi-book"
+  label="Summary"
 />
