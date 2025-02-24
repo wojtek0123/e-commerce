@@ -16,7 +16,7 @@
       />
     </div>
     <div
-      class="w-full flex flex-col justify-center @4xl/book-details:grid @4xl/book-details:grid-cols-2 @4xl/book-details:items-center"
+      class="w-full flex flex-col justify-center @4xl:gap-8 @4xl/book-details:grid @4xl/book-details:grid-cols-2 @4xl/book-details:items-center"
     >
       <a
         class="text-base @md/cart-item:font-bold @lg/cart-item:text-2xl @4xl/book-details:text-3xl"
@@ -43,10 +43,17 @@
   <div
     class="flex flex-col items-end justify-between @3xl/cart-item:flex-row @3xl/cart-item:items-center @3xl/cart-item:gap-10 @3xl/cart-item:p-4 @4xl/cart-item:gap-16 @6xl/cart-item:gap-28"
   >
-    <span
-      class="@md/cart-item:font-bold @lg/cart-item:text-xl @4xl/cart-item:text-3xl"
-    >
-      {{ cartItem().book.price | currency: 'USD' }}
+    <span class="flex items-center flex-row gap-base @5xl/cart-item:gap-28">
+      @if (readonly()) {
+        <span class="text-base flex items-center min-w-max text-muted-color">
+          {{ cartItem().quantity }} pieces
+        </span>
+      }
+      <span
+        class="@md/cart-item:font-bold @lg/cart-item:text-xl @4xl/cart-item:text-3xl"
+      >
+        {{ cartItem().book.price | currency: 'USD' }}
+      </span>
     </span>
     @if (!readonly()) {
       <div class="flex items-center @lg/cart-item:gap-3">

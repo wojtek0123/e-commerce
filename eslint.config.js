@@ -128,6 +128,7 @@ module.exports = [
                 'type:util',
                 'type:shared-data-access',
                 'type:shared-util',
+                'type:shared-type',
               ],
             },
             {

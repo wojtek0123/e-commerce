@@ -171,6 +171,9 @@
       "@e-commerce/client-web/shared/data-access/api-services": [
         "libs/client-web/shared/data-access/api-services/src/index.ts"
       ],
+      "@e-commerce/client-web/shared/data-access/services": [
+        "libs/client-web/shared/data-access/services/src/index.ts"
+      ],
       "@e-commerce/client-web/shared/data-access/signal-store-feature": [
         "libs/client-web/shared/data-access/signal-store-feature/src/index.ts"
       ],

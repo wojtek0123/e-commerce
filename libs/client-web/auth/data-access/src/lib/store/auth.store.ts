@@ -6,6 +6,7 @@ import {
   withHooks,
   withComputed,
   watchState,
+  withProps,
 } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { AuthApiService } from '@e-commerce/client-web/shared/data-access/api-services';
@@ -27,6 +28,7 @@ import {
   APP_LOCAL_STORAGE_KEYS_TOKEN,
   APP_QUERY_PARAMS,
 } from '@e-commerce/client-web/shared/app-config';
+import { MessageBusService } from '@e-commerce/client-web/shared/data-access/services';
 
 export interface AuthState {
   userId: User['id'] | null;
@@ -34,12 +36,6 @@ export interface AuthState {
   refreshToken: Tokens['refreshToken'] | null;
   loading: boolean;
   error: string | null;
-  event:
-    | 'init-local'
-    | 'init-database'
-    | 'auth-success'
-    | 'logout-success'
-    | null;
 }
 
 export const initialAuthState: AuthState = {
@@ -48,7 +44,6 @@ export const initialAuthState: AuthState = {
   refreshToken: null,
   loading: false,
   error: null,
-  event: null,
 };
 
 export const AuthStore = signalStore(
@@ -58,6 +53,9 @@ export const AuthStore = signalStore(
     isAuthenticated: computed(
       () => !!userId() && !!accessToken() && !!refreshToken(),
     ),
+  })),
+  withProps(() => ({
+    _messageBusService: inject(MessageBusService),
   })),
   withMethods(
     (
@@ -117,10 +115,11 @@ export const AuthStore = signalStore(
                 accessToken,
                 refreshToken,
                 userId,
-                event: 'init-database',
               });
+
+              store._messageBusService.setEvent('init-database');
             } else {
-              patchState(store, { event: 'init-local' });
+              store._messageBusService.setEvent('init-local');
             }
           });
         });
@@ -142,8 +141,8 @@ export const AuthStore = signalStore(
                     refreshToken: tokens.refreshToken,
                     userId: user.id,
                     loading: false,
-                    event: 'auth-success',
                   });
+                  store._messageBusService.setEvent('auth-success');
 
                   store.redirect();
                 },
@@ -179,8 +178,8 @@ export const AuthStore = signalStore(
                     refreshToken: tokens.refreshToken,
                     userId: user.id,
                     loading: false,
-                    event: 'auth-success',
                   });
+                  store._messageBusService.setEvent('auth-success');
 
                   store.redirect();
                 },
@@ -235,8 +234,9 @@ export const AuthStore = signalStore(
 
         patchState(store, {
           loading: false,
-          event: 'logout-success',
         });
+
+        store._messageBusService.setEvent('logout-success');
       },
       logout: rxMethod<void>(
         pipe(
@@ -256,9 +256,9 @@ export const AuthStore = signalStore(
 
                   patchState(store, {
                     loading: false,
-                    event: 'logout-success',
                   });
 
+                  store._messageBusService.setEvent('logout-success');
                   // TODO: redirect only if user is on protected route
                   await router.navigate([appRoutePaths.HOME()]);
                 },
