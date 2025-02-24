@@ -25,6 +25,7 @@ import { jwtDecode } from 'jwt-decode';
 import {
   APP_ROUTE_PATHS_TOKEN,
   APP_LOCAL_STORAGE_KEYS_TOKEN,
+  APP_QUERY_PARAMS,
 } from '@e-commerce/client-web/shared/app-config';
 
 export interface AuthState {
@@ -66,9 +67,15 @@ export const AuthStore = signalStore(
       appRoutePaths = inject(APP_ROUTE_PATHS_TOKEN),
     ) => ({
       redirect: async () => {
-        const url = route.snapshot.queryParams['redirect-to'];
+        const url = route.snapshot.queryParams[APP_QUERY_PARAMS.REDIRECT_TO] as
+          | string
+          | undefined;
 
-        await router.navigate([url || appRoutePaths.HOME()]);
+        const appRoutePath = {
+          'order-process': appRoutePaths.ORDER_PROCESS(),
+        }[url ?? ''];
+
+        await router.navigate([appRoutePath || appRoutePaths.HOME()]);
       },
       removeSession: () => {
         patchState(store, {

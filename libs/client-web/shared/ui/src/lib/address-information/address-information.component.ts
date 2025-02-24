@@ -19,20 +19,21 @@ export class AddressInformationComponent {
   isActive = input<boolean>();
   address = input.required<UserAddress | null>();
   clickable = input(true);
+  removeable = input(true);
 
-  onSelect = output<void>();
-  onEdit = output<void>();
-  onDelete = output<void>();
+  selectEvent = output<void>();
+  editEvent = output<void>();
+  deleteEvent = output<void>();
 
   select() {
-    this.onSelect.emit();
+    this.selectEvent.emit();
   }
 
   edit() {
-    this.onEdit.emit();
+    this.editEvent.emit();
   }
 
   delete() {
-    this.onDelete.emit();
+    this.deleteEvent.emit();
   }
 }

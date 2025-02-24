@@ -1,11 +1,11 @@
 import { Route } from '@angular/router';
 import { APP_ROUTES_FEATURE } from '@e-commerce/client-web/shared/app-config';
-import { canMatchAuth } from '@e-commerce/client-web/shared/utils';
+import { authGuard } from '@e-commerce/client-web/shared/feature';
 
 export const accountShellRoutes: Route[] = [
   {
     path: '',
-    canMatch: [canMatchAuth],
+    canActivate: [authGuard],
     children: [
       {
         path: APP_ROUTES_FEATURE.ACCOUNT.ORDERS,

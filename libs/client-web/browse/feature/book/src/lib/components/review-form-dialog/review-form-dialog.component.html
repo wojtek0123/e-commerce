@@ -112,7 +112,7 @@
         class="p-button p-button-outlined p-button-secondary"
         icon="pi pi-sign-in"
         routerLink="/auth/register"
-        [queryParams]="{ 'redirect-to': url }"
+        [queryParams]="{ redirectTo: url }"
       >
         <span class="pi pi-user-plus"></span>
         <span>Register</span>
@@ -121,7 +121,7 @@
         class="p-button p-button-secondary"
         icon="pi pi-sign-in"
         routerLink="/auth/login"
-        [queryParams]="{ 'redirect-to': url }"
+        [queryParams]="{ redirectTo: url }"
       >
         <span class="pi pi-sign-in"></span>
         <span>Log in</span>

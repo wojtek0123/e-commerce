@@ -35,9 +35,10 @@ export class CartItemComponent {
   #appRoutePaths = inject(APP_ROUTE_PATHS_TOKEN);
 
   cartItem = input.required<CartItemBase>();
+  readonly = input(false);
 
-  onUpdateQuantity = output<number>();
-  onDelete = output<void>();
+  updateQuantityEvent = output<number>();
+  deleteEvent = output<void>();
 
   bookDetailsUrl = computed(() =>
     this.#appRoutePaths.BOOK(this.cartItem().book.id),
@@ -47,20 +48,20 @@ export class CartItemComponent {
   #timer?: ReturnType<typeof setTimeout>;
 
   remove() {
-    this.onDelete.emit();
+    this.deleteEvent.emit();
   }
 
   increase() {
     this.quantity.update((quantity) => quantity + 1);
 
-    this.throttle(() => this.onUpdateQuantity.emit(this.quantity()));
+    this.throttle(() => this.updateQuantityEvent.emit(this.quantity()));
   }
 
   decrease() {
     this.quantity.update((quantity) => quantity - 1);
 
     this.throttle(() => {
-      this.onUpdateQuantity.emit(this.quantity());
+      this.updateQuantityEvent.emit(this.quantity());
     });
   }
 

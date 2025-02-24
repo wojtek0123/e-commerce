@@ -1,6 +1,7 @@
 import {
   ConflictException,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -11,6 +12,7 @@ import { OrderDetail } from './entities/order-detail.entity';
 import { MailerService } from '@nestjs-modules/mailer';
 import { BookEntity } from '../books/entities/book.entity';
 import { Role } from '@prisma/client';
+import { throwDeprecation } from 'process';
 
 @Injectable()
 export class OrderDetailsService {
@@ -26,7 +28,7 @@ export class OrderDetailsService {
     let userId: string;
     try {
       userId = String(decode(authHeader.split(' ')[1]).sub);
-    } catch (error) {
+    } catch (error: unknown) {
       throw new UnauthorizedException('Invalid authentication token');
     }
 
@@ -176,9 +178,17 @@ export class OrderDetailsService {
       console.log(error);
     }
 
-    await this.prisma.shoppingSession.delete({ where: { userId } });
+    try {
+      await this.prisma.shoppingSession.delete({ where: { userId } });
+    } catch (error: unknown) {
+      throw new InternalServerErrorException(error);
+    }
 
-    await this.prisma.shoppingSession.create({ data: { userId, total: 0 } });
+    try {
+      await this.prisma.shoppingSession.create({ data: { userId, total: 0 } });
+    } catch (error: unknown) {
+      throw new InternalServerErrorException(error);
+    }
 
     return order;
   }

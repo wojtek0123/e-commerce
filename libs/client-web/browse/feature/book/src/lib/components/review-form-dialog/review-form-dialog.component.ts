@@ -29,6 +29,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { AuthService } from '@e-commerce/client-web/auth/api';
 import { Router, RouterLink } from '@angular/router';
 import { RatingInputComponent } from '@e-commerce/client-web/shared/ui';
+import { APP_QUERY_PARAMS } from '@e-commerce/client-web/shared/app-config';
 
 @Component({
   selector: 'lib-review-form-dialog',
@@ -54,6 +55,8 @@ export class ReviewFormDialogComponent implements OnInit {
   #bookStore = inject(BookStore);
   #authService = inject(AuthService);
   #router = inject(Router);
+
+  redirectTo = APP_QUERY_PARAMS.REDIRECT_TO;
 
   isLoggedIn = this.#authService.isAuthenticated;
   userId = this.#authService.userId;
