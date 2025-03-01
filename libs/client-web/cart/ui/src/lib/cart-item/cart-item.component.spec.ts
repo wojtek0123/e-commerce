@@ -19,6 +19,7 @@ describe('CartItemComponent', () => {
       },
       createdAt: '',
       updatedAt: '',
+      reviews: [],
       id: '1',
       categoryId: '',
       coverImage: '',
@@ -55,7 +56,7 @@ describe('CartItemComponent', () => {
 
     fixture = TestBed.createComponent(CartItemComponent);
     component = fixture.componentInstance;
-    fixture.componentRef.setInput('item', mockCartItem);
+    fixture.componentRef.setInput('cartItem', mockCartItem);
     fixture.detectChanges();
   });
 
@@ -68,14 +69,14 @@ describe('CartItemComponent', () => {
   });
 
   it('should emit delete event when remove is called', () => {
-    const spy = jest.spyOn(component.onDelete, 'emit');
+    const spy = jest.spyOn(component.deleteEvent, 'emit');
     component.remove();
     expect(spy).toHaveBeenCalled();
   });
 
   describe('quantity updates', () => {
     it('should increase quantity', async () => {
-      const spy = jest.spyOn(component.onUpdateQuantity, 'emit');
+      const spy = jest.spyOn(component.updateQuantityEvent, 'emit');
       component.increase();
       expect(component.quantity()).toBe(3);
 
@@ -85,7 +86,7 @@ describe('CartItemComponent', () => {
     });
 
     it('should decrease quantity', async () => {
-      const spy = jest.spyOn(component.onUpdateQuantity, 'emit');
+      const spy = jest.spyOn(component.updateQuantityEvent, 'emit');
       component.decrease();
       expect(component.quantity()).toBe(1);
 
@@ -95,7 +96,7 @@ describe('CartItemComponent', () => {
     });
 
     it('should throttle multiple quantity updates', async () => {
-      const spy = jest.spyOn(component.onUpdateQuantity, 'emit');
+      const spy = jest.spyOn(component.updateQuantityEvent, 'emit');
 
       component.increase(); // 3
       component.increase(); // 4
