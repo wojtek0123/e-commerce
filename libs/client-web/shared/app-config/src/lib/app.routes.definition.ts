@@ -17,7 +17,7 @@ export const APP_QUERY_PARAMS = {
 
 export const APP_ROUTES_FEATURE = {
   HOME: {
-    BASE: 'home',
+    BASE: '',
   } as const,
   AUTH: {
     BASE: 'auth',

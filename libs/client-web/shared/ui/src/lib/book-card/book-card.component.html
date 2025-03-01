@@ -7,9 +7,7 @@
     <img
       [alt]="book().title + 'cover image'"
       class="!h-full !w-auto mx-auto !aspect-[3/4] object-fill rounded-base"
-      [ngSrc]="
-        book().coverImage ? book().coverImage! : 'assets/images/not-found.png'
-      "
+      [ngSrc]="book().coverImage"
       width="480"
       height="640"
     />
