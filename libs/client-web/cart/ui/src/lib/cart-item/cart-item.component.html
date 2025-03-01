@@ -1,25 +1,38 @@
 <div
-  class="@container/cart-item min-h-24 flex justify-between w-full p-4 rounded-base bg-content-background"
+  class="@container min-h-24 flex justify-between w-full p-4 rounded-base bg-content-background"
 >
   <div
-    class="flex w-full gap-4 @container/book-details @3xl/cart-item:p-4 @2xl/cart-item:gap-8 @4xl/cart-item:gap-16"
+    class="relative flex items-center justify-center aspect-[3/4] w-20 @3xl:w-32"
   >
-    <div
-      class="relative aspect-[3/4] w-20 h-28 @3xl/cart-item:w-32 @3xl/cart-item:h-40"
+    <p-image
+      appendTo="body"
+      [preview]="true"
+      styleClass="h-full h-28 @3xl:h-40"
+      [src]="cartItem().book.coverImage ?? ''"
+      [alt]="cartItem().book.title + ' cover image'"
+    />
+  </div>
+  <div
+    class="w-full flex flex-col justify-center @5xl:gap-8 @lg:ml-8 @3xl:grid @3xl:grid-cols-[1fr,0.3fr] @5xl:items-center"
+  >
+    <span
+      class="flex items-center justify-end flex-row gap-base @5xl:gap-28 @3xl:hidden"
     >
-      <p-image
-        appendTo="body"
-        [preview]="true"
-        styleClass="h-full"
-        [src]="cartItem().book.coverImage ?? ''"
-        [alt]="cartItem().book.title + ' cover image'"
-      />
-    </div>
+      @if (readonly()) {
+        <span class="text-base flex items-center min-w-max text-muted-color">
+          {{ cartItem().quantity }} pieces
+        </span>
+      }
+      <span class="@md:font-bold @lg:text-xl @5xl:text-3xl">
+        {{ cartItem().book.price | currency: 'USD' }}
+      </span>
+    </span>
+
     <div
-      class="w-full flex flex-col justify-center @4xl:gap-8 @4xl/book-details:grid @4xl/book-details:grid-cols-2 @4xl/book-details:items-center"
+      class="flex flex-col ml-2 gap-2 @2xl:justify-center @5xl:grid @5xl:grid-cols-[1fr,0.75fr] @5xl:gap-6 @5xl:items-center"
     >
       <a
-        class="text-base @md/cart-item:font-bold @lg/cart-item:text-2xl @4xl/book-details:text-3xl"
+        class="text-base font-bold @lg:text-lg @6xl:text-2xl"
         [routerLink]="bookDetailsUrl()"
       >
         {{ cartItem().book.title }}
@@ -31,58 +44,59 @@
           track author.id;
           let last = $last
         ) {
-          <span
-            class="text-muted-color text-xs @3xl/cart-item:text-base @4xl/book-details:text-xl"
-          >
+          <span class="text-muted-color text-xs @3xl:text-base @5xl:text-xl">
             {{ author.name }} {{ !last ? '|' : '' }}
           </span>
         }
       </div>
     </div>
-  </div>
-  <div
-    class="flex flex-col items-end justify-between @3xl/cart-item:flex-row @3xl/cart-item:items-center @3xl/cart-item:gap-10 @3xl/cart-item:p-4 @4xl/cart-item:gap-16 @6xl/cart-item:gap-28"
-  >
-    <span class="flex items-center flex-row gap-base @5xl/cart-item:gap-28">
-      @if (readonly()) {
-        <span class="text-base flex items-center min-w-max text-muted-color">
-          {{ cartItem().quantity }} pieces
-        </span>
-      }
+
+    <div
+      class="flex flex-col items-end justify-between @3xl:items-center @3xl:gap-10 @3xl:p-4 @3xl:flex-row"
+    >
       <span
-        class="@md/cart-item:font-bold @lg/cart-item:text-xl @4xl/cart-item:text-3xl"
+        class="hidden items-center justify-end flex-row gap-base @5xl:gap-28 @3xl:flex"
       >
-        {{ cartItem().book.price | currency: 'USD' }}
-      </span>
-    </span>
-    @if (!readonly()) {
-      <div class="flex items-center @lg/cart-item:gap-3">
-        @if (quantity() === 1) {
-          <p-button
-            data-testId="remove-btn"
-            (onClick)="remove()"
-            [text]="true"
-            ariaLabel="Remove"
-            icon="pi pi-trash"
-          />
-        } @else {
-          <p-button
-            data-testId="decrease-btn"
-            ariaLabel="Decrease quantity"
-            (onClick)="decrease()"
-            [text]="true"
-            icon="pi pi-minus"
-          />
+        @if (readonly()) {
+          <span class="flex text-base items-center min-w-max text-muted-color">
+            {{ cartItem().quantity }} pieces
+          </span>
         }
-        <span>{{ quantity() }}</span>
-        <p-button
-          data-testId="increase-btn"
-          ariaLabel="Increase quantity"
-          (onClick)="increase()"
-          [text]="true"
-          icon="pi pi-plus"
-        />
-      </div>
-    }
+        <span class="@md:font-bold @lg:text-xl @3xl:text-2xl @6xl:text-3xl">
+          {{ cartItem().book.price | currency: 'USD' }}
+        </span>
+      </span>
+      @if (!readonly()) {
+        <div
+          class="flex items-center justify-end @lg:gap-3 @5xl:justify-center"
+        >
+          @if (quantity() === 1) {
+            <p-button
+              data-testId="remove-btn"
+              (onClick)="remove()"
+              [text]="true"
+              ariaLabel="Remove"
+              icon="pi pi-trash"
+            />
+          } @else {
+            <p-button
+              data-testId="decrease-btn"
+              ariaLabel="Decrease quantity"
+              (onClick)="decrease()"
+              [text]="true"
+              icon="pi pi-minus"
+            />
+          }
+          <span>{{ quantity() }}</span>
+          <p-button
+            data-testId="increase-btn"
+            ariaLabel="Increase quantity"
+            (onClick)="increase()"
+            [text]="true"
+            icon="pi pi-plus"
+          />
+        </div>
+      }
+    </div>
   </div>
 </div>
