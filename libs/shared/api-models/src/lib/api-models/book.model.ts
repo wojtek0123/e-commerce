@@ -12,7 +12,7 @@ export interface Book {
   publishedDate?: string;
   pages?: number;
   categoryId: Category['id'];
-  coverImage?: string;
+  coverImage: string;
   language?: string;
   tag?: BookTag;
   price: number;
