@@ -22,6 +22,7 @@ import { DialogModule } from 'primeng/dialog';
 import { Divider } from 'primeng/divider';
 import { InputText } from 'primeng/inputtext';
 import { Message } from 'primeng/message';
+import { groupBy } from '@e-commerce/client-web/browse/utils';
 
 @Component({
   selector: 'lib-save-filters',
@@ -49,7 +50,7 @@ export class SaveFiltersComponent {
   filters = this.#booksStore.activeFilters;
 
   groupedFiltersByFilter = computed(() =>
-    this.groupBy(
+    groupBy(
       this.filters(),
       (activeFilter: ActiveFilter) => activeFilter.filter,
     ),
@@ -67,33 +68,22 @@ export class SaveFiltersComponent {
   }
 
   save() {
+    const name = this.nameFc.value;
+
     if (this.nameFc.pristine) {
       this.nameFc.markAsDirty();
     }
 
-    if (this.nameFc.invalid) return;
+    if (this.nameFc.invalid || !name) return;
 
     const filters = new Map(
       JSON.parse(localStorage.getItem('filters') || '[]'),
     );
 
-    // INFO: should filters be validated whether they are valid Map object?
-
-    filters.set(this.nameFc.value!, this.filters());
+    filters.set(name, this.filters());
 
     localStorage.setItem('filters', JSON.stringify([...filters]));
 
     this.visible.set(false);
-  }
-
-  groupBy<T, Q>(
-    array: T[],
-    predicate: (value: T, index: number, array: T[]) => Q,
-  ) {
-    return array.reduce((map, value, index, array) => {
-      const key = predicate(value, index, array);
-      map.get(key)?.push(value) ?? map.set(key, [value]);
-      return map;
-    }, new Map<Q, T[]>());
   }
 }
