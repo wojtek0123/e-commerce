@@ -1,6 +1,4 @@
-import { Author, Category } from '@e-commerce/shared/api-models';
 import { BooksSortDirection, BooksSortKey } from './books-sort.model';
-import { Tag } from './tag.model';
 
 export interface BooksQueryParam {
   tags: string | null;

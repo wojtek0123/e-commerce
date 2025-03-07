@@ -27,12 +27,11 @@
       </div>
     </div>
   } @else if (error()) {
-    <div
-      role="alert"
-      class="text-red-500 p-4 rounded-base border border-red-300 bg-red-50"
-    >
-      {{ error() }}
-    </div>
+    <lib-error-and-retry-message
+      [error]="error()"
+      unableToLoad="addresses"
+      (onRetry)="getAddresses()"
+    />
   } @else {
     @for (address of addresses(); track address.id) {
       <lib-address-information

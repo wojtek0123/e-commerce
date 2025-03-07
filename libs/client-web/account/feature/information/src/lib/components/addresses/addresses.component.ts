@@ -12,6 +12,7 @@ import { AddressStore } from '@e-commerce/client-web/account/data-access';
 import {
   AddressInformationComponent,
   ConfirmationDialogComponent,
+  ErrorAndRetryMessageComponent,
 } from '@e-commerce/client-web/shared/ui';
 import { SkeletonModule } from 'primeng/skeleton';
 import { UserAddress } from '@e-commerce/shared/api-models';
@@ -30,6 +31,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
     ButtonModule,
     ConfirmDialogModule,
     ConfirmationDialogComponent,
+    ErrorAndRetryMessageComponent,
   ],
   templateUrl: './addresses.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -58,7 +60,11 @@ export class AddressesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.#addressesStore.resetState();
+    if (this.addresses().length === 0) this.getAddresses();
+  }
+
+  getAddresses() {
+    this.#addressesStore.getAddresses();
   }
 
   delete() {

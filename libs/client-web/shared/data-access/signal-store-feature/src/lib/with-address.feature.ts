@@ -11,7 +11,6 @@ import {
   signalStoreFeature,
   type,
   withComputed,
-  withHooks,
   withMethods,
   withState,
 } from '@ngrx/signals';
@@ -327,10 +326,5 @@ export function withAddress() {
         },
       }),
     ),
-    withHooks({
-      onInit: (store) => {
-        store.getAddresses();
-      },
-    }),
   );
 }

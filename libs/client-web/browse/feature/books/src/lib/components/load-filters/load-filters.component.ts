@@ -26,16 +26,8 @@ import {
 import { BadgeModule } from 'primeng/badge';
 import { MessageService } from 'primeng/api';
 import { Message } from 'primeng/message';
-
-@Pipe({
-  name: 'getFiltersCount',
-  standalone: true,
-})
-export class GetFiltersCount implements PipeTransform {
-  transform(filter: any) {
-    return [...filter.values()].reduce((acc, f) => acc + f.length, 0);
-  }
-}
+import { groupBy } from '@e-commerce/client-web/browse/utils';
+import { GetFiltersCount } from '../../pipes/get-filters-count.pipe';
 
 @Component({
   selector: 'lib-load-filters',
@@ -75,12 +67,12 @@ export class LoadFiltersComponent {
         filters.set(outerKey, new Map());
       }
 
-      const groupedActiveFilters = this.groupBy(
+      const groupedActiveFilters = groupBy(
         activeFilters,
         (activeFilter: ActiveFilter) => activeFilter.filter,
       );
 
-      [...groupedActiveFilters].forEach(([key, value]) => {
+      Object.entries(groupedActiveFilters).forEach(([key, value]) => {
         filters.get(outerKey)?.set(key, value);
       });
     }
@@ -95,18 +87,21 @@ export class LoadFiltersComponent {
   }
 
   load(filters: Map<string, ActiveFilter[]>) {
+    console.log(filters);
     const queryParams: BooksQueryParam = {
       categories: this.parseActiveFilterToQueryParam(filters.get('category')),
       tags: this.parseActiveFilterToQueryParam(filters.get('tag')),
       authors: this.parseActiveFilterToQueryParam(filters.get('author')),
-      minPrice: Number(filters.get('minPrice')) || null,
-      maxPrice: Number(filters.get('maxPrice')) || null,
+      minPrice: Number(filters.get('minPrice')?.at(0)?.value) || null,
+      maxPrice: Number(filters.get('maxPrice')?.at(0)?.value) || null,
       size: FILTER_SIZE,
       search: null,
       page: FILTER_PAGE,
       sortBy: 'title',
       sortByMode: 'asc',
     };
+
+    console.log(queryParams);
 
     this.visible.set(false);
     this.#booksStore.loadFilters(queryParams);
@@ -129,12 +124,12 @@ export class LoadFiltersComponent {
         filters.set(outerKey, new Map());
       }
 
-      const groupedActiveFilters = this.groupBy(
+      const groupedActiveFilters = groupBy(
         activeFilters,
         (activeFilter: ActiveFilter) => activeFilter.filter,
       );
 
-      [...groupedActiveFilters].forEach(([key, value]) => {
+      Object.entries(groupedActiveFilters).forEach(([key, value]) => {
         filters.get(outerKey)?.set(key, value);
       });
     }
@@ -156,16 +151,5 @@ export class LoadFiltersComponent {
         )
         .join(',') ?? null
     );
-  }
-
-  groupBy<T, Q>(
-    array: T[],
-    predicate: (value: T, index: number, array: T[]) => Q,
-  ) {
-    return array.reduce((map, value, index, array) => {
-      const key = predicate(value, index, array);
-      map.get(key)?.push(value) ?? map.set(key, [value]);
-      return map;
-    }, new Map<Q, T[]>());
   }
 }

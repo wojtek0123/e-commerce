@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  effect,
   inject,
   OnInit,
 } from '@angular/core';
@@ -56,7 +57,7 @@ export class DeliveryAddressComponent implements OnInit {
   );
 
   ngOnInit() {
-    this.#addressStore.resetState();
+    if (this.addresses().length === 0) this.getAddresses();
   }
 
   getAddresses() {
