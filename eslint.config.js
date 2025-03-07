@@ -142,6 +142,13 @@ module.exports = [
                 'scope:shared',
               ],
             },
+            {
+              sourceTag: 'scope:delivery-manager',
+              onlyDependOnLibsWithTags: [
+                'scope:delivery-manager',
+                'scope:shared',
+              ],
+            },
           ],
         },
       ],

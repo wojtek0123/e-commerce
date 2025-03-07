@@ -18,6 +18,7 @@ async function bootstrap() {
     origin: [
       'http://localhost:4200',
       'http://localhost:4201',
+      'http://localhost:4202',
       'http://127.0.0.1:4200',
     ],
   });

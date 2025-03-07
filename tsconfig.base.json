@@ -189,6 +189,15 @@
       "@e-commerce/client-web/shared/utils": [
         "libs/client-web/shared/utils/src/index.ts"
       ],
+      "@e-commerce/delivery-manager/auth/data-access": [
+        "libs/delivery-manager/auth/data-access/src/index.ts"
+      ],
+      "@e-commerce/delivery-manager/auth/feature/login": [
+        "libs/delivery-manager/auth/feature/login/src/index.ts"
+      ],
+      "@e-commerce/delivery-manager/auth/feature/shell": [
+        "libs/delivery-manager/auth/feature/shell/src/index.ts"
+      ],
       "@e-commerce/shared/api-models": ["libs/shared/api-models/src/index.ts"]
     }
   },

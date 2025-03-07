@@ -19,12 +19,10 @@ onMounted(() => {
 
 <template>
   <Toast />
-  <!-- <div class="flex flex-col w-full min-h-svh p-gap"> -->
 
   <div
     class="flex flex-col-reverse w-full h-svh xl:flex-row xl:p-gap xl:min-h-svh xl:h-full"
   >
     <RouterView />
   </div>
-  <!-- </div> -->
 </template>

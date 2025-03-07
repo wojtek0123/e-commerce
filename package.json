@@ -76,7 +76,8 @@
     "vue-chartjs": "^5.3.2",
     "vue-router": "^4.5.0",
     "zod": "^3.24.2",
-    "zone.js": "~0.15.0"
+    "zone.js": "~0.15.0",
+    "zustand": "^5.0.3"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~19.0.7",
@@ -89,6 +90,8 @@
     "@angular/compiler-cli": "~19.0.7",
     "@angular/language-service": "~19.0.7",
     "@angular/pwa": "^19.1.7",
+    "@babel/core": "^7.14.5",
+    "@babel/preset-react": "^7.14.5",
     "@eslint/eslintrc": "^2.1.4",
     "@eslint/js": "~8.57.1",
     "@nestjs-modules/mailer": "^2.0.2",
@@ -155,12 +158,15 @@
     "nx": "20.3.0",
     "postcss": "^8.5.2",
     "prettier": "^3.5.1",
+    "primereact": "^10.9.2",
     "prisma": "^6.4.0",
+    "react-hook-form": "^7.54.2",
     "tailwindcss": "^3.4.17",
     "ts-jest": "^29.2.5",
     "ts-node": "10.9.2",
     "typescript": "5.6.3",
     "typescript-eslint": "^8.24.1",
+    "verdaccio": "^5.0.4",
     "vite": "^6.1.0",
     "vite-plugin-dts": "~4.3.0",
     "vite-plugin-electron-renderer": "^0.14.6",
@@ -184,5 +190,8 @@
     "nx",
     "prisma",
     "vue-demi"
-  ]
+  ],
+  "nx": {
+    "includedScripts": []
+  }
 }
