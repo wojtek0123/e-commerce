@@ -19,6 +19,7 @@ import { NewPasswordFormComponent } from '../new-password-form/new-password-form
 import { DialogModule } from 'primeng/dialog';
 import { NewEmailFormComponent } from '../new-email-form/new-email-form.component';
 import { AuthService } from '@e-commerce/client-web/auth/api';
+import { ErrorAndRetryMessageComponent } from '@e-commerce/client-web/shared/ui';
 
 @Component({
   selector: 'lib-account-data',
@@ -32,37 +33,44 @@ import { AuthService } from '@e-commerce/client-web/auth/api';
     NewPasswordFormComponent,
     DialogModule,
     NewEmailFormComponent,
+    ErrorAndRetryMessageComponent,
   ],
   templateUrl: './account-data.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccountDataComponent {
-  private readonly informationStore = inject(InformationStore);
-  private readonly authService = inject(AuthService);
+  #informationStore = inject(InformationStore);
+  #authService = inject(AuthService);
 
-  public loading = this.informationStore.loading;
-  public error = this.informationStore.error;
-  public user = this.informationStore.user;
-  public editingField = this.informationStore.editingField;
+  loading = this.#informationStore.loading;
+  error = this.#informationStore.error;
+  user = this.#informationStore.user;
+  editingField = this.#informationStore.editingField;
 
-  public userId = this.authService.userId;
+  userId = this.#authService.userId;
 
-  protected getUserEffect = effect(() => {
-    const userId = this.userId();
+  getUserEffect = effect(() => {
+    this.userId();
 
     untracked(() => {
-      if (userId) {
-        this.informationStore.getUser$({ id: userId });
-      }
+      this.getUserInformation();
     });
   });
 
-  public isDialogVisible = computed(() => !!this.editingField());
-  public dialogHeader = computed(
+  isDialogVisible = computed(() => !!this.editingField());
+  dialogHeader = computed(
     () => `Change ${this.editingField() === 'password' ? 'password' : 'email'}`,
   );
 
-  public setEditingField(editingField: EditingField) {
-    this.informationStore.setEditingField(editingField);
+  getUserInformation() {
+    const userId = this.userId();
+
+    if (!userId) return;
+
+    this.#informationStore.getUser$({ id: userId });
+  }
+
+  setEditingField(editingField: EditingField) {
+    this.#informationStore.setEditingField(editingField);
   }
 }

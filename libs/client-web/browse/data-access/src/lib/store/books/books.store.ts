@@ -527,16 +527,16 @@ export const BooksStore = signalStore(
       await store._router.navigate([], {
         relativeTo: store._route,
         queryParams: {
-          [BooksQueryParamKey.TAGS]: queryParam.tags,
-          [BooksQueryParamKey.CATEGORIES]: queryParam.categories,
-          [BooksQueryParamKey.AUTHORS]: queryParam.authors,
+          [BooksQueryParamKey.TAGS]: queryParam.tags || null,
+          [BooksQueryParamKey.CATEGORIES]: queryParam.categories || null,
+          [BooksQueryParamKey.AUTHORS]: queryParam.authors || null,
           [BooksQueryParamKey.SEARCH]: queryParam.search || null,
-          [BooksQueryParamKey.MIN_PRICE]: queryParam.minPrice,
-          [BooksQueryParamKey.MAX_PRICE]: queryParam.maxPrice,
-          [BooksQueryParamKey.SIZE]: queryParam.size,
-          [BooksQueryParamKey.PAGE]: queryParam.page,
-          [BooksQueryParamKey.SORT_BY]: queryParam.sortBy,
-          [BooksQueryParamKey.SORT_BY_MODE]: queryParam.sortByMode,
+          [BooksQueryParamKey.MIN_PRICE]: queryParam.minPrice || null,
+          [BooksQueryParamKey.MAX_PRICE]: queryParam.maxPrice || null,
+          [BooksQueryParamKey.SIZE]: queryParam.size || null,
+          [BooksQueryParamKey.PAGE]: queryParam.page || null,
+          [BooksQueryParamKey.SORT_BY]: queryParam.sortBy || null,
+          [BooksQueryParamKey.SORT_BY_MODE]: queryParam.sortByMode || null,
         },
         replaceUrl: true,
       });
@@ -744,7 +744,6 @@ export const BooksStore = signalStore(
     _serializeQueryParamsFilters: rxMethod<{ queryParam: BooksQueryParam }>(
       pipe(
         skip(1),
-        distinctUntilChanged((prev, curr) => isEqual(prev, curr)),
         tap(({ queryParam }) => {
           store.setQueryParam({
             tags: queryParam.tags,

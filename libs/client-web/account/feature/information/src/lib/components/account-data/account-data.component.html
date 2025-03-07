@@ -5,7 +5,11 @@
       <p-skeleton libOrderProcessItem width="100%" height="2rem" />
       <p-skeleton libOrderProcessItem width="100%" height="2rem" />
     } @else if (error()) {
-      <div>{{ error() }}</div>
+      <lib-error-and-retry-message
+        [error]="error()"
+        unableToLoad="account data"
+        (onRetry)="getUserInformation()"
+      />
     } @else {
       <div
         libOrderProcessItem
