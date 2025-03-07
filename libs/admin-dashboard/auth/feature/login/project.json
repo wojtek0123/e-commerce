@@ -1,5 +1,5 @@
 {
-  "name": "login",
+  "name": "admin-dashboard-auth-feature-login",
   "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/admin-dashboard/auth/feature/login/src",
   "projectType": "library",
