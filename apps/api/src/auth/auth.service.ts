@@ -41,6 +41,7 @@ export class AuthService {
     const hasAccessToApp = {
       'admin-dashboard': user.role === Role.ADMIN,
       'client-web': user.role === Role.USER,
+      'delivery-manager': user.role === Role.ADMIN,
     }[appHeader];
 
     if (!hasAccessToApp) {
