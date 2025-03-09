@@ -1,8 +1,11 @@
 import { useAuthStore } from '@e-commerce/delivery-manager/auth/data-access';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
-import { useEffect } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
+import { useMutation } from '@tanstack/react-query';
+import axios from 'axios';
+import { Tokens, User } from '@e-commerce/shared/api-models';
+import { useNavigate } from 'react-router-dom';
 
 type LoginForm = {
   email: string;
@@ -10,15 +13,31 @@ type LoginForm = {
 };
 
 export function Login() {
-  const state = useAuthStore();
+  const navigate = useNavigate();
+  const mutation = useMutation({
+    mutationFn: ({ email, password }: { email: string; password: string }) =>
+      axios.post<{ user: User; tokens: Tokens }>(
+        'http://localhost:3000/auth/login',
+        { email, password },
+      ),
+    async onSuccess({ data: { user, tokens } }) {
+      authenticate(user, tokens);
+
+      await navigate('/');
+    },
+    onError(error) {
+      console.error(error);
+    },
+  });
+  const { authenticate } = useAuthStore();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<LoginForm>();
 
-  const onSubmit: SubmitHandler<LoginForm> = (data) => {
-    state.login(data.email, data.password);
+  const onSubmit: SubmitHandler<LoginForm> = ({ email, password }) => {
+    mutation.mutate({ email, password });
   };
 
   return (
@@ -57,8 +76,13 @@ export function Login() {
             <span className="text-red-300">Invalid password</span>
           )}
         </div>
-        {state.error && <span className="text-red-300">{state.error}</span>}
-        <Button type="submit" label="Log in" className="mt-2 w-full" />
+        {mutation.isError && <span className="text-red-300">{}</span>}
+        <Button
+          type="submit"
+          label="Log in"
+          className="mt-2 w-full"
+          loading={mutation.isLoading}
+        />
       </form>
     </>
   );
