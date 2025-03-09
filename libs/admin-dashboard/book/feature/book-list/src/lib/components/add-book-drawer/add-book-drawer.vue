@@ -39,48 +39,50 @@ const authorsResolver = zodResolver(
   }),
 );
 
-const resolver = zodResolver(
-  z.object({
-    title: z.string().min(1, { message: 'Title is required' }),
-    description: z.string().optional(),
-    language: z.string(),
-    pageCount: z.number().nonnegative(),
-    price: z.number().nonnegative(),
-    publishedDate: z.date(),
-    category: z.object({ id: z.string(), name: z.string().nonempty() }),
-    quantity: z.number().nonnegative(),
-    tag: z.string().optional(),
-    authors: z
-      .array(z.object({ id: z.string(), name: z.string() }))
-      .min(1, { message: 'Select at least one author' }),
-    publisherName: z
-      .string()
-      .optional()
-      .refine(
-        (val) => {
-          if (publisherInputType.value === 'Add') {
-            return !!val;
-          }
-          return true;
-        },
-        { message: 'Publisher name is required when adding new publisher' },
-      ),
-    publisher: z
-      .object({ id: z.string(), name: z.string() })
-      .optional()
-      .refine(
-        (val) => {
-          if (publisherInputType.value === 'Select') {
-            return !!val;
-          }
-          return true;
-        },
-        {
-          message:
-            'Publisher selection is required when selecting existing publisher',
-        },
-      ),
-  }),
+const resolver = ref(
+  zodResolver(
+    z.object({
+      title: z.string().min(1, { message: 'Title is required' }),
+      description: z.string().optional(),
+      language: z.string(),
+      pageCount: z.number().nonnegative(),
+      price: z.number().nonnegative(),
+      publishedDate: z.date(),
+      category: z.object({ id: z.string(), name: z.string().nonempty() }),
+      quantity: z.number().nonnegative(),
+      tag: z.string().optional(),
+      authors: z
+        .array(z.object({ id: z.string(), name: z.string() }))
+        .min(1, { message: 'Select at least one author' }),
+      publisherName: z
+        .string()
+        .optional()
+        .refine(
+          (val) => {
+            if (publisherInputType.value === 'Add') {
+              return !!val;
+            }
+            return true;
+          },
+          { message: 'Publisher name is required when adding new publisher' },
+        ),
+      publisher: z
+        .object({ id: z.string(), name: z.string() })
+        .optional()
+        .refine(
+          (val) => {
+            if (publisherInputType.value === 'Select') {
+              return !!val;
+            }
+            return true;
+          },
+          {
+            message:
+              'Publisher selection is required when selecting existing publisher',
+          },
+        ),
+    }),
+  ),
 );
 
 function searchTag(event: AutoCompleteCompleteEvent) {
@@ -214,7 +216,7 @@ onUnmounted(() => {
       >
         <div class="flex flex-col gap-4">
           <FormField v-slot="$field" class="flex flex-col gap-1" name="title">
-            <label class="text-muted-color">Title</label>
+            <label class="text-muted-color">Title *</label>
             <InputText fluid id="title" />
             <Message
               v-if="$field.invalid"
@@ -231,7 +233,7 @@ onUnmounted(() => {
             class="flex flex-col gap-1"
             name="pageCount"
           >
-            <label class="text-muted-color">Page count</label>
+            <label class="text-muted-color">Page count *</label>
             <InputNumber fluid id="pageCount" name="pageCount" />
             <Message
               v-if="$field.invalid"
@@ -244,8 +246,14 @@ onUnmounted(() => {
           </FormField>
 
           <FormField v-slot="$field" class="flex flex-col gap-1" name="price">
-            <label for="price" class="text-muted-color">Price</label>
-            <InputNumber fluid id="price" name="price" />
+            <label for="price" class="text-muted-color">Price *</label>
+            <InputNumber
+              fluid
+              id="price"
+              name="price"
+              :min="0"
+              :max-fraction-digits="2"
+            />
             <Message
               v-if="$field.invalid"
               severity="error"

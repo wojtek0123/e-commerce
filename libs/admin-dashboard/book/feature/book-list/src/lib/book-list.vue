@@ -18,7 +18,7 @@ const store = useBooksStore();
 const confirm = useConfirm();
 
 const home = ref({
-  icon: 'pi pi-home',
+  label: 'home',
   route: '/',
 });
 const breadcrumbs = ref([
@@ -64,14 +64,14 @@ onMounted(() => {
   <ConfirmDialog />
   <div class="flex flex-col gap-base">
     <div
-      class="flex flex-col bg-content-background pt-2 pb-4 xl:pb-2 xl:pl-2 xl:pr-4 rounded-base xl:flex-row justify-between items-center gap-base"
+      class="flex flex-col bg-content-background p-base rounded-base sm:flex-row justify-between sm:items-center gap-base"
     >
-      <Breadcrumb :home="home" :model="breadcrumbs" />
+      <Breadcrumb class="min-w-max" :home="home" :model="breadcrumbs" />
       <InputText
         v-model="store.search"
         type="text"
         placeholder="Search book by title..."
-        class="w-full h-fit 2xl:max-w-[30rem]"
+        class="w-full h-fit max-w-[30rem]"
         @value-change="onSearchInput"
       />
     </div>
