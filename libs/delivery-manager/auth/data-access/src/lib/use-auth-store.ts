@@ -11,6 +11,7 @@ type AuthStore = {
   error: string | null;
   authenticate: (user: User, tokens: Tokens) => void;
   retrieveSession: () => void;
+  saveSessionToStorage: (tokens: Tokens) => void;
   logout: () => void;
 };
 
@@ -45,5 +46,11 @@ export const useAuthStore = create<AuthStore>((set) => ({
     localStorage.removeItem('userId');
 
     set({ userId: null, tokens: { access: null, refresh: null } });
+  },
+  saveSessionToStorage: ({ accessToken, refreshToken }: Tokens) => {
+    localStorage.setItem('accessToken', accessToken);
+    localStorage.setItem('refreshToken', refreshToken);
+
+    set({ tokens: { access: accessToken, refresh: refreshToken } });
   },
 }));

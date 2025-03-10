@@ -4,16 +4,15 @@ import * as ReactDOM from 'react-dom/client';
 import App from './app/app';
 import axios from 'axios';
 import { Tokens } from '@e-commerce/shared/api-models';
+import { useAuthApi } from '@e-commerce/delivery-manager/auth/api';
 
 axios.interceptors.request.use(
   function (config) {
-    // const authService = useAuthService();
-
-    // const { access, refresh } = authService.tokens.value;
+    const { accessToken, refreshToken } = useAuthApi();
 
     config.headers.set('app', 'delivery-manager');
 
-    // config.headers.Authorization = `Bearer ${config.url?.includes('refresh') ? refresh : access}`;
+    config.headers.Authorization = `Bearer ${config.url?.includes('refresh') ? refreshToken : accessToken}`;
 
     return config;
   },
@@ -36,18 +35,18 @@ axios.interceptors.response.use(
     ) {
       originalConfig._retry = true;
 
-      // const authStore = useAuthStore();
+      const { userId, refreshToken, saveSessionToStorage } = useAuthApi();
 
       try {
         const { data } = await axios.post<{
           accessToken: Tokens['accessToken'];
           refreshToken: Tokens['refreshToken'];
         }>(`${import.meta.env.VITE_API_URL}/auth/refresh`, {
-          // userId: authStore.userId,
-          // refreshToken: authStore.tokens.refresh,
+          userId,
+          refreshToken: refreshToken,
         });
 
-        // authStore.setSessionToStorage(data);
+        saveSessionToStorage(data);
 
         return axios.request({
           ...originalConfig,

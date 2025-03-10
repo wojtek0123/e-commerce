@@ -201,6 +201,12 @@
       "@e-commerce/delivery-manager/auth/feature/shell": [
         "libs/delivery-manager/auth/feature/shell/src/index.ts"
       ],
+      "@e-commerce/delivery-manager/core/data-access": [
+        "libs/delivery-manager/core/data-access/src/index.ts"
+      ],
+      "@e-commerce/delivery-manager/core/feature/nav": [
+        "libs/delivery-manager/core/feature/nav/src/index.ts"
+      ],
       "@e-commerce/shared/api-models": ["libs/shared/api-models/src/index.ts"]
     }
   },
