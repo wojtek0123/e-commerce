@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { Tokens, User } from '@e-commerce/shared/api-models';
+import { useEffect } from 'react';
 
 type AuthStore = {
   userId: User['id'] | null;
@@ -37,6 +38,8 @@ export const useAuthStore = create<AuthStore>((set) => ({
     const accessToken = localStorage.getItem('accessToken');
     const refreshToken = localStorage.getItem('refreshToken');
     const userId = localStorage.getItem('userId');
+
+    console.log(userId, accessToken, refreshToken);
 
     set({ userId, tokens: { access: accessToken, refresh: refreshToken } });
   },

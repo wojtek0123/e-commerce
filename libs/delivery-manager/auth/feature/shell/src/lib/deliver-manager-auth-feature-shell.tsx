@@ -1,7 +1,17 @@
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, Navigate } from 'react-router-dom';
 import { Login } from '@e-commerce/delivery-manager/auth/feature/login';
+import { useAuthStore } from '@e-commerce/delivery-manager/auth/data-access';
 
 export function DeliverManagerAuthFeatureShell() {
+  const {
+    userId,
+    tokens: { access, refresh },
+  } = useAuthStore();
+
+  if (userId && access && refresh) {
+    return <Navigate to="/" />;
+  }
+
   return (
     <div className="flex flex-col-reverse w-full gap-4 xl:grid xl:h-content xl:grid-cols-2">
       <div className="flex flex-col items-center h-content justify-center w-full">

@@ -48,6 +48,20 @@ module.exports = [
               ],
             },
             {
+              sourceTag: 'type:shared-feature',
+              onlyDependOnLibsWithTags: [
+                'type:ui',
+                'type:data-access',
+                'type:util',
+                'type:api',
+                'type:shared-feature',
+                'type:shared-data-access',
+                'type:shared-util',
+                'type:shared-ui',
+                'type:shared-type',
+              ],
+            },
+            {
               sourceTag: 'type:data-access',
               onlyDependOnLibsWithTags: [
                 'type:util',

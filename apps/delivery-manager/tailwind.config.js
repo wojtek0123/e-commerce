@@ -24,7 +24,7 @@ module.exports = {
         base: '0px 3px 5px rgba(0, 0, 0, 0.02), 0px 0px 2px rgba(0, 0, 0, 0.05), 0px 1px 4px rgba(0,0,0,0.08)',
       },
       backgroundColor: {
-        'content-background': 'var(--p-content-background)',
+        'content-background': 'var(--surface-card)',
       },
       screens: {
         '3xl': '1924px',

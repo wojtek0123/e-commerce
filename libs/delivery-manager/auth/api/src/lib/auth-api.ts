@@ -4,6 +4,7 @@ export function useAuthApi() {
   const {
     logout,
     saveSessionToStorage,
+    retrieveSession,
     userId,
     tokens: { access, refresh },
   } = useAuthStore();
@@ -15,5 +16,6 @@ export function useAuthApi() {
     isAuthenticated: userId && access && refresh,
     logout,
     saveSessionToStorage,
+    retrieveSession,
   };
 }
