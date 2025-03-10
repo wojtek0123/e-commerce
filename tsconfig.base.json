@@ -207,6 +207,9 @@
       "@e-commerce/delivery-manager/core/feature/nav": [
         "libs/delivery-manager/core/feature/nav/src/index.ts"
       ],
+      "@e-commerce/delivery-manager/shared/feature": [
+        "libs/delivery-manager/shared/feature/src/index.ts"
+      ],
       "@e-commerce/shared/api-models": ["libs/shared/api-models/src/index.ts"]
     }
   },

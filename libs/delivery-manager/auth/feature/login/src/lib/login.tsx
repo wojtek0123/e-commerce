@@ -20,10 +20,10 @@ export function Login() {
         'http://localhost:3000/auth/login',
         { email, password },
       ),
-    async onSuccess({ data: { user, tokens } }) {
+    onSuccess({ data: { user, tokens } }) {
       authenticate(user, tokens);
 
-      await navigate('/');
+      navigate('/');
     },
     onError(error) {
       console.error(error);

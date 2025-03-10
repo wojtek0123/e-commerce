@@ -4,11 +4,11 @@ import * as ReactDOM from 'react-dom/client';
 import App from './app/app';
 import axios from 'axios';
 import { Tokens } from '@e-commerce/shared/api-models';
-import { useAuthApi } from '@e-commerce/delivery-manager/auth/api';
 
 axios.interceptors.request.use(
   function (config) {
-    const { accessToken, refreshToken } = useAuthApi();
+    const accessToken = localStorage.getItem('accessToken');
+    const refreshToken = localStorage.getItem('refreshToken');
 
     config.headers.set('app', 'delivery-manager');
 
@@ -26,7 +26,10 @@ axios.interceptors.response.use(
     return response;
   },
   async function (error) {
+    console.log(error);
     const originalConfig = error.config;
+
+    console.log(originalConfig);
 
     if (
       !originalConfig._retry &&
@@ -35,7 +38,10 @@ axios.interceptors.response.use(
     ) {
       originalConfig._retry = true;
 
-      const { userId, refreshToken, saveSessionToStorage } = useAuthApi();
+      const refreshToken = localStorage.getItem('refreshToken');
+      const userId = localStorage.getItem('userId');
+
+      // const { userId, refreshToken, saveSessionToStorage } = useAuthApi();
 
       try {
         const { data } = await axios.post<{
@@ -46,7 +52,7 @@ axios.interceptors.response.use(
           refreshToken: refreshToken,
         });
 
-        saveSessionToStorage(data);
+        // saveSessionToStorage(data);
 
         return axios.request({
           ...originalConfig,
