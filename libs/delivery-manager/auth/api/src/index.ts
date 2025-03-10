@@ -1,1 +1,1 @@
-export * from './lib/deliver-manager-auth-api';
+export * from './lib/auth-api';
