@@ -1,11 +1,10 @@
 import { useAuthStore } from '@e-commerce/delivery-manager/auth/data-access';
-import { Button } from 'primereact/button';
-import { InputText } from 'primereact/inputtext';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { Tokens, User } from '@e-commerce/shared/api-models';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 type LoginForm = {
   email: string;
@@ -13,6 +12,7 @@ type LoginForm = {
 };
 
 export function Login() {
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   const mutation = useMutation({
     mutationFn: ({ email, password }: { email: string; password: string }) =>
@@ -26,6 +26,11 @@ export function Login() {
       navigate('/');
     },
     onError(error) {
+      if (error instanceof AxiosError) {
+        setError(
+          error.response?.data?.message ?? 'Error occurred while logging in',
+        );
+      }
       console.error(error);
     },
   });
@@ -53,36 +58,50 @@ export function Login() {
         className="flex flex-col gap-2 w-full"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <div className="flex flex-col gap-1 w-full">
-          <label htmlFor="email">Email</label>
-          <InputText
-            id="email"
-            invalid={!!errors.email}
-            {...register('email', { required: true })}
+        <fieldset className="fieldset">
+          <legend className="fieldset-legend">What is your email?</legend>
+          <input
+            type="text"
+            className={'input w-full ' + (errors.email ? 'input-error' : '')}
+            placeholder="Type here"
+            {...register('email', {
+              required: true,
+              pattern: /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
+            })}
           />
-          {errors.email && <span className="text-red-300">Invalid email</span>}
-        </div>
+          {errors.email && (
+            <span className="fieldset-label text-error text-base">
+              Email is invalid
+            </span>
+          )}
+        </fieldset>
 
-        <div className="flex flex-col gap-1 w-full">
-          <label htmlFor="password">Password</label>
-          <InputText
-            id="password"
+        <fieldset className="fieldset">
+          <legend className="fieldset-legend">What is your password?</legend>
+          <input
             type="password"
-            className="w-full"
-            invalid={!!errors.password}
+            className={'input w-full ' + (errors.password ? 'input-error' : '')}
+            placeholder="Type here"
             {...register('password', { required: true })}
           />
           {errors.password && (
-            <span className="text-red-300">Invalid password</span>
+            <span className="fieldset-label text-error text-base">
+              Password is required
+            </span>
           )}
-        </div>
-        {mutation.isError && <span className="text-red-300">{}</span>}
-        <Button
+        </fieldset>
+
+        {error && <span className="text-error">{error}</span>}
+        <button
+          className="btn btn-primary mt-2 w-full"
           type="submit"
-          label="Log in"
-          className="mt-2 w-full"
-          loading={mutation.isLoading}
-        />
+          disabled={mutation.isLoading}
+        >
+          {mutation.isLoading && (
+            <span className="loading loading-spinner"></span>
+          )}
+          Log in
+        </button>
       </form>
     </>
   );

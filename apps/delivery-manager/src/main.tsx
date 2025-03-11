@@ -26,10 +26,7 @@ axios.interceptors.response.use(
     return response;
   },
   async function (error) {
-    console.log(error);
     const originalConfig = error.config;
-
-    console.log(originalConfig);
 
     if (
       !originalConfig._retry &&

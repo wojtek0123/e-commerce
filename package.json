@@ -139,6 +139,7 @@
     "autoprefixer": "^10.4.20",
     "babel-jest": "^29.7.0",
     "cypress": "^13.17.0",
+    "daisyui": "^5.0.0",
     "electron": "^33.4.1",
     "electron-builder": "^25.1.8",
     "eslint": "~9.16.0",

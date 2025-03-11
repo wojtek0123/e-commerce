@@ -46,5 +46,5 @@ module.exports = {
       },
     },
   },
-  plugins: [require('@tailwindcss/container-queries')],
+  plugins: [require('daisyui'), require('@tailwindcss/container-queries')],
 };
