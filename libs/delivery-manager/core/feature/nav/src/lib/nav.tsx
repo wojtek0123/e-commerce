@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-import { Divider } from 'primereact/divider';
 import { useRef, useState } from 'react';
 import { useAuthApi } from '@e-commerce/delivery-manager/auth/api';
 import { Toast } from 'primereact/toast';
@@ -42,7 +41,7 @@ export function Nav() {
       <div className="max-w-80">
         <div
           className={
-            'transition-[width] duration-300 ease-in-out hidden justify-between gap-4 xl:h-content px-2 py-4 bg-content-background xl:sticky z-[501] top-4 flex-col rounded-base xl:flex ' +
+            'transition-[width] duration-300 ease-in-out hidden justify-between gap-4 xl:h-content px-2 py-4 bg-neutral xl:sticky z-[501] top-4 flex-col rounded-base xl:flex ' +
             (isExpanded ? 'w-80' : 'w-14')
           }
         >
@@ -60,55 +59,27 @@ export function Nav() {
                   <Link
                     v-if="!store.shouldLabelBeShowed"
                     to="/"
-                    className="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700"
+                    className="px-3 h-10 flex items-center gap-4"
                   >
                     <i className="pi pi-home"></i>
                   </Link>
                 )}
               </div>
-              <Divider />
-              <ul className="flex flex-col">
-                <Link
-                  to="/books"
-                  className="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700 cursorpointer"
-                >
-                  <i className="pi pi-book"></i>
-                  {isLabelShowed && <span>Books</span>}
-                </Link>
-
-                <Link
-                  to="/categories"
-                  className="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700 cursorpointer"
-                >
-                  <i className="pi pi-objects-column"></i>
-                  {isLabelShowed && <span>Categories</span>}
-                </Link>
-              </ul>
+              <div className="bg-primary w-full h-[1px] my-4"></div>
+              <ul className="flex flex-col"></ul>
             </div>
 
             <div className="flex flex-col gap-2">
               <button
-                className="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700"
+                className="px-3 h-10 flex items-center gap-4"
                 onClick={onLogout}
               >
                 <i className="pi pi-sign-out"></i>
                 {isLabelShowed && <span v-if="store.isExpanded">Log out</span>}
               </button>
-              <Divider />
+              <div className="bg-primary w-full h-[1px] my-4"></div>
               <button
-                className="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700"
-                onClick={setTheme}
-              >
-                {isDark ? (
-                  <i v-if="store.isDark" className="pi pi-moon"></i>
-                ) : (
-                  <i v-if="!store.isDark" className="pi pi-sun"></i>
-                )}
-                {isLabelShowed && isDark && <span>Dark</span>}
-                {isLabelShowed && !isDark && <span>Light</span>}
-              </button>
-              <button
-                className="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700"
+                className="px-3 h-10 flex items-center gap-4"
                 onClick={expandCollapse}
               >
                 {isLabelShowed && (

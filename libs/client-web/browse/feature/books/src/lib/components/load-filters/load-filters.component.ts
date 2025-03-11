@@ -101,8 +101,6 @@ export class LoadFiltersComponent {
       sortByMode: 'asc',
     };
 
-    console.log(queryParams);
-
     this.visible.set(false);
     this.#booksStore.loadFilters(queryParams);
   }

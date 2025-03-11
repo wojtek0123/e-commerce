@@ -1,15 +1,7 @@
-@layer tailwind-base, primereact, tailwind-utilities;
-
-@import 'primereact/resources/themes/viva-dark/theme.css' layer(primereact);
-
-@layer tailwind-base {
-  @tailwind base;
-}
-
-@layer tailwind-utilities {
-  @tailwind components;
-  @tailwind utilities;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@plugin "daisyui";
 
 body {
   font-family: var(--font-family);
@@ -22,4 +14,8 @@ body {
 
 .dark body {
   background-color: var(--p-surface-950);
+}
+
+.btn {
+  @apply rounded-full;
 }

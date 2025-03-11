@@ -39,8 +39,6 @@ export const useAuthStore = create<AuthStore>((set) => ({
     const refreshToken = localStorage.getItem('refreshToken');
     const userId = localStorage.getItem('userId');
 
-    console.log(userId, accessToken, refreshToken);
-
     set({ userId, tokens: { access: accessToken, refresh: refreshToken } });
   },
   logout: () => {
