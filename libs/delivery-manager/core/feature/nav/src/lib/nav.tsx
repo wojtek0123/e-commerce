@@ -56,17 +56,21 @@ export function Nav() {
                 )}
 
                 {!isLabelShowed && (
-                  <Link
-                    v-if="!store.shouldLabelBeShowed"
-                    to="/"
-                    className="px-3 h-10 flex items-center gap-4"
-                  >
+                  <Link to="/" className="px-3 h-10 flex items-center gap-4">
                     <i className="pi pi-home"></i>
                   </Link>
                 )}
               </div>
               <div className="bg-primary w-full h-[1px] my-4"></div>
-              <ul className="flex flex-col"></ul>
+              <ul className="flex flex-col">
+                <Link
+                  to="/orders/list"
+                  className="px-3 h-10 flex items-center gap-4"
+                >
+                  <i className="pi pi-list"></i>
+                  {isLabelShowed && <span>Orders</span>}
+                </Link>
+              </ul>
             </div>
 
             <div className="flex flex-col gap-2">
@@ -75,7 +79,7 @@ export function Nav() {
                 onClick={onLogout}
               >
                 <i className="pi pi-sign-out"></i>
-                {isLabelShowed && <span v-if="store.isExpanded">Log out</span>}
+                {isLabelShowed && <span>Log out</span>}
               </button>
               <div className="bg-primary w-full h-[1px] my-4"></div>
               <button

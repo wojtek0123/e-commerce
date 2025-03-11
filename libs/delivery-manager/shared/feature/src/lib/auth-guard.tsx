@@ -1,4 +1,3 @@
-import { ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuthApi } from '@e-commerce/delivery-manager/auth/api';
 
