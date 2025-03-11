@@ -38,8 +38,6 @@ axios.interceptors.response.use(
       const refreshToken = localStorage.getItem('refreshToken');
       const userId = localStorage.getItem('userId');
 
-      // const { userId, refreshToken, saveSessionToStorage } = useAuthApi();
-
       try {
         const { data } = await axios.post<{
           accessToken: Tokens['accessToken'];
