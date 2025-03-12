@@ -12,12 +12,14 @@ import { OrderDetail } from './entities/order-detail.entity';
 import { MailerService } from '@nestjs-modules/mailer';
 import { BookEntity } from '../books/entities/book.entity';
 import { Role } from '@prisma/client';
+import { EventsGateway } from '../app/gateways/events.gateway';
 
 @Injectable()
 export class OrderDetailsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly mailerService: MailerService,
+    private readonly socket: EventsGateway,
   ) {}
 
   async create(
@@ -196,6 +198,8 @@ export class OrderDetailsService {
         'Failed to initialize new shopping session.',
       );
     }
+
+    this.socket.server.emit('order', order);
 
     return order;
   }

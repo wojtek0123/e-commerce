@@ -3,7 +3,7 @@ import { Outlet } from 'react-router-dom';
 
 export function MainLayout() {
   return (
-    <div className="flex gap-base">
+    <div className="flex w-full gap-base">
       <Nav />
       <Outlet />
     </div>
