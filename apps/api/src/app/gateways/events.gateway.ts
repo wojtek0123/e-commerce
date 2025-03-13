@@ -9,7 +9,7 @@ import { OrderDetail } from '../../order-details/entities/order-detail.entity';
 
 @WebSocketGateway({
   cors: {
-    origin: '*',
+    origin: 'http://localhost:4202',
   },
 })
 export class EventsGateway {
