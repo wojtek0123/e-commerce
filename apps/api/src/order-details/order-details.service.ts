@@ -11,7 +11,7 @@ import { decode } from 'jsonwebtoken';
 import { OrderDetail } from './entities/order-detail.entity';
 import { MailerService } from '@nestjs-modules/mailer';
 import { BookEntity } from '../books/entities/book.entity';
-import { Role } from '@prisma/client';
+import { OrderStatus, Role } from '@prisma/client';
 import { EventsGateway } from '../app/gateways/events.gateway';
 
 @Injectable()
@@ -206,12 +206,25 @@ export class OrderDetailsService {
 
   findAll(
     authHeader: string,
-    filters: { startDate?: string; endDate?: string },
+    filters: {
+      startDate?: string;
+      endDate?: string;
+      sortBy?: string;
+      sortByMode?: string;
+    },
   ) {
     const role = decode(authHeader.split(' ')[1])['role'] as Role | undefined;
     const userId = authHeader
       ? String(decode(authHeader.split(' ')[1]).sub)
       : null;
+
+    const parsedSortByMode = ['asc', 'desc'].includes(filters.sortByMode)
+      ? filters.sortByMode
+      : 'asc';
+
+    const parsedSortBy = ['createdAt'].includes(filters.sortBy)
+      ? filters.sortBy
+      : 'createdAt';
 
     // Create date filter condition if dates are provided
     const dateFilter =
@@ -229,15 +242,19 @@ export class OrderDetailsService {
         ...dateFilter,
         ...(userId && role !== Role.ADMIN && { userId }),
       },
-      orderBy: { createdAt: 'desc' },
+      orderBy: { [parsedSortBy]: parsedSortByMode },
     });
   }
 
-  findOne(authHeader: string, id: OrderDetail['id']) {
+  async findOne(authHeader: string, id: OrderDetail['id']) {
     const userId = String(decode(authHeader.split(' ')[1]).sub);
+    const role = decode(authHeader.split(' ')[1])['role'] as Role | undefined;
 
-    return this.prisma.orderDetails.findUnique({
-      where: { id, userId },
+    const order = await this.prisma.orderDetails.findUnique({
+      where: {
+        id,
+        ...(userId && role !== Role.ADMIN && { userId }),
+      },
       include: {
         orderAddress: {
           include: {
@@ -248,11 +265,32 @@ export class OrderDetailsService {
         paymentDetails: true,
         orderItems: {
           include: {
-            book: true,
+            book: {
+              include: {
+                authors: {
+                  include: {
+                    author: true,
+                  },
+                },
+              },
+            },
           },
         },
       },
     });
+
+    return {
+      ...order,
+      orderItems: order.orderItems.map((item) => ({
+        ...item,
+        book: {
+          ...item.book,
+          authors: item.book.authors.map((a) => a.author),
+        },
+      })),
+    };
+
+    // return { ...order,  ...book, authors: book.authors.map((a) => a.author) };
   }
 
   async findOrder(authHeader: string, bookId: BookEntity['id']) {
@@ -277,5 +315,12 @@ export class OrderDetailsService {
     const orders = await this.prisma.orderDetails.findMany();
 
     return orders;
+  }
+
+  async update(id: string, body: { status: OrderStatus }) {
+    return this.prisma.orderDetails.update({
+      where: { id },
+      data: { status: body.status },
+    });
   }
 }
