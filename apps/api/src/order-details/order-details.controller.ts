@@ -22,7 +22,7 @@ import {
 import { OrderDetail } from './entities/order-detail.entity';
 import { OrderDetailList } from './entities/order-detail-list.dto';
 import { Roles, RolesGuard } from '../common/guards/role.guard';
-import { Role } from '@prisma/client';
+import { OrderStatus, Role } from '@prisma/client';
 
 @ApiTags('order-details')
 // @ApiBearerAuth()
@@ -82,5 +82,19 @@ export class OrderDetailsController {
     @Param('id') bookId: string,
   ) {
     return this.orderDetailsService.findOrder(authHeader, bookId);
+  }
+
+  @Post(':id')
+  @ApiOperation({ summary: 'Update order status' })
+  @ApiCreatedResponse({ type: OrderDetail })
+  @UseGuards(RolesGuard)
+  @Roles([Role.ADMIN])
+  @ApiParam({ name: 'id', type: String, required: true })
+  @ApiBearerAuth()
+  updateStatus(
+    @Param('id') orderId: string,
+    @Body() body: { status: OrderStatus },
+  ) {
+    return this.orderDetailsService.update(orderId, body);
   }
 }

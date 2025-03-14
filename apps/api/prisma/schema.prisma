@@ -248,9 +248,9 @@ enum Tag {
 
 enum OrderStatus {
   NEW
-  PROCESSING
+  PACKING
+  PREPARED_FOR_SHIPPING
   SHIPPED
-  COMPLETED
 }
 
 enum PaymentStatus {
