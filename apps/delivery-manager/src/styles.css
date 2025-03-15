@@ -19,3 +19,7 @@ body {
 .btn {
   @apply rounded-full;
 }
+
+.wrapper {
+  @apply rounded-base bg-neutral p-base rounded-base;
+}

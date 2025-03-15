@@ -207,11 +207,17 @@
       "@e-commerce/delivery-manager/core/feature/nav": [
         "libs/delivery-manager/core/feature/nav/src/index.ts"
       ],
+      "@e-commerce/delivery-manager/orders/feature/order-details": [
+        "libs/delivery-manager/orders/feature/order-details/src/index.ts"
+      ],
       "@e-commerce/delivery-manager/orders/feature/order-list": [
         "libs/delivery-manager/orders/feature/order-list/src/index.ts"
       ],
       "@e-commerce/delivery-manager/orders/feature/shell": [
         "libs/delivery-manager/orders/feature/shell/src/index.ts"
+      ],
+      "@e-commerce/delivery-manager/shared/data-access": [
+        "libs/delivery-manager/shared/data-access/src/index.ts"
       ],
       "@e-commerce/delivery-manager/shared/feature": [
         "libs/delivery-manager/shared/feature/src/index.ts"
