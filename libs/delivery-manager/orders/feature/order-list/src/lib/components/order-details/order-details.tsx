@@ -11,19 +11,28 @@ import { useToastStore } from '@e-commerce/delivery-manager/shared/data-access';
 export function OrderDetails({
   orderId,
   dialogRef,
+  onStatusChange,
 }: {
   orderId: Order['id'] | null;
   dialogRef: React.RefObject<HTMLDialogElement>;
+  onStatusChange: (status: OrderStatus) => void;
 }) {
   const toast = useToastStore();
   const selectAllCheckboxRef = useRef<HTMLInputElement | null>(null);
   const [submitted, setSubmitted] = useState(false);
-  const [hasLabel, setHasLabel] = useState(false);
+  const [label, setLabel] = useState<{
+    isGenerated: boolean;
+    isPrinted: boolean;
+  }>({ isGenerated: false, isPrinted: false });
   const [selectedOrderItems, setSelectedOrderItems] = useState<
     OrderDetailsItem[]
   >([]);
   const queryClient = useQueryClient();
-  const { isLoading, isError, data, refetch } = useQuery<Order>({
+  const {
+    isLoading,
+    isError,
+    data: order,
+  } = useQuery<Order>({
     queryKey: ['order', orderId],
     queryFn: async () => {
       const { data } = await axios.get<Order>(
@@ -32,8 +41,8 @@ export function OrderDetails({
 
       return data;
     },
-    staleTime: Infinity,
     enabled: orderId !== null,
+    staleTime: Infinity,
   });
   const mutation = useMutation<
     void,
@@ -43,24 +52,24 @@ export function OrderDetails({
     mutationFn: ({ orderId, status }) =>
       axios.post(`http://localhost:3000/order-details/${orderId}`, { status }),
     onSuccess(_, { status }) {
-      if (data) {
-        const updatedData = { ...data, status };
-        queryClient.setQueryData(['order', orderId], updatedData);
+      if (order) {
+        const updatedOrder = { ...order, status };
+        queryClient.setQueryData(['order', orderId], updatedOrder);
       }
       toast.show(
         `Status has been updated to ${status} for order no. ${orderId}`,
       );
+
+      onStatusChange(status);
     },
     onError() {
       toast.show('Something went wrong!');
-      // On error, refetch to ensure data consistency
-      refetch();
     },
   });
 
   function toggleAllOrderItemsSelection() {
     setSelectedOrderItems((prevState) =>
-      prevState.length !== 0 ? [] : (data?.orderItems ?? []),
+      prevState.length !== 0 ? [] : (order?.orderItems ?? []),
     );
   }
 
@@ -76,22 +85,29 @@ export function OrderDetails({
     if (!selectAllCheckboxRef.current) return;
 
     selectAllCheckboxRef.current.indeterminate =
-      updatedSelectedOrderItems.length !== data?.orderItems.length &&
+      updatedSelectedOrderItems.length !== order?.orderItems.length &&
       updatedSelectedOrderItems.length !== 0;
   }
 
   function generateLabel() {
-    setHasLabel(true);
+    setLabel((prevState) => ({ ...prevState, isGenerated: true }));
   }
 
   function printLabel() {
-    console.log('Label has been printed');
+    setLabel((prevState) => ({ ...prevState, isPrinted: true }));
   }
 
   function markAsPrepareForShipping() {
     setSubmitted(true);
 
     if (!orderId) return;
+
+    if (
+      !label.isPrinted ||
+      !label.isGenerated ||
+      selectedOrderItems.length !== order?.orderItems.length
+    )
+      return;
 
     mutation.mutate({ orderId, status: OrderStatus.PREPARED_FOR_SHIPPING });
   }
@@ -107,9 +123,13 @@ export function OrderDetails({
   }
 
   useEffect(() => {
-    setHasLabel(false);
+    setLabel({ isPrinted: false, isGenerated: false });
     setSubmitted(false);
     setSelectedOrderItems([]);
+
+    if (orderId) {
+      mutation.mutate({ orderId, status: OrderStatus.PACKING });
+    }
   }, [orderId]);
 
   if (isLoading) {
@@ -128,7 +148,7 @@ export function OrderDetails({
 
   return (
     <>
-      {data.status === OrderStatus.PREPARED_FOR_SHIPPING && (
+      {order.status === OrderStatus.PREPARED_FOR_SHIPPING && (
         <div className="flex flex-col gap-base">
           <p className="text-center">
             Once you hand over the package to the courier, you can mark this
@@ -143,7 +163,7 @@ export function OrderDetails({
           </button>
         </div>
       )}
-      {data.status === OrderStatus.PACKING && (
+      {order.status === OrderStatus.PACKING && (
         <div className="flex flex-col gap-4 w-full">
           <div className="wrapper flex flex-col gap-base">
             <span className="text-lg font-bold">Shipping method</span>
@@ -152,7 +172,7 @@ export function OrderDetails({
                 Name
               </span>
               <span className="text-base !text-start">
-                {data.shippingMethod.name}
+                {order.shippingMethod.name}
               </span>
             </span>
 
@@ -161,7 +181,7 @@ export function OrderDetails({
                 Price
               </span>
               <span className="text-base !text-start">
-                {data.shippingMethod.price}
+                {order.shippingMethod.price}
               </span>
             </span>
           </div>
@@ -173,7 +193,7 @@ export function OrderDetails({
                 Phone
               </span>
               <span className="text-base !text-start">
-                {data.orderAddress.phone}
+                {order.orderAddress.phone}
               </span>
             </span>
             <span className="flex gap-4 justify-start">
@@ -181,8 +201,8 @@ export function OrderDetails({
                 Name
               </span>
               <span className="text-base flex justify-start">
-                {data.orderAddress.firstName}
-                {data.orderAddress.lastName}
+                {order.orderAddress.firstName}
+                {order.orderAddress.lastName}
               </span>
             </span>
             <span className="flex gap-4">
@@ -191,17 +211,17 @@ export function OrderDetails({
               </span>
               <span className="flex flex-col items-start">
                 <span className="text-base !text-start">
-                  {data.orderAddress.street} {data.orderAddress.homeNumber}
-                  {data.orderAddress.houseNumber
-                    ? '/ ' + data.orderAddress.houseNumber
+                  {order.orderAddress.street} {order.orderAddress.homeNumber}
+                  {order.orderAddress.houseNumber
+                    ? '/ ' + order.orderAddress.houseNumber
                     : ''}
-                  , {data.orderAddress.postcode}, {data.orderAddress.city},
-                  {data.orderAddress.country.name}
+                  , {order.orderAddress.postcode}, {order.orderAddress.city},
+                  {order.orderAddress.country.name}
                 </span>
               </span>
             </span>
 
-            {hasLabel ? (
+            {label.isGenerated ? (
               <button
                 className="btn btn-secondary max-w-[50%] min-w-fit w-full mx-auto"
                 onClick={printLabel}
@@ -230,7 +250,7 @@ export function OrderDetails({
                         className="checkbox"
                         ref={selectAllCheckboxRef}
                         checked={
-                          selectedOrderItems.length === data.orderItems.length
+                          selectedOrderItems.length === order.orderItems.length
                         }
                         onChange={toggleAllOrderItemsSelection}
                       />
@@ -242,7 +262,7 @@ export function OrderDetails({
                 </tr>
               </thead>
               <tbody>
-                {data.orderItems?.map((item) => (
+                {order.orderItems?.map((item) => (
                   <tr key={item.id}>
                     <th>
                       <label>
@@ -281,13 +301,19 @@ export function OrderDetails({
 
           <div className="flex flex-col justify-center items-center gap-base">
             {submitted &&
-              selectedOrderItems.length !== data.orderItems.length && (
+              selectedOrderItems.length !== order.orderItems.length && (
                 <span className="text-error text-base">
                   Not all book are packed
                 </span>
               )}
 
-            {submitted && !hasLabel && (
+            {submitted && !label.isGenerated && !label.isPrinted && (
+              <span className="text-error text-base">
+                Order does NOT have a label generated
+              </span>
+            )}
+
+            {submitted && !label.isPrinted && label.isGenerated && (
               <span className="text-error text-base">
                 Order does NOT have a label generated
               </span>
@@ -302,7 +328,7 @@ export function OrderDetails({
           </div>
         </div>
       )}
-      {data.status === OrderStatus.SHIPPED && (
+      {order.status === OrderStatus.SHIPPED && (
         <div className="flex flex-col gap-base">
           <div className="text-center">Delivery process is finished!</div>
           <button
