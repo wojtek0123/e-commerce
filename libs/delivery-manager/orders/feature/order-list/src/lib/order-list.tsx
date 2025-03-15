@@ -1,12 +1,20 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { io } from 'socket.io-client';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { OrderDetails } from '@e-commerce/shared/api-models';
 import axios from 'axios';
+import OrderDetailsComponent from './components/order-details/order-details';
+import { OrderStatus } from '@prisma/client';
+import { useToastStore } from '@e-commerce/delivery-manager/shared/data-access';
 
 const socket = io('http://localhost:3000');
 
 export function OrderList() {
+  const toast = useToastStore();
+  const orderDetailsDialog = useRef<HTMLDialogElement | null>(null);
+  const [selectedOrderId, setSelectedOrderId] = useState<
+    OrderDetails['id'] | null
+  >(null);
   const [isConnected, setIsConnected] = useState(socket.connected);
   const [newOrders, setNewOrders] = useState<OrderDetails[]>([]);
   const { isLoading, error, data } = useQuery<OrderDetails[]>({
@@ -16,6 +24,21 @@ export function OrderList() {
         'http://localhost:3000/order-details',
       );
       return data;
+    },
+    staleTime: Infinity,
+  });
+  const mutation = useMutation({
+    mutationFn: (orderId: OrderDetails['id']) =>
+      axios.post(`http://localhost:3000/order-details/${orderId}`, {
+        status: OrderStatus.PACKING,
+      }),
+    onSuccess() {
+      toast.show(
+        `Status has been updated to ${OrderStatus.PACKING} for order no. ${selectedOrderId}`,
+      );
+    },
+    onError() {
+      toast.show(`Something went wrong. Try again.`);
     },
   });
 
@@ -32,7 +55,16 @@ export function OrderList() {
   }
 
   function onError(error: unknown) {
-    console.log(error);
+    toast.show('WebSocket encounters an error. Reload page.');
+  }
+
+  function openOrderDetailsDialog(order: OrderDetails) {
+    setSelectedOrderId(order.id);
+    orderDetailsDialog.current?.showModal();
+
+    if (order.status !== OrderStatus.NEW) return;
+
+    mutation.mutate(order.id);
   }
 
   useEffect(() => {
@@ -58,48 +90,72 @@ export function OrderList() {
   }
 
   if (error) {
-    return <div>{(error as any)?.message}</div>;
+    return <div>Error occurred while getting orders!</div>;
   }
 
   return (
-    <div className="w-full">
-      {data?.length !== 0 && (
-        <div className="overflow-x-auto">
-          <table className="table">
-            <thead>
-              <tr>
-                <th></th>
-                <th>Order no.</th>
-                <th>Created at</th>
-                <th>Status</th>
-                <th> </th>
-              </tr>
-            </thead>
-            <tbody>
-              {data?.length &&
-                [...data, ...newOrders].map((order) => (
-                  <tr>
-                    <th>1</th>
-                    <td>{order.id}</td>
-                    <td>{order.createdAt}</td>
-                    <td>{order.status}</td>
-                    <td>
-                      <button className="btn">
-                        <span className="pi pi-box"></span>
-                        <span>Pack up</span>
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-            </tbody>
-          </table>
+    <>
+      {!toast.hidden && (
+        <div className="toast toast-top toast-end z-[1001]">
+          <div className="alert alert-success">
+            <span>{toast.message}</span>
+          </div>
         </div>
       )}
-      <h2>New orders</h2>
-      {newOrders?.length !== 0 && (
-        <ul>{newOrders?.map((order) => <li key={order.id}>{order.id}</li>)}</ul>
-      )}
-    </div>
+
+      <dialog ref={orderDetailsDialog} className="modal">
+        <div className="modal-box rounded-base flex flex-col gap-base max-w-[868px]">
+          <h3 className="text-center text-xl">Order packing</h3>
+          <OrderDetailsComponent
+            orderId={selectedOrderId}
+            dialogRef={orderDetailsDialog}
+          />
+        </div>
+      </dialog>
+
+      <div className="w-full">
+        {data?.length !== 0 && (
+          <div className="overflow-x-auto">
+            <table className="table w-full">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Order no.</th>
+                  <th>Created at</th>
+                  <th>Status</th>
+                  <th> </th>
+                </tr>
+              </thead>
+              <tbody>
+                {data?.length &&
+                  [...newOrders, ...data].map((order, index) => (
+                    <tr key={order.id}>
+                      <th>{index + 1}</th>
+                      <td>{order.id}</td>
+                      <td>{order.createdAt}</td>
+                      <td>{order.status}</td>
+                      <td>
+                        <button
+                          className="btn"
+                          onClick={() => openOrderDetailsDialog(order)}
+                        >
+                          pack order
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+        <h2>New orders</h2>
+        {newOrders?.length !== 0 && (
+          <ul>
+            {newOrders?.map((order) => <li key={order.id}>{order.id}</li>)}
+          </ul>
+        )}
+      </div>
+    </>
   );
 }
 

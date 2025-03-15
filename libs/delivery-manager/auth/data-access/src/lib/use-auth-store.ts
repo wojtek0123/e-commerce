@@ -1,6 +1,5 @@
 import { create } from 'zustand';
 import { Tokens, User } from '@e-commerce/shared/api-models';
-import { useEffect } from 'react';
 
 type AuthStore = {
   userId: User['id'] | null;

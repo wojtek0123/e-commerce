@@ -5,13 +5,15 @@ import 'primeicons/primeicons.css';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthGuard } from '@e-commerce/delivery-manager/shared/feature';
 import { useAuthApi } from '@e-commerce/delivery-manager/auth/api';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { DeliveryManagerOrdersFeatureShell } from '@e-commerce/delivery-manager/orders/feature/shell';
 import MainLayout from './main-layout';
+import { useToastStore } from '@e-commerce/delivery-manager/shared/data-access';
 
 const queryClient = new QueryClient();
 
 export function App() {
+  const toast = useToastStore();
   const { retrieveSession } = useAuthApi();
 
   useEffect(() => {
@@ -21,6 +23,13 @@ export function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <PrimeReactProvider>
+        {!toast.hidden && (
+          <div className="toast toast-top toast-end">
+            <div className="alert alert-success">
+              <span>{toast.message}</span>
+            </div>
+          </div>
+        )}
         <div className="flex flex-col-reverse w-full h-svh xl:flex-row xl:p-gap xl:min-h-svh xl:h-full">
           <Routes>
             <Route
