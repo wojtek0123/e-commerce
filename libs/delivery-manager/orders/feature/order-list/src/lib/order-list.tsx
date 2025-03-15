@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { io } from 'socket.io-client';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { OrderDetails } from '@e-commerce/shared/api-models';
 import axios from 'axios';
 import OrderDetailsComponent from './components/order-details/order-details';
@@ -11,13 +11,18 @@ const socket = io('http://localhost:3000');
 
 export function OrderList() {
   const toast = useToastStore();
+  const queryClient = useQueryClient();
   const orderDetailsDialog = useRef<HTMLDialogElement | null>(null);
   const [selectedOrderId, setSelectedOrderId] = useState<
     OrderDetails['id'] | null
   >(null);
   const [isConnected, setIsConnected] = useState(socket.connected);
   const [newOrders, setNewOrders] = useState<OrderDetails[]>([]);
-  const { isLoading, error, data } = useQuery<OrderDetails[]>({
+  const {
+    isLoading,
+    error,
+    data: orders,
+  } = useQuery<OrderDetails[]>({
     queryKey: ['orders'],
     queryFn: async () => {
       const { data } = await axios.get<OrderDetails[]>(
@@ -27,12 +32,20 @@ export function OrderList() {
     },
     staleTime: Infinity,
   });
-  const mutation = useMutation({
-    mutationFn: (orderId: OrderDetails['id']) =>
+  const mutation = useMutation<void, Error, { orderId: OrderDetails['id'] }>({
+    mutationFn: ({ orderId }) =>
       axios.post(`http://localhost:3000/order-details/${orderId}`, {
         status: OrderStatus.PACKING,
       }),
-    onSuccess() {
+    onSuccess(_, { orderId }) {
+      if (orders) {
+        const updatedData = orders.map((order) =>
+          order.id === orderId
+            ? { ...order, status: OrderStatus.PACKING }
+            : { ...order },
+        );
+        queryClient.setQueryData(['orders'], updatedData);
+      }
       toast.show(
         `Status has been updated to ${OrderStatus.PACKING} for order no. ${selectedOrderId}`,
       );
@@ -64,9 +77,18 @@ export function OrderList() {
 
     if (order.status !== OrderStatus.NEW) return;
 
-    mutation.mutate(order.id);
+    // mutation.mutate({ orderId: order.id });
   }
 
+  function updateStatus(status: OrderStatus) {
+    if (!orders) return;
+
+    const updatedData = orders.map((order) =>
+      order.id === selectedOrderId ? { ...order, status } : { ...order },
+    );
+
+    queryClient.setQueryData(['orders'], updatedData);
+  }
   useEffect(() => {
     socket.on('order', addOrder);
     socket.on('connect', onConnect);
@@ -80,10 +102,6 @@ export function OrderList() {
       socket.off('exception', onError);
     };
   }, []);
-
-  useEffect(() => {
-    console.log(isConnected);
-  }, [isConnected]);
 
   if (isLoading) {
     return <div>Loading....</div>;
@@ -109,12 +127,13 @@ export function OrderList() {
           <OrderDetailsComponent
             orderId={selectedOrderId}
             dialogRef={orderDetailsDialog}
+            onStatusChange={updateStatus}
           />
         </div>
       </dialog>
 
       <div className="w-full">
-        {data?.length !== 0 && (
+        {orders?.length !== 0 && (
           <div className="overflow-x-auto">
             <table className="table w-full">
               <thead>
@@ -127,8 +146,8 @@ export function OrderList() {
                 </tr>
               </thead>
               <tbody>
-                {data?.length &&
-                  [...newOrders, ...data].map((order, index) => (
+                {orders?.length &&
+                  [...newOrders, ...orders].map((order, index) => (
                     <tr key={order.id}>
                       <th>{index + 1}</th>
                       <td>{order.id}</td>

@@ -27,8 +27,6 @@ export function OrderDetails() {
     return <div>Something went wrong! Try later!</div>;
   }
 
-  console.log(data.status);
-
   return (
     <>
       {data.status === OrderStatus.PREPARED_FOR_SHIPPING && (
