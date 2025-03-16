@@ -211,6 +211,7 @@ export class OrderDetailsService {
       endDate?: string;
       sortBy?: string;
       sortByMode?: string;
+      status?: string;
     },
   ) {
     const role = decode(authHeader.split(' ')[1])['role'] as Role | undefined;
@@ -225,6 +226,19 @@ export class OrderDetailsService {
     const parsedSortBy = ['createdAt'].includes(filters.sortBy)
       ? filters.sortBy
       : 'createdAt';
+
+    const parsedStatus = filters.status
+      ?.split(',')
+      ?.filter((status) =>
+        (
+          [
+            OrderStatus.NEW,
+            OrderStatus.SHIPPED,
+            OrderStatus.PREPARED_FOR_SHIPPING,
+            OrderStatus.PACKING,
+          ] as string[]
+        ).includes(status),
+      ) as OrderStatus[] | undefined;
 
     // Create date filter condition if dates are provided
     const dateFilter =
@@ -241,6 +255,7 @@ export class OrderDetailsService {
       where: {
         ...dateFilter,
         ...(userId && role !== Role.ADMIN && { userId }),
+        status: { in: parsedStatus },
       },
       orderBy: { [parsedSortBy]: parsedSortByMode },
     });

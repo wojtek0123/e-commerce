@@ -1,17 +1,17 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { OrderDetailsStatus } from '@e-commerce/shared/api-models';
+import { OrderStatus } from '@prisma/client';
 
 @Pipe({ name: 'statusToSeverity', standalone: true })
 export class StatusToServerityPipe implements PipeTransform {
-  transform(orderDetailsStatus: OrderDetailsStatus) {
+  transform(orderDetailsStatus: OrderStatus) {
     switch (orderDetailsStatus) {
       case 'NEW':
         return 'danger';
-      case 'PROCESSING':
+      case 'PACKING':
         return 'warn';
-      case 'SHIPPED':
+      case 'PREPARED_FOR_SHIPPING':
         return 'info';
-      case 'COMPLETED':
+      case 'SHIPPED':
         return 'success';
     }
   }

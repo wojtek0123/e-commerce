@@ -27,6 +27,7 @@ module.exports = [
                 'type:api',
                 'type:shell',
                 'type:data-access',
+                'type:shared-feature',
                 'type:shared-data-access',
                 'type:shared-util',
                 'type:shared-ui',

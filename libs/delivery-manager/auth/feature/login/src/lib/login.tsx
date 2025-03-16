@@ -17,7 +17,7 @@ export function Login() {
   const mutation = useMutation({
     mutationFn: ({ email, password }: { email: string; password: string }) =>
       axios.post<{ user: User; tokens: Tokens }>(
-        'http://localhost:3000/auth/login',
+        `${import.meta.env.VITE_API_URL}/auth/login`,
         { email, password },
       ),
     onSuccess({ data: { user, tokens } }) {

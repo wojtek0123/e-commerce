@@ -24,7 +24,7 @@ export function App() {
     <QueryClientProvider client={queryClient}>
       <PrimeReactProvider>
         {!toast.hidden && (
-          <div className="toast toast-top toast-end">
+          <div className="toast toast-top toast-end !z-[2001]">
             <div className="alert alert-success">
               <span>{toast.message}</span>
             </div>

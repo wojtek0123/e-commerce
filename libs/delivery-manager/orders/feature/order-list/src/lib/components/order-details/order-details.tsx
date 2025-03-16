@@ -18,6 +18,12 @@ export function OrderDetails({
   onStatusChange: (status: OrderStatus) => void;
 }) {
   const toast = useToastStore();
+  const [orderSteps] = useState<OrderStatus[]>([
+    'NEW',
+    'PACKING',
+    'PREPARED_FOR_SHIPPING',
+    'SHIPPED',
+  ]);
   const selectAllCheckboxRef = useRef<HTMLInputElement | null>(null);
   const [submitted, setSubmitted] = useState(false);
   const [label, setLabel] = useState<{
@@ -36,7 +42,7 @@ export function OrderDetails({
     queryKey: ['order', orderId],
     queryFn: async () => {
       const { data } = await axios.get<Order>(
-        `http://localhost:3000/order-details/${orderId}`,
+        `${import.meta.env.VITE_API_URL}/order-details/${orderId}`,
       );
 
       return data;
@@ -44,13 +50,16 @@ export function OrderDetails({
     enabled: orderId !== null,
     staleTime: Infinity,
   });
-  const mutation = useMutation<
+
+  const { mutate, isLoading: isUpdating } = useMutation<
     void,
     Error,
     { orderId: Order['id']; status: OrderStatus }
   >({
     mutationFn: ({ orderId, status }) =>
-      axios.post(`http://localhost:3000/order-details/${orderId}`, { status }),
+      axios.post(`${import.meta.env.VITE_API_URL}/order-details/${orderId}`, {
+        status,
+      }),
     onSuccess(_, { status }) {
       if (order) {
         const updatedOrder = { ...order, status };
@@ -91,10 +100,14 @@ export function OrderDetails({
 
   function generateLabel() {
     setLabel((prevState) => ({ ...prevState, isGenerated: true }));
+
+    toast.show('Label has been generated');
   }
 
   function printLabel() {
     setLabel((prevState) => ({ ...prevState, isPrinted: true }));
+
+    toast.show('Label has been printed');
   }
 
   function markAsPrepareForShipping() {
@@ -109,7 +122,7 @@ export function OrderDetails({
     )
       return;
 
-    mutation.mutate({ orderId, status: OrderStatus.PREPARED_FOR_SHIPPING });
+    mutate({ orderId, status: 'PREPARED_FOR_SHIPPING' });
   }
 
   function close() {
@@ -119,25 +132,27 @@ export function OrderDetails({
   function markAsShipped() {
     if (!orderId) return;
 
-    mutation.mutate({ orderId, status: OrderStatus.SHIPPED });
+    mutate({ orderId, status: 'SHIPPED' });
+  }
+
+  function markAsPacking() {
+    if (!orderId) return;
+
+    mutate({ orderId, status: 'PACKING' });
   }
 
   useEffect(() => {
     setLabel({ isPrinted: false, isGenerated: false });
     setSubmitted(false);
     setSelectedOrderItems([]);
-
-    if (orderId) {
-      mutation.mutate({ orderId, status: OrderStatus.PACKING });
-    }
   }, [orderId]);
 
-  if (isLoading) {
+  if (isLoading || isUpdating) {
     return (
       <div className="flex flex-col gap-base">
-        <div className="skeleton h-32 w-full rounded-base"></div>
-        <div className="skeleton h-32 w-full rounded-base"></div>
-        <div className="skeleton h-32 w-full rounded-base"></div>
+        <div className="skeleton h-10 w-full rounded-base"></div>
+        <div className="skeleton h-10 w-full rounded-base"></div>
+        <div className="skeleton h-10 w-full rounded-base"></div>
       </div>
     );
   }
@@ -148,22 +163,47 @@ export function OrderDetails({
 
   return (
     <>
-      {order.status === OrderStatus.PREPARED_FOR_SHIPPING && (
+      <ul className="steps">
+        {orderSteps.map((step) => (
+          <li
+            key={step}
+            className={`step ${
+              step === order.status ? 'step-primary' : ''
+            } ${orderSteps.indexOf(step) < orderSteps.indexOf(order.status) ? '' : 'disabled'}`}
+          >
+            {step.replaceAll('_', ' ')}
+          </li>
+        ))}
+      </ul>
+
+      {order.status === 'NEW' && (
+        <div className="flex flex-col gap-8">
+          <p className="text-center text-xl">Order is ready to be packed</p>
+
+          <button
+            className="btn btn-primary max-w-[50%] min-w-fit w-full mx-auto"
+            onClick={markAsPacking}
+          >
+            Prepare this order
+          </button>
+        </div>
+      )}
+      {order.status === 'PREPARED_FOR_SHIPPING' && (
         <div className="flex flex-col gap-base">
-          <p className="text-center">
+          <p className="text-center text-xl">
             Once you hand over the package to the courier, you can mark this
             order as 'Shipped' in the system.
           </p>
 
           <button
-            className="btn btn-secondary max-w-[50%] min-w-fit w-full mx-auto"
+            className="btn btn-primary max-w-[50%] min-w-fit w-full mx-auto"
             onClick={markAsShipped}
           >
             Mark as shipped
           </button>
         </div>
       )}
-      {order.status === OrderStatus.PACKING && (
+      {order.status === 'PACKING' && (
         <div className="flex flex-col gap-4 w-full">
           <div className="wrapper flex flex-col gap-base">
             <span className="text-lg font-bold">Shipping method</span>
@@ -309,13 +349,13 @@ export function OrderDetails({
 
             {submitted && !label.isGenerated && !label.isPrinted && (
               <span className="text-error text-base">
-                Order does NOT have a label generated
+                Order does NOT have a generated label
               </span>
             )}
 
             {submitted && !label.isPrinted && label.isGenerated && (
               <span className="text-error text-base">
-                Order does NOT have a label generated
+                Order does NOT have a printed label
               </span>
             )}
 
@@ -328,11 +368,13 @@ export function OrderDetails({
           </div>
         </div>
       )}
-      {order.status === OrderStatus.SHIPPED && (
+      {order.status === 'SHIPPED' && (
         <div className="flex flex-col gap-base">
-          <div className="text-center">Delivery process is finished!</div>
+          <div className="text-center text-xl">
+            Delivery process is finished!
+          </div>
           <button
-            className="btn btn-secondary max-w-[50%] min-w-fit w-full mx-auto"
+            className="btn btn-primary max-w-[50%] min-w-fit w-full mx-auto"
             onClick={close}
           >
             Close
