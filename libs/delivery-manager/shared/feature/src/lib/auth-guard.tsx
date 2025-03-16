@@ -1,7 +1,7 @@
 import { Navigate } from 'react-router-dom';
 import { useAuthApi } from '@e-commerce/delivery-manager/auth/api';
 
-export function AuthGuard({ children }: { children: any }) {
+export function AuthGuard({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuthApi();
 
   if (!isAuthenticated) {

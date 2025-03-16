@@ -1,13 +1,13 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { io } from 'socket.io-client';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { OrderDetails } from '@e-commerce/shared/api-models';
 import axios from 'axios';
 import OrderDetailsComponent from './components/order-details/order-details';
 import { OrderStatus } from '@prisma/client';
 import { useToastStore } from '@e-commerce/delivery-manager/shared/data-access';
 
-const socket = io('http://localhost:3000');
+const socket = io(import.meta.env.VITE_API_URL);
 
 export function OrderList() {
   const toast = useToastStore();
@@ -16,68 +16,46 @@ export function OrderList() {
   const [selectedOrderId, setSelectedOrderId] = useState<
     OrderDetails['id'] | null
   >(null);
-  const [isConnected, setIsConnected] = useState(socket.connected);
   const [newOrders, setNewOrders] = useState<OrderDetails[]>([]);
   const {
     isLoading,
-    error,
+    isError,
     data: orders,
   } = useQuery<OrderDetails[]>({
     queryKey: ['orders'],
     queryFn: async () => {
       const { data } = await axios.get<OrderDetails[]>(
-        'http://localhost:3000/order-details',
+        `${import.meta.env.VITE_API_URL}/order-details`,
+        {
+          params: {
+            status: (
+              [
+                'NEW',
+                'PACKING',
+                'PREPARED_FOR_SHIPPING',
+              ] satisfies OrderStatus[]
+            ).join(','),
+          },
+        },
       );
       return data;
     },
     staleTime: Infinity,
-  });
-  const mutation = useMutation<void, Error, { orderId: OrderDetails['id'] }>({
-    mutationFn: ({ orderId }) =>
-      axios.post(`http://localhost:3000/order-details/${orderId}`, {
-        status: OrderStatus.PACKING,
-      }),
-    onSuccess(_, { orderId }) {
-      if (orders) {
-        const updatedData = orders.map((order) =>
-          order.id === orderId
-            ? { ...order, status: OrderStatus.PACKING }
-            : { ...order },
-        );
-        queryClient.setQueryData(['orders'], updatedData);
-      }
-      toast.show(
-        `Status has been updated to ${OrderStatus.PACKING} for order no. ${selectedOrderId}`,
-      );
-    },
-    onError() {
-      toast.show(`Something went wrong. Try again.`);
-    },
   });
 
   function addOrder(order: OrderDetails) {
     setNewOrders((prevState) => [...prevState, order]);
   }
 
-  function onConnect() {
-    setIsConnected(true);
-  }
-
-  function onDisconnect() {
-    setIsConnected(false);
-  }
-
-  function onError(error: unknown) {
+  const onError = useCallback(() => {
     toast.show('WebSocket encounters an error. Reload page.');
-  }
+  }, [toast]);
 
   function openOrderDetailsDialog(order: OrderDetails) {
     setSelectedOrderId(order.id);
     orderDetailsDialog.current?.showModal();
 
     if (order.status !== OrderStatus.NEW) return;
-
-    // mutation.mutate({ orderId: order.id });
   }
 
   function updateStatus(status: OrderStatus) {
@@ -91,24 +69,35 @@ export function OrderList() {
   }
   useEffect(() => {
     socket.on('order', addOrder);
-    socket.on('connect', onConnect);
     socket.on('exception', onError);
-    socket.on('disconnect', onDisconnect);
 
     return () => {
       socket.off('order', addOrder);
-      socket.off('connect', onConnect);
-      socket.off('disconnect', onDisconnect);
       socket.off('exception', onError);
     };
-  }, []);
+  }, [onError]);
 
   if (isLoading) {
-    return <div>Loading....</div>;
+    return (
+      <div className="flex flex-col gap-base">
+        <div className="skeleton h-10 w-full rounded-base"></div>
+        <div className="skeleton h-10 w-full rounded-base"></div>
+        <div className="skeleton h-10 w-full rounded-base"></div>
+        <div className="skeleton h-10 w-full rounded-base"></div>
+        <div className="skeleton h-10 w-full rounded-base"></div>
+        <div className="skeleton h-10 w-full rounded-base"></div>
+        <div className="skeleton h-10 w-full rounded-base"></div>
+        <div className="skeleton h-10 w-full rounded-base"></div>
+        <div className="skeleton h-10 w-full rounded-base"></div>
+        <div className="skeleton h-10 w-full rounded-base"></div>
+        <div className="skeleton h-10 w-full rounded-base"></div>
+        <div className="skeleton h-10 w-full rounded-base"></div>
+      </div>
+    );
   }
 
-  if (error) {
-    return <div>Error occurred while getting orders!</div>;
+  if (isError) {
+    return <div>Something went wrong! Try later!</div>;
   }
 
   return (
@@ -122,8 +111,9 @@ export function OrderList() {
       )}
 
       <dialog ref={orderDetailsDialog} className="modal">
-        <div className="modal-box rounded-base flex flex-col gap-base max-w-[868px]">
-          <h3 className="text-center text-xl">Order packing</h3>
+        <div className="modal-box rounded-base flex flex-col gap-8 max-w-[868px]">
+          <h3 className="text-center text-xl">Order no. {selectedOrderId}</h3>
+          <div className="w-full h-[1px] bg-neutral-content"></div>
           <OrderDetailsComponent
             orderId={selectedOrderId}
             dialogRef={orderDetailsDialog}

@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -30,13 +27,13 @@ model BookReview {
   id        String   @id @default(uuid())
   rating    Int
   message   String?
-  name      String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId    String
-  book      Book     @relation(fields: [bookId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   bookId    String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  name      String
+  book      Book     @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Book {
@@ -50,27 +47,27 @@ model Book {
   coverImage         String?              @default("https://wialcudrcfkznrlcooal.supabase.co/storage/v1/object/sign/image-covers/not-found.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJpbWFnZS1jb3ZlcnMvbm90LWZvdW5kLnBuZyIsImlhdCI6MTczNDk2OTQzOCwiZXhwIjo0ODg4NTY5NDM4fQ.vJne2LtJc42hsss3q_TF3ey-8KoXKnzYvZIFq_CaXB8&t=2024-12-23T15%3A57%3A18.203Z")
   createdAt          DateTime             @default(now())
   updatedAt          DateTime             @updatedAt
-  publisher          Publisher?           @relation(fields: [publisherId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   publisherId        String?
-  authors            BookAuthor[]
-  category           Category             @relation(fields: [categoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   categoryId         String
   tag                Tag?
-  cartItems          CartItem[]
-  productInventory   ProductInventory     @relation(fields: [productInventoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   productInventoryId String               @unique
-  orderItem          OrderItem[]
-  favouriteBooksList FavouriteBooksList[]
+  category           Category             @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  productInventory   ProductInventory     @relation(fields: [productInventoryId], references: [id], onDelete: Cascade)
+  publisher          Publisher?           @relation(fields: [publisherId], references: [id], onDelete: Cascade)
+  authors            BookAuthor[]
   reviews            BookReview[]
+  cartItems          CartItem[]
+  orderItem          OrderItem[]
+  favouriteBooksList FavouriteBooksList[] @relation("BookToFavouriteBooksList")
 }
 
 model BookAuthor {
-  book      Book     @relation(fields: [bookId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   bookId    String
-  author    Author   @relation(fields: [authorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   authorId  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  author    Author   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  book      Book     @relation(fields: [bookId], references: [id], onDelete: Cascade)
 
   @@id([bookId, authorId])
 }
@@ -95,21 +92,21 @@ model User {
   role               Role                @default(USER)
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt
-  address            UserAddress[]
-  creditCard         CreditCard?
-  shoppingSessions   ShoppingSession?
-  orderDetails       OrderDetails[]
-  favouriteBooksList FavouriteBooksList?
   bookReviews        BookReview[]
+  creditCard         CreditCard?
+  favouriteBooksList FavouriteBooksList?
+  orderDetails       OrderDetails[]
+  shoppingSessions   ShoppingSession?
+  address            UserAddress[]
 }
 
 model FavouriteBooksList {
   id        String   @id @default(uuid())
   userId    String   @unique
-  user      User     @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  books     Book[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  books     Book[]   @relation("BookToFavouriteBooksList")
 }
 
 model CreditCard {
@@ -119,8 +116,8 @@ model CreditCard {
   expirationDate String
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
-  user           User     @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   userId         String   @unique
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model UserAddress {
@@ -133,39 +130,39 @@ model UserAddress {
   street      String
   houseNumber String?
   homeNumber  String
-  country     Country @relation(fields: [countryId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  countryId   String
-  user        User    @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   userId      String
+  countryId   String
+  country     Country @relation(fields: [countryId], references: [id], onDelete: Cascade)
+  user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Country {
   id           String         @id @default(uuid())
   code         String
   name         String
-  userAddress  UserAddress[]
   orderAddress OrderAddress[]
+  userAddress  UserAddress[]
 }
 
 model ShoppingSession {
   id        String     @id @default(uuid())
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
-  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId    String     @unique
   total     Float
   cartItems CartItem[]
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model CartItem {
   id                String          @id @default(uuid())
   quantity          Int
-  book              Book            @relation(fields: [bookId], references: [id])
   bookId            String
   createdAt         DateTime        @default(now())
   updatedAt         DateTime        @updatedAt
-  shoppingSession   ShoppingSession @relation(fields: [shoppingSessionId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   shoppingSessionId String
+  book              Book            @relation(fields: [bookId], references: [id])
+  shoppingSession   ShoppingSession @relation(fields: [shoppingSessionId], references: [id], onDelete: Cascade)
 
   @@unique([bookId, shoppingSessionId])
 }
@@ -173,18 +170,18 @@ model CartItem {
 model OrderDetails {
   id               String         @id @default(uuid())
   total            Float
-  status           OrderStatus    @default(NEW)
   createdAt        DateTime       @default(now())
   updatedAt        DateTime       @updatedAt
-  paymentDetails   PaymentDetails @relation(fields: [paymentDetailsId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  paymentDetailsId String         @unique
-  orderItems       OrderItem[]
-  shippingMethod   ShippingMethod @relation(fields: [shippingMethodId], references: [id])
   shippingMethodId String
-  user             User           @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   userId           String
-  orderAddress     OrderAddress   @relation(fields: [orderAddressId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  paymentDetailsId String         @unique
+  status           OrderStatus    @default(NEW)
   orderAddressId   String         @unique
+  orderAddress     OrderAddress   @relation(fields: [orderAddressId], references: [id], onDelete: Cascade)
+  paymentDetails   PaymentDetails @relation(fields: [paymentDetailsId], references: [id], onDelete: Cascade)
+  shippingMethod   ShippingMethod @relation(fields: [shippingMethodId], references: [id])
+  user             User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  orderItems       OrderItem[]
 }
 
 model OrderAddress {
@@ -197,20 +194,20 @@ model OrderAddress {
   street       String
   houseNumber  String?
   homeNumber   String
-  country      Country       @relation(fields: [countryId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   countryId    String
+  country      Country       @relation(fields: [countryId], references: [id], onDelete: Cascade)
   orderDetails OrderDetails?
 }
 
 model OrderItem {
   id             String       @id @default(uuid())
-  book           Book         @relation(fields: [bookId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   bookId         String
-  quantity       Int
-  orderDetails   OrderDetails @relation(fields: [orderDetailsId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   orderDetailsId String
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
+  quantity       Int
+  book           Book         @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  orderDetails   OrderDetails @relation(fields: [orderDetailsId], references: [id], onDelete: Cascade)
 }
 
 model PaymentDetails {
@@ -218,8 +215,8 @@ model PaymentDetails {
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
   amount       Float
-  method       PaymentMethod
   status       PaymentStatus
+  method       PaymentMethod
   orderDetails OrderDetails?
 }
 
@@ -227,10 +224,10 @@ model ShippingMethod {
   id           String         @id @default(uuid())
   name         String
   price        Float
-  deliveryTime String
-  orderDetails OrderDetails[]
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
+  deliveryTime String
+  orderDetails OrderDetails[]
 }
 
 enum Role {
