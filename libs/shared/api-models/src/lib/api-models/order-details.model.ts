@@ -1,7 +1,7 @@
-import { PaymentDetails, OrderStatus } from '@prisma/client';
 import { Book } from './book.model';
 import { ShippingMethod } from './shipping-method.model';
 import { OrderAddress } from './order-address.model';
+import { PaymentDetails } from './payment-details.model';
 
 export interface OrderDetailsBase {
   id: string;
@@ -10,6 +10,12 @@ export interface OrderDetailsBase {
   createdAt: string;
   updatedAt: string;
 }
+
+export type OrderStatus =
+  | 'NEW'
+  | 'PACKING'
+  | 'PREPARE_FOR_SHIPPING'
+  | 'SHIPPED';
 
 export interface OrderDetails extends OrderDetailsBase {
   paymentDetails: PaymentDetails;
@@ -26,8 +32,8 @@ export interface OrderDetailsItem {
 }
 
 export const orderDetailsStatuses: OrderStatus[] = [
-  OrderStatus.NEW,
-  OrderStatus.PREPARED_FOR_SHIPPING,
-  OrderStatus.PACKING,
-  OrderStatus.SHIPPED,
+  'NEW',
+  'PACKING',
+  'PREPARE_FOR_SHIPPING',
+  'SHIPPED',
 ];
