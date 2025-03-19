@@ -14,7 +14,7 @@ export interface OrderDetailsBase {
 export type OrderStatus =
   | 'NEW'
   | 'PACKING'
-  | 'PREPARE_FOR_SHIPPING'
+  | 'PREPARED_FOR_SHIPPING'
   | 'SHIPPED';
 
 export interface OrderDetails extends OrderDetailsBase {
@@ -34,6 +34,6 @@ export interface OrderDetailsItem {
 export const orderDetailsStatuses: OrderStatus[] = [
   'NEW',
   'PACKING',
-  'PREPARE_FOR_SHIPPING',
+  'PREPARED_FOR_SHIPPING',
   'SHIPPED',
 ];
