@@ -16,7 +16,6 @@ export function OrderList() {
   const [selectedOrderId, setSelectedOrderId] = useState<
     OrderDetails['id'] | null
   >(null);
-  const [newOrders, setNewOrders] = useState<OrderDetails[]>([]);
   const {
     isLoading,
     isError,
@@ -35,6 +34,8 @@ export function OrderList() {
                 'PREPARED_FOR_SHIPPING',
               ] satisfies OrderStatus[]
             ).join(','),
+            sortBy: 'createdAt',
+            sortByMode: 'desc',
           },
         },
       );
@@ -44,7 +45,12 @@ export function OrderList() {
   });
 
   function addOrder(order: OrderDetails) {
-    setNewOrders((prevState) => [...prevState, order]);
+    queryClient.setQueryData(
+      ['orders'],
+      (oldData: OrderDetails[] | undefined) => {
+        return [order, ...(oldData ?? [])];
+      },
+    );
   }
 
   const onError = useCallback(() => {
@@ -56,6 +62,27 @@ export function OrderList() {
     orderDetailsDialog.current?.showModal();
 
     if (order.status !== OrderStatus.NEW) return;
+  }
+
+  function statusToBadgeClass(status: OrderStatus) {
+    let severity = '';
+
+    switch (status) {
+      case 'NEW':
+        severity = 'badge-warning';
+        break;
+      case 'PACKING':
+        severity = 'badge-secondary';
+        break;
+      case 'PREPARED_FOR_SHIPPING':
+        severity = 'badge-neutral';
+        break;
+      case 'SHIPPED':
+        severity = 'badge-accent';
+        break;
+    }
+
+    return `badge badge-xl ${severity}`;
   }
 
   function updateStatus(status: OrderStatus) {
@@ -128,24 +155,30 @@ export function OrderList() {
             <table className="table w-full">
               <thead>
                 <tr>
-                  <th></th>
-                  <th>Order no.</th>
-                  <th>Created at</th>
-                  <th>Status</th>
-                  <th> </th>
+                  <th className="text-lg"></th>
+                  <th className="text-lg">Order no.</th>
+                  <th className="text-lg">Created at</th>
+                  <th className="text-lg">Status</th>
+                  <th className="text-lg"></th>
                 </tr>
               </thead>
               <tbody>
                 {orders?.length &&
-                  [...newOrders, ...orders].map((order, index) => (
+                  orders.map((order, index) => (
                     <tr key={order.id}>
-                      <th>{index + 1}</th>
-                      <td>{order.id}</td>
-                      <td>{order.createdAt}</td>
-                      <td>{order.status}</td>
+                      <th className="text-lg">{index + 1}</th>
+                      <td className="text-lg">{order.id}</td>
+                      <td className="text-lg">
+                        {new Date(order.createdAt).toUTCString()}
+                      </td>
+                      <td>
+                        <span className={statusToBadgeClass(order.status)}>
+                          {order.status}
+                        </span>
+                      </td>
                       <td>
                         <button
-                          className="btn"
+                          className="btn btn-primary"
                           onClick={() => openOrderDetailsDialog(order)}
                         >
                           pack order
@@ -156,12 +189,6 @@ export function OrderList() {
               </tbody>
             </table>
           </div>
-        )}
-        <h2>New orders</h2>
-        {newOrders?.length !== 0 && (
-          <ul>
-            {newOrders?.map((order) => <li key={order.id}>{order.id}</li>)}
-          </ul>
         )}
       </div>
     </>

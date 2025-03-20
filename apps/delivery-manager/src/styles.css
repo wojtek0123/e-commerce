@@ -4,16 +4,10 @@
 @plugin "daisyui";
 
 body {
-  font-family: var(--font-family);
   min-height: 100vh;
   max-width: 3840px;
   width: 100%;
-  background-color: var(--p-surface-100);
   overflow-x: hidden;
-}
-
-.dark body {
-  background-color: var(--p-surface-950);
 }
 
 .btn {
