@@ -50,17 +50,28 @@ export class OrderDetailsController {
   @Roles([Role.USER, Role.ADMIN])
   @ApiQuery({ name: 'startDate', type: String, required: false })
   @ApiQuery({ name: 'endDate', type: String, required: false })
-  @ApiQuery({ name: 'status', type: String, isArray: true, required: false })
+  @ApiQuery({
+    name: 'status',
+    enum: OrderStatus,
+    isArray: true,
+    required: false,
+  })
+  @ApiQuery({ name: 'sortBy', type: String, required: false })
+  @ApiQuery({ name: 'sortByMode', type: String, required: false })
   findUserOrders(
     @Headers('authorization') authHeader: string,
     @Query('startDate') startDate?: string,
     @Query('endDate') endDate?: string,
     @Query('status') status?: string,
+    @Query('sortBy') sortBy?: string,
+    @Query('sortByMode') sortByMode?: string,
   ) {
     return this.orderDetailsService.findAll(authHeader, {
       startDate,
       endDate,
       status,
+      sortBy,
+      sortByMode,
     });
   }
 
