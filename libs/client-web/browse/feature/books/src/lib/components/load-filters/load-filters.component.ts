@@ -87,7 +87,6 @@ export class LoadFiltersComponent {
   }
 
   load(filters: Map<string, ActiveFilter[]>) {
-    console.log(filters);
     const queryParams: BooksQueryParam = {
       categories: this.parseActiveFilterToQueryParam(filters.get('category')),
       tags: this.parseActiveFilterToQueryParam(filters.get('tag')),

@@ -1,10 +1,9 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  effect,
+  DestroyRef,
   inject,
   OnInit,
-  untracked,
 } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NavComponent } from '@e-commerce/client-web/core/feature/nav';
@@ -14,6 +13,7 @@ import { definePreset } from '@primeng/themes';
 import { CartService } from '@e-commerce/client-web/cart/api';
 import { PrimeNG } from 'primeng/config';
 import { MessageBusService } from '@e-commerce/client-web/shared/data-access/services';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 const borderRadius = '1rem' as const;
 const MyPreset = definePreset(Aura, {
@@ -51,14 +51,25 @@ export class AppComponent implements OnInit {
   #cartService = inject(CartService);
   #primeng = inject(PrimeNG);
   #messageBusService = inject(MessageBusService);
+  #destroyRef = inject(DestroyRef);
 
-  event = this.#messageBusService.event;
+  event$ = this.#messageBusService.event$;
 
-  constructor() {
-    effect(() => {
-      const event = this.event();
+  ngOnInit(): void {
+    this.#primeng.theme.set({
+      preset: MyPreset,
+      options: {
+        darkModeSelector: '.dark',
+        cssLayer: {
+          name: 'primeng',
+          order: 'tailwind-base, primeng, tailwind-utilities',
+        },
+      },
+    });
 
-      untracked(() => {
+    this.event$
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe((event) => {
         if (event === 'auth-success' || event === 'init-database') {
           this.#cartService.syncCartAndFetchSession();
         }
@@ -73,19 +84,5 @@ export class AppComponent implements OnInit {
           this.#cartService.getShoppingSession();
         }
       });
-    });
-  }
-
-  ngOnInit(): void {
-    this.#primeng.theme.set({
-      preset: MyPreset,
-      options: {
-        darkModeSelector: '.dark',
-        cssLayer: {
-          name: 'primeng',
-          order: 'tailwind-base, primeng, tailwind-utilities',
-        },
-      },
-    });
   }
 }
