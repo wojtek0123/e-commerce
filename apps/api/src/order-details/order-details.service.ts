@@ -223,7 +223,7 @@ export class OrderDetailsService {
       ? filters.sortByMode
       : 'asc';
 
-    const parsedSortBy = ['createdAt'].includes(filters.sortBy)
+    const parsedSortBy = ['createdAt', 'status'].includes(filters.sortBy)
       ? filters.sortBy
       : 'createdAt';
 
