@@ -189,6 +189,9 @@
       "@e-commerce/client-web/shared/utils": [
         "libs/client-web/shared/utils/src/index.ts"
       ],
+      "@e-commerce/deliery-manager/orders/data-access": [
+        "libs/delivery-manager/orders/data-access/src/index.ts"
+      ],
       "@e-commerce/delivery-manager/auth/api": [
         "libs/delivery-manager/auth/api/src/index.ts"
       ],
