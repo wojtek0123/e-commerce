@@ -102,7 +102,10 @@ export function OrderList() {
       order.id === selectedOrderId ? { ...order, status } : { ...order },
     );
 
-    queryClient.setQueryData(['orders'], updatedData);
+    queryClient.setQueryData(
+      ['orders', store.sort.by, store.sort.mode],
+      updatedData,
+    );
   }
 
   useEffect(() => {
