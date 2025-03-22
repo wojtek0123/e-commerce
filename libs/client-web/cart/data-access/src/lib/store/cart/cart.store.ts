@@ -89,6 +89,9 @@ export const CartStore = signalStore(
   withMethods((store) => ({
     getShoppingSession: rxMethod<void>(
       pipe(
+        tap(() => {
+          patchState(store, { shoppingSession: null });
+        }),
         switchMap(() =>
           store.shoppingSessionApi.getShoppingSession().pipe(
             tapResponse({
@@ -421,6 +424,7 @@ export const CartStore = signalStore(
         { shoppingSession: null },
         removeAllEntities(cartItemsConfig),
       );
+      localStorage.removeItem(store.appLocalStorageKeys.CART);
     },
     getLocalCartItems: () => {
       const cartItems = JSON.parse(

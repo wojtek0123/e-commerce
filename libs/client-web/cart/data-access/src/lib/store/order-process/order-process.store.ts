@@ -61,13 +61,13 @@ export const OrderProcessStore = signalStore(
             .pipe(
               tapResponse({
                 next: async (orderDetails) => {
-                  patchState(store, { orderDetails, loading: false });
-
-                  store.messageBusService.setEvent('checkout-success');
-
                   await store.router.navigate([
                     store.appRoutePaths.PAYMENT_STATUS(orderDetails.id),
                   ]);
+
+                  patchState(store, { orderDetails, loading: false });
+
+                  store.messageBusService.setEvent('checkout-success');
                 },
                 error: (error: ResponseError) => {
                   store.messageService.add({

@@ -1,13 +1,14 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable } from '@angular/core';
+import { ReplaySubject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class MessageBusService {
-  #event = signal<MessageEvent | null>(null);
+  #event$ = new ReplaySubject();
 
-  event = this.#event.asReadonly();
+  event$ = this.#event$.asObservable();
 
   setEvent(event: MessageEvent) {
-    this.#event.set(event);
+    this.#event$.next(event);
   }
 }
 
