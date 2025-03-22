@@ -7,6 +7,7 @@ import OrderDetailsComponent from './components/order-details/order-details';
 import { OrderStatus } from '@prisma/client';
 import { useToastStore } from '@e-commerce/delivery-manager/shared/data-access';
 import SortButton from './components/sort-header/sort-header';
+import { useOrdersStore } from '@e-commerce/deliery-manager/orders/data-access';
 
 const socket = io(import.meta.env.VITE_API_URL);
 
@@ -15,11 +16,8 @@ export type SortBy = 'createdAt' | 'status';
 export function OrderList() {
   const toast = useToastStore();
   const queryClient = useQueryClient();
+  const store = useOrdersStore();
   const orderDetailsDialog = useRef<HTMLDialogElement | null>(null);
-  const [sort, setSort] = useState<{ by: SortBy; mode: 'asc' | 'desc' }>({
-    by: 'createdAt',
-    mode: 'desc',
-  });
   const [selectedOrderId, setSelectedOrderId] = useState<
     OrderDetails['id'] | null
   >(null);
@@ -28,7 +26,7 @@ export function OrderList() {
     isError,
     data: orders,
   } = useQuery<OrderDetails[]>({
-    queryKey: ['orders', sort.by, sort.mode],
+    queryKey: ['orders', store.sort.by, store.sort.mode],
     queryFn: async () => {
       const { data } = await axios.get<OrderDetails[]>(
         `${import.meta.env.VITE_API_URL}/order-details`,
@@ -41,8 +39,8 @@ export function OrderList() {
                 'PREPARED_FOR_SHIPPING',
               ] satisfies OrderStatus[]
             ).join(','),
-            sortBy: sort.by,
-            sortByMode: sort.mode,
+            sortBy: store.sort.by,
+            sortByMode: store.sort.mode,
           },
         },
       );
@@ -52,17 +50,14 @@ export function OrderList() {
     cacheTime: 0,
   });
 
-  const addOrder = useCallback(
-    () => (order: OrderDetails) => {
-      queryClient.setQueryData(
-        ['orders'],
-        (oldData: OrderDetails[] | undefined) => {
-          return [order, ...(oldData ?? [])];
-        },
-      );
-    },
-    [queryClient],
-  );
+  const addOrder = (order: OrderDetails) => {
+    queryClient.setQueryData(
+      ['orders'],
+      (oldData: OrderDetails[] | undefined) => {
+        return [order, ...(oldData ?? [])];
+      },
+    );
+  };
 
   const onError = useCallback(() => {
     toast.show('WebSocket encounters an error. Reload page.');
@@ -97,14 +92,7 @@ export function OrderList() {
   }
 
   const changeSort = (by: SortBy) => {
-    if (sort.by === by) {
-      setSort((prevState) => ({
-        ...prevState,
-        mode: prevState.mode === 'desc' ? 'asc' : 'desc',
-      }));
-    } else {
-      setSort({ by, mode: 'desc' });
-    }
+    store.setSort(by);
   };
 
   function updateStatus(status: OrderStatus) {
@@ -116,6 +104,7 @@ export function OrderList() {
 
     queryClient.setQueryData(['orders'], updatedData);
   }
+
   useEffect(() => {
     socket.on('order', addOrder);
     socket.on('exception', onError);
@@ -124,11 +113,11 @@ export function OrderList() {
       socket.off('order', addOrder);
       socket.off('exception', onError);
     };
-  }, [onError, addOrder]);
+  }, []);
 
   if (isLoading) {
     return (
-      <div className="flex flex-col gap-base">
+      <div className="flex flex-col gap-base w-full">
         <div className="skeleton h-10 w-full rounded-base"></div>
         <div className="skeleton h-10 w-full rounded-base"></div>
         <div className="skeleton h-10 w-full rounded-base"></div>
@@ -183,7 +172,7 @@ export function OrderList() {
                     <span> Created at </span>
                     <SortButton
                       by="createdAt"
-                      sort={sort}
+                      sort={store.sort}
                       changeSort={(event) => changeSort(event)}
                     />
                   </th>
@@ -192,7 +181,7 @@ export function OrderList() {
 
                     <SortButton
                       by="status"
-                      sort={sort}
+                      sort={store.sort}
                       changeSort={(event) => changeSort(event)}
                     />
                   </th>
