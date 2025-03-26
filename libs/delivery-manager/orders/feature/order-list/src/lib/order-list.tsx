@@ -24,6 +24,7 @@ export function OrderList() {
   const {
     isLoading,
     isError,
+    isRefetching,
     data: orders,
   } = useQuery<OrderDetails[]>({
     queryKey: ['orders', store.sort.by, store.sort.mode],
@@ -48,13 +49,33 @@ export function OrderList() {
     },
     staleTime: Infinity,
     cacheTime: 0,
+    keepPreviousData: true,
   });
 
   const addOrder = (order: OrderDetails) => {
     queryClient.setQueryData(
-      ['orders'],
-      (oldData: OrderDetails[] | undefined) => {
-        return [order, ...(oldData ?? [])];
+      ['orders', store.sort.by, store.sort.mode],
+      (oldData?: OrderDetails[]) => {
+        const newOrders = [order, ...(oldData ?? [])];
+
+        const sortedOrders = newOrders.toSorted((a, b) => {
+          const aValue = a[store.sort.by];
+          const bValue = b[store.sort.by];
+
+          if (typeof aValue === 'string' && typeof bValue === 'string') {
+            return aValue.localeCompare(bValue);
+          }
+
+          if (typeof aValue === 'number' && typeof bValue === 'number') {
+            return aValue - bValue;
+          }
+
+          return String(aValue).localeCompare(String(bValue));
+        });
+
+        return store.sort.mode === 'asc'
+          ? sortedOrders.toReversed()
+          : sortedOrders;
       },
     );
   };
@@ -118,7 +139,7 @@ export function OrderList() {
     };
   }, []);
 
-  if (isLoading) {
+  if (isLoading && !orders) {
     const skeletons = new Array(20).fill(0, 0, 19);
 
     return (
@@ -164,7 +185,9 @@ export function OrderList() {
       <div className="w-full">
         {orders?.length !== 0 && (
           <div className="overflow-x-auto">
-            <table className="table w-full">
+            <table
+              className={`table w-full ${isRefetching && 'animate-pulse pointer-events-none'}`}
+            >
               <thead>
                 <tr>
                   <th className="text-lg"></th>
