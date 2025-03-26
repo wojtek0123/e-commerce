@@ -225,6 +225,15 @@
       "@e-commerce/delivery-manager/shared/feature": [
         "libs/delivery-manager/shared/feature/src/index.ts"
       ],
+      "@e-commerce/delivery-manager/supplies/data-access": [
+        "libs/delivery-manager/supplies/data-access/src/index.ts"
+      ],
+      "@e-commerce/delivery-manager/supplies/feature/shell": [
+        "libs/delivery-manager/supplies/feature/shell/src/index.ts"
+      ],
+      "@e-commerce/delivery-manager/supplies/feature/supply-list": [
+        "libs/delivery-manager/supplies/feature/supply-list/src/index.ts"
+      ],
       "@e-commerce/shared/api-models": ["libs/shared/api-models/src/index.ts"]
     }
   },

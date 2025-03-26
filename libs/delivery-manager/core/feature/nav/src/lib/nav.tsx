@@ -41,18 +41,18 @@ export function Nav() {
 
       <div className="dock dock-md bg-base-300 sticky bottom-0 xl:hidden">
         <NavLink
-          to="/"
+          to="/supplies"
           className={({ isActive }) => (isActive ? 'dock-active' : '')}
         >
-          <span className="pi pi-home"></span>
-          <span className="dock-label">Home</span>
+          <span className="pi pi-truck"></span>
+          <span className="dock-label">Supplies</span>
         </NavLink>
 
         <NavLink
           to="/orders"
           className={({ isActive }) => (isActive ? 'dock-active' : '')}
         >
-          <span className="pi pi-list"></span>
+          <span className="pi pi-box"></span>
           <span className="dock-label">Orders</span>
         </NavLink>
 
@@ -87,13 +87,29 @@ export function Nav() {
               </div>
               <div className="bg-primary w-full h-[1px] my-4"></div>
               <ul className="flex flex-col">
-                <Link
+                <NavLink
                   to="/orders/list"
-                  className="px-3 h-10 flex items-center gap-4"
+                  className={({ isActive }) =>
+                    isActive
+                      ? 'bg-base-100 px-3 h-10 flex items-center gap-4 rounded-base'
+                      : 'px-3 h-10 flex items-center gap-4 rounded-base'
+                  }
                 >
-                  <i className="pi pi-list"></i>
+                  <i className="pi pi-box"></i>
                   {isLabelShowed && <span>Orders</span>}
-                </Link>
+                </NavLink>
+
+                <NavLink
+                  to="/supplies/list"
+                  className={({ isActive }) =>
+                    isActive
+                      ? 'bg-base-100 px-3 h-10 flex items-center gap-4 rounded-base'
+                      : 'px-3 h-10 flex items-center gap-4 rounded-base'
+                  }
+                >
+                  <i className="pi pi-truck"></i>
+                  {isLabelShowed && <span>Supplies</span>}
+                </NavLink>
               </ul>
             </div>
 

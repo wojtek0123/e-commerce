@@ -9,6 +9,7 @@ import { useEffect } from 'react';
 import { DeliveryManagerOrdersFeatureShell } from '@e-commerce/delivery-manager/orders/feature/shell';
 import MainLayout from './main-layout';
 import { useToastStore } from '@e-commerce/delivery-manager/shared/data-access';
+import { SuppliesShell } from '@e-commerce/delivery-manager/supplies/feature/shell';
 
 const queryClient = new QueryClient();
 
@@ -43,6 +44,7 @@ export function App() {
                 path="orders/*"
                 element={<DeliveryManagerOrdersFeatureShell />}
               />
+              <Route path="supplies/*" element={<SuppliesShell />} />
               <Route path="*" element={<Navigate to="/orders" />} />
             </Route>
             <Route path="auth/*" element={<DeliverManagerAuthFeatureShell />} />
