@@ -13,6 +13,8 @@ import { MailerService } from '@nestjs-modules/mailer';
 import { BookEntity } from '../books/entities/book.entity';
 import { OrderStatus, Role } from '@prisma/client';
 import { EventsGateway } from '../app/gateways/events.gateway';
+import { parseNumber } from '../common/utils/parse-number';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class OrderDetailsService {
@@ -204,7 +206,7 @@ export class OrderDetailsService {
     return order;
   }
 
-  findAll(
+  async findAll(
     authHeader: string,
     filters: {
       startDate?: string;
@@ -212,12 +214,17 @@ export class OrderDetailsService {
       sortBy?: string;
       sortByMode?: string;
       status?: string;
+      size?: string;
+      page?: string;
     },
   ) {
     const role = decode(authHeader.split(' ')[1])['role'] as Role | undefined;
     const userId = authHeader
       ? String(decode(authHeader.split(' ')[1]).sub)
       : null;
+
+    const pageNumber = parseNumber(filters.page);
+    const sizeNumber = parseNumber(filters.size);
 
     const parsedSortByMode = ['asc', 'desc'].includes(filters.sortByMode)
       ? filters.sortByMode
@@ -251,14 +258,38 @@ export class OrderDetailsService {
           }
         : {};
 
-    return this.prisma.orderDetails.findMany({
-      where: {
-        ...dateFilter,
-        ...(userId && role !== Role.ADMIN && { userId }),
-        status: { in: parsedStatus },
-      },
-      orderBy: { [parsedSortBy]: parsedSortByMode },
-    });
+    const where: Prisma.OrderDetailsWhereInput = {
+      AND: [
+        {
+          ...dateFilter,
+          ...(userId && role !== Role.ADMIN && { userId }),
+          status: { in: parsedStatus },
+        },
+      ],
+    };
+
+    const [orders, total] = await Promise.all([
+      this.prisma.orderDetails.findMany({
+        where: {
+          ...dateFilter,
+          ...(userId && role !== Role.ADMIN && { userId }),
+          status: { in: parsedStatus },
+        },
+        orderBy: { [parsedSortBy]: parsedSortByMode },
+        ...(pageNumber &&
+          sizeNumber && { skip: (pageNumber - 1) * sizeNumber }),
+        ...(sizeNumber && { take: sizeNumber }),
+      }),
+
+      this.prisma.orderDetails.count({ where }),
+    ]);
+
+    return {
+      items: orders,
+      total,
+      count: orders.length,
+      page: pageNumber,
+    };
   }
 
   async findOne(authHeader: string, id: OrderDetail['id']) {

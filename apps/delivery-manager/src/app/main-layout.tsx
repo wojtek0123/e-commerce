@@ -3,10 +3,12 @@ import { Outlet } from 'react-router-dom';
 
 export function MainLayout() {
   return (
-    <div className="flex w-full gap-base">
+    <>
       <Nav />
-      <Outlet />
-    </div>
+      <div className="w-full h-full overflow-y-auto p-4 xl:pl-gap xl:p-0 xl:overflow-y-visible">
+        <Outlet />
+      </div>
+    </>
   );
 }
 

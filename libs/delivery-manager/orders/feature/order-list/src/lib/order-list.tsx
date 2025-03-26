@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { io } from 'socket.io-client';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { OrderDetails } from '@e-commerce/shared/api-models';
+import { OrderDetails, Paginated } from '@e-commerce/shared/api-models';
 import axios from 'axios';
 import OrderDetailsComponent from './components/order-details/order-details';
 import { OrderStatus } from '@prisma/client';
@@ -28,7 +28,7 @@ export function OrderList() {
   } = useQuery<OrderDetails[]>({
     queryKey: ['orders', store.sort.by, store.sort.mode],
     queryFn: async () => {
-      const { data } = await axios.get<OrderDetails[]>(
+      const { data } = await axios.get<Paginated<OrderDetails>>(
         `${import.meta.env.VITE_API_URL}/order-details`,
         {
           params: {
@@ -44,7 +44,7 @@ export function OrderList() {
           },
         },
       );
-      return data;
+      return data.items;
     },
     staleTime: Infinity,
     cacheTime: 0,
@@ -119,20 +119,18 @@ export function OrderList() {
   }, []);
 
   if (isLoading) {
+    const skeletons = new Array(20).fill(0, 0, 19);
+
     return (
       <div className="flex flex-col gap-base w-full">
-        <div className="skeleton h-10 w-full rounded-base"></div>
-        <div className="skeleton h-10 w-full rounded-base"></div>
-        <div className="skeleton h-10 w-full rounded-base"></div>
-        <div className="skeleton h-10 w-full rounded-base"></div>
-        <div className="skeleton h-10 w-full rounded-base"></div>
-        <div className="skeleton h-10 w-full rounded-base"></div>
-        <div className="skeleton h-10 w-full rounded-base"></div>
-        <div className="skeleton h-10 w-full rounded-base"></div>
-        <div className="skeleton h-10 w-full rounded-base"></div>
-        <div className="skeleton h-10 w-full rounded-base"></div>
-        <div className="skeleton h-10 w-full rounded-base"></div>
-        <div className="skeleton h-10 w-full rounded-base"></div>
+        {skeletons.map((_, index) => (
+          <div className="grid grid-cols-4 gap-12" key={index}>
+            <div className="skeleton h-10 w-full rounded-base"></div>
+            <div className="skeleton h-10 w-full rounded-base"></div>
+            <div className="skeleton h-10 w-full rounded-base"></div>
+            <div className="skeleton h-10 w-full rounded-base"></div>
+          </div>
+        ))}
       </div>
     );
   }
@@ -207,10 +205,10 @@ export function OrderList() {
                       </td>
                       <td>
                         <button
-                          className="btn btn-primary"
+                          className="btn btn-primary min-w-max"
                           onClick={() => openOrderDetailsDialog(order)}
                         >
-                          pack order
+                          Pack order
                         </button>
                       </td>
                     </tr>

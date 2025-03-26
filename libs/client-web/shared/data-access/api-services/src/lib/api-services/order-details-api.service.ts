@@ -6,6 +6,7 @@ import {
   PaymentMethod,
   OrderDetailsBase,
   Book,
+  Paginated,
 } from '@e-commerce/shared/api-models';
 import { API_URL } from '@e-commerce/client-web/shared/app-config';
 
@@ -34,8 +35,11 @@ export class OrderDetailsApiService {
     return this.http.post<OrderDetails>(`${this.apiUrl}/order-details`, body);
   }
 
-  getMany() {
-    return this.http.get<OrderDetailsBase[]>(`${this.apiUrl}/order-details`);
+  getMany(params: { size: number; page: number }) {
+    return this.http.get<Paginated<OrderDetailsBase>>(
+      `${this.apiUrl}/order-details`,
+      { params },
+    );
   }
 
   getUnique(id: OrderDetails['id']) {

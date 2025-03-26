@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { useRef, useState } from 'react';
 import { useAuthApi } from '@e-commerce/delivery-manager/auth/api';
 import { Toast } from 'primereact/toast';
@@ -38,10 +38,34 @@ export function Nav() {
   return (
     <>
       <Toast ref={toast} />
+
+      <div className="dock dock-md bg-base-300 sticky bottom-0 xl:hidden">
+        <NavLink
+          to="/"
+          className={({ isActive }) => (isActive ? 'dock-active' : '')}
+        >
+          <span className="pi pi-home"></span>
+          <span className="dock-label">Home</span>
+        </NavLink>
+
+        <NavLink
+          to="/orders"
+          className={({ isActive }) => (isActive ? 'dock-active' : '')}
+        >
+          <span className="pi pi-list"></span>
+          <span className="dock-label">Orders</span>
+        </NavLink>
+
+        <button onClick={onLogout}>
+          <span className="pi pi-sign-out"></span>
+          <span className="dock-label">Log out</span>
+        </button>
+      </div>
+
       <div className="max-w-80">
         <div
           className={
-            'transition-[width] duration-300 ease-in-out hidden justify-between gap-4 xl:h-content px-2 py-4 bg-neutral xl:sticky z-[501] top-4 flex-col rounded-base xl:flex ' +
+            'transition-[width] duration-300 ease-in-out hidden justify-between gap-4 xl:h-content px-2 py-4 bg-base-300 xl:sticky z-[501] top-4 flex-col rounded-base xl:flex ' +
             (isExpanded ? 'w-80' : 'w-14')
           }
         >

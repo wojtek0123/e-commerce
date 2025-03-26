@@ -7,19 +7,24 @@ import {
 import { OrderDetailsApiService } from '@e-commerce/client-web/shared/data-access/api-services';
 import { tapResponse } from '@ngrx/operators';
 import {
+  getState,
   patchState,
   signalStore,
   withHooks,
   withMethods,
   withState,
 } from '@ngrx/signals';
-import { filter, pipe, switchMap, tap } from 'rxjs';
+import { filter, map, pipe, switchMap, tap } from 'rxjs';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 
 interface OrdersState {
   loading: boolean;
   error: string | null;
   orders: OrderDetailsBase[];
+  page: number;
+  count: number;
+  size: number;
+  total: number;
   selectedOrder: {
     data: OrderDetails | null;
     loading: boolean;
@@ -31,6 +36,10 @@ const initialOrdersState: OrdersState = {
   loading: false,
   error: null,
   orders: [],
+  page: 1,
+  size: 20,
+  total: 0,
+  count: 0,
   selectedOrder: {
     data: null,
     loading: false,
@@ -46,11 +55,24 @@ export const OrdersStore = signalStore(
         tap(() =>
           patchState(store, { loading: true, orders: [], error: null }),
         ),
-        switchMap(() =>
-          ordersApi.getMany().pipe(
+        map(() => {
+          const { size, page } = getState(store);
+
+          return {
+            size,
+            page,
+          };
+        }),
+        switchMap(({ size, page }) =>
+          ordersApi.getMany({ size, page }).pipe(
             tapResponse({
-              next: (orders) => {
-                patchState(store, { loading: false, orders });
+              next: ({ items, total, count }) => {
+                patchState(store, {
+                  loading: false,
+                  orders: items,
+                  count,
+                  total,
+                });
               },
               error: (error: ResponseError) => {
                 patchState(store, {
@@ -105,6 +127,12 @@ export const OrdersStore = signalStore(
       patchState(store, {
         selectedOrder: { data: null, loading: false, error: null },
       });
+    },
+    setPage: (page: number) => {
+      patchState(store, { page });
+    },
+    setSize: (size: number) => {
+      patchState(store, { size });
     },
   })),
   withHooks({
