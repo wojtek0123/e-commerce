@@ -33,7 +33,7 @@ export const useHomeStore = defineStore('home', () => {
     error.value = null;
 
     try {
-      const response = await axios.get<OrderDetails[]>(
+      const response = await axios.get<Paginated<OrderDetails>>(
         `${import.meta.env.VITE_API_URL}/order-details`,
         {
           params: {
@@ -42,7 +42,7 @@ export const useHomeStore = defineStore('home', () => {
           },
         },
       );
-      orders.value = response.data;
+      orders.value = response.data.items;
     } catch (e: unknown) {
       if (e instanceof AxiosError) {
         error.value =
