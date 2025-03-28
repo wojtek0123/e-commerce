@@ -128,7 +128,9 @@ export function SupplyList() {
               <tbody>
                 {data?.items?.map((book, index) => (
                   <tr key={book.id}>
-                    <th className="text-lg">{index + 1}</th>
+                    <th className="text-lg">
+                      {index + store.size * (store.page - 1) + 1}
+                    </th>
                     <td className="text-lg">{book.id}</td>
                     <td className="text-lg">{book.title}</td>
                     <td className="text-lg">
