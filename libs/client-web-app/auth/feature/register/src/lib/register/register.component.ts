@@ -84,10 +84,6 @@ export class RegisterComponent {
   }
 
   onSubmit() {
-    // this.submitted = true;
-
-    // if (this.registerForm.invalid) return;
-    console.log('here');
     const { valid } = this.registerForm;
     const { email, password } = this.registerForm.value;
 
@@ -100,6 +96,5 @@ export class RegisterComponent {
     );
 
     this.registerForm.reset();
-    // this.submitted = false;
   }
 }
