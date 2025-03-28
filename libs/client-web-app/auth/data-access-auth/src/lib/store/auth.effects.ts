@@ -10,8 +10,8 @@ export const login$ = createEffect(
     return actions$.pipe(
       ofType(authActions.login),
       tap((data) => console.log(data)),
-      switchMap((action) =>
-        authService.login$(action.email, action.password).pipe(
+      switchMap(({ email, password }) =>
+        authService.login$(email, password).pipe(
           map(({ accessToken }) => authActions.loginSuccess({ accessToken })),
           catchError((error) => of(authActions.loginFailure({ error })))
         )

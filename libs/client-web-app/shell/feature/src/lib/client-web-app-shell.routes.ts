@@ -10,21 +10,21 @@ export const clientWebAppShellRoutes: Route[] = [
         path: '',
         loadChildren: () =>
           import('@e-commerce/client-web-app/products/feature-home').then(
-            (routes) => routes.featureHomeRoutes
+            (r) => r.featureHomeRoutes
           ),
       },
       {
         path: 'products',
         loadChildren: () =>
           import('@e-commerce/client-web-app/products/feature-products').then(
-            (routes) => routes.productsRoutes
+            (r) => r.productsRoutes
           ),
       },
       {
         path: 'auth',
         loadChildren: () =>
-          import('@e-commerce/client-web-app/auth/feature-register').then(
-            (routes) => routes.featureRegisterRoutes
+          import('@e-commerce/client-web-app/auth/feature/shell').then(
+            (r) => r.shellRoutes
           ),
       },
     ],

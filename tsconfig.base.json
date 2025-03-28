@@ -15,17 +15,11 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@e-commerce/client-web-app/shared/data-access/category-api": [
-        "libs/client-web-app/shared/data-access/api-services/src/index.ts"
-      ],
       "@e-commerce/client-web-app/auth/data-access-auth": [
         "libs/client-web-app/auth/data-access-auth/src/index.ts"
       ],
       "@e-commerce/client-web-app/auth/feature-register": [
         "libs/client-web-app/auth/feature-register/src/index.ts"
-      ],
-      "@e-commerce/client-web-app/auth/ui-auth": [
-        "libs/client-web-app/auth/ui-auth/src/index.ts"
       ],
       "@e-commerce/client-web-app/home/ui": [
         "libs/client-web-app/home/ui/src/index.ts"
@@ -48,15 +42,30 @@
       "@e-commerce/client-web-app/shared/data-access/api-types": [
         "libs/client-web-app/shared/data-access/api-types/src/index.ts"
       ],
+      "@e-commerce/client-web-app/shared/data-access/category-api": [
+        "libs/client-web-app/shared/data-access/api-services/src/index.ts"
+      ],
       "@e-commerce/client-web-app/shell/feature": [
         "libs/client-web-app/shell/feature/src/index.ts"
       ],
       "@e-commerce/client-web-app/shell/ui": [
         "libs/client-web-app/shell/ui/src/index.ts"
       ],
+      "@e-commerce/client-web-app/auth/ui/form-wrapper": [
+        "libs/client-web-app/auth/ui/form-wrapper/src/index.ts"
+      ],
+      "@e-commerce/client-web-app/auth/feature/login": [
+        "libs/client-web-app/auth/feature/login/src/index.ts"
+      ],
+      "@e-commerce/client-web-app/auth/feature/register": [
+        "libs/client-web-app/auth/feature/register/src/index.ts"
+      ],
       "@e-commerce/server/publishers": ["libs/server/publishers/src/index.ts"],
       "@e-commerce/shared/data-access": [
         "libs/shared/data-access/src/index.ts"
+      ],
+      "@e-commerce/client-web-app/auth/feature/shell": [
+        "libs/client-web-app/auth/feature/shell/src/index.ts"
       ],
       "@e-commerce/store": ["libs/client-web-app/home/data-access/src/index.ts"]
     }
