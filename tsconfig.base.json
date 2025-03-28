@@ -225,6 +225,9 @@
       "@e-commerce/delivery-manager/shared/feature": [
         "libs/delivery-manager/shared/feature/src/index.ts"
       ],
+      "@e-commerce/delivery-manager/shared/ui": [
+        "libs/delivery-manager/shared/ui/src/index.ts"
+      ],
       "@e-commerce/delivery-manager/supplies/data-access": [
         "libs/delivery-manager/supplies/data-access/src/index.ts"
       ],
