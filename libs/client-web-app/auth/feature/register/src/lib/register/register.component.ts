@@ -3,18 +3,21 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
-  FormsModule,
   ReactiveFormsModule,
   ValidationErrors,
   Validators,
 } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { authActions } from '@e-commerce/client-web-app/auth/data-access-auth';
+import {
+  authActions,
+  authSelectors,
+} from '@e-commerce/client-web-app/auth/data-access-auth';
 import { FormWrapperComponent } from '@e-commerce/client-web-app/auth/ui/form-wrapper';
 import { Store } from '@ngrx/store';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
+import { FloatLabelModule } from 'primeng/floatlabel';
 
 @Component({
   selector: 'e-commerce-register',
@@ -24,12 +27,12 @@ import { PasswordModule } from 'primeng/password';
     AsyncPipe,
     NgClass,
     InputTextModule,
-    FormsModule,
     PasswordModule,
     ButtonModule,
     RouterLink,
     FormWrapperComponent,
     ReactiveFormsModule,
+    FloatLabelModule,
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css',
@@ -39,26 +42,20 @@ export class RegisterComponent {
   private store = inject(Store);
   private fb = inject(FormBuilder);
 
-  submitted = false;
-  registerForm = this.fb.group({
-    email: this.fb.control('', [Validators.required, Validators.email]),
-    passwords: this.fb.group(
-      {
-        password: this.fb.control('', [
-          Validators.required,
-          Validators.minLength(6),
-        ]),
-        confirmPassword: this.fb.control('', [Validators.required]),
-      },
-      {
-        validators: [this.matchPassword()],
-      }
-    ),
-  });
+  status$ = this.store.select(authSelectors.selectStatus);
+  errorMessage$ = this.store.select(authSelectors.selectErrorMessage);
 
-  get passwordsControls() {
-    return this.registerForm.controls.passwords.controls;
-  }
+  registerForm = this.fb.group(
+    {
+      email: this.fb.control('', [Validators.required, Validators.email]),
+      password: this.fb.control('', [
+        Validators.required,
+        Validators.minLength(6),
+      ]),
+      confirmPassword: this.fb.control('', [Validators.required]),
+    },
+    { validators: this.matchPassword() }
+  );
 
   matchPassword() {
     return (formGroup: AbstractControl): ValidationErrors | null => {
@@ -86,16 +83,23 @@ export class RegisterComponent {
     };
   }
 
-  onRegister() {
-    this.submitted = true;
+  onSubmit() {
+    // this.submitted = true;
 
-    if (this.registerForm.invalid) return;
+    // if (this.registerForm.invalid) return;
+    console.log('here');
+    const { valid } = this.registerForm;
+    const { email, password } = this.registerForm.value;
 
     this.store.dispatch(
       authActions.register({
-        email: this.registerForm.value.email ?? '',
-        password: this.registerForm.value.passwords?.password ?? '',
+        email: email ?? '',
+        password: password ?? '',
+        valid,
       })
     );
+
+    this.registerForm.reset();
+    // this.submitted = false;
   }
 }

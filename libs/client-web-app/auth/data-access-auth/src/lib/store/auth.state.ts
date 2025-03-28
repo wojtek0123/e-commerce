@@ -1,3 +1,5 @@
+import { ApiStatus } from '@e-commerce/client-web-app/shared/data-access/api-types';
+
 export interface RegisterState {
   email: string | null;
   password: string | null;
@@ -11,10 +13,12 @@ export interface LoginState {
 
 export interface AuthState {
   accessToken: string | null;
-  status: 'idle' | 'loading' | 'ok' | 'error';
+  status: ApiStatus;
+  errorMessage: string | null;
 }
 
 export const initialState: AuthState = {
   accessToken: null,
   status: 'idle',
+  errorMessage: null,
 };
