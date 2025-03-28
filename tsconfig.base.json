@@ -15,8 +15,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@e-commerce/client-web-app/auth/data-access-auth": [
-        "libs/client-web-app/auth/data-access-auth/src/index.ts"
+      "@e-commerce/client-web-app/auth/data-access": [
+        "libs/client-web-app/auth/data-access/src/index.ts"
       ],
       "@e-commerce/client-web-app/auth/feature-register": [
         "libs/client-web-app/auth/feature-register/src/index.ts"
