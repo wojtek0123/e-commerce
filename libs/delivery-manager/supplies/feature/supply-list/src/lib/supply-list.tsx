@@ -7,6 +7,7 @@ import {
   useSuppliesStore,
 } from '@e-commerce/delivery-manager/supplies/data-access';
 import { FormEvent, useRef, useState } from 'react';
+import ChangeQuantityDialog from './components/change-quantity-dialog/change-quantity-dialog';
 
 export function SupplyList() {
   const searchTextRef = useRef<HTMLInputElement | null>(null);
@@ -134,9 +135,7 @@ export function SupplyList() {
                     <td className="text-lg">{book.id}</td>
                     <td className="text-lg">{book.title}</td>
                     <td className="text-lg">
-                      <button className="btn btn-primary">
-                        Change quantity
-                      </button>
+                      <ChangeQuantityDialog bookId={book.id} />
                     </td>
                   </tr>
                 ))}

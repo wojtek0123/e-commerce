@@ -63,14 +63,11 @@ export class AddressFormComponent {
   onCancel = output<void>();
 
   form = new FormGroup({
-    firstName: new FormControl<string | null>(null, Validators.required),
-    lastName: new FormControl<string | null>(null, Validators.required),
     city: new FormControl<string | null>(null, Validators.required),
     street: new FormControl<string | null>(null, Validators.required),
     houseNumber: new FormControl<string | null>(null),
     homeNumber: new FormControl<string | null>(null, Validators.required),
     postcode: new FormControl<string | null>(null, Validators.required),
-    phone: new FormControl<string | null>(null, Validators.required),
     country: new FormControl<Country | null>(null, Validators.required),
   });
 
@@ -98,14 +95,11 @@ export class AddressFormComponent {
 
       untracked(() => {
         this.form.setValue({
-          firstName: address?.firstName ?? null,
-          lastName: address?.lastName ?? null,
           country: address?.country ?? null,
           street: address?.street ?? null,
           homeNumber: address?.homeNumber ?? null,
           houseNumber: address?.houseNumber ?? null,
           postcode: address?.postcode ?? null,
-          phone: address?.phone ?? null,
           city: address?.city ?? null,
         });
       });
@@ -127,27 +121,15 @@ export class AddressFormComponent {
 
     if (this.form.invalid || !this.isFormChanged()) return;
 
-    const {
-      firstName,
-      lastName,
-      city,
-      street,
-      homeNumber,
-      houseNumber,
-      postcode,
-      phone,
-      country,
-    } = this.form.value;
+    const { city, street, homeNumber, houseNumber, postcode, country } =
+      this.form.value;
 
     const formValues: CreateUserAddressBody = {
-      firstName: firstName ?? '',
-      lastName: lastName ?? '',
       city: city ?? '',
       street: street ?? '',
       homeNumber: homeNumber ?? '',
       houseNumber: houseNumber ?? '',
       postcode: postcode ?? '',
-      phone: phone ?? '',
       countryId: country?.id ?? '',
     };
 

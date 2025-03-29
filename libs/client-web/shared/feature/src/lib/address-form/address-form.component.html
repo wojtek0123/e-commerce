@@ -3,34 +3,6 @@
   (ngSubmit)="submit()"
   class="flex flex-col gap-2 @container"
 >
-  <div class="flex flex-col gap-4 @3xl:flex-row">
-    <lib-form-field>
-      <lib-label idFor="firstname">First name</lib-label>
-      <input
-        pInputText
-        slot="input"
-        class="w-full"
-        id="firstname"
-        formControlName="firstName"
-      />
-      @if (form.controls.firstName.invalid && form.controls.firstName.dirty) {
-        <p-message libErrorMessage>First name is required</p-message>
-      }
-    </lib-form-field>
-    <lib-form-field>
-      <lib-label idFor="lastname">Last name</lib-label>
-      <input
-        slot="input"
-        class="w-full"
-        pInputText
-        id="lastname"
-        formControlName="lastName"
-      />
-      @if (form.controls.lastName.invalid && form.controls.lastName.dirty) {
-        <p-message libErrorMessage>Last name is required</p-message>
-      }
-    </lib-form-field>
-  </div>
   <div class="flex flex-wrap gap-4 w-full @lg:grid @lg:grid-cols-[1fr_1fr]">
     <lib-form-field>
       <lib-label idFor="street">Street</lib-label>
@@ -102,13 +74,6 @@
       }
     </lib-form-field>
   </div>
-  <lib-form-field>
-    <lib-label idFor="phone">Phone</lib-label>
-    <input pInputText id="phone" class="w-20rem" formControlName="phone" />
-    @if (form.controls.phone.invalid && form.controls.phone.dirty) {
-      <p-message libErrorMessage>Phone is required</p-message>
-    }
-  </lib-form-field>
   @if (!isFormChanged() && form.dirty) {
     <p-message libErrorMessage class="mt-2">
       You should change some values to save them.

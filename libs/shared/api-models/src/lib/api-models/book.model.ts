@@ -1,7 +1,7 @@
 import { Author } from './author.model';
 import { BookReview } from './book-review.model';
 import { Category } from './category.model';
-import { ProductInventory } from './product-inventory.model';
+import { Inventory } from './inventory.model';
 
 export interface Book {
   id: string;
@@ -12,7 +12,7 @@ export interface Book {
   publishedDate?: string;
   pages?: number;
   categoryId: Category['id'];
-  coverImage: string;
+  coverImage?: string;
   language?: string;
   tag?: BookTag;
   price: number;
@@ -22,7 +22,7 @@ export interface Book {
 }
 
 export interface BookDetails extends Book {
-  productInventory: ProductInventory;
+  inventory: Inventory;
 }
 
 export enum BookTag {

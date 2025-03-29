@@ -15,12 +15,13 @@ model Category {
   books     Book[]
 }
 
-model ProductInventory {
+model Inventory {
   id        String   @id @default(uuid())
   quantity  Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  book      Book?
+  bookId    String   @unique // Ensure bookId is unique
+  book      Book     @relation(fields: [bookId], references: [id], onDelete: Cascade)
 }
 
 model BookReview {
@@ -44,15 +45,14 @@ model Book {
   pages              Int?
   publishedDate      DateTime?
   price              Float
-  coverImage         String?              @default("https://wialcudrcfkznrlcooal.supabase.co/storage/v1/object/sign/image-covers/not-found.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJpbWFnZS1jb3ZlcnMvbm90LWZvdW5kLnBuZyIsImlhdCI6MTczNDk2OTQzOCwiZXhwIjo0ODg4NTY5NDM4fQ.vJne2LtJc42hsss3q_TF3ey-8KoXKnzYvZIFq_CaXB8&t=2024-12-23T15%3A57%3A18.203Z")
+  coverImage         String?
   createdAt          DateTime             @default(now())
   updatedAt          DateTime             @updatedAt
   publisherId        String?
   categoryId         String
   tag                Tag?
-  productInventoryId String               @unique
   category           Category             @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  productInventory   ProductInventory     @relation(fields: [productInventoryId], references: [id], onDelete: Cascade)
+  inventory          Inventory?
   publisher          Publisher?           @relation(fields: [publisherId], references: [id], onDelete: Cascade)
   authors            BookAuthor[]
   reviews            BookReview[]
@@ -98,6 +98,31 @@ model User {
   orderDetails       OrderDetails[]
   shoppingSessions   ShoppingSession?
   address            UserAddress[]
+  userInformation    UserInformation?
+}
+
+model UserInformation {
+  id        String   @id @default(uuid())
+  firstName String
+  lastName  String
+  phone     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model UserAddress {
+  id          String  @id @default(uuid())
+  city        String
+  postcode    String
+  street      String
+  houseNumber String?
+  homeNumber  String
+  userId      String
+  countryId   String
+  country     Country @relation(fields: [countryId], references: [id], onDelete: Cascade)
+  user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model FavouriteBooksList {
@@ -120,22 +145,6 @@ model CreditCard {
   user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-model UserAddress {
-  id          String  @id @default(uuid())
-  firstName   String
-  lastName    String
-  phone       String
-  city        String
-  postcode    String
-  street      String
-  houseNumber String?
-  homeNumber  String
-  userId      String
-  countryId   String
-  country     Country @relation(fields: [countryId], references: [id], onDelete: Cascade)
-  user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
 model Country {
   id           String         @id @default(uuid())
   code         String
@@ -148,9 +157,9 @@ model ShoppingSession {
   id        String     @id @default(uuid())
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
-  userId    String     @unique
   total     Float
   cartItems CartItem[]
+  userId    String     @unique
   user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
@@ -168,27 +177,36 @@ model CartItem {
 }
 
 model OrderDetails {
-  id               String         @id @default(uuid())
-  total            Float
-  createdAt        DateTime       @default(now())
-  updatedAt        DateTime       @updatedAt
-  shippingMethodId String
-  userId           String
-  paymentDetailsId String         @unique
-  status           OrderStatus    @default(NEW)
-  orderAddressId   String         @unique
-  orderAddress     OrderAddress   @relation(fields: [orderAddressId], references: [id], onDelete: Cascade)
-  paymentDetails   PaymentDetails @relation(fields: [paymentDetailsId], references: [id], onDelete: Cascade)
-  shippingMethod   ShippingMethod @relation(fields: [shippingMethodId], references: [id])
-  user             User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  orderItems       OrderItem[]
+  id                     String               @id @default(uuid())
+  total                  Float
+  createdAt              DateTime             @default(now())
+  updatedAt              DateTime             @updatedAt
+  shippingMethodId       String
+  userId                 String
+  paymentDetailsId       String               @unique
+  status                 OrderStatus          @default(NEW)
+  orderAddressId         String               @unique
+  orderAddress           OrderAddress         @relation(fields: [orderAddressId], references: [id], onDelete: Cascade)
+  orderUserInformationId String               @unique
+  orderUserInformation   OrderUserInformation @relation(fields: [orderUserInformationId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  paymentDetails         PaymentDetails       @relation(fields: [paymentDetailsId], references: [id], onDelete: Cascade)
+  shippingMethod         ShippingMethod       @relation(fields: [shippingMethodId], references: [id])
+  user                   User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  orderItems             OrderItem[]
 }
 
-model OrderAddress {
+model OrderUserInformation {
   id           String        @id @default(uuid())
   firstName    String
   lastName     String
   phone        String
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  srderDetails OrderDetails?
+}
+
+model OrderAddress {
+  id           String        @id @default(uuid())
   city         String
   postcode     String
   street       String
@@ -197,6 +215,9 @@ model OrderAddress {
   countryId    String
   country      Country       @relation(fields: [countryId], references: [id], onDelete: Cascade)
   orderDetails OrderDetails?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model OrderItem {

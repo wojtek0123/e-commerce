@@ -6,11 +6,8 @@ import { API_URL } from '@e-commerce/client-web/shared/app-config';
 export type CreateUserAddressBody = Omit<UserAddress, 'id' | 'country'>;
 
 interface UpdateUserAddressBody {
-  firstName?: string | null;
-  lastName?: string | null;
   city?: string | null;
   street?: string | null;
-  phone?: string | null;
   postcode?: string | null;
   houseNumber?: string | null;
   homeNumber?: string | null;

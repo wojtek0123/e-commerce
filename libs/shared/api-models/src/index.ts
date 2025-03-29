@@ -15,7 +15,7 @@ export * from './lib/api-models/order-details.model';
 export * from './lib/api-models/response-error.model';
 export * from './lib/api-models/shipping-method.model';
 export * from './lib/api-models/shopping-session.model';
-export * from './lib/api-models/product-inventory.model';
+export * from './lib/api-models/inventory.model';
 export * from './lib/api-models/payment-method.model';
 export * from './lib/api-models/credit-card.model';
 export * from './lib/api-models/favourite-books-list.model';

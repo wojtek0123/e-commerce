@@ -11,9 +11,6 @@ import {
 import { API_URL } from '@e-commerce/client-web/shared/app-config';
 
 export interface CreateOrderAddress {
-  firstName: string;
-  lastName: string;
-  phone: string;
   city: string;
   street: string;
   houseNumber?: string;

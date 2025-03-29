@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { User } from '../../users/entities/user.entity';
-import { BookEntity } from '../../books/entities/book.entity';
+import { Book } from '../../books/entities/book.entity';
 
 export class BookReview {
   @ApiProperty({ type: String })
@@ -24,8 +24,8 @@ export class BookReview {
   @ApiProperty({ type: String })
   bookId: string;
 
-  @ApiProperty({ type: BookEntity })
-  book: BookEntity;
+  @ApiProperty({ type: Book })
+  book: Book;
 
   @ApiProperty({ type: String })
   createdAt: string;

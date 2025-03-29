@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { BookEntity } from './book.entity';
+import { Book } from './book.entity';
 
 export class Books {
-  @ApiProperty({ type: BookEntity, isArray: true })
-  items: BookEntity[];
+  @ApiProperty({ type: Book, isArray: true })
+  items: Book[];
 
   @ApiProperty({ type: Number })
   total: number;

@@ -19,7 +19,7 @@ import {
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
-import { BookEntity } from './entities/book.entity';
+import { Book } from './entities/book.entity';
 import { UpdateBookBodyDto } from './dto/update-body.dto';
 import { CreateBookDto } from './dto/create-book.dto';
 import { Role } from '@prisma/client';
@@ -38,7 +38,7 @@ export class BooksController {
   @Roles([Role.ADMIN])
   @ApiOperation({ summary: 'Create a book' })
   @ApiBody({ type: CreateBookDto })
-  @ApiCreatedResponse({ type: BookEntity })
+  @ApiCreatedResponse({ type: Book })
   @ApiBearerAuth()
   create(@Body() data: CreateBookDto) {
     return this.booksService.create(data);
@@ -46,7 +46,7 @@ export class BooksController {
 
   @Get()
   @ApiOperation({ summary: 'Get books' })
-  @ApiOkResponse({ type: Pagination<BookEntity>, isArray: true })
+  @ApiOkResponse({ type: Pagination<Book>, isArray: true })
   @ApiQuery({ type: String, default: '1', name: 'page', required: false })
   @ApiQuery({ type: String, default: '20', name: 'size', required: false })
   @ApiQuery({ type: String, name: 'priceFrom', required: false })
@@ -95,14 +95,14 @@ export class BooksController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Get a specific book' })
-  @ApiOkResponse({ type: BookEntity })
+  @ApiOkResponse({ type: Book })
   findOne(@Param('id') id: string) {
     return this.booksService.findOne(id);
   }
 
   @Patch(':id')
   @ApiOperation({ summary: 'Update a book' })
-  @ApiCreatedResponse({ type: BookEntity })
+  @ApiCreatedResponse({ type: Book })
   @UseGuards(RolesGuard)
   @Roles([Role.ADMIN])
   @ApiBearerAuth()
@@ -112,7 +112,7 @@ export class BooksController {
 
   @Delete()
   @ApiOperation({ summary: 'Delete a book' })
-  @ApiOkResponse({ type: BookEntity })
+  @ApiOkResponse({ type: Book })
   @ApiBearerAuth()
   @ApiQuery({ name: 'ids', required: true })
   @UseGuards(RolesGuard)

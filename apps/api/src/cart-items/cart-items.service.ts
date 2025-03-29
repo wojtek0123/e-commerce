@@ -45,8 +45,8 @@ export class CartItemsService {
       },
     });
 
-    const availableAmount = await this.prisma.productInventory.findFirst({
-      where: { book: { id: bookId } },
+    const availableAmount = await this.prisma.inventory.findUnique({
+      where: { bookId },
     });
 
     if (existingCartItem) {

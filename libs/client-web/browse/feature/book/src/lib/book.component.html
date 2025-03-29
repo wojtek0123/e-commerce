@@ -38,7 +38,7 @@
       @defer {
         <img
           class="rounded-base w-full object-fill"
-          [ngSrc]="book()?.coverImage ?? ''"
+          [ngSrc]="book()?.coverImage || 'assets/images/image-not-found.webp'"
           [alt]="book()?.title + ' cover image'"
           width="480"
           height="640"

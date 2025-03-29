@@ -10,7 +10,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { decode } from 'jsonwebtoken';
 import { OrderDetail } from './entities/order-detail.entity';
 import { MailerService } from '@nestjs-modules/mailer';
-import { BookEntity } from '../books/entities/book.entity';
+import { Book } from '../books/entities/book.entity';
 import { OrderStatus, Role } from '@prisma/client';
 import { EventsGateway } from '../app/gateways/events.gateway';
 import { parseNumber } from '../common/utils/parse-number';
@@ -46,10 +46,10 @@ export class OrderDetailsService {
       );
     }
 
-    const productInventories = await Promise.all(
+    const inventories = await Promise.all(
       shoppingSession.cartItems.map((cartItem) =>
-        this.prisma.productInventory.findFirst({
-          where: { book: { id: cartItem.bookId } },
+        this.prisma.inventory.findFirst({
+          where: { bookId: cartItem.bookId },
           select: {
             id: true,
             quantity: true,
@@ -60,21 +60,21 @@ export class OrderDetailsService {
     );
 
     await Promise.all(
-      productInventories.map((pi) => {
+      inventories.map((inventory) => {
         const cartItem = shoppingSession.cartItems.find(
-          (ci) => ci.bookId === pi.book.id,
+          (cartItem) => cartItem.bookId === inventory.book.id,
         );
 
-        const newQuantity = pi.quantity - cartItem.quantity;
+        const newQuantity = inventory.quantity - cartItem.quantity;
 
         if (newQuantity < 0) {
           throw new ConflictException(
-            `Not enough stock for book: ${pi.book.title}`,
+            `Not enough stock for book: ${inventory.book.title}`,
           );
         }
 
-        return this.prisma.productInventory.update({
-          where: { id: pi.id },
+        return this.prisma.inventory.update({
+          where: { id: inventory.id },
           data: { quantity: newQuantity },
         });
       }),
@@ -84,30 +84,30 @@ export class OrderDetailsService {
       where: { id: shippingMethodId },
     });
 
-    const total = shoppingSession.total + shippingMethod.price;
+    const userInformation = await this.prisma.userInformation.findUnique({
+      where: { userId },
+    });
 
-    const {
-      firstName,
-      lastName,
-      postcode,
-      phone,
-      city,
-      countryId,
-      homeNumber,
-      houseNumber,
-      street,
-    } = orderAddress;
+    const { firstName, lastName, phone } = userInformation;
+    const { postcode, city, countryId, homeNumber, houseNumber, street } =
+      orderAddress;
+
+    const total = shoppingSession.total + shippingMethod.price;
 
     const order = await this.prisma.orderDetails.create({
       data: {
         shippingMethod: {
           connect: { id: shippingMethodId },
         },
-        orderAddress: {
+        orderUserInformation: {
           create: {
             firstName,
             lastName,
             phone,
+          },
+        },
+        orderAddress: {
+          create: {
             city,
             postcode,
             street,
@@ -147,6 +147,7 @@ export class OrderDetailsService {
           },
         },
         orderAddress: { include: { country: true } },
+        orderUserInformation: true,
         paymentDetails: true,
       },
     });
@@ -164,10 +165,10 @@ export class OrderDetailsService {
           },
           items: order.orderItems,
           orderDetails: {
-            firstName: order.orderAddress.firstName,
-            lastName: order.orderAddress.lastName,
+            firstName: order.orderUserInformation.firstName,
+            lastName: order.orderUserInformation.lastName,
             address: `${order.orderAddress.street} ${order.orderAddress.homeNumber}${order.orderAddress.houseNumber ? '/' + order.orderAddress.houseNumber : ''}, ${order.orderAddress.postcode} ${order.orderAddress.city}, ${order.orderAddress.country.name}`,
-            phone: order.orderAddress.phone,
+            phone: order.orderUserInformation.phone,
             paymentMethod: order.paymentDetails.method
               .replaceAll('_', ' ')
               .toLowerCase(),
@@ -339,7 +340,7 @@ export class OrderDetailsService {
     // return { ...order,  ...book, authors: book.authors.map((a) => a.author) };
   }
 
-  async findOrder(authHeader: string, bookId: BookEntity['id']) {
+  async findOrder(authHeader: string, bookId: Book['id']) {
     const userId = String(decode(authHeader.split(' ')[1]).sub);
 
     if (!userId) {

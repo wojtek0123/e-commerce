@@ -1,12 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { BookEntity } from '../../books/entities/book.entity';
+import { Book } from '../../books/entities/book.entity';
 
 export class OrderItem {
   @ApiProperty({ type: String, readOnly: true })
   id: string;
 
-  @ApiProperty({ type: BookEntity })
-  book: BookEntity;
+  @ApiProperty({ type: Book })
+  book: Book;
 
   @ApiProperty({ type: Number })
   quantity: number;

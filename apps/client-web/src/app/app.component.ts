@@ -14,6 +14,7 @@ import { CartService } from '@e-commerce/client-web/cart/api';
 import { PrimeNG } from 'primeng/config';
 import { MessageBusService } from '@e-commerce/client-web/shared/data-access/services';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FavouriteBooksListService } from '@e-commerce/client-web/account/api';
 
 const borderRadius = '1rem' as const;
 const MyPreset = definePreset(Aura, {
@@ -49,6 +50,7 @@ const MyPreset = definePreset(Aura, {
 })
 export class AppComponent implements OnInit {
   #cartService = inject(CartService);
+  #favouriteBooksService = inject(FavouriteBooksListService);
   #primeng = inject(PrimeNG);
   #messageBusService = inject(MessageBusService);
   #destroyRef = inject(DestroyRef);
@@ -72,6 +74,7 @@ export class AppComponent implements OnInit {
       .subscribe((event) => {
         if (event === 'auth-success' || event === 'init-database') {
           this.#cartService.syncCartAndFetchSession();
+          this.#favouriteBooksService.getBooks();
         }
         if (event === 'logout-success') {
           this.#cartService.clearCartAndSession();

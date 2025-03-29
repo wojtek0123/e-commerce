@@ -1,10 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { $Enums, Book, Tag } from '@prisma/client';
+import { $Enums, Tag } from '@prisma/client';
 import { IsOptional, IsString } from 'class-validator';
 import { AuthorEntity } from '../../authors/enities/author.entity';
 import { Category } from '../../categories/entities/category.entity';
 
-export class BookEntity implements Book {
+export class Book {
   @ApiProperty({ type: String })
   title: string;
 

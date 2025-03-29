@@ -12,7 +12,7 @@ import { ConfigModule } from '@nestjs/config';
 import { CartItemsModule } from '../cart-items/cart-items.module';
 import { UserAddressesModule } from '../user-addresses/user-addresses.module';
 import { ShoppingSessionsModule } from '../shopping-sessions/shopping-sessions.module';
-import { ProductInventoriesModule } from '../product-inventories/product-inventories.module';
+import { Inventoriesnodule } from '../inventories/inventories.module';
 import { CountriesModule } from '../countries/countries.module';
 import { ShippingMethodsModule } from '../shipping-methods/shipping-methods.module';
 import { OrderDetailsModule } from '../order-details/order-details.module';
@@ -56,7 +56,7 @@ import { BookReviewsModule } from '../book-reviews/book-reviews.module';
     CartItemsModule,
     UserAddressesModule,
     ShoppingSessionsModule,
-    ProductInventoriesModule,
+    Inventoriesnodule,
     CountriesModule,
     ShippingMethodsModule,
     OrderDetailsModule,

@@ -88,9 +88,4 @@ export const FavouriteBooksListStore = signalStore(
       ),
     ),
   })),
-  withHooks({
-    onInit: (store) => {
-      store.getFavouriteBooks();
-    },
-  }),
 );

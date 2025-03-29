@@ -11,4 +11,8 @@ export class FavouriteBooksListService {
   addToFavourite(bookId: Book['id']) {
     this.#favouriteBooksListStore.addToFavourite({ bookId });
   }
+
+  getBooks() {
+    this.#favouriteBooksListStore.getFavouriteBooks();
+  }
 }

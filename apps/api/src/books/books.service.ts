@@ -10,32 +10,40 @@ export class BooksService {
   constructor(private prisma: PrismaService) {}
 
   create(data: CreateBookDto) {
-    return this.prisma.book.create({
+    return this.prisma.inventory.create({
       data: {
-        title: data.title,
-        description: data.description,
-        language: data.language,
-        pages: data.pages,
-        publishedDate: data.publishedDate,
-        price: data.price,
-        coverImage: data.coverImage,
-        tag: data.tag,
-        authors: {
-          createMany: {
-            data: data.authorsId.map((authorId) => ({ authorId })),
-          },
-        },
-        category: { connect: { id: data.categoryId } },
-        productInventory: { create: { quantity: data.quantity } },
-        publisher: {
-          connectOrCreate: {
-            create: { name: data.publisherName ?? '' },
-            where: { id: data.publisherId ?? '' },
+        quantity: data.quantity,
+        book: {
+          create: {
+            title: data.title,
+            description: data.description,
+            language: data.language,
+            pages: data.pages,
+            publishedDate: data.publishedDate,
+            price: data.price,
+            coverImage: data.coverImage,
+            tag: data.tag,
+            authors: {
+              createMany: {
+                data: data.authorsId.map((authorId) => ({ authorId })),
+              },
+            },
+            category: { connect: { id: data.categoryId } },
+            publisher: {
+              connectOrCreate: {
+                create: { name: data.publisherName ?? '' },
+                where: { id: data.publisherId ?? '' },
+              },
+            },
           },
         },
       },
       include: {
-        authors: { include: { author: true } },
+        book: {
+          include: {
+            authors: { include: { author: true } },
+          },
+        },
       },
     });
   }
@@ -134,7 +142,7 @@ export class BooksService {
     const book = await this.prisma.book.findUnique({
       where: { id },
       include: {
-        productInventory: true,
+        inventory: true,
         authors: { include: { author: true } },
         category: true,
         reviews: { include: { user: true } },

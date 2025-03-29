@@ -33,17 +33,7 @@ import {
   untracked,
 } from '@angular/core';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import {
-  distinctUntilChanged,
-  filter,
-  forkJoin,
-  map,
-  of,
-  pipe,
-  skip,
-  switchMap,
-  tap,
-} from 'rxjs';
+import { filter, forkJoin, map, of, pipe, skip, switchMap, tap } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
 import { Filter } from '../../models/filter.model';
 import {
@@ -62,7 +52,6 @@ import {
   setEntity,
   withEntities,
 } from '@ngrx/signals/entities';
-import { isEqual } from 'lodash-es';
 import {
   getSelectedItemsFromQueryParam,
   buildSelectedItemsQueryParam,

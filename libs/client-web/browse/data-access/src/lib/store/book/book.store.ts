@@ -51,7 +51,7 @@ export const initialBookState: BookState = {
 export const BookStore = signalStore(
   withState(initialBookState),
   withComputed(({ book }) => ({
-    availableQuantity: computed(() => book()?.productInventory.quantity ?? 0),
+    availableQuantity: computed(() => book()?.inventory.quantity ?? 0),
     reviews: computed(() => book()?.reviews ?? []),
   })),
   withProps(() => ({
