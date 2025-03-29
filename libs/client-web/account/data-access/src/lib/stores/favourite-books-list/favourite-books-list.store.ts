@@ -2,7 +2,6 @@ import { inject } from '@angular/core';
 import {
   patchState,
   signalStore,
-  withHooks,
   withMethods,
   withProps,
   withState,
@@ -10,9 +9,11 @@ import {
 import { Book, ResponseError } from '@e-commerce/shared/api-models';
 import { FavouriteBooksListApiService } from '@e-commerce/client-web/shared/data-access/api-services';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { pipe, switchMap, tap } from 'rxjs';
+import { filter, pipe, switchMap, tap } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
 import { MessageService } from 'primeng/api';
+import { UnauthorizedDialogService } from '@e-commerce/client-web/shared/data-access/services';
+import { AuthService } from '@e-commerce/client-web/auth/api';
 
 interface FavouriteBooksListState {
   books: Book[];
@@ -32,6 +33,8 @@ export const FavouriteBooksListStore = signalStore(
   withProps(() => ({
     _favouriteBooksListApi: inject(FavouriteBooksListApiService),
     _messageService: inject(MessageService),
+    _unauthorizedDialogService: inject(UnauthorizedDialogService),
+    _authService: inject(AuthService),
   })),
   withMethods((store) => ({
     getFavouriteBooks: rxMethod<void>(
@@ -62,6 +65,14 @@ export const FavouriteBooksListStore = signalStore(
     ),
     addToFavourite: rxMethod<{ bookId: Book['id'] }>(
       pipe(
+        tap(() => {
+          const isAuth = store._authService.isAuthenticated();
+
+          if (!isAuth) {
+            store._unauthorizedDialogService.show();
+          }
+        }),
+        filter(() => store._authService.isAuthenticated()),
         switchMap(({ bookId }) =>
           store._favouriteBooksListApi.update({ bookId }).pipe(
             tapResponse({
@@ -81,7 +92,15 @@ export const FavouriteBooksListStore = signalStore(
                   severity: 'success',
                 });
               },
-              error: () => {},
+              error: (error: ResponseError) => {
+                store._messageService.add({
+                  summary: 'Error',
+                  detail:
+                    error?.error?.message ??
+                    'Error occurred while adding book to favourite',
+                  severity: 'error',
+                });
+              },
             }),
           ),
         ),

@@ -15,6 +15,7 @@ import { PrimeNG } from 'primeng/config';
 import { MessageBusService } from '@e-commerce/client-web/shared/data-access/services';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FavouriteBooksListService } from '@e-commerce/client-web/account/api';
+import { UnauthorizedDialogComponent } from './components/unauthorized-dialog/unauthorized-dialog.component';
 
 const borderRadius = '1rem' as const;
 const MyPreset = definePreset(Aura, {
@@ -42,7 +43,12 @@ const MyPreset = definePreset(Aura, {
 
 @Component({
   standalone: true,
-  imports: [RouterOutlet, ToastModule, NavComponent],
+  imports: [
+    RouterOutlet,
+    ToastModule,
+    NavComponent,
+    UnauthorizedDialogComponent,
+  ],
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',

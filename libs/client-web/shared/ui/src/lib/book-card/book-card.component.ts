@@ -69,17 +69,17 @@ export class BookCardComponent {
     ).toFixed(1);
   });
 
-  public onAddToCart = output<Book>();
-  onAddToFavourite = output<Book>();
+  addToCartEvent = output<Book>();
+  addToFavouriteEvent = output<Book>();
 
   public addToCart(event: Event, book: Book) {
     event.preventDefault();
     event.stopImmediatePropagation();
 
-    this.onAddToCart.emit(book);
+    this.addToCartEvent.emit(book);
   }
 
   addToFavourite(book: Book) {
-    this.onAddToFavourite.emit(book);
+    this.addToFavouriteEvent.emit(book);
   }
 }

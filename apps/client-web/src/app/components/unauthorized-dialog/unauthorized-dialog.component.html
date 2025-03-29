@@ -1,0 +1,35 @@
+<p-dialog
+  appendTo="body"
+  [visible]="!hidden()"
+  [modal]="true"
+  header="Unauthorized"
+  (visibleChange)="close()"
+  styleClass="w-full max-w-[32rem] mx-4 w-full"
+>
+  <div class="flex flex-col gap-6">
+    <div class="flex flex-col gap-4">
+      <span class="text-xl font-bold">You need to be logged in!</span>
+      <small class="text-base">
+        After successful login you will be redirect to this page.
+      </small>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4 mt-4">
+      <p-button
+        severity="secondary"
+        [outlined]="true"
+        styleClass="w-full"
+        label="Cancel"
+        (onClick)="close()"
+      />
+      <p-button
+        type="submit"
+        severity="secondary"
+        styleClass="w-full"
+        label="Log in"
+        (onClick)="close()"
+        [routerLink]="loginUrl"
+      />
+    </div>
+  </div>
+</p-dialog>

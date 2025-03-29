@@ -28,8 +28,8 @@
             [book]="book"
             [awaitingBookIdsToAddToCart]="pendingBookIds()"
             [favouriteBooks]="favouriteBooks()"
-            (onAddToCart)="addToCartEvent.emit($event)"
-            (onAddToFavourite)="addToFavourite($event)"
+            (addToCartEvent)="addToCartEvent.emit($event)"
+            (addToFavouriteEvent)="addToFavourite($event)"
           />
         } @placeholder {
           <lib-book-card-skeleton />

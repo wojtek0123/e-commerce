@@ -19,7 +19,7 @@ import {
   runInInjectionContext,
 } from '@angular/core';
 import { MessageService } from 'primeng/api';
-import { filter, map, pipe, switchMap, tap } from 'rxjs';
+import { AsyncSubject, filter, map, pipe, switchMap, tap } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
@@ -27,8 +27,10 @@ import {
   APP_ROUTE_PATHS_TOKEN,
   APP_LOCAL_STORAGE_KEYS_TOKEN,
   APP_QUERY_PARAMS,
+  APP_ROUTES_FEATURE,
 } from '@e-commerce/client-web/shared/app-config';
 import { MessageBusService } from '@e-commerce/client-web/shared/data-access/services';
+import { Location } from '@angular/common';
 
 export interface AuthState {
   userId: User['id'] | null;
@@ -56,40 +58,43 @@ export const AuthStore = signalStore(
   })),
   withProps(() => ({
     _messageBusService: inject(MessageBusService),
+    _router: inject(Router),
+    _location: inject(Location),
+    _appRoutePaths: inject(APP_ROUTE_PATHS_TOKEN),
   })),
-  withMethods(
-    (
-      store,
-      route = inject(ActivatedRoute),
-      router = inject(Router),
-      appRoutePaths = inject(APP_ROUTE_PATHS_TOKEN),
-    ) => ({
-      redirect: async () => {
-        const url = route.snapshot.queryParams[APP_QUERY_PARAMS.REDIRECT_TO] as
-          | string
-          | undefined;
+  withMethods((store, route = inject(ActivatedRoute)) => ({
+    redirect: async () => {
+      const url = route.snapshot.queryParams[APP_QUERY_PARAMS.REDIRECT_TO] as
+        | string
+        | undefined;
+      const state = store._location.getState() as { navigationId?: number };
 
-        const appRoutePath = {
-          'order-process': appRoutePaths.ORDER_PROCESS(),
-        }[url ?? ''];
+      const appRoutePath = {
+        'order-process': store._appRoutePaths.ORDER_PROCESS(),
+      }[url ?? ''];
 
-        await router.navigate([appRoutePath || appRoutePaths.HOME()]);
-      },
-      removeSession: () => {
-        patchState(store, {
-          refreshToken: null,
-          accessToken: null,
-          userId: null,
-        });
-      },
-      updateTokens(tokens: Tokens) {
-        patchState(store, {
-          accessToken: tokens.accessToken,
-          refreshToken: tokens.refreshToken,
-        });
-      },
-    }),
-  ),
+      if (state.navigationId === 1 || appRoutePath) {
+        await store._router.navigate([
+          appRoutePath || store._appRoutePaths.HOME(),
+        ]);
+      } else {
+        store._location.back();
+      }
+    },
+    removeSession: () => {
+      patchState(store, {
+        refreshToken: null,
+        accessToken: null,
+        userId: null,
+      });
+    },
+    updateTokens(tokens: Tokens) {
+      patchState(store, {
+        accessToken: tokens.accessToken,
+        refreshToken: tokens.refreshToken,
+      });
+    },
+  })),
   withMethods(
     (
       store,
@@ -247,6 +252,19 @@ export const AuthStore = signalStore(
             authApi.logout$(userId).pipe(
               tapResponse({
                 next: async () => {
+                  const currectUrl = store._router.url;
+
+                  const mainRoutePath = currectUrl.split('/').at(1);
+
+                  const notRestrictedRoutes = [
+                    APP_ROUTES_FEATURE.HOME.BASE,
+                    APP_ROUTES_FEATURE.BROWSE.BASE,
+                  ] as string[];
+
+                  if (!notRestrictedRoutes.includes(mainRoutePath ?? '')) {
+                    await router.navigate([appRoutePaths.HOME()]);
+                  }
+
                   messageService.add({
                     severity: 'success',
                     detail: 'You have been logged out',
@@ -259,8 +277,6 @@ export const AuthStore = signalStore(
                   });
 
                   store._messageBusService.setEvent('logout-success');
-                  // TODO: redirect only if user is on protected route
-                  await router.navigate([appRoutePaths.HOME()]);
                 },
                 error: async (error: ResponseError) => {
                   const errorMessage =

@@ -8,7 +8,7 @@
       appendTo="body"
       [preview]="true"
       styleClass="h-full h-28 @3xl:h-40"
-      [src]="cartItem().book.coverImage"
+      [src]="cartItem().book.coverImage || 'assets/images/image-not-found.webp'"
       [alt]="cartItem().book.title + ' cover image'"
     />
   </div>
