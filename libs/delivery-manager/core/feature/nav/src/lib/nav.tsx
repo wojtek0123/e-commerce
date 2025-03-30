@@ -1,15 +1,15 @@
 import { Link, NavLink } from 'react-router-dom';
 import { useRef, useState } from 'react';
 import { useAuthApi } from '@e-commerce/delivery-manager/auth/api';
-import { Toast } from 'primereact/toast';
 import { useCoreStore } from '@e-commerce/delivery-manager/core/data-access';
+import { useToastStore } from '@e-commerce/delivery-manager/shared/data-access';
 
 export function Nav() {
   const [isExpanded, setIsExpanded] = useState(true);
   const [isLabelShowed, setIsLabelShowed] = useState(true);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const { logout } = useAuthApi();
-  const toast = useRef<Toast | null>(null);
+  const toast = useToastStore();
   const { isDark, setTheme } = useCoreStore();
 
   function expandCollapse() {
@@ -28,17 +28,11 @@ export function Nav() {
   function onLogout() {
     logout();
 
-    toast.current?.show({
-      detail: 'You have been logged out',
-      summary: 'Success',
-      severity: 'success',
-    });
+    toast.show('You have been logged out');
   }
 
   return (
     <>
-      <Toast ref={toast} />
-
       <div className="dock dock-md bg-base-300 sticky bottom-0 xl:hidden">
         <NavLink
           to="/supplies"

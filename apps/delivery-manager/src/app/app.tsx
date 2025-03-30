@@ -1,6 +1,5 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { DeliverManagerAuthFeatureShell } from '@e-commerce/delivery-manager/auth/feature/shell';
-import { PrimeReactProvider } from 'primereact/api';
 import 'primeicons/primeicons.css';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthGuard } from '@e-commerce/delivery-manager/shared/feature';
@@ -23,35 +22,33 @@ export function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <PrimeReactProvider>
-        {!toast.hidden && (
-          <div className="toast toast-top toast-end !z-[2001]">
-            <div className="alert alert-success">
-              <span>{toast.message}</span>
-            </div>
+      {!toast.hidden && (
+        <div className="toast toast-top toast-end !z-[2001]">
+          <div className="alert alert-success">
+            <span>{toast.message}</span>
           </div>
-        )}
-        <div className="flex flex-col-reverse w-full h-svh xl:flex-row xl:p-gap xl:min-h-svh xl:h-full">
-          <Routes>
-            <Route
-              element={
-                <AuthGuard>
-                  <MainLayout />
-                </AuthGuard>
-              }
-            >
-              <Route
-                path="orders/*"
-                element={<DeliveryManagerOrdersFeatureShell />}
-              />
-              <Route path="supplies/*" element={<SuppliesShell />} />
-              <Route path="*" element={<Navigate to="/orders" />} />
-            </Route>
-            <Route path="auth/*" element={<DeliverManagerAuthFeatureShell />} />
-            <Route path="*" element={<Navigate to="/" />} />
-          </Routes>
         </div>
-      </PrimeReactProvider>
+      )}
+      <div className="flex flex-col-reverse w-full h-svh xl:flex-row xl:p-gap xl:min-h-svh xl:h-full">
+        <Routes>
+          <Route
+            element={
+              <AuthGuard>
+                <MainLayout />
+              </AuthGuard>
+            }
+          >
+            <Route
+              path="orders/*"
+              element={<DeliveryManagerOrdersFeatureShell />}
+            />
+            <Route path="supplies/*" element={<SuppliesShell />} />
+            <Route path="*" element={<Navigate to="/orders" />} />
+          </Route>
+          <Route path="auth/*" element={<DeliverManagerAuthFeatureShell />} />
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+      </div>
     </QueryClientProvider>
   );
 }
