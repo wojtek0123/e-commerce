@@ -5,14 +5,6 @@ import { IsString } from 'class-validator';
 export class UserAddressUpdateDto implements Prisma.UserAddressUpdateInput {
   @ApiProperty({ required: false, type: String })
   @IsString()
-  firstName?: string;
-
-  @ApiProperty({ required: false, type: String })
-  @IsString()
-  lastName?: string;
-
-  @ApiProperty({ required: false, type: String })
-  @IsString()
   postcode?: string;
 
   @ApiProperty({ required: false, type: String })
@@ -22,10 +14,6 @@ export class UserAddressUpdateDto implements Prisma.UserAddressUpdateInput {
   @ApiProperty({ required: false, type: String })
   @IsString()
   city?: string;
-
-  @ApiProperty({ required: false, type: String })
-  @IsString()
-  phone?: string;
 
   @ApiProperty({ required: false, type: String })
   @IsString()

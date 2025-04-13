@@ -133,8 +133,8 @@ export class BooksService {
         count: books.length,
         page: pageNumber,
       };
-    } catch (error) {
-      throw new Error('Error occur while searching books');
+    } catch (error: unknown) {
+      throw new Error('Error occurred while searching books');
     }
   }
 

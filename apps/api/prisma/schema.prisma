@@ -151,6 +151,8 @@ model Country {
   name         String
   orderAddress OrderAddress[]
   userAddress  UserAddress[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model ShoppingSession {

@@ -7,12 +7,6 @@ export class UserAddressDto implements UserAddress {
   id: string;
 
   @ApiProperty()
-  firstName: string;
-
-  @ApiProperty()
-  lastName: string;
-
-  @ApiProperty()
   city: string;
 
   @ApiProperty()
@@ -23,9 +17,6 @@ export class UserAddressDto implements UserAddress {
 
   @ApiProperty()
   houseNumber: string;
-
-  @ApiProperty()
-  phone: string;
 
   @ApiProperty()
   street: string;

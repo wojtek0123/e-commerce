@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCreditCardDto } from './dto/create-credit-card.dto';
 import { UpdateCreditCardDto } from './dto/update-credit-card.dto';
 import { PrismaService } from '../prisma/prisma.service';
@@ -35,6 +35,10 @@ export class CreditCardsService {
     const creditCard = await this.prisma.creditCard.findUnique({
       where: { userId },
     });
+
+    if (!creditCard) {
+      throw new NotFoundException("You didn't add a credit card");
+    }
 
     return this._removeVulnerability(creditCard);
   }

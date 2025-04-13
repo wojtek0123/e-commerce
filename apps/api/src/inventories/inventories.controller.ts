@@ -2,38 +2,70 @@ import {
   Body,
   Controller,
   Get,
-  Headers,
   Param,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { InventoriesService } from './inventories.service';
 import {
   ApiBearerAuth,
+  ApiBody,
   ApiCreatedResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
 import { Book } from '../books/entities/book.entity';
 import { Roles, RolesGuard } from '../common/guards/role.guard';
 import { Role } from '@prisma/client';
 import { Inventory } from './entities/inventory.entity';
+import { Pagination } from '../common/entities/pagination.entity';
+import { SortKey } from '../books/models/sort-key.enum';
+import { SortByMode } from '../common/entities/sort-by-mode.enum';
+import { CreateInventoryDto } from './dto/create-inventory.dto';
 
 @ApiTags('inventories')
 @Controller('inventories')
 export class InventoriesController {
   constructor(private readonly inventoriesService: InventoriesService) {}
 
-  // @Post()
-  // create(@Body() createProductInventoryDto: CreateProductInventoryDto) {
-  //   return this.productInventoriesService.create(createProductInventoryDto);
-  // }
-  //
-  // @Get()
-  // findAll() {
-  //   return this.productInventoriesService.findAll();
-  // }
+  @Get()
+  @ApiOperation({ summary: 'Get books' })
+  @ApiOkResponse({ type: Pagination<Inventory>, isArray: true })
+  @ApiQuery({ type: String, name: 'page', required: false })
+  @ApiQuery({ type: String, name: 'size', required: false })
+  @ApiQuery({ type: String, name: 'titleLike', required: false })
+  @ApiQuery({
+    enum: SortKey,
+    default: SortKey.TITLE,
+    name: 'sortBy',
+    required: false,
+  })
+  @ApiQuery({
+    enum: SortByMode,
+    default: SortByMode.ASC,
+    name: 'sortByMode',
+    required: false,
+  })
+  @UseGuards(RolesGuard)
+  @Roles([Role.ADMIN])
+  findAll(
+    @Query('page') page: string,
+    @Query('size') size: string,
+    @Query('titleLike') titleLike: string,
+    @Query('sortBy') sortBy: string,
+    @Query('sortByMode') sortByMode: string,
+  ) {
+    return this.inventoriesService.findAll({
+      sortByMode,
+      sortBy,
+      page,
+      size,
+      titleLike,
+    });
+  }
 
   @Get(':bookId')
   @ApiOkResponse({ type: Inventory })
@@ -57,13 +89,14 @@ export class InventoriesController {
     return this.inventoriesService.updateQuantity(bookId, body.quantity);
   }
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateProductInventoryDto: UpdateProductInventoryDto) {
-  //   return this.productInventoriesService.update(+id, updateProductInventoryDto);
-  // }
-  //
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.productInventoriesService.remove(+id);
-  // }
+  @Post()
+  @UseGuards(RolesGuard)
+  @Roles([Role.ADMIN])
+  @ApiOperation({ description: 'Create an inventory' })
+  @ApiBody({ type: CreateInventoryDto })
+  @ApiCreatedResponse({ type: Book })
+  @ApiBearerAuth()
+  create(@Body() data: CreateInventoryDto) {
+    return this.inventoriesService.create(data);
+  }
 }

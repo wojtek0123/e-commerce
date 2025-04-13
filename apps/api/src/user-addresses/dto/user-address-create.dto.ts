@@ -4,18 +4,6 @@ import { IsOptional, IsString } from 'class-validator';
 export class UserAddressCreateDto {
   @ApiProperty({ type: String })
   @IsString()
-  firstName: string;
-
-  @ApiProperty({ type: String })
-  @IsString()
-  lastName: string;
-
-  @ApiProperty({ type: String })
-  @IsString()
-  phone: string;
-
-  @ApiProperty({ type: String })
-  @IsString()
   city: string;
 
   @ApiProperty({ type: String })
