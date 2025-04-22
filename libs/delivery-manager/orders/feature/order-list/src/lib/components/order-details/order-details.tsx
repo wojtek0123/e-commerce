@@ -63,16 +63,17 @@ export function OrderDetails({
     onSuccess(_, { status }) {
       if (order) {
         const updatedOrder = { ...order, status };
-        queryClient.setQueryData(['order', orderId], updatedOrder);
+        queryClient.setQueryData(['order', orderId], { updatedOrder });
       }
       toast.show(
         `Status has been updated to ${status} for order no. ${orderId}`,
+        'success',
       );
 
       onStatusChange(status);
     },
     onError() {
-      toast.show('Something went wrong!');
+      toast.show('Something went wrong!', 'error');
     },
   });
 
@@ -101,13 +102,13 @@ export function OrderDetails({
   function generateLabel() {
     setLabel((prevState) => ({ ...prevState, isGenerated: true }));
 
-    toast.show('Label has been generated');
+    toast.show('Label has been generated', 'success');
   }
 
   function printLabel() {
     setLabel((prevState) => ({ ...prevState, isPrinted: true }));
 
-    toast.show('Label has been printed');
+    toast.show('Label has been printed', 'success');
   }
 
   function markAsPrepareForShipping() {

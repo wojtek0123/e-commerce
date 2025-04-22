@@ -12,4 +12,19 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
       'Password must contain uppercase, lowercase, number and special character',
   })
   newPassword?: string;
+
+  @ApiProperty({ type: String, required: false })
+  @IsString()
+  @IsOptional()
+  firstName?: string;
+
+  @ApiProperty({ type: String, required: false })
+  @IsString()
+  @IsOptional()
+  lastName?: string;
+
+  @ApiProperty({ type: String, required: false })
+  @IsString()
+  @IsOptional()
+  phone?: string;
 }

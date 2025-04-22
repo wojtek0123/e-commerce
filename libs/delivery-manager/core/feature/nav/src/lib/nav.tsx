@@ -28,7 +28,7 @@ export function Nav() {
   function onLogout() {
     logout();
 
-    toast.show('You have been logged out');
+    toast.show('You have been logged out', 'success');
   }
 
   return (

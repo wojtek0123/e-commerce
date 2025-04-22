@@ -19,7 +19,7 @@ export class AddressInformationComponent {
   isActive = input<boolean>();
   address = input.required<UserAddress | null>();
   clickable = input(true);
-  removeable = input(true);
+  removable = input(true);
 
   selectEvent = output<void>();
   editEvent = output<void>();

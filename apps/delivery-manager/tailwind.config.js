@@ -19,12 +19,16 @@ module.exports = {
       borderRadius: { base: '1rem' },
       maxWidth: { 'book-card': '22rem' },
       height: { content: 'calc(100svh - 2 * 1rem)' },
+      minHeight: { content: 'calc(100svh - 2 * 1rem)' },
       maxheight: { content: 'calc(100svh - 2 * 1rem)' },
       boxShadow: {
         base: '0px 3px 5px rgba(0, 0, 0, 0.02), 0px 0px 2px rgba(0, 0, 0, 0.05), 0px 1px 4px rgba(0,0,0,0.08)',
       },
       backgroundColor: {
         'content-background': 'var(--surface-card)',
+      },
+      textColor: {
+        'text-error': 'var(--red-300)',
       },
       screens: {
         '3xl': '1924px',
@@ -46,5 +50,5 @@ module.exports = {
       },
     },
   },
-  plugins: [require('daisyui'), require('@tailwindcss/container-queries')],
+  plugins: [require('@tailwindcss/container-queries')],
 };

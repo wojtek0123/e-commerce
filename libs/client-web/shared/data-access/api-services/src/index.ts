@@ -13,3 +13,4 @@ export * from './lib/api-services/inventory-api.service';
 export * from './lib/api-services/user-api.service';
 export * from './lib/api-services/favourite-books-list.service';
 export * from './lib/api-services/book-review-api.service';
+export * from './lib/api-services/user-information.service';

@@ -7,6 +7,9 @@ export interface UpdateUserBody {
   email?: string;
   password?: string;
   newPassword?: string;
+  firstName?: string;
+  lastName?: string;
+  phone?: string;
 }
 
 @Injectable({ providedIn: 'root' })

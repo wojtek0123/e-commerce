@@ -4,6 +4,7 @@ import {
   OrderProcessStore,
   PaymentStore,
   ShippingStore,
+  CustomerInformationStore,
 } from '@e-commerce/client-web/cart/data-access';
 import { APP_ROUTES_FEATURE } from '@e-commerce/client-web/shared/app-config';
 
@@ -37,6 +38,12 @@ export const cartShellRoutes: Route[] = [
         redirectTo: APP_ROUTES_FEATURE.CART.ORDER_PROCESS,
       },
     ],
-    providers: [AddressStore, ShippingStore, PaymentStore, OrderProcessStore],
+    providers: [
+      AddressStore,
+      ShippingStore,
+      PaymentStore,
+      OrderProcessStore,
+      CustomerInformationStore,
+    ],
   },
 ];

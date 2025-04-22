@@ -5,6 +5,9 @@ import axios, { AxiosError } from 'axios';
 import { Tokens, User } from '@e-commerce/shared/api-models';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { InputText } from 'primereact/inputtext';
+import { Password } from 'primereact/password';
+import { Button } from 'primereact/button';
 
 type LoginForm = {
   email: string;
@@ -58,50 +61,47 @@ export function Login() {
         className="flex flex-col gap-2 w-full"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <fieldset className="fieldset">
-          <legend className="fieldset-legend">What is your email?</legend>
-          <input
+        <fieldset className="flex flex-col gap-1">
+          <label htmlFor="email">What is your email?</label>
+          <InputText
+            id="email"
             type="text"
-            className={'input w-full ' + (errors.email ? 'input-error' : '')}
-            placeholder="Type here"
+            invalid={!!errors.email}
+            className="w-full"
+            placeholder="Type email"
             {...register('email', {
               required: true,
               pattern: /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
             })}
           />
           {errors.email && (
-            <span className="fieldset-label text-error text-base">
-              Email is invalid
-            </span>
+            <span className="text-red-300 text-base">Email is invalid</span>
           )}
         </fieldset>
 
-        <fieldset className="fieldset">
-          <legend className="fieldset-legend">What is your password?</legend>
-          <input
+        <fieldset className="flex flex-col gap-1">
+          <label htmlFor="password">What is your password?</label>
+          <InputText
+            id="password"
             type="password"
-            className={'input w-full ' + (errors.password ? 'input-error' : '')}
-            placeholder="Type here"
+            placeholder="Type password"
+            className="w-full"
+            invalid={!!errors.password}
             {...register('password', { required: true })}
           />
           {errors.password && (
-            <span className="fieldset-label text-error text-base">
-              Password is required
-            </span>
+            <span className="text-red-300 text-base">Password is required</span>
           )}
         </fieldset>
 
-        {error && <span className="text-error">{error}</span>}
-        <button
-          className="btn btn-primary mt-2 w-full"
+        {error && <span className="text-red-300">{error}</span>}
+        <Button
+          className="mt-2 w-full"
           type="submit"
+          loading={mutation.isLoading}
           disabled={mutation.isLoading}
-        >
-          {mutation.isLoading && (
-            <span className="loading loading-spinner"></span>
-          )}
-          Log in
-        </button>
+          label="Log in"
+        />
       </form>
     </>
   );

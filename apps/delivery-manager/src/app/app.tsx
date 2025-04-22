@@ -9,6 +9,7 @@ import { DeliveryManagerOrdersFeatureShell } from '@e-commerce/delivery-manager/
 import MainLayout from './main-layout';
 import { useToastStore } from '@e-commerce/delivery-manager/shared/data-access';
 import { SuppliesShell } from '@e-commerce/delivery-manager/supplies/feature/shell';
+import { PrimeReactProvider } from 'primereact/api';
 
 const queryClient = new QueryClient();
 
@@ -22,33 +23,37 @@ export function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {!toast.hidden && (
-        <div className="toast toast-top toast-end !z-[2001]">
-          <div className="alert alert-success">
-            <span>{toast.message}</span>
+      <PrimeReactProvider>
+        {!toast.hidden && (
+          <div className="toast toast-top toast-end !z-[2001]">
+            <div
+              className={`alert ${toast.variant === 'success' ? 'alert-success' : 'alert-error'}`}
+            >
+              <span>{toast.message}</span>
+            </div>
           </div>
-        </div>
-      )}
-      <div className="flex flex-col-reverse w-full h-svh xl:flex-row xl:p-gap xl:min-h-svh xl:h-full">
-        <Routes>
-          <Route
-            element={
-              <AuthGuard>
-                <MainLayout />
-              </AuthGuard>
-            }
-          >
+        )}
+        <div className="flex flex-col-reverse w-full h-svh xl:flex-row xl:p-gap xl:min-h-svh xl:h-full">
+          <Routes>
             <Route
-              path="orders/*"
-              element={<DeliveryManagerOrdersFeatureShell />}
-            />
-            <Route path="supplies/*" element={<SuppliesShell />} />
-            <Route path="*" element={<Navigate to="/orders" />} />
-          </Route>
-          <Route path="auth/*" element={<DeliverManagerAuthFeatureShell />} />
-          <Route path="*" element={<Navigate to="/" />} />
-        </Routes>
-      </div>
+              element={
+                <AuthGuard>
+                  <MainLayout />
+                </AuthGuard>
+              }
+            >
+              <Route
+                path="orders/*"
+                element={<DeliveryManagerOrdersFeatureShell />}
+              />
+              <Route path="supplies/*" element={<SuppliesShell />} />
+              <Route path="*" element={<Navigate to="/orders" />} />
+            </Route>
+            <Route path="auth/*" element={<DeliverManagerAuthFeatureShell />} />
+            <Route path="*" element={<Navigate to="/" />} />
+          </Routes>
+        </div>
+      </PrimeReactProvider>
     </QueryClientProvider>
   );
 }

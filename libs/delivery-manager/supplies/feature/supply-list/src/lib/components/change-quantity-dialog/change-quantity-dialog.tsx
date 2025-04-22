@@ -2,16 +2,18 @@ import { useToastStore } from '@e-commerce/delivery-manager/shared/data-access';
 import { Book } from '@e-commerce/shared/api-models';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
-import { setEngine } from 'crypto';
 import { FormEvent, useRef, useState } from 'react';
 
 type ChangeQuantityDialogProps = {
   bookId: Book['id'];
+  increseQuantity: (by: number) => void;
 };
 
-export const ChangeQuantityDialog = ({ bookId }: ChangeQuantityDialogProps) => {
+export const ChangeQuantityDialog = ({
+  bookId,
+  increseQuantity,
+}: ChangeQuantityDialogProps) => {
   const dialogRef = useRef<HTMLDialogElement | null>(null);
-  const inputRef = useRef<HTMLInputElement | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [quantity, setQuantity] = useState<number | null>(null);
   const toast = useToastStore();
@@ -21,16 +23,21 @@ export const ChangeQuantityDialog = ({ bookId }: ChangeQuantityDialogProps) => {
     { bookId: Book['id']; quantity: number }
   >({
     mutationFn: ({ bookId, quantity }) =>
-      axios.post(`${import.meta.env.VITE_API_URL}/books/${bookId}`, {
+      axios.post(`${import.meta.env.VITE_API_URL}/inventories/${bookId}`, {
         quantity,
       }),
-    onSuccess(data, variables, context) {
+    onSuccess(_, { quantity }) {
       toast.show(
-        `Available quanity of this book has been increased by ${variables.quantity}`,
+        `Available quanity of this book has been increased by ${quantity}`,
+        'success',
       );
+
+      increseQuantity(quantity);
+
+      closeDialog();
     },
-    onError(error, variables, context) {
-      toast.show(error.message);
+    onError(error) {
+      toast.show(error.message || 'Something went wrong!', 'error');
     },
   });
 

@@ -1,5 +1,5 @@
-import { useQuery } from '@tanstack/react-query';
-import { Book, Paginated } from '@e-commerce/shared/api-models';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { Inventory, Paginated } from '@e-commerce/shared/api-models';
 import axios from 'axios';
 import { SortButton, Paginator } from '@e-commerce/delivery-manager/shared/ui';
 import {
@@ -8,16 +8,18 @@ import {
 } from '@e-commerce/delivery-manager/supplies/data-access';
 import { FormEvent, useRef, useState } from 'react';
 import ChangeQuantityDialog from './components/change-quantity-dialog/change-quantity-dialog';
+import AddBookDialog from './components/add-book-dialog/add-book-dialog.component';
 
 export function SupplyList() {
   const searchTextRef = useRef<HTMLInputElement | null>(null);
   const [searchText, setSearchText] = useState('');
   const store = useSuppliesStore();
+  const queryClient = useQueryClient();
   const { isInitialLoading, isError, isRefetching, data } = useQuery<
-    Paginated<Book>
+    Paginated<Inventory>
   >({
     queryKey: [
-      'books',
+      'inventories',
       store.sort.by,
       store.sort.mode,
       store.page,
@@ -25,8 +27,8 @@ export function SupplyList() {
       searchText,
     ],
     queryFn: async () => {
-      const { data } = await axios.get<Paginated<Book>>(
-        `${import.meta.env.VITE_API_URL}/books`,
+      const { data } = await axios.get<Paginated<Inventory>>(
+        `${import.meta.env.VITE_API_URL}/inventories`,
         {
           params: {
             titleLike: searchText,
@@ -43,6 +45,26 @@ export function SupplyList() {
     refetchOnWindowFocus: false,
     keepPreviousData: true,
   });
+
+  const increaseQuantity = (inventoryId: Inventory['id'], by: number) => {
+    const updatedInventories = data?.items.map((inventory) =>
+      inventory.id === inventoryId
+        ? { ...inventory, quantity: inventory.quantity + by }
+        : { ...inventory },
+    );
+
+    queryClient.setQueryData<Paginated<Inventory>>(
+      [
+        'inventories',
+        store.sort.by,
+        store.sort.mode,
+        store.page,
+        store.size,
+        searchText,
+      ],
+      (prevState) => ({ ...prevState!, items: updatedInventories ?? [] }),
+    );
+  };
 
   const changeSort = (by: SortBy) => {
     store.setSort(by);
@@ -96,7 +118,7 @@ export function SupplyList() {
           </button>
         </form>
 
-        <button className="btn btn-primary">Add book</button>
+        <AddBookDialog />
       </div>
       <div className="w-full rounded-base p-base bg-base-300">
         {!data?.items?.length && !isRefetching ? (
@@ -115,10 +137,11 @@ export function SupplyList() {
                 <tr>
                   <th className="text-lg"></th>
                   <th className="text-lg">ID</th>
+                  <th className="text-lg">Title</th>
                   <th className="text-lg">
-                    <span>Title</span>
+                    <span>Quantity</span>
                     <SortButton
-                      by="title"
+                      by="quantity"
                       sort={store.sort}
                       changeSort={(event) => changeSort(event)}
                     />
@@ -127,15 +150,21 @@ export function SupplyList() {
                 </tr>
               </thead>
               <tbody>
-                {data?.items?.map((book, index) => (
-                  <tr key={book.id}>
+                {data?.items?.map((inventory, index) => (
+                  <tr key={inventory.id}>
                     <th className="text-lg">
                       {index + store.size * (store.page - 1) + 1}
                     </th>
-                    <td className="text-lg">{book.id}</td>
-                    <td className="text-lg">{book.title}</td>
+                    <td className="text-lg">{inventory.id}</td>
+                    <td className="text-lg">{inventory.book.title}</td>
+                    <td className="text-lg">{inventory.quantity}</td>
                     <td className="text-lg">
-                      <ChangeQuantityDialog bookId={book.id} />
+                      <ChangeQuantityDialog
+                        bookId={inventory.book.id}
+                        increseQuantity={(by) =>
+                          increaseQuantity(inventory.id, by)
+                        }
+                      />
                     </td>
                   </tr>
                 ))}

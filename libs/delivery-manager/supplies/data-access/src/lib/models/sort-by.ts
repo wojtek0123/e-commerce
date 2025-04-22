@@ -1,1 +1,1 @@
-export type SortBy = 'title';
+export type SortBy = 'quantity' | 'createdAt';

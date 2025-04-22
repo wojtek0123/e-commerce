@@ -2,10 +2,13 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  DestroyRef,
   effect,
   inject,
+  OnInit,
   untracked,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormControl,
   FormGroup,
@@ -26,6 +29,7 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { Message } from 'primeng/message';
 import { PasswordModule } from 'primeng/password';
+import { distinctUntilChanged } from 'rxjs';
 
 @Component({
   selector: 'lib-new-email-form',
@@ -44,14 +48,25 @@ import { PasswordModule } from 'primeng/password';
   ],
   templateUrl: './new-email-form.component.html',
 })
-export class NewEmailFormComponent {
+export class NewEmailFormComponent implements OnInit {
   private readonly informationStore = inject(InformationStore);
+  #destroyRef = inject(DestroyRef);
 
-  public form = new FormGroup({
-    email: new FormControl<string | null>(null, Validators.required),
+  public form: FormGroup<{
+    email: FormControl<string | null>;
+    password: FormControl<string | null>;
+    firstName: FormControl<string | null>;
+    lastName: FormControl<string | null>;
+    phone: FormControl<string | null>;
+  }> = new FormGroup({
+    email: new FormControl<string | null>(null),
     password: new FormControl<string | null>(null, Validators.required),
+    firstName: new FormControl<string | null>(null),
+    lastName: new FormControl<string | null>(null),
+    phone: new FormControl<string | null>(null),
   });
   public userEmail = this.informationStore.email;
+  user = this.informationStore.user;
   public loading = this.informationStore.loading;
 
   isDialogVisible = computed(() => !!this.informationStore.editingField());
@@ -59,11 +74,38 @@ export class NewEmailFormComponent {
   constructor() {
     effect(() => {
       const isDialogVisible = this.isDialogVisible();
+      const user = this.user();
 
       untracked(() => {
-        if (!isDialogVisible) this.form.reset();
+        if (!isDialogVisible)
+          this.form.reset(
+            {
+              email: null,
+              password: null,
+              firstName: user?.userInformation?.firstName,
+              lastName: user?.userInformation?.lastName,
+              phone: user?.userInformation?.phone,
+            },
+            { emitEvent: false },
+          );
       });
     });
+  }
+
+  ngOnInit(): void {
+    this.form.controls.email.valueChanges
+      .pipe(distinctUntilChanged(), takeUntilDestroyed(this.#destroyRef))
+      .subscribe((value) => {
+        if (value) {
+          this.form.addControl(
+            'password',
+            new FormControl<string | null>(null, Validators.required),
+            { emitEvent: false },
+          );
+        } else {
+          this.form.removeControl('password', { emitEvent: false });
+        }
+      });
   }
 
   public setEditingField(editingField: EditingField) {
@@ -77,10 +119,15 @@ export class NewEmailFormComponent {
 
     if (this.form.invalid) return;
 
+    const { email, password, firstName, lastName, phone } = this.form.value;
+
     this.informationStore.updateUser$({
       body: {
-        email: this.form.value.email ?? '',
-        password: this.form.value.password ?? '',
+        ...(email && { email }),
+        ...(firstName && { firstName }),
+        ...(lastName && { lastName }),
+        ...(phone && { phone }),
+        password: password ?? '',
       },
     });
   }

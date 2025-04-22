@@ -6,6 +6,7 @@ import { OrderPriceSummaryComponent } from './components/order-price-summary/ord
 import { OrderCheckoutComponent } from './components/order-checkout/order-checkout.component';
 import { CartItemsComponent } from './components/cart-items/cart-items.component';
 import { OrderContainerComponent } from '@e-commerce/client-web/cart/ui';
+import { CustomerInformationComponent } from './components/customer-information/customer-information.component';
 
 @Component({
   selector: 'lib-order-process',
@@ -17,6 +18,7 @@ import { OrderContainerComponent } from '@e-commerce/client-web/cart/ui';
     OrderCheckoutComponent,
     CartItemsComponent,
     OrderContainerComponent,
+    CustomerInformationComponent,
   ],
   templateUrl: './order-process.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

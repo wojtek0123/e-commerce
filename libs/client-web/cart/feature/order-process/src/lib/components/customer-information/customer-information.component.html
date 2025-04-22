@@ -1,0 +1,19 @@
+<lib-section-wrapper header="Personal information">
+  <lib-user-information
+    [user]="user()"
+    [removable]="false"
+    (editEvent)="edit()"
+  />
+</lib-section-wrapper>
+
+<p-dialog
+  header="Update personal information"
+  [visible]="isFormVisible()"
+  [modal]="true"
+  styleClass="w-full max-w-[48rem] mx-4 w-full"
+  [closeOnEscape]="true"
+  [dismissableMask]="true"
+  (visibleChange)="hideForm()"
+>
+  <lib-customer-information-form />
+</p-dialog>

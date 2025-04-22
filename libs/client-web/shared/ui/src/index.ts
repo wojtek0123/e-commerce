@@ -9,3 +9,4 @@ export * from './lib/error-and-retry-message/error-and-retry-message.component';
 export * from './lib/rating-input/rating-input.component';
 export * from './lib/accordion/accordion-panel.component';
 export * from './lib/accordion/accordion.component';
+export * from './lib/user-information/user-information.component';

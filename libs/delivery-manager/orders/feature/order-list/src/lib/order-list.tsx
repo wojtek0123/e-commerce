@@ -8,6 +8,10 @@ import { OrderStatus } from '@prisma/client';
 import { useToastStore } from '@e-commerce/delivery-manager/shared/data-access';
 import SortButton from './components/sort-header/sort-header';
 import { useOrdersStore } from '@e-commerce/deliery-manager/orders/data-access';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import { Button } from 'primereact/button';
+import { Badge } from 'primereact/badge';
 
 const socket = io(import.meta.env.VITE_API_URL);
 
@@ -81,7 +85,7 @@ export function OrderList() {
   };
 
   const onError = useCallback(() => {
-    toast.show('WebSocket encounters an error. Reload page.');
+    toast.show('WebSocket encounters an error. Reload page.', 'error');
   }, [toast]);
 
   function openOrderDetailsDialog(order: OrderDetails) {
@@ -92,24 +96,16 @@ export function OrderList() {
   }
 
   function statusToBadgeClass(status: OrderStatus) {
-    let severity = '';
-
     switch (status) {
       case 'NEW':
-        severity = 'badge-warning';
-        break;
+        return 'info';
       case 'PACKING':
-        severity = 'badge-secondary';
-        break;
+        return 'danger';
       case 'PREPARED_FOR_SHIPPING':
-        severity = 'badge-neutral';
-        break;
+        return 'warning';
       case 'SHIPPED':
-        severity = 'badge-accent';
-        break;
+        return 'success';
     }
-
-    return `badge badge-xl ${severity}`;
   }
 
   const changeSort = (by: SortBy) => {
@@ -160,16 +156,16 @@ export function OrderList() {
     return <div>Something went wrong! Try later!</div>;
   }
 
+  const changeStatusTemplate = () => {
+    return <Button label="Open" />;
+  };
+
+  const statusBadgeTemplate = (rowData: OrderDetails) => {
+    return <Badge severity={statusToBadgeClass(rowData.status)} />;
+  };
+
   return (
     <>
-      {!toast.hidden && (
-        <div className="toast toast-top toast-end z-[1001]">
-          <div className="alert alert-success">
-            <span>{toast.message}</span>
-          </div>
-        </div>
-      )}
-
       <dialog ref={orderDetailsDialog} className="modal">
         <div className="modal-box rounded-base flex flex-col gap-8 max-w-[868px]">
           <h3 className="text-center text-xl">Order no. {selectedOrderId}</h3>
@@ -182,64 +178,24 @@ export function OrderList() {
         </div>
       </dialog>
 
-      <div className="w-full">
-        {orders?.length !== 0 && (
-          <div className="overflow-x-auto">
-            <table
-              className={`table w-full ${isRefetching && 'animate-pulse pointer-events-none'}`}
-            >
-              <thead>
-                <tr>
-                  <th className="text-lg"></th>
-                  <th className="text-lg">Order no.</th>
-                  <th className="text-lg">
-                    <span> Created at </span>
-                    <SortButton
-                      by="createdAt"
-                      sort={store.sort}
-                      changeSort={(event) => changeSort(event)}
-                    />
-                  </th>
-                  <th className="text-lg">
-                    <span>Status</span>
+      <div className="w-full p-base bg-content-background rounded-base min-h-content">
+        <div className="overflow-x-auto ">
+          <DataTable value={orders}>
+            <Column header="Order no" />
+            <Column header="Created at" field="creaedAt" sortable />
+            <Column
+              header="Status"
+              field="status"
+              sortable
+              body={statusBadgeTemplate}
+            />
+            <Column header="" body={changeStatusTemplate} />
+          </DataTable>
 
-                    <SortButton
-                      by="status"
-                      sort={store.sort}
-                      changeSort={(event) => changeSort(event)}
-                    />
-                  </th>
-                  <th className="text-lg"></th>
-                </tr>
-              </thead>
-              <tbody>
-                {orders?.length &&
-                  orders.map((order, index) => (
-                    <tr key={order.id}>
-                      <th className="text-lg">{index + 1}</th>
-                      <td className="text-lg">{order.id}</td>
-                      <td className="text-lg">
-                        {new Date(order.createdAt).toUTCString()}
-                      </td>
-                      <td>
-                        <span className={statusToBadgeClass(order.status)}>
-                          {order.status}
-                        </span>
-                      </td>
-                      <td>
-                        <button
-                          className="btn btn-primary min-w-max"
-                          onClick={() => openOrderDetailsDialog(order)}
-                        >
-                          Pack order
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
+          <div className="w-full py-12 text-center text-4xl font-bold">
+            Not found any orders!
           </div>
-        )}
+        </div>
       </div>
     </>
   );

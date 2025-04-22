@@ -1,10 +1,10 @@
 import { render } from '@testing-library/react';
 
-import DeliveryManagerCoreFeatureNav from './delivery-manager-core-feature-nav';
+import Nav from './nav';
 
 describe('DeliveryManagerCoreFeatureNav', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<DeliveryManagerCoreFeatureNav />);
+    const { baseElement } = render(<Nav />);
     expect(baseElement).toBeTruthy();
   });
 });

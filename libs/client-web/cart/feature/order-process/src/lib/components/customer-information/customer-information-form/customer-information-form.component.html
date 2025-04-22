@@ -1,0 +1,51 @@
+<form
+  class="flex flex-col gap-2 bg-content-background p-4 rounded-base"
+  [formGroup]="form"
+  (ngSubmit)="submit()"
+>
+  <lib-form-field>
+    <lib-label idFor="current-email">Your email</lib-label>
+    <input pInputText id="current-email" [value]="email()" [disabled]="true" />
+  </lib-form-field>
+
+  <lib-form-field>
+    <lib-label idFor="fistname">What is your first name?</lib-label>
+    <input pInputText id="firstname" formControlName="firstName" />
+    @if (form.controls.firstName.invalid && form.controls.firstName.dirty) {
+      <p-message libErrorMessage>First name is required</p-message>
+    }
+  </lib-form-field>
+
+  <lib-form-field>
+    <lib-label idFor="lastName">What is your last name?</lib-label>
+    <input pInputText id="lastName" formControlName="lastName" />
+    @if (form.controls.lastName.invalid && form.controls.lastName.dirty) {
+      <p-message libErrorMessage>Last name is required</p-message>
+    }
+  </lib-form-field>
+
+  <lib-form-field>
+    <lib-label idFor="phone">What is your phone number?</lib-label>
+    <input pInputText id="phone" formControlName="phone" />
+    @if (form.controls.phone.invalid && form.controls.phone.dirty) {
+      <p-message libErrorMessage>Phone is required</p-message>
+    }
+  </lib-form-field>
+
+  <div class="grid grid-cols-2 gap-4 mt-4">
+    <p-button
+      severity="secondary"
+      [outlined]="true"
+      styleClass="w-full"
+      label="Cancel"
+      (onClick)="hideForm()"
+    />
+    <p-button
+      type="submit"
+      severity="secondary"
+      styleClass="w-full"
+      label="Save"
+      [loading]="loading()"
+    />
+  </div>
+</form>

@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import {
   AddressStore,
   CartStore,
+  CustomerInformationStore,
   PaymentStore,
   ShippingStore,
 } from '@e-commerce/client-web/cart/data-access';
@@ -30,12 +31,14 @@ export class OrderCheckoutComponent {
   #addressStore = inject(AddressStore);
   #shippingStore = inject(ShippingStore);
   #paymentStore = inject(PaymentStore);
+  #customerInformationStore = inject(CustomerInformationStore);
   #router = inject(Router);
   #appRoutePaths = inject(APP_ROUTE_PATHS_TOKEN);
 
   selectedUserAddress = this.#addressStore.selectedAddress;
   selectedShippingMethod = this.#shippingStore.selectedShipping;
   selectedPaymentMethod = this.#paymentStore.selectedPayment;
+  user = this.#customerInformationStore.user;
 
   loading = computed(
     () =>
@@ -44,6 +47,15 @@ export class OrderCheckoutComponent {
       this.#paymentStore.creditCard.loading(),
   );
 
+  isCustomerInformationInvalid = computed(() => {
+    const user = this.user();
+
+    return [
+      user?.userInformation?.firstName ?? null,
+      user?.userInformation?.lastName ?? null,
+      user?.userInformation?.phone ?? null,
+    ].some((value) => !value);
+  });
   isCartEmpty = computed(() => this.#cartStore.cartItems().length === 0);
   isAddressSelected = computed(() => this.selectedUserAddress());
   isShippingMethodSelected = computed(() => this.selectedShippingMethod());
@@ -60,6 +72,7 @@ export class OrderCheckoutComponent {
       !this.isAddressSelected(),
       !this.isShippingMethodSelected(),
       !this.isPaymentMethodSelected(),
+      this.isCustomerInformationInvalid(),
       this.isSixDigitCodeInvalid() || !this.creditCard,
       this.isCartEmpty(),
     ].some((error) => !!error),

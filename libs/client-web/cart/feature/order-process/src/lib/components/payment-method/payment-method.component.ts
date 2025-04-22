@@ -18,7 +18,10 @@ import { SixDigitCodeFormComponent } from './six-digit-code-form/six-digit-code-
 import { PaymentMethod } from '@e-commerce/shared/api-models';
 import { OrderProcessItemDirective } from '@e-commerce/client-web/shared/utils';
 import { DialogModule } from 'primeng/dialog';
-import { ErrorAndRetryMessageComponent } from '@e-commerce/client-web/shared/ui';
+import {
+  ConfirmationDialogComponent,
+  ErrorAndRetryMessageComponent,
+} from '@e-commerce/client-web/shared/ui';
 
 @Component({
   selector: 'lib-payment-method',
@@ -34,6 +37,7 @@ import { ErrorAndRetryMessageComponent } from '@e-commerce/client-web/shared/ui'
     DialogModule,
     ToggleableContentComponent,
     ErrorAndRetryMessageComponent,
+    ConfirmationDialogComponent,
   ],
   templateUrl: './payment-method.component.html',
   styleUrl: './payment-method.component.scss',
@@ -49,6 +53,7 @@ export class PaymentMethodComponent {
   loading = this.#paymentStore.creditCard.loading;
   error = this.#paymentStore.creditCard.error;
   payments = signal<PaymentMethod[]>(['CREDIT_CARD', 'SIX_DIGIT_CODE']);
+  isDeleteDialogVisible = this.#paymentStore.creditCard.isDeleteDialogVisible;
 
   isCreditCardFormVisible = this.#paymentStore.isCreditCardFormVisible;
   creditCardFormType = this.#paymentStore.creditCardFormType;
@@ -67,5 +72,13 @@ export class PaymentMethodComponent {
 
   getCreditCard() {
     this.#paymentStore.getCreditCard();
+  }
+
+  toggleDeleteDialogConfirmation() {
+    this.#paymentStore.toggleDeleteCreditCardConfirmation();
+  }
+
+  deleteCreditCard() {
+    this.#paymentStore.deleteCreditCard();
   }
 }

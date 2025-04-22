@@ -3,3 +3,4 @@ export * from './lib/store/order-process/address.store';
 export * from './lib/store/order-process/payment.store';
 export * from './lib/store/order-process/shipping.store';
 export * from './lib/store/order-process/order-process.store';
+export * from './lib/store/order-process/customer-information.store';

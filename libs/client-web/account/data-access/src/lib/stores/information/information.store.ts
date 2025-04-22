@@ -31,7 +31,7 @@ const initialInformationState: InformationState = {
   editingField: null,
 };
 
-export type EditingField = 'email' | 'password' | null;
+export type EditingField = 'user-information' | 'password' | null;
 
 export const InformationStore = signalStore(
   withState(initialInformationState),

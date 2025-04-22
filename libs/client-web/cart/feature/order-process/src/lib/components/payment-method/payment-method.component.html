@@ -28,26 +28,41 @@
       <lib-toggleable-content
         [isExpanded]="selectedPaymentMethod() === creditCardType"
       >
+          @if (creditCard().data) {
         <div class="flex items-center justify-between p-4">
-          <div class="flex items-center gap-4">
-            <img
-              class="bg-white w-6"
-              src="assets/icons/visa-card.svg"
-              alt="Visa card"
-            />
-            <img
-              class="bg-white w-6"
-              src="assets/icons/mastercard.svg"
-              alt="Mastercard"
-            />
-            <span> {{ creditCard().data?.number }}</span>
-          </div>
+            <div class="flex items-center gap-4">
+              <img
+                class="bg-white w-6"
+                src="assets/icons/visa-card.svg"
+                alt="Visa card"
+              />
+              <img
+                class="bg-white w-6"
+                src="assets/icons/mastercard.svg"
+                alt="Mastercard"
+              />
+              <span> {{ creditCard().data?.number }}</span>
+            </div>
+
+              <div class="flex items-center">
           <p-button
-            ariaLabel="Update creadit card information"
+            ariaLabel="Detele credit card information"
+            icon="pi pi-trash"
+                [text]="true"
+                size="small"
+            (onClick)="toggleDeleteDialogConfirmation()"
+          />
+          <p-button
+            ariaLabel="Update credit card information"
             icon="pi pi-pencil"
+                [text]="true"
+                size="small"
             (onClick)="showCreditCardForm('update')"
           />
+
+</div>
         </div>
+          }
 
         <p-button
           label="Add"
@@ -77,6 +92,16 @@
     </lib-toggleable-content>
   }
 </lib-section-wrapper>
+
+
+<lib-confirmation-dialog
+  header="Address deletion"
+  [isVisible]="isDeleteDialogVisible()"
+  (onCancel)="toggleDeleteDialogConfirmation()"
+  (onConfirm)="deleteCreditCard()"
+>
+  <div>Are you sure you want to <strong>delete</strong> this credit card?</div>
+</lib-confirmation-dialog>
 
 <p-dialog
   [header]="

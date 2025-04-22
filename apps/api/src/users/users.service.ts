@@ -33,7 +33,7 @@ export class UsersService {
   }
 
   findAll(filters: { roleIn: string }) {
-    let roles = parseQueryParams(filters.roleIn);
+    const roles = parseQueryParams(filters.roleIn);
 
     const validatedRoles = roles.filter((role) =>
       ([Role.USER, Role.ADMIN] as string[]).includes(role),
@@ -66,6 +66,7 @@ export class UsersService {
         email: true,
         role: true,
         updatedAt: true,
+        userInformation: true,
       },
     });
 
@@ -89,23 +90,25 @@ export class UsersService {
       throw new UnauthorizedException();
     }
 
-    if (!body.password) {
+    if (!body.password && body.email) {
       throw new BadRequestException('Current password is required');
     }
 
-    const isPasswordCorrect = await compare(body.password, user.password);
-
     let hashedPassword: string | undefined;
 
-    if (body.newPassword) {
-      if (!isPasswordCorrect) {
-        throw new BadRequestException('Incorrect password');
-      }
+    if (body.password) {
+      const isPasswordCorrect = await compare(body.password, user.password);
 
-      hashedPassword = await hash(
-        body.newPassword.toString(),
-        +this.config.get<string>('ROUNDS_OF_HASHING'),
-      );
+      if (body.newPassword) {
+        if (!isPasswordCorrect) {
+          throw new BadRequestException('Incorrect password');
+        }
+
+        hashedPassword = await hash(
+          body.newPassword.toString(),
+          +this.config.get<string>('ROUNDS_OF_HASHING'),
+        );
+      }
     }
 
     if (body.email) {
@@ -118,11 +121,32 @@ export class UsersService {
       }
     }
 
+    const userInformation = await this.prisma.userInformation.findUnique({
+      where: { userId },
+    });
+
     return this.prisma.user.update({
       where: { id: userId },
       data: {
         ...(hashedPassword && { password: hashedPassword }),
         ...(body.email && { email: body.email }),
+        userInformation: {
+          ...(userInformation
+            ? {
+                update: {
+                  ...(body.firstName && { firstName: body.firstName }),
+                  ...(body.lastName && { lastName: body.lastName }),
+                  ...(body.phone && { phone: body.phone }),
+                },
+              }
+            : {
+                create: {
+                  firstName: body.firstName,
+                  lastName: body.lastName,
+                  phone: body.phone,
+                },
+              }),
+        },
       },
       select: {
         password: false,
@@ -131,6 +155,7 @@ export class UsersService {
         email: true,
         role: true,
         updatedAt: true,
+        userInformation: true,
       },
     });
   }

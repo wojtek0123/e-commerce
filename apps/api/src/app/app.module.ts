@@ -23,6 +23,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { join } from 'path';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { BookReviewsModule } from '../book-reviews/book-reviews.module';
+import { UserInformationsModule } from '../user-informations/user-informations.module';
 
 @Module({
   controllers: [AppController],
@@ -64,6 +65,7 @@ import { BookReviewsModule } from '../book-reviews/book-reviews.module';
     CreditCardsModule,
     FavouriteBooksListsModule,
     BookReviewsModule,
+    UserInformationsModule,
   ],
 })
 export class AppModule {}

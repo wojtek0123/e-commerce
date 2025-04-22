@@ -19,7 +19,10 @@ import { NewPasswordFormComponent } from '../new-password-form/new-password-form
 import { DialogModule } from 'primeng/dialog';
 import { NewEmailFormComponent } from '../new-email-form/new-email-form.component';
 import { AuthService } from '@e-commerce/client-web/auth/api';
-import { ErrorAndRetryMessageComponent } from '@e-commerce/client-web/shared/ui';
+import {
+  ErrorAndRetryMessageComponent,
+  UserInformationComponent,
+} from '@e-commerce/client-web/shared/ui';
 
 @Component({
   selector: 'lib-account-data',
@@ -34,6 +37,7 @@ import { ErrorAndRetryMessageComponent } from '@e-commerce/client-web/shared/ui'
     DialogModule,
     NewEmailFormComponent,
     ErrorAndRetryMessageComponent,
+    UserInformationComponent,
   ],
   templateUrl: './account-data.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -59,7 +63,8 @@ export class AccountDataComponent {
 
   isDialogVisible = computed(() => !!this.editingField());
   dialogHeader = computed(
-    () => `Change ${this.editingField() === 'password' ? 'password' : 'email'}`,
+    () =>
+      `Update ${this.editingField() === 'password' ? 'password' : 'user information'}`,
   );
 
   getUserInformation() {

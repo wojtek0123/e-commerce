@@ -7,6 +7,7 @@ import {
 import { CreditCardApiService } from '@e-commerce/client-web/shared/data-access/api-services';
 import { tapResponse } from '@ngrx/operators';
 import {
+  getState,
   patchState,
   signalStore,
   withComputed,
@@ -17,7 +18,7 @@ import {
 } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { MessageService } from 'primeng/api';
-import { pipe, switchMap, tap } from 'rxjs';
+import { filter, map, pipe, switchMap, tap } from 'rxjs';
 
 interface PaymentState {
   creditCard: {
@@ -28,6 +29,7 @@ interface PaymentState {
       isVisible: boolean;
       type: CreditCardFormType;
     };
+    isDeleteDialogVisible: boolean;
   };
   sixDigitCode: string | null;
   selectedPayment: PaymentMethod | null;
@@ -44,6 +46,7 @@ const initialPaymentState: PaymentState = {
       isVisible: false,
       type: 'add',
     },
+    isDeleteDialogVisible: false,
   },
   sixDigitCode: null,
   selectedPayment: 'CREDIT_CARD',
@@ -81,12 +84,23 @@ export const PaymentStore = signalStore(
                 }));
               },
               error: (error: ResponseError) => {
+                if (error.error.statusCode === 404) {
+                  patchState(store, (state) => ({
+                    creditCard: {
+                      ...state.creditCard,
+                      loading: false,
+                    },
+                  }));
+                }
+
                 patchState(store, (state) => ({
                   creditCard: {
                     ...state.creditCard,
                     error:
-                      error?.error?.message ||
-                      'An error occurred while getting credit card information',
+                      error.error.statusCode === 404
+                        ? null
+                        : error?.error?.message ||
+                          'An error occurred while getting credit card information',
                     loading: false,
                   },
                 }));
@@ -118,6 +132,10 @@ export const PaymentStore = signalStore(
                       ...state.creditCard,
                       data: creditCard,
                       loading: false,
+                      form: {
+                        ...state.creditCard.form,
+                        isVisible: false,
+                      },
                     },
                   }));
                 },
@@ -145,6 +163,53 @@ export const PaymentStore = signalStore(
         ),
       ),
     ),
+    deleteCreditCard: rxMethod<void>(
+      pipe(
+        tap(() => {
+          patchState(store, (state) => ({
+            creditCard: { ...state.creditCard, loading: true },
+          }));
+        }),
+        map(() => ({ id: getState(store).creditCard.data?.id })),
+        filter(({ id }) => !!id),
+        switchMap(({ id }) =>
+          store.creditCardApi.delete$(id!).pipe(
+            tapResponse({
+              next: () => {
+                patchState(store, (state) => ({
+                  creditCard: {
+                    ...state.creditCard,
+                    error: null,
+                    data: null,
+                    loading: false,
+                    isDeleteDialogVisible: false,
+                  },
+                }));
+              },
+              error: (error: ResponseError) => {
+                patchState(store, (state) => ({
+                  creditCard: {
+                    ...state.creditCard,
+                    data: null,
+                    loading: false,
+                    error:
+                      error?.error?.message ??
+                      'An error occurred while adding credit card',
+                  },
+                }));
+                store.messageService.add({
+                  summary: 'Error',
+                  detail:
+                    error?.error?.message ??
+                    'An error occurred while adding credit card',
+                  severity: 'error',
+                });
+              },
+            }),
+          ),
+        ),
+      ),
+    ),
     showCreditCardForm: (type: CreditCardFormType) => {
       patchState(store, (state) => ({
         creditCard: { ...state.creditCard, form: { isVisible: true, type } },
@@ -163,6 +228,14 @@ export const PaymentStore = signalStore(
     },
     enterSixDigitCode: (code: string | null) => {
       patchState(store, { sixDigitCode: code });
+    },
+    toggleDeleteCreditCardConfirmation: () => {
+      patchState(store, (state) => ({
+        creditCard: {
+          ...state.creditCard,
+          isDeleteDialogVisible: !state.creditCard.isDeleteDialogVisible,
+        },
+      }));
     },
   })),
   withHooks({

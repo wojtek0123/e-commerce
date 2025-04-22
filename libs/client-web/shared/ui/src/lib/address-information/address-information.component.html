@@ -2,25 +2,10 @@
   <button
     libOrderProcessItem
     [isActive]="isActive()"
-    class="flex flex-col items-start !justify-start gap-4 pr-14"
+    class="flex flex-col items-start !justify-start gap-4 pr-[5.5rem]"
     [class.pointer-events-none]="!clickable()"
     (click)="select()"
   >
-    <!--<span class="flex gap-4 justify-start">
-      <span class="text-sm text-muted-color font-semibold w-24 text-start">
-        Phone
-      </span>
-      <span class="text-base !text-start">{{ address()?.phone }}</span>
-    </span>
-    <span class="flex gap-4 justify-start">
-      <span class="text-sm text-muted-color font-semibold w-24 text-start">
-        Name
-      </span>
-      <span class="text-base flex justify-start">
-        {{ address()?.firstName }}
-        {{ address()?.lastName }}
-      </span> </span
-    >-->
     <span class="flex gap-4">
       <span class="text-sm text-muted-color font-semibold min-w-24 text-start">
         Address
@@ -36,15 +21,20 @@
       </span>
     </span>
   </button>
-  <div class="flex flex-col gap-4 absolute top-1/2 right-2 -translate-y-1/2">
+  <div class="flex absolute top-1/2 right-2 -translate-y-1/2">
     <p-button
+      size="small"
+      [text]="true"
       data-testId="edit-button"
+      class=""
       ariaLabel="Edit address"
       icon="pi pi-pencil"
       (onClick)="edit()"
     />
-    @if (removeable()) {
+    @if (removable()) {
       <p-button
+        size="small"
+        [text]="true"
         data-testId="delete-button"
         ariaLabel="Delete address"
         icon="pi pi-trash"

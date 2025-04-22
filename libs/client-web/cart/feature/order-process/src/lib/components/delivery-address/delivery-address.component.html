@@ -50,7 +50,7 @@
 </lib-confirmation-dialog>
 
 <p-dialog
-  header="Address form"
+  [header]="updatingAddress() ? 'Update address' :  'Add address'"
   [visible]="isFormVisible()"
   [modal]="true"
   styleClass="w-full max-w-[48rem] mx-4 w-full"

@@ -14,7 +14,7 @@
   </lib-form-field>
 
   <lib-form-field>
-    <lib-label idFor="new-email">New email</lib-label>
+    <lib-label idFor="new-email">What is your new email?</lib-label>
     <input pInputText id="new-email" [email]="true" formControlName="email" />
     @if (form.controls.email.invalid && form.controls.email.dirty) {
       <p-message libErrorMessage>Enter valid email</p-message>
@@ -22,18 +22,35 @@
   </lib-form-field>
 
   <lib-form-field>
-    <lib-label idFor="password">Password to confirm</lib-label>
-    <p-password
-      id="password"
-      formControlName="password"
-      [fluid]="true"
-      [toggleMask]="true"
-      [feedback]="false"
-    />
-    @if (form.controls.password.invalid && form.controls.password.dirty) {
-      <p-message libErrorMessage>Password is required</p-message>
-    }
+    <lib-label idFor="fistname">What is your first name?</lib-label>
+    <input pInputText id="firstname" formControlName="firstName" />
   </lib-form-field>
+
+  <lib-form-field>
+    <lib-label idFor="lastName">What is your last name?</lib-label>
+    <input pInputText id="lastName" formControlName="lastName" />
+  </lib-form-field>
+
+  <lib-form-field>
+    <lib-label idFor="phone">What is your phone number?</lib-label>
+    <input pInputText id="phone" formControlName="phone" />
+  </lib-form-field>
+
+  @if (form.controls.password) {
+    <lib-form-field>
+      <lib-label idFor="password">Password to confirm</lib-label>
+      <p-password
+        id="password"
+        formControlName="password"
+        [fluid]="true"
+        [toggleMask]="true"
+        [feedback]="false"
+      />
+      @if (form.controls.password.invalid && form.controls.password.dirty) {
+        <p-message libErrorMessage>Password is required</p-message>
+      }
+    </lib-form-field>
+  }
 
   <div class="grid grid-cols-2 gap-4 mt-4">
     <p-button
