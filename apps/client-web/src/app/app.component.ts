@@ -80,7 +80,7 @@ export class AppComponent implements OnInit {
       .subscribe((event) => {
         if (event === 'auth-success' || event === 'init-database') {
           this.#cartService.syncCartAndFetchSession();
-          this.#favouriteBooksService.getBooks();
+          this.#favouriteBooksService.getFavouriteBooks();
         }
         if (event === 'logout-success') {
           this.#cartService.clearCartAndSession();

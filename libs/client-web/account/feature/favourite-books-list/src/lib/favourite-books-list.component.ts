@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FavouriteBooksListStore } from '@e-commerce/client-web/account/data-access';
 import { BooksGridComponent } from '@e-commerce/client-web/shared/ui';
 import { CartService } from '@e-commerce/client-web/cart/api';
@@ -9,23 +9,27 @@ import { Book } from '@e-commerce/shared/api-models';
   imports: [BooksGridComponent],
   templateUrl: './favourite-books-list.component.html',
 })
-export class FavouriteBooksListComponent {
-  #store = inject(FavouriteBooksListStore);
+export class FavouriteBooksListComponent implements OnInit {
+  #favouriteBooksListStore = inject(FavouriteBooksListStore);
   #cartService = inject(CartService);
 
-  favouriteBooks = this.#store.books;
-  loading = this.#store.loading;
-  error = this.#store.error;
+  favouriteBooks = this.#favouriteBooksListStore.books;
+  loading = this.#favouriteBooksListStore.loading;
+  error = this.#favouriteBooksListStore.error;
 
-  retry() {
-    this.#store.getFavouriteBooks();
+  ngOnInit(): void {
+    this.#favouriteBooksListStore.getFavouriteBooks();
   }
 
-  addToCart(book: Book) {
+  retry() {
+    this.#favouriteBooksListStore.getFavouriteBooks();
+  }
+
+  addBookToCart(book: Book) {
     this.#cartService.addBook(book, 1);
   }
 
-  addToFavourite({ id }: Book) {
-    this.#store.addToFavourite({ bookId: id });
+  addBookToFavourite({ id }: Book) {
+    this.#favouriteBooksListStore.addToFavourite({ bookId: id });
   }
 }

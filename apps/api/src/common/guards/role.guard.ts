@@ -24,8 +24,6 @@ export class RolesGuard implements CanActivate {
 
     const authHeader = request.headers.authorization;
 
-    // this.prisma.
-
     if (!authHeader) return false;
 
     const authToken = decode(authHeader.split(' ')[1]);

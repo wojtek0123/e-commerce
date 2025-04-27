@@ -8,11 +8,11 @@ export class FavouriteBooksListService {
 
   favouriteBooks = computed(() => this.#favouriteBooksListStore.books());
 
-  addToFavourite(bookId: Book['id']) {
+  addBookToFavourite(bookId: Book['id']) {
     this.#favouriteBooksListStore.addToFavourite({ bookId });
   }
 
-  getBooks() {
+  getFavouriteBooks() {
     this.#favouriteBooksListStore.getFavouriteBooks();
   }
 }

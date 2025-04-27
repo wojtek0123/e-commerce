@@ -107,7 +107,9 @@
           <td class="h-[11rem] relative">
             <img
               class="aspect-[3/4] max-w-32 object-cover py-4 rounded-base"
-              [ngSrc]="item.book.coverImage"
+              [ngSrc]="
+                item.book.coverImage || 'assets/images/image-not-found.webp'
+              "
               [alt]="item.book.title"
               fill
             />

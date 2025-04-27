@@ -21,7 +21,6 @@ import { ErrorMessageDirective } from '@e-commerce/client-web/shared/utils';
 import { Button } from 'primeng/button';
 import { InputText } from 'primeng/inputtext';
 import { Message } from 'primeng/message';
-import { Password } from 'primeng/password';
 
 @Component({
   selector: 'lib-customer-information-form',
@@ -32,7 +31,6 @@ import { Password } from 'primeng/password';
     FormFieldComponent,
     LabelComponent,
     Message,
-    Password,
     ErrorMessageDirective,
     Button,
     InputText,

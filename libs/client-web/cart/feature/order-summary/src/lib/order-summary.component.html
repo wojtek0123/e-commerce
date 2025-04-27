@@ -37,7 +37,12 @@
             }}
           </span>
         </div>
-        <p-button icon="pi pi-pencil" (onClick)="edit()" />
+        <p-button
+          [text]="true"
+          size="small"
+          icon="pi pi-pencil"
+          (onClick)="edit()"
+        />
       </div>
     </lib-section-wrapper>
 
@@ -62,7 +67,12 @@
             <span>Six digit code</span>
           }
         </div>
-        <p-button icon="pi pi-pencil" (onClick)="edit()" />
+        <p-button
+          size="small"
+          [text]="true"
+          icon="pi pi-pencil"
+          (onClick)="edit()"
+        />
       </div>
     </lib-section-wrapper>
 

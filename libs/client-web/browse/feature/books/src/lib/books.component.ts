@@ -115,7 +115,7 @@ export class BooksComponent implements OnInit {
   }
 
   addToFavourite({ id }: Book) {
-    this.#favouriteBooksListService.addToFavourite(id);
+    this.#favouriteBooksListService.addBookToFavourite(id);
   }
 
   changeSort(booksSort: BooksSort) {

@@ -94,7 +94,6 @@ export const OrdersStore = signalStore(
             selectedOrder: { data: null, loading: true, error: null },
           }),
         ),
-        filter(({ id }) => !!id),
         switchMap(({ id }) =>
           ordersApi.getUnique(id).pipe(
             tapResponse({

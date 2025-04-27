@@ -28,8 +28,8 @@
       <lib-toggleable-content
         [isExpanded]="selectedPaymentMethod() === creditCardType"
       >
-          @if (creditCard().data) {
-        <div class="flex items-center justify-between p-4">
+        @if (creditCard().data) {
+          <div class="flex items-center justify-between p-4">
             <div class="flex items-center gap-4">
               <img
                 class="bg-white w-6"
@@ -44,32 +44,33 @@
               <span> {{ creditCard().data?.number }}</span>
             </div>
 
-              <div class="flex items-center">
-          <p-button
-            ariaLabel="Detele credit card information"
-            icon="pi pi-trash"
+            <div class="flex items-center">
+              <p-button
+                ariaLabel="Detele credit card information"
+                icon="pi pi-trash"
                 [text]="true"
                 size="small"
-            (onClick)="toggleDeleteDialogConfirmation()"
-          />
-          <p-button
-            ariaLabel="Update credit card information"
-            icon="pi pi-pencil"
+                (onClick)="toggleDeleteDialogConfirmation()"
+              />
+              <p-button
+                ariaLabel="Update credit card information"
+                icon="pi pi-pencil"
                 [text]="true"
                 size="small"
-            (onClick)="showCreditCardForm('update')"
+                (onClick)="showCreditCardForm('update')"
+              />
+            </div>
+          </div>
+        }
+
+        @if (!creditCard().data) {
+          <p-button
+            label="Add"
+            severity="secondary"
+            styleClass="w-full mt-4"
+            (onClick)="showCreditCardForm('add')"
           />
-
-</div>
-        </div>
-          }
-
-        <p-button
-          label="Add"
-          severity="secondary"
-          styleClass="w-full"
-          (onClick)="showCreditCardForm('add')"
-        />
+        }
       </lib-toggleable-content>
     </div>
 
@@ -92,7 +93,6 @@
     </lib-toggleable-content>
   }
 </lib-section-wrapper>
-
 
 <lib-confirmation-dialog
   header="Address deletion"

@@ -2,6 +2,7 @@ import { inject } from '@angular/core';
 import {
   patchState,
   signalStore,
+  withHooks,
   withMethods,
   withProps,
   withState,
@@ -43,10 +44,11 @@ export const FavouriteBooksListStore = signalStore(
         switchMap(() =>
           store._favouriteBooksListApi.get().pipe(
             tapResponse({
-              next: (favouriteBooksList) => {
+              next: ({ books }) => {
                 patchState(store, {
                   loading: false,
-                  books: favouriteBooksList.books ?? [],
+                  error: null,
+                  books: books ?? [],
                 });
               },
               error: (error: ResponseError) => {

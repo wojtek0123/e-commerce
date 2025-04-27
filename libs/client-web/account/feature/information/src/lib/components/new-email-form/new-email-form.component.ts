@@ -52,13 +52,13 @@ export class NewEmailFormComponent implements OnInit {
   private readonly informationStore = inject(InformationStore);
   #destroyRef = inject(DestroyRef);
 
-  public form: FormGroup<{
+  public form = new FormGroup<{
     email: FormControl<string | null>;
-    password: FormControl<string | null>;
+    password?: FormControl<string | null>;
     firstName: FormControl<string | null>;
     lastName: FormControl<string | null>;
     phone: FormControl<string | null>;
-  }> = new FormGroup({
+  }>({
     email: new FormControl<string | null>(null),
     password: new FormControl<string | null>(null, Validators.required),
     firstName: new FormControl<string | null>(null),

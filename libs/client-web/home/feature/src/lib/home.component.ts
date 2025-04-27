@@ -115,7 +115,7 @@ export class HomeComponent implements OnDestroy {
   }
 
   addBookToFavourite({ id }: Book) {
-    this.#favouriteBooksListService.addToFavourite(id);
+    this.#favouriteBooksListService.addBookToFavourite(id);
   }
 
   retry() {

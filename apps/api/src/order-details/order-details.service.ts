@@ -15,6 +15,7 @@ import { OrderStatus, Role } from '@prisma/client';
 import { EventsGateway } from '../app/gateways/events.gateway';
 import { parseNumber } from '../common/utils/parse-number';
 import { Prisma } from '@prisma/client';
+import { getUserIdFromAccessToken } from '../common/utils/get-user-id-from-access-token';
 
 @Injectable()
 export class OrderDetailsService {
@@ -30,7 +31,8 @@ export class OrderDetailsService {
   ) {
     let userId: string;
     try {
-      userId = String(decode(authHeader.split(' ')[1]).sub);
+      // userId = String(decode(authHeader.split(' ')[1]).sub);
+      userId = getUserIdFromAccessToken(authHeader);
     } catch (error: unknown) {
       throw new UnauthorizedException('Invalid authentication token');
     }
