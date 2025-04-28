@@ -52,7 +52,11 @@ export class PaymentMethodComponent {
   creditCard = this.#paymentStore.creditCard;
   loading = this.#paymentStore.creditCard.loading;
   error = this.#paymentStore.creditCard.error;
-  payments = signal<PaymentMethod[]>(['CREDIT_CARD', 'SIX_DIGIT_CODE']);
+  payments = signal([
+    'CREDIT_CARD',
+    'SIX_DIGIT_CODE',
+  ] satisfies PaymentMethod[]);
+
   isDeleteDialogVisible = this.#paymentStore.creditCard.isDeleteDialogVisible;
 
   isCreditCardFormVisible = this.#paymentStore.isCreditCardFormVisible;

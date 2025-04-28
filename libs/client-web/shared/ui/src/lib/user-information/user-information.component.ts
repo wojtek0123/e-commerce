@@ -4,14 +4,14 @@ import {
   input,
   output,
 } from '@angular/core';
-import { User, UserInformation } from '@e-commerce/shared/api-models';
+import { User } from '@e-commerce/shared/api-models';
 import { Button } from 'primeng/button';
 
 @Component({
   selector: 'lib-user-information',
   templateUrl: './user-information.component.html',
   imports: [Button],
-  host: { class: 'relative' },
+  host: { class: 'relative @container' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserInformationComponent {

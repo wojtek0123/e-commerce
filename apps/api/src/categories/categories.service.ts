@@ -20,8 +20,8 @@ export class CategoriesService {
     page?: string;
     size?: string;
   }) {
-    const pageNumber = parseNumber(opts.page) || 1;
-    const sizeNumber = parseNumber(opts.size) || 20;
+    const pageNumber = parseNumber(opts.page);
+    const sizeNumber = parseNumber(opts.size);
     const nameIn = parseQueryParams(opts.nameIn);
 
     const whereClause: Prisma.CategoryWhereInput = {
