@@ -18,9 +18,7 @@ export function SupplyList() {
   const store = useSuppliesStore();
   const queryClient = useQueryClient();
   const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
-  const { isInitialLoading, isError, isRefetching, data } = useQuery<
-    Paginated<Inventory>
-  >({
+  const { isLoading, isError, data } = useQuery<Paginated<Inventory>>({
     queryKey: [
       'inventories',
       store.sort.by,
@@ -69,30 +67,9 @@ export function SupplyList() {
     );
   };
 
-  const changeSort = (by: SortBy) => {
-    store.setSort(by);
-  };
-
   const setPage = (page: number) => {
     store.setPage(page);
   };
-
-  if (isInitialLoading) {
-    const skeletons = new Array(20).fill(0, 0, 19);
-
-    return (
-      <div className="flex flex-col gap-base w-full">
-        {skeletons.map((_, index) => (
-          <div className="grid grid-cols-4 gap-12" key={index}>
-            <div className="skeleton h-10 w-full rounded-base"></div>
-            <div className="skeleton h-10 w-full rounded-base"></div>
-            <div className="skeleton h-10 w-full rounded-base"></div>
-            <div className="skeleton h-10 w-full rounded-base"></div>
-          </div>
-        ))}
-      </div>
-    );
-  }
 
   if (isError) {
     return <div>Something went wrong! Try later!</div>;
@@ -141,28 +118,19 @@ export function SupplyList() {
         <AddBookDialog />
       </div>
       <div className="w-full rounded-base p-base bg-content-background">
-        {!data?.items?.length && !isRefetching ? (
-          <div className="flex flex-col gap-base items-center">
-            <h2 className="text-xl font-bold">
-              Not found any book! Do you want to add one?
-            </h2>
-            <AddBookDialog />
-          </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <DataTable loading={isRefetching} value={data?.items}>
-              <Column header="ID" field="id" />
-              <Column header="Title" field="book" body={titleTemplate} />
-              <Column header="Quantity" field="quantity" />
-              <Column body={changeQuantityTemplate} />
-            </DataTable>
-          </div>
-        )}
+        <div className="overflow-x-auto">
+          <DataTable loading={isLoading} value={data?.items}>
+            <Column header="ID" field="id" />
+            <Column header="Title" field="book" body={titleTemplate} />
+            <Column header="Quantity" field="quantity" />
+            <Column body={changeQuantityTemplate} />
+          </DataTable>
+        </div>
       </div>
 
       {data?.items?.length && (
         <div
-          className={`p-base rounded-base bg-content-background gap-base flex items-center justify-center ${isRefetching && 'animate-pulse pointer-events-none'}`}
+          className={`p-base rounded-base bg-content-background gap-base flex items-center justify-center ${isLoading && 'animate-pulse pointer-events-none'}`}
         >
           <Paginator
             className="p-0 border-none"

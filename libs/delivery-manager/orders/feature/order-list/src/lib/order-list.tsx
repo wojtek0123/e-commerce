@@ -28,7 +28,6 @@ export function OrderList() {
   const {
     isLoading,
     isError,
-    isRefetching,
     data: orders,
   } = useQuery<OrderDetails[]>({
     queryKey: ['orders', store.sort.by, store.sort.mode],
@@ -135,35 +134,6 @@ export function OrderList() {
     };
   }, []);
 
-  if (isLoading && !orders) {
-    const skeletons = new Array(20).fill(0, 0, 19);
-
-    return (
-      <div className="flex flex-col gap-base w-full">
-        {skeletons.map((_, index) => (
-          <div className="grid grid-cols-4 gap-12" key={index}>
-            <div className="skeleton h-10 w-full rounded-base"></div>
-            <div className="skeleton h-10 w-full rounded-base"></div>
-            <div className="skeleton h-10 w-full rounded-base"></div>
-            <div className="skeleton h-10 w-full rounded-base"></div>
-          </div>
-        ))}
-      </div>
-    );
-  }
-
-  if (!orders?.length && !isLoading) {
-    return (
-      <div className="w-full py-12 text-center text-4xl font-bold">
-        Not found any orders!
-      </div>
-    );
-  }
-
-  if (isError) {
-    return <div>Something went wrong! Try later!</div>;
-  }
-
   const changeStatusTemplate = (order: OrderDetails) => {
     return (
       <Button
@@ -182,6 +152,10 @@ export function OrderList() {
       />
     );
   };
+
+  if (isError) {
+    return <div>Error occurred while getting orders</div>;
+  }
 
   return (
     <>
@@ -203,7 +177,7 @@ export function OrderList() {
 
       <div className="w-full p-base bg-content-background rounded-base xl:min-h-content">
         <div className="overflow-x-auto ">
-          <DataTable value={orders} loading={isRefetching}>
+          <DataTable value={orders} loading={isLoading}>
             <Column header="Order no" field="id" />
             <Column header="Created at" field="createdAt" sortable />
             <Column
