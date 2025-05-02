@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { OrderDetails, Paginated } from '@e-commerce/shared/api-models';
@@ -6,12 +6,12 @@ import axios from 'axios';
 import OrderDetailsComponent from './components/order-details/order-details';
 import { OrderStatus } from '@prisma/client';
 import { useToastStore } from '@e-commerce/delivery-manager/shared/data-access';
-import SortButton from './components/sort-header/sort-header';
 import { useOrdersStore } from '@e-commerce/deliery-manager/orders/data-access';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
-import { Badge } from 'primereact/badge';
+import { Dialog } from 'primereact/dialog';
+import { Tag } from 'primereact/tag';
 
 const socket = io(import.meta.env.VITE_API_URL);
 
@@ -21,7 +21,7 @@ export function OrderList() {
   const toast = useToastStore();
   const queryClient = useQueryClient();
   const store = useOrdersStore();
-  const orderDetailsDialog = useRef<HTMLDialogElement | null>(null);
+  const [isDialogVisible, setIsDialogVisible] = useState(false);
   const [selectedOrderId, setSelectedOrderId] = useState<
     OrderDetails['id'] | null
   >(null);
@@ -85,17 +85,21 @@ export function OrderList() {
   };
 
   const onError = useCallback(() => {
-    toast.show('WebSocket encounters an error. Reload page.', 'error');
+    toast.show({
+      detail: 'WebSocket encounters an error. Reload page.',
+      severity: 'error',
+      summary: 'Error',
+    });
   }, [toast]);
 
   function openOrderDetailsDialog(order: OrderDetails) {
     setSelectedOrderId(order.id);
-    orderDetailsDialog.current?.showModal();
+    setIsDialogVisible(true);
 
     if (order.status !== OrderStatus.NEW) return;
   }
 
-  function statusToBadgeClass(status: OrderStatus) {
+  function statusToSeverityClass(status: OrderStatus) {
     switch (status) {
       case 'NEW':
         return 'info';
@@ -107,10 +111,6 @@ export function OrderList() {
         return 'success';
     }
   }
-
-  const changeSort = (by: SortBy) => {
-    store.setSort(by);
-  };
 
   function updateStatus(status: OrderStatus) {
     if (!orders) return;
@@ -152,49 +152,71 @@ export function OrderList() {
     );
   }
 
+  if (!orders?.length && !isLoading) {
+    return (
+      <div className="w-full py-12 text-center text-4xl font-bold">
+        Not found any orders!
+      </div>
+    );
+  }
+
   if (isError) {
     return <div>Something went wrong! Try later!</div>;
   }
 
-  const changeStatusTemplate = () => {
-    return <Button label="Open" />;
+  const changeStatusTemplate = (order: OrderDetails) => {
+    return (
+      <Button
+        label="Open"
+        className="h-fit"
+        onClick={() => openOrderDetailsDialog(order)}
+      />
+    );
   };
 
-  const statusBadgeTemplate = (rowData: OrderDetails) => {
-    return <Badge severity={statusToBadgeClass(rowData.status)} />;
+  const statusTagTemplate = (rowData: OrderDetails) => {
+    return (
+      <Tag
+        severity={statusToSeverityClass(rowData.status)}
+        value={rowData.status}
+      />
+    );
   };
 
   return (
     <>
-      <dialog ref={orderDetailsDialog} className="modal">
-        <div className="modal-box rounded-base flex flex-col gap-8 max-w-[868px]">
+      <Dialog
+        visible={isDialogVisible}
+        onHide={() => setIsDialogVisible(false)}
+        className="max-w-[868px]"
+      >
+        <div className="flex flex-col gap-8">
           <h3 className="text-center text-xl">Order no. {selectedOrderId}</h3>
           <div className="w-full h-[1px] bg-neutral-content"></div>
           <OrderDetailsComponent
             orderId={selectedOrderId}
-            dialogRef={orderDetailsDialog}
             onStatusChange={updateStatus}
+            onClose={() => setIsDialogVisible(false)}
           />
         </div>
-      </dialog>
+      </Dialog>
 
-      <div className="w-full p-base bg-content-background rounded-base min-h-content">
+      <div className="w-full p-base bg-content-background rounded-base xl:min-h-content">
         <div className="overflow-x-auto ">
-          <DataTable value={orders}>
-            <Column header="Order no" />
-            <Column header="Created at" field="creaedAt" sortable />
+          <DataTable value={orders} loading={isRefetching}>
+            <Column header="Order no" field="id" />
+            <Column header="Created at" field="createdAt" sortable />
             <Column
               header="Status"
               field="status"
               sortable
-              body={statusBadgeTemplate}
+              body={statusTagTemplate}
             />
-            <Column header="" body={changeStatusTemplate} />
+            <Column
+              header=""
+              body={(rowData) => changeStatusTemplate(rowData)}
+            />
           </DataTable>
-
-          <div className="w-full py-12 text-center text-4xl font-bold">
-            Not found any orders!
-          </div>
         </div>
       </div>
     </>

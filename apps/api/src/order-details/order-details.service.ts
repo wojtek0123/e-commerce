@@ -310,6 +310,7 @@ export class OrderDetailsService {
             country: true,
           },
         },
+        orderUserInformation: true,
         shippingMethod: true,
         paymentDetails: true,
         orderItems: {

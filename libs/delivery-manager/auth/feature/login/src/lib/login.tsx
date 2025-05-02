@@ -6,7 +6,6 @@ import { Tokens, User } from '@e-commerce/shared/api-models';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { InputText } from 'primereact/inputtext';
-import { Password } from 'primereact/password';
 import { Button } from 'primereact/button';
 
 type LoginForm = {

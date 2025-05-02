@@ -1,20 +1,23 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Inventory, Paginated } from '@e-commerce/shared/api-models';
 import axios from 'axios';
-import { SortButton, Paginator } from '@e-commerce/delivery-manager/shared/ui';
+import { Paginator } from 'primereact/paginator';
 import {
   SortBy,
   useSuppliesStore,
 } from '@e-commerce/delivery-manager/supplies/data-access';
-import { FormEvent, useRef, useState } from 'react';
+import { FormEvent, useState } from 'react';
 import ChangeQuantityDialog from './components/change-quantity-dialog/change-quantity-dialog';
 import AddBookDialog from './components/add-book-dialog/add-book-dialog.component';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import { InputText } from 'primereact/inputtext';
 
 export function SupplyList() {
-  const searchTextRef = useRef<HTMLInputElement | null>(null);
   const [searchText, setSearchText] = useState('');
   const store = useSuppliesStore();
   const queryClient = useQueryClient();
+  const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
   const { isInitialLoading, isError, isRefetching, data } = useQuery<
     Paginated<Inventory>
   >({
@@ -74,13 +77,6 @@ export function SupplyList() {
     store.setPage(page);
   };
 
-  const search = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    event.stopPropagation();
-
-    setSearchText(searchTextRef.current?.value ?? '');
-  };
-
   if (isInitialLoading) {
     const skeletons = new Array(20).fill(0, 0, 19);
 
@@ -102,87 +98,78 @@ export function SupplyList() {
     return <div>Something went wrong! Try later!</div>;
   }
 
+  const searchSupplies = (event: FormEvent<HTMLInputElement>) => {
+    event.preventDefault();
+
+    const value = (event.target as HTMLInputElement)?.value ?? null;
+
+    if (timer) {
+      clearTimeout(timer);
+    }
+
+    const delay = setTimeout(() => {
+      setSearchText(value);
+    }, 300);
+
+    setTimer(delay);
+  };
+
+  const titleTemplate = (inventory: Inventory) => {
+    return <span>{inventory.book.title}</span>;
+  };
+
+  const changeQuantityTemplate = (inventory: Inventory) => {
+    return (
+      <ChangeQuantityDialog
+        bookId={inventory.book.id}
+        increseQuantity={(by) => increaseQuantity(inventory.id, by)}
+      />
+    );
+  };
+
   return (
-    <div className="flex flex-col gap-base">
-      <div className="flex justify-between gap-base p-base rounded-base bg-base-300">
-        <form className="flex gap-base" onSubmit={(event) => search(event)}>
-          <input
-            type="text"
-            ref={searchTextRef}
-            placeholder="Type title"
-            aria-label="Search book by title"
-            className="input max-w-[440px] w-full"
-          />
-          <button className="btn btn-secondary !rounded-sm" type="submit">
-            Search
-          </button>
-        </form>
+    <div className="w-full rounded-base flex flex-col gap-base xl:min-h-content">
+      <div className="flex justify-between gap-base p-base rounded-base bg-content-background">
+        <InputText
+          type="text"
+          onChange={(e) => searchSupplies(e)}
+          placeholder="Type title"
+          aria-label="Search book by title"
+          className="input max-w-[440px] w-full py-0"
+        />
 
         <AddBookDialog />
       </div>
-      <div className="w-full rounded-base p-base bg-base-300">
+      <div className="w-full rounded-base p-base bg-content-background">
         {!data?.items?.length && !isRefetching ? (
           <div className="flex flex-col gap-base items-center">
             <h2 className="text-xl font-bold">
               Not found any book! Do you want to add one?
             </h2>
-            <button className="btn btn-primary">Add book</button>
+            <AddBookDialog />
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table
-              className={`table w-full ${isRefetching && 'animate-pulse pointer-events-none'}`}
-            >
-              <thead>
-                <tr>
-                  <th className="text-lg"></th>
-                  <th className="text-lg">ID</th>
-                  <th className="text-lg">Title</th>
-                  <th className="text-lg">
-                    <span>Quantity</span>
-                    <SortButton
-                      by="quantity"
-                      sort={store.sort}
-                      changeSort={(event) => changeSort(event)}
-                    />
-                  </th>
-                  <th className="text-lg"></th>
-                </tr>
-              </thead>
-              <tbody>
-                {data?.items?.map((inventory, index) => (
-                  <tr key={inventory.id}>
-                    <th className="text-lg">
-                      {index + store.size * (store.page - 1) + 1}
-                    </th>
-                    <td className="text-lg">{inventory.id}</td>
-                    <td className="text-lg">{inventory.book.title}</td>
-                    <td className="text-lg">{inventory.quantity}</td>
-                    <td className="text-lg">
-                      <ChangeQuantityDialog
-                        bookId={inventory.book.id}
-                        increseQuantity={(by) =>
-                          increaseQuantity(inventory.id, by)
-                        }
-                      />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <DataTable loading={isRefetching} value={data?.items}>
+              <Column header="ID" field="id" />
+              <Column header="Title" field="book" body={titleTemplate} />
+              <Column header="Quantity" field="quantity" />
+              <Column body={changeQuantityTemplate} />
+            </DataTable>
           </div>
         )}
       </div>
 
       {data?.items?.length && (
         <div
-          className={`p-base rounded-base bg-base-300 gap-base flex items-center justify-center ${isRefetching && 'animate-pulse pointer-events-none'}`}
+          className={`p-base rounded-base bg-content-background gap-base flex items-center justify-center ${isRefetching && 'animate-pulse pointer-events-none'}`}
         >
           <Paginator
-            total={data.total}
-            page={store.page}
-            size={store.size}
-            setPage={(event) => setPage(event)}
+            className="p-0 border-none"
+            totalRecords={data.total}
+            first={store.page}
+            rows={store.size}
+            onPageChange={(event) => setPage(event.first)}
           />
         </div>
       )}

@@ -4,35 +4,39 @@ import {
   OrderDetailsItem,
 } from '@e-commerce/shared/api-models';
 import axios from 'axios';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { OrderStatus } from '@prisma/client';
 import { useToastStore } from '@e-commerce/delivery-manager/shared/data-access';
+import { Button } from 'primereact/button';
+import { DataTable, DataTableValueArray } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import { Steps } from 'primereact/steps';
+import { MenuItem } from 'primereact/menuitem';
+import { Skeleton } from 'primereact/skeleton';
 
 export function OrderDetails({
   orderId,
-  dialogRef,
   onStatusChange,
+  onClose,
 }: {
   orderId: Order['id'] | null;
-  dialogRef: React.RefObject<HTMLDialogElement>;
   onStatusChange: (status: OrderStatus) => void;
+  onClose: () => void;
 }) {
   const toast = useToastStore();
-  const [orderSteps] = useState<OrderStatus[]>([
-    'NEW',
-    'PACKING',
-    'PREPARED_FOR_SHIPPING',
-    'SHIPPED',
+  const [orderSteps] = useState<MenuItem[]>([
+    { label: 'NEW' },
+    { label: 'PACKING' },
+    { label: 'PREPARED_FOR_SHIPPING' },
+    { label: 'SHIPPED' },
   ]);
-  const selectAllCheckboxRef = useRef<HTMLInputElement | null>(null);
   const [submitted, setSubmitted] = useState(false);
   const [label, setLabel] = useState<{
     isGenerated: boolean;
     isPrinted: boolean;
   }>({ isGenerated: false, isPrinted: false });
-  const [selectedOrderItems, setSelectedOrderItems] = useState<
-    OrderDetailsItem[]
-  >([]);
+  const [selectedOrderItems, setSelectedOrderItems] =
+    useState<DataTableValueArray>([]);
   const queryClient = useQueryClient();
   const {
     isLoading,
@@ -61,54 +65,43 @@ export function OrderDetails({
         status,
       }),
     onSuccess(_, { status }) {
-      if (order) {
-        const updatedOrder = { ...order, status };
-        queryClient.setQueryData(['order', orderId], { updatedOrder });
-      }
-      toast.show(
-        `Status has been updated to ${status} for order no. ${orderId}`,
-        'success',
-      );
+      queryClient.setQueryData(['order', orderId], { ...order, status });
+
+      toast.show({
+        detail: `Status has been updated to ${status} for order no. ${orderId}`,
+        summary: 'Success',
+        severity: 'success',
+      });
 
       onStatusChange(status);
     },
     onError() {
-      toast.show('Something went wrong!', 'error');
+      toast.show({
+        detail: 'Something went wrong!',
+        summary: 'Error',
+        severity: 'error',
+      });
     },
   });
-
-  function toggleAllOrderItemsSelection() {
-    setSelectedOrderItems((prevState) =>
-      prevState.length !== 0 ? [] : (order?.orderItems ?? []),
-    );
-  }
-
-  function toggleOrderItemSelection(orderItem: OrderDetailsItem) {
-    const isSelected = selectedOrderItems.find(({ id }) => id === orderItem.id);
-
-    const updatedSelectedOrderItems = isSelected
-      ? selectedOrderItems.filter(({ id }) => id !== orderItem.id)
-      : [...selectedOrderItems, orderItem];
-
-    setSelectedOrderItems(updatedSelectedOrderItems);
-
-    if (!selectAllCheckboxRef.current) return;
-
-    selectAllCheckboxRef.current.indeterminate =
-      updatedSelectedOrderItems.length !== order?.orderItems.length &&
-      updatedSelectedOrderItems.length !== 0;
-  }
 
   function generateLabel() {
     setLabel((prevState) => ({ ...prevState, isGenerated: true }));
 
-    toast.show('Label has been generated', 'success');
+    toast.show({
+      detail: 'Label has been generated',
+      summary: 'Success',
+      severity: 'success',
+    });
   }
 
   function printLabel() {
     setLabel((prevState) => ({ ...prevState, isPrinted: true }));
 
-    toast.show('Label has been printed', 'success');
+    toast.show({
+      detail: 'Label has been printed',
+      summary: 'Success',
+      severity: 'success',
+    });
   }
 
   function markAsPrepareForShipping() {
@@ -127,7 +120,7 @@ export function OrderDetails({
   }
 
   function close() {
-    dialogRef.current?.close();
+    onClose();
   }
 
   function markAsShipped() {
@@ -151,9 +144,9 @@ export function OrderDetails({
   if (isLoading || isUpdating) {
     return (
       <div className="flex flex-col gap-base">
-        <div className="skeleton h-10 w-full rounded-base"></div>
-        <div className="skeleton h-10 w-full rounded-base"></div>
-        <div className="skeleton h-10 w-full rounded-base"></div>
+        <Skeleton className="!h-10 w-full" borderRadius="1rem" />
+        <Skeleton className="!h-10 w-full" borderRadius="1rem" />
+        <Skeleton className="!h-10 w-full" borderRadius="1rem" />
       </div>
     );
   }
@@ -162,31 +155,43 @@ export function OrderDetails({
     return <div>Something went wrong! Try later!</div>;
   }
 
+  const imageTemplate = (orderItem: OrderDetailsItem) => {
+    return (
+      <img
+        className="max-h-48"
+        src={orderItem.book.coverImage}
+        alt={orderItem.book.title + ' cover image'}
+      />
+    );
+  };
+
+  const authorsTemplate = (orderItem: OrderDetailsItem) => {
+    return (
+      <div className="flex flex-wrap gap-2">
+        {orderItem.book.authors?.map((author) => (
+          <span key={crypto.randomUUID()}>{author.name}</span>
+        ))}{' '}
+      </div>
+    );
+  };
+
   return (
     <>
-      <ul className="steps">
-        {orderSteps.map((step) => (
-          <li
-            key={step}
-            className={`step ${
-              step === order.status ? 'step-primary' : ''
-            } ${orderSteps.indexOf(step) < orderSteps.indexOf(order.status) ? '' : 'disabled'}`}
-          >
-            {step.replaceAll('_', ' ')}
-          </li>
-        ))}
-      </ul>
-
+      Status: {order.status}
+      <Steps
+        readOnly
+        model={orderSteps}
+        activeIndex={orderSteps.findIndex((o) => order.status === o.label)}
+      />
       {order.status === 'NEW' && (
         <div className="flex flex-col gap-8">
           <p className="text-center text-xl">Order is ready to be packed</p>
 
-          <button
-            className="btn btn-primary max-w-[50%] min-w-fit w-full mx-auto"
+          <Button
+            className="max-w-[50%] min-w-fit w-full mx-auto"
             onClick={markAsPacking}
-          >
-            Prepare this order
-          </button>
+            label="Prepare this order"
+          />
         </div>
       )}
       {order.status === 'PREPARED_FOR_SHIPPING' && (
@@ -196,12 +201,11 @@ export function OrderDetails({
             order as 'Shipped' in the system.
           </p>
 
-          <button
-            className="btn btn-primary max-w-[50%] min-w-fit w-full mx-auto"
+          <Button
+            className="max-w-[50%] min-w-fit w-full mx-auto"
             onClick={markAsShipped}
-          >
-            Mark as shipped
-          </button>
+            label="Mark as shipped"
+          />
         </div>
       )}
       {order.status === 'PACKING' && (
@@ -234,7 +238,7 @@ export function OrderDetails({
                 Phone
               </span>
               <span className="text-base !text-start">
-                {order.orderAddress.phone}
+                {order.orderUserInformation.phone}
               </span>
             </span>
             <span className="flex gap-4 justify-start">
@@ -242,8 +246,8 @@ export function OrderDetails({
                 Name
               </span>
               <span className="text-base flex justify-start">
-                {order.orderAddress.firstName}
-                {order.orderAddress.lastName}
+                {order.orderUserInformation.firstName}
+                {order.orderUserInformation.lastName}
               </span>
             </span>
             <span className="flex gap-4">
@@ -263,81 +267,98 @@ export function OrderDetails({
             </span>
 
             {label.isGenerated ? (
-              <button
-                className="btn btn-secondary max-w-[50%] min-w-fit w-full mx-auto"
+              <Button
+                severity="secondary"
+                className="max-w-[50%] min-w-fit w-full mx-auto"
                 onClick={printLabel}
-              >
-                Print label
-              </button>
+                label="Print label"
+              />
             ) : (
-              <button
-                className="btn btn-secondary max-w-[50%] min-w-fit w-full mx-auto"
+              <Button
+                severity="secondary"
+                className="max-w-[50%] min-w-fit w-full mx-auto"
                 onClick={generateLabel}
-              >
-                Generate label
-              </button>
+                label="Generate label"
+              />
             )}
           </div>
 
           <div className="overflow-x-auto rounded-box wrapper">
             <span className="text-lg font-bold">Books to packed</span>
-            <table className="table">
-              <thead>
-                <tr>
-                  <th>
-                    <label>
-                      <input
-                        type="checkbox"
-                        className="checkbox"
-                        ref={selectAllCheckboxRef}
-                        checked={
-                          selectedOrderItems.length === order.orderItems.length
-                        }
-                        onChange={toggleAllOrderItemsSelection}
-                      />
-                    </label>
-                  </th>
-                  <th>Image</th>
-                  <th>Authors</th>
-                  <th>Favorite Color</th>
-                </tr>
-              </thead>
-              <tbody>
-                {order.orderItems?.map((item) => (
-                  <tr key={item.id}>
-                    <th>
-                      <label>
-                        <input
-                          type="checkbox"
-                          className="checkbox"
-                          onChange={() => toggleOrderItemSelection(item)}
-                          checked={
-                            !!selectedOrderItems.find(
-                              ({ id }) => id === item.id,
-                            )
-                          }
-                        />
-                      </label>
-                    </th>
-                    <td>
-                      <img
-                        className="max-h-48"
-                        src={item.book.coverImage}
-                        alt={item.book.title + ' cover image'}
-                      />
-                    </td>
-                    <td>
-                      <div className="flex flex-wrap gap-2">
-                        {item.book.authors?.map((author) => (
-                          <span key={crypto.randomUUID()}>{author.name}</span>
-                        ))}
-                      </div>
-                    </td>
-                    <td>Blue</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <DataTable
+              value={order.orderItems}
+              selection={selectedOrderItems}
+              onSelectionChange={(event) => setSelectedOrderItems(event.value)}
+              selectionMode="checkbox"
+              dataKey="id"
+            >
+              <Column
+                selectionMode="multiple"
+                headerStyle={{ width: '3rem' }}
+              ></Column>
+              <Column header="Authors" field="book" body={authorsTemplate} />
+              <Column header="Cover" field="book" body={imageTemplate} />
+            </DataTable>
+            {
+              // <table className="table">
+              //   <thead>
+              //     <tr>
+              //       <th>
+              //         <label>
+              //           <input
+              //             type="checkbox"
+              //             className="checkbox"
+              //             ref={selectAllCheckboxRef}
+              //             checked={
+              //               selectedOrderItems.length ===
+              //               order.orderItems.length
+              //             }
+              //             onChange={toggleAllOrderItemsSelection}
+              //           />
+              //         </label>
+              //       </th>
+              //       <th>Image</th>
+              //       <th>Authors</th>
+              //       <th>Favorite Color</th>
+              //     </tr>
+              //   </thead>
+              //   <tbody>
+              //     {order.orderItems?.map((item) => (
+              //       <tr key={item.id}>
+              //         <th>
+              //           <label>
+              //             <input
+              //               type="checkbox"
+              //               className="checkbox"
+              //               onChange={() => toggleOrderItemSelection(item)}
+              //               checked={
+              //                 !!selectedOrderItems.find(
+              //                   ({ id }) => id === item.id,
+              //                 )
+              //               }
+              //             />
+              //           </label>
+              //         </th>
+              //         <td>
+              //           <img
+              //             className="max-h-48"
+              //             src={item.book.coverImage}
+              //             alt={item.book.title + ' cover image'}
+              //           />
+              //         </td>
+              //         <td>
+              //           <div className="flex flex-wrap gap-2">
+              //             {item.book.authors?.map((author) => (
+              //               <span key={crypto.randomUUID()}>{author.name}</span>
+              //             ))}
+              //           </div>
+              //         </td>
+              //         <td>Blue</td>
+              //       </tr>
+              //     ))}
+              //   </tbody>
+              // </table>
+            }
           </div>
 
           <div className="flex flex-col justify-center items-center gap-base">
@@ -360,12 +381,11 @@ export function OrderDetails({
               </span>
             )}
 
-            <button
-              className="btn btn-primary max-w-[50%] min-w-fit w-full"
+            <Button
+              className="max-w-[50%] min-w-fit w-full"
               onClick={markAsPrepareForShipping}
-            >
-              Mark as packed
-            </button>
+              label="Mark as packed"
+            />
           </div>
         </div>
       )}
@@ -374,12 +394,11 @@ export function OrderDetails({
           <div className="text-center text-xl">
             Delivery process is finished!
           </div>
-          <button
-            className="btn btn-primary max-w-[50%] min-w-fit w-full mx-auto"
+          <Button
+            className="max-w-[50%] min-w-fit w-full mx-auto"
             onClick={close}
-          >
-            Close
-          </button>
+            label="Close"
+          />
         </div>
       )}
     </>

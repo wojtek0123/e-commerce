@@ -24,3 +24,11 @@ body {
 /* .wrapper { */
 /*   @apply rounded-base bg-neutral p-base rounded-base; */
 /* } */
+
+.p-button {
+  padding: 0.25rem 0.75rem;
+}
+
+.p-button-label {
+  font-weight: normal;
+}

@@ -27,12 +27,12 @@
     <div class="flex flex-col gap-6">
       <span class="text-xl">Order address</span>
       <div class="flex flex-col">
-        <div class="text-muted-color">
+        <div class="text-muted-color flex items-center gap-1">
           <span>{{ orderDetails()?.orderAddress?.street }}</span>
-          <span
+          <span class="flex items-center gap-1"
             >{{ orderDetails()?.orderAddress?.homeNumber }}
             @if (orderDetails()?.orderAddress?.houseNumber) {
-              /{{ orderDetails()?.orderAddress?.houseNumber }}
+              / {{ orderDetails()?.orderAddress?.houseNumber }}
             }
           </span>
         </div>
@@ -53,11 +53,11 @@
       <span class="text-xl">Personal information</span>
       <div class="flex flex-col lg:text-end">
         <span class="text-muted-color">
-          {{ orderDetails()?.orderAddress?.firstName }}
-          {{ orderDetails()?.orderAddress?.lastName }}
+          {{ orderDetails()?.orderUserInformation?.firstName }}
+          {{ orderDetails()?.orderUserInformation?.lastName }}
         </span>
         <span class="text-muted-color">
-          phone {{ orderDetails()?.orderAddress?.phone }}
+          {{ orderDetails()?.orderUserInformation?.phone }}
         </span>
       </div>
     </div>

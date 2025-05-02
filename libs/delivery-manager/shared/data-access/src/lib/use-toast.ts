@@ -1,23 +1,22 @@
 import { create } from 'zustand';
-
-type ToastVariant = 'success' | 'error';
+import { ToastMessage } from 'primereact/toast';
 
 type ToastState = {
-  hidden: boolean;
-  message: string | null;
-  variant: ToastVariant;
-  show: (message: string, variant: ToastVariant) => void;
+  toastMessage: ToastMessage | null;
+  show: (toastMessage: ToastMessage) => void;
 };
 
 export const useToastStore = create<ToastState>((set) => ({
-  hidden: true,
-  message: null,
-  variant: 'success',
-  show: (message, variant) => {
-    set({ hidden: false, message, variant });
+  toastMessage: null,
+  show: (toastMessage) => {
+    if (!toastMessage.id) {
+      toastMessage = { ...toastMessage, id: crypto.randomUUID() };
+    }
+
+    set({ toastMessage: toastMessage });
 
     setTimeout(() => {
-      set({ hidden: true, message: null });
-    }, 5000);
+      set({ toastMessage: null });
+    }, toastMessage.life || 5000);
   },
 }));

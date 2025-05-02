@@ -2,6 +2,7 @@ import { Book } from './book.model';
 import { ShippingMethod } from './shipping-method.model';
 import { OrderAddress } from './order-address.model';
 import { PaymentDetails } from './payment-details.model';
+import { UserInformation } from './user-information.model';
 
 export interface OrderDetailsBase {
   id: string;
@@ -20,6 +21,7 @@ export type OrderStatus =
 export interface OrderDetails extends OrderDetailsBase {
   paymentDetails: PaymentDetails;
   orderAddress: OrderAddress;
+  orderUserInformation: UserInformation;
   paymentDetailsId: PaymentDetails['id'];
   shippingMethod: ShippingMethod;
   orderItems: OrderDetailsItem[];

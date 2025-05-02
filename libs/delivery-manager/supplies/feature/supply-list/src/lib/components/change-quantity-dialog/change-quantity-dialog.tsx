@@ -2,7 +2,10 @@ import { useToastStore } from '@e-commerce/delivery-manager/shared/data-access';
 import { Book } from '@e-commerce/shared/api-models';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
-import { FormEvent, useRef, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
+import { Dialog } from 'primereact/dialog';
+import { Button } from 'primereact/button';
+import { InputText } from 'primereact/inputtext';
 
 type ChangeQuantityDialogProps = {
   bookId: Book['id'];
@@ -13,9 +16,9 @@ export const ChangeQuantityDialog = ({
   bookId,
   increseQuantity,
 }: ChangeQuantityDialogProps) => {
-  const dialogRef = useRef<HTMLDialogElement | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [quantity, setQuantity] = useState<number | null>(null);
+  const [isDialogVisible, setIsDialogVisible] = useState<boolean>(false);
   const toast = useToastStore();
   const { mutate, isLoading } = useMutation<
     void,
@@ -27,27 +30,24 @@ export const ChangeQuantityDialog = ({
         quantity,
       }),
     onSuccess(_, { quantity }) {
-      toast.show(
-        `Available quanity of this book has been increased by ${quantity}`,
-        'success',
-      );
+      toast.show({
+        severity: 'success',
+        detail: `Available quanity of this book has been increased by ${quantity}`,
+        summary: 'Success',
+      });
 
       increseQuantity(quantity);
 
-      closeDialog();
+      setIsDialogVisible(false);
     },
     onError(error) {
-      toast.show(error.message || 'Something went wrong!', 'error');
+      toast.show({
+        detail: error.message || 'Something went wrong!',
+        summary: 'Error',
+        severity: 'error',
+      });
     },
   });
-
-  const openDialog = () => {
-    dialogRef.current?.showModal();
-  };
-
-  const closeDialog = () => {
-    dialogRef.current?.close();
-  };
 
   const onInput = (event: FormEvent<HTMLInputElement>) => {
     const quantity = Number((event.target as HTMLInputElement).value);
@@ -76,43 +76,38 @@ export const ChangeQuantityDialog = ({
 
   return (
     <>
-      <button className="btn btn-primary" onClick={openDialog}>
-        Change quantity
-      </button>
-      <dialog ref={dialogRef} className="modal">
-        <div className="modal-box rounded-base flex flex-col gap-8 max-w-[648px]">
-          <div className="flex flex-col gap-base">
-            <div className="flex items-center">
-              <h3 className="text-center text-xl mx-auto">Update quantity</h3>
-              <button className="btn btn-ghost seft-end" onClick={closeDialog}>
-                <span className="pi pi-times"></span>
-              </button>
-            </div>
-            <div className="w-full h-[1px] bg-neutral-content"></div>
+      <Button
+        className="btn btn-primary h-fit"
+        onClick={() => setIsDialogVisible(true)}
+        text={true}
+        icon="pi pi-pencil"
+        title="Update quantity"
+      />
+
+      <Dialog
+        visible={isDialogVisible}
+        onHide={() => setIsDialogVisible(false)}
+        header="Update quantity"
+        className="max-w-[648px] w-full"
+      >
+        <form
+          onSubmit={(event) => changeQuantity(event)}
+          className="flex flex-col gap-8"
+        >
+          <div className="flex flex-col gap-1">
+            <label>How many books arrived?</label>
+            <InputText
+              onInput={(event) => onInput(event)}
+              className={`input ${error !== null && 'border-error text-error'}`}
+              placeholder="Enter number"
+              type="number"
+            />
+            {error && <span className="text-error text-base">{error}</span>}
           </div>
 
-          <form
-            onSubmit={(event) => changeQuantity(event)}
-            className="flex flex-col gap-8"
-          >
-            <div className="flex flex-col gap-1">
-              <label>How many books arrived?</label>
-              <input
-                onInput={(event) => onInput(event)}
-                className={`input ${error !== null && 'border-error text-error'}`}
-                placeholder="Enter number"
-                type="number"
-              />
-              {error && <span className="text-error text-base">{error}</span>}
-            </div>
-
-            <button className="btn btn-primary btn-block">
-              {isLoading && <span className="loading loading-spinner"></span>}
-              <span> Update quantity</span>
-            </button>
-          </form>
-        </div>
-      </dialog>
+          <Button loading={isLoading} label="Update quantity" />
+        </form>
+      </Dialog>
     </>
   );
 };

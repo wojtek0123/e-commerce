@@ -5,7 +5,7 @@ export function MainLayout() {
   return (
     <>
       <Nav />
-      <div className="w-full h-full overflow-y-auto p-4 xl:pl-gap xl:p-0 xl:overflow-y-visible">
+      <div className="w-full h-[calc(100%-4rem)] overflow-y-auto p-4 xl:pl-gap xl:p-0 xl:overflow-y-visible">
         <Outlet />
       </div>
     </>

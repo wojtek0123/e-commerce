@@ -3,6 +3,8 @@ import { useRef, useState } from 'react';
 import { useAuthApi } from '@e-commerce/delivery-manager/auth/api';
 import { useCoreStore } from '@e-commerce/delivery-manager/core/data-access';
 import { useToastStore } from '@e-commerce/delivery-manager/shared/data-access';
+import { Divider } from 'primereact/divider';
+import { Toolbar } from 'primereact/toolbar';
 
 export function Nav() {
   const [isExpanded, setIsExpanded] = useState(true);
@@ -28,33 +30,47 @@ export function Nav() {
   function onLogout() {
     logout();
 
-    toast.show('You have been logged out', 'success');
+    toast.show({
+      detail: 'You have been logged out',
+      severity: 'success',
+      summary: 'Success',
+    });
   }
 
   return (
     <>
-      <div className="dock dock-md bg-base-300 sticky bottom-0 xl:hidden">
-        <NavLink
-          to="/supplies"
-          className={({ isActive }) => (isActive ? 'dock-active' : '')}
-        >
-          <span className="pi pi-truck"></span>
-          <span className="dock-label">Supplies</span>
-        </NavLink>
+      <Toolbar
+        className="xl:hidden"
+        center={
+          <div className="flex gap-4">
+            <NavLink
+              to="/orders"
+              className={({ isActive }) =>
+                `flex flex-col items-center ${isActive ? '' : 'text-[var(--surface-400)]'}`
+              }
+            >
+              <span className="pi pi-box"></span>
+              <span className="dock-label">Orders</span>
+            </NavLink>
 
-        <NavLink
-          to="/orders"
-          className={({ isActive }) => (isActive ? 'dock-active' : '')}
-        >
-          <span className="pi pi-box"></span>
-          <span className="dock-label">Orders</span>
-        </NavLink>
-
-        <button onClick={onLogout}>
-          <span className="pi pi-sign-out"></span>
-          <span className="dock-label">Log out</span>
-        </button>
-      </div>
+            <NavLink
+              to="/supplies"
+              className={({ isActive }) =>
+                `flex flex-col items-center ${isActive ? '' : 'text-[var(--surface-400)]'}`
+              }
+            >
+              <span className="pi pi-truck"></span>
+              <span className="dock-label">Supplies</span>
+            </NavLink>
+          </div>
+        }
+        end={
+          <button onClick={onLogout} className="flex flex-col items-center">
+            <span className="pi pi-sign-out"></span>
+            <span className="dock-label">Log out</span>
+          </button>
+        }
+      />
 
       <div className="max-w-80">
         <div
@@ -79,13 +95,13 @@ export function Nav() {
                   </Link>
                 )}
               </div>
-              <div className="bg-primary w-full h-[1px] my-4"></div>
+              <Divider />
               <ul className="flex flex-col">
                 <NavLink
                   to="/orders/list"
                   className={({ isActive }) =>
                     isActive
-                      ? 'bg-base-100 px-3 h-10 flex items-center gap-4 rounded-base'
+                      ? 'bg-content-background px-3 h-10 flex items-center gap-4 rounded-base'
                       : 'px-3 h-10 flex items-center gap-4 rounded-base'
                   }
                 >
@@ -97,7 +113,7 @@ export function Nav() {
                   to="/supplies/list"
                   className={({ isActive }) =>
                     isActive
-                      ? 'bg-base-100 px-3 h-10 flex items-center gap-4 rounded-base'
+                      ? 'bg-content-background px-3 h-10 flex items-center gap-4 rounded-base'
                       : 'px-3 h-10 flex items-center gap-4 rounded-base'
                   }
                 >
@@ -115,7 +131,7 @@ export function Nav() {
                 <i className="pi pi-sign-out"></i>
                 {isLabelShowed && <span>Log out</span>}
               </button>
-              <div className="bg-primary w-full h-[1px] my-4"></div>
+              <Divider />
               <button
                 className="px-3 h-10 flex items-center gap-4"
                 onClick={expandCollapse}
