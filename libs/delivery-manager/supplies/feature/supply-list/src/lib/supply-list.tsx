@@ -8,7 +8,7 @@ import {
 } from '@e-commerce/delivery-manager/supplies/data-access';
 import { FormEvent, useState } from 'react';
 import ChangeQuantityDialog from './components/change-quantity-dialog/change-quantity-dialog';
-import AddBookDialog from './components/add-book-dialog/add-book-dialog.component';
+import AddBookDialog from './components/add-book-dialog/add-book-dialog';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { InputText } from 'primereact/inputtext';

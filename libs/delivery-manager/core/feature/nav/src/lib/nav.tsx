@@ -75,7 +75,7 @@ export function Nav() {
       <div className="max-w-80">
         <div
           className={
-            'transition-[width] duration-300 ease-in-out hidden justify-between gap-4 xl:h-content px-2 py-4 bg-base-300 xl:sticky z-[501] top-4 flex-col rounded-base xl:flex ' +
+            'transition-[width] bg-content-background duration-300 ease-in-out hidden justify-between gap-4 xl:h-content px-2 py-4 bg-base-300 xl:sticky z-[501] top-4 flex-col rounded-base xl:flex ' +
             (isExpanded ? 'w-80' : 'w-14')
           }
         >
@@ -101,7 +101,7 @@ export function Nav() {
                   to="/orders/list"
                   className={({ isActive }) =>
                     isActive
-                      ? 'bg-content-background px-3 h-10 flex items-center gap-4 rounded-base'
+                      ? 'bg-gray-900 px-3 h-10 flex items-center gap-4 rounded-base'
                       : 'px-3 h-10 flex items-center gap-4 rounded-base'
                   }
                 >
@@ -113,7 +113,7 @@ export function Nav() {
                   to="/supplies/list"
                   className={({ isActive }) =>
                     isActive
-                      ? 'bg-content-background px-3 h-10 flex items-center gap-4 rounded-base'
+                      ? 'bg-gray-900 px-3 h-10 flex items-center gap-4 rounded-base'
                       : 'px-3 h-10 flex items-center gap-4 rounded-base'
                   }
                 >

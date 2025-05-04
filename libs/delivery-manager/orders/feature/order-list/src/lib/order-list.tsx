@@ -137,7 +137,8 @@ export function OrderList() {
   const changeStatusTemplate = (order: OrderDetails) => {
     return (
       <Button
-        label="Open"
+        text={true}
+        icon="pi pi-shopping-cart"
         className="h-fit"
         onClick={() => openOrderDetailsDialog(order)}
       />
@@ -175,7 +176,7 @@ export function OrderList() {
         </div>
       </Dialog>
 
-      <div className="w-full p-base bg-content-background rounded-base xl:min-h-content">
+      <div className="w-full p-base bg-content-background rounded-base">
         <div className="overflow-x-auto ">
           <DataTable value={orders} loading={isLoading}>
             <Column header="Order no" field="id" />
