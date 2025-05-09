@@ -553,14 +553,14 @@ export const BooksStore = signalStore(
           const requests = {
             categories$: params.categories
               ? store._categoryApi.getCategories$({
-                  nameIn: getSelectedItemsFromQueryParam(params.categories),
-                })
+                nameIn: getSelectedItemsFromQueryParam(params.categories),
+              })
               : of([]),
 
             authors$: params.authors
               ? store._authorApi.getAll$({
-                  nameIn: getSelectedItemsFromQueryParam(params.authors),
-                })
+                nameIn: getSelectedItemsFromQueryParam(params.authors),
+              })
               : of([]),
 
             tags$: of(
@@ -658,11 +658,11 @@ export const BooksStore = signalStore(
                 ...(params.size && { size: Number(params.size) }),
                 ...(params.sortBy &&
                   params.sortByMode && {
-                    sort: {
-                      direction: params.sortByMode as BooksSortDirection,
-                      key: params.sortBy as BooksSortKey,
-                    },
-                  }),
+                  sort: {
+                    direction: params.sortByMode as BooksSortDirection,
+                    key: params.sortBy as BooksSortKey,
+                  },
+                }),
                 filters: {
                   multiSelect: {
                     ...state.filters.multiSelect,

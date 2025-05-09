@@ -4,16 +4,16 @@ import axios from 'axios';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { Category, Paginated } from '@e-commerce/shared/api-models';
+import { Publisher } from '@e-commerce/shared/api-models';
 
-type AddCategoryBody = {
+type AddPublisherBody = {
   name: string;
 };
 
-export default function AddBookDialogCategoryForm({
+export default function AddBookDialogPublisherForm({
   onClose,
 }: {
-  onClose: (category?: Category) => void;
+  onClose: (publisher?: Publisher) => void;
 }) {
   const toast = useToastStore();
   const {
@@ -22,33 +22,35 @@ export default function AddBookDialogCategoryForm({
     formState: { errors },
   } = useForm<{ name: string }>();
 
-  const { mutate, isLoading } = useMutation<Category, Error, AddCategoryBody>({
-    mutationFn: (body) =>
-      axios
-        .post(`${import.meta.env.VITE_API_URL}/categories`, body)
-        .then(({ data }) => data),
-    onSuccess(category) {
-      toast.show({
-        detail: 'Category has been added',
-        summary: 'Success',
-        severity: 'success',
-      });
-      onClose(category);
+  const { mutate, isLoading } = useMutation<Publisher, Error, AddPublisherBody>(
+    {
+      mutationFn: (body) =>
+        axios
+          .post(`${import.meta.env.VITE_API_URL}/publishers`, body)
+          .then(({ data }) => data),
+      onSuccess(publisher) {
+        toast.show({
+          detail: 'Publisher has been added',
+          summary: 'Success',
+          severity: 'success',
+        });
+        onClose(publisher);
+      },
     },
-  });
+  );
 
-  const { data: categories } = useQuery<Category[]>({
-    queryKey: ['categories'],
+  const { data: publishers } = useQuery<Publisher[]>({
+    queryKey: ['publishers'],
     queryFn: async () => {
-      const response = await axios.get<Paginated<Category>>(
-        `${import.meta.env.VITE_API_URL}/categories`,
+      const response = await axios.get<Publisher[]>(
+        `${import.meta.env.VITE_API_URL}/publishers`,
       );
 
-      return response.data.items;
+      return response.data;
     },
   });
 
-  const onAddCategory: SubmitHandler<{ name: string }> = (state) => {
+  const onAddPublisher: SubmitHandler<{ name: string }> = (state) => {
     const formErrors = Object.values(errors);
 
     if (formErrors.some((e) => !!e)) return;
@@ -59,15 +61,15 @@ export default function AddBookDialogCategoryForm({
   return (
     <form
       className="rounded-base flex flex-col gap-8 w-full max-w-[648px]"
-      onSubmit={handleSubmit(onAddCategory)}
+      onSubmit={handleSubmit(onAddPublisher)}
     >
       <div className="flex flex-col gap-1">
-        <label htmlFor="name">What is the category name?</label>
+        <label htmlFor="name">What is the publisher name?</label>
         <InputText
           {...register('name', {
             required: true,
             validate: (value) =>
-              categories?.findIndex((c) =>
+              publishers?.findIndex((c) =>
                 c.name.toLowerCase().localeCompare(value.toLowerCase()),
               ) !== -1,
           })}
@@ -80,7 +82,7 @@ export default function AddBookDialogCategoryForm({
         )}
         {errors.name?.type === 'validate' && (
           <span className="text-red-300 text-base">
-            This category is already added
+            This publishers is already added
           </span>
         )}
       </div>
@@ -91,7 +93,7 @@ export default function AddBookDialogCategoryForm({
           label="Cancel"
           onClick={() => onClose()}
         />
-        <Button label="Add category" type="submit" loading={isLoading} />
+        <Button label="Add publisher" type="submit" loading={isLoading} />
       </div>
     </form>
   );

@@ -17,7 +17,7 @@ import {
   Paginated,
   Publisher,
 } from '@e-commerce/shared/api-models';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import { useToastStore } from '@e-commerce/delivery-manager/shared/data-access';
 import { supabase } from '@e-commerce/delivery-manager/supplies/data-access';
@@ -52,32 +52,38 @@ type AddInventoryForm = {
   language: string;
 };
 
-type AddBookDialogInventoryFormProps<TValue> = {
-  setField: {
+type AddBookDialogInventoryFormProps = {
+  isFormVisible: boolean;
+  setFields: {
     key: keyof AddInventoryForm;
-    value: TValue;
-  };
+    value: AddInventoryForm[keyof AddInventoryForm] | null;
+  }[];
   onChangeForm: (form: FormType) => void;
   onClose: () => void;
+  onUnmount: (imageCoverUrl: string) => void;
 };
 
-export default function AddBookDialogInventoryForm<T>({
-  setField,
+export default function AddBookDialogInventoryForm({
+  isFormVisible,
+  setFields,
   onChangeForm: changeForm,
   onClose,
-}: AddBookDialogInventoryFormProps<T>) {
+  onUnmount
+}: AddBookDialogInventoryFormProps) {
   const toast = useToastStore();
   const [filterdPublishers, setFilteredPublishers] = useState<Publisher[]>([]);
   const [filteredAuthors, setFilteredAuthors] = useState<Author[]>([]);
   const [filteredCategories, setFilteredCategories] = useState<Category[]>([]);
   const [imageCoverUrl, setImageCoverUrl] = useState<string | null>(null);
+  const [imageUploadLoading, setImageUploadLoading] = useState(false)
 
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitSuccessful },
     control,
     setValue,
+    clearErrors,
   } = useForm<AddInventoryForm>();
 
   const [tags] = useState<BookTag[]>([
@@ -155,6 +161,8 @@ export default function AddBookDialogInventoryForm<T>({
 
     if (!file) return;
 
+    setImageUploadLoading(true)
+
     const { data, error } = await supabase.storage
       .from('image-covers')
       .upload(`${file.name}`, file, { upsert: true });
@@ -165,6 +173,8 @@ export default function AddBookDialogInventoryForm<T>({
         detail: error.message ?? 'Error occurred while uploading image',
         severity: 'error',
       });
+
+      setImageUploadLoading(false)
       return;
     }
 
@@ -182,6 +192,8 @@ export default function AddBookDialogInventoryForm<T>({
           'Error occurred while creating a url to view image',
         severity: 'success',
       });
+
+      setImageUploadLoading(false)
       return;
     }
 
@@ -192,6 +204,7 @@ export default function AddBookDialogInventoryForm<T>({
     });
 
     setImageCoverUrl(response.signedUrl);
+    setImageUploadLoading(false)
   };
 
   const searchAuthor = (event: AutoCompleteCompleteEvent) => {
@@ -243,11 +256,28 @@ export default function AddBookDialogInventoryForm<T>({
     });
   };
 
+
   useEffect(() => {
-    if (setField.key) {
-      setValue(setField.key, setField.value as any);
+    setFields.forEach((field) => {
+      if (!field.value) return;
+
+      setValue(field.key, field.value);
+    });
+  }, [setFields, setValue]);
+
+  useEffect(() => {
+    if (isFormVisible) {
+      clearErrors();
     }
-  }, [setField, setValue]);
+  }, [isFormVisible, clearErrors]);
+
+  useEffect(() => {
+    return () => {
+      if (!isSubmitSuccessful && imageCoverUrl) {
+        onUnmount(imageCoverUrl)
+      }
+    }
+  }, [imageCoverUrl, isSubmitSuccessful, onUnmount])
 
   return (
     <form
@@ -341,27 +371,39 @@ export default function AddBookDialogInventoryForm<T>({
 
       <div className="flex flex-col gap-1">
         <label htmlFor="author">What are the authors?</label>
-        <Controller
-          name="authors"
-          control={control}
-          rules={{ required: true }}
-          render={({ field }) => (
-            <AutoComplete
-              inputId={field.name}
-              value={field.value}
-              invalid={!!errors.authors}
-              field="name"
-              placeholder="Select authors"
-              showEmptyMessage={true}
-              pt={{ container: { className: 'w-full' } }}
-              suggestions={filteredAuthors}
-              completeMethod={searchAuthor}
-              multiple
-              onChange={(e) => field.onChange(e.value)}
-              dropdown
-            />
-          )}
-        />
+
+        <div className="flex gap-base items-center w-full">
+          <Controller
+            name="authors"
+            control={control}
+            rules={{ required: true }}
+            render={({ field }) => (
+              <AutoComplete
+                inputId={field.name}
+                value={field.value}
+                invalid={!!errors.authors}
+                field="name"
+                placeholder="Select authors"
+                showEmptyMessage={true}
+                pt={{
+                  container: { className: 'w-full' },
+                  root: { className: 'w-full' },
+                }}
+                suggestions={filteredAuthors}
+                completeMethod={searchAuthor}
+                multiple
+                onChange={(e) => field.onChange(e.value)}
+                dropdown
+              />
+            )}
+          />
+
+          <Button
+            text={true}
+            icon="pi pi-plus"
+            onClick={() => changeForm('author')}
+          />
+        </div>
 
         {errors.authors?.type === 'required' && (
           <span className="text-red-300 text-base">
@@ -392,27 +434,38 @@ export default function AddBookDialogInventoryForm<T>({
 
       <div className="flex flex-col gap-1">
         <label htmlFor="publisher">What is the publisher?</label>
-        <Controller
-          name="publisher"
-          control={control}
-          rules={{ required: true }}
-          render={({ field }) => (
-            <AutoComplete
-              id="publisher"
-              inputId={field.name}
-              value={field.value}
-              invalid={!!errors.publisher}
-              showEmptyMessage={true}
-              field="name"
-              placeholder="Select publisher"
-              pt={{ container: { className: 'w-full' } }}
-              suggestions={filterdPublishers}
-              completeMethod={searchPublisher}
-              onChange={(e) => field.onChange(e.value)}
-              dropdown
-            />
-          )}
-        />
+
+        <div className="flex gap-base items-center w-full">
+          <Controller
+            name="publisher"
+            control={control}
+            rules={{ required: true }}
+            render={({ field }) => (
+              <AutoComplete
+                id="publisher"
+                inputId={field.name}
+                value={field.value}
+                invalid={!!errors.publisher}
+                showEmptyMessage={true}
+                field="name"
+                placeholder="Select publisher"
+                pt={{
+                  container: { className: 'w-full' },
+                  root: { className: 'w-full' },
+                }}
+                suggestions={filterdPublishers}
+                completeMethod={searchPublisher}
+                onChange={(e) => field.onChange(e.value)}
+                dropdown
+              />
+            )}
+          />
+          <Button
+            text={true}
+            icon="pi pi-plus"
+            onClick={() => changeForm('publisher')}
+          />
+        </div>
 
         {errors.publisher?.type === 'required' && (
           <span className="text-red-300 text-base">Publisher is required</span>
@@ -482,22 +535,25 @@ export default function AddBookDialogInventoryForm<T>({
 
       <div className="flex flex-col gap-1">
         <label htmlFor="tag">How the cover looks like?</label>
-        <FileUpload
-          id="file"
-          mode="basic"
-          className="mr-auto"
-          name="file"
-          accept="image/*"
-          maxFileSize={1000000}
-          customUpload
-          uploadHandler={uploadImageCover}
-        />
+        <div className='flex items-center gap-4'>
+          <FileUpload
+            id="file"
+            mode="basic"
+            name="file"
+            accept="image/*"
+            maxFileSize={1000000}
+            customUpload
+            uploadHandler={uploadImageCover}
+          />
+          {imageUploadLoading && <span className='pi pi-spin pi-spinner'></span>}
+        </div>
       </div>
 
       <div className="flex flex-col gap-1">
         <label htmlFor="description">What is the description?</label>
         <InputTextarea
           id="description"
+          className='min-h-[10rem]'
           {...register('description')}
           placeholder="Enter description"
         />

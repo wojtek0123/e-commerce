@@ -217,14 +217,25 @@ onMounted(() => {
         :value="store.totalOrders"
         :change="todayOrders"
       />
-      <Stat header="Total books" :value="store.booksTotal" />
-      <Stat header="Total revenue" :value="123400" :change="10" />
+      <Stat
+        header="Total books"
+        :value="store.booksTotal"
+      />
+      <Stat
+        header="Total revenue"
+        :value="123400"
+        :change="10"
+      />
       <Stat
         header="Total customers"
         :value="store.customers.length"
         :change="todayCustomers"
       />
-      <Stat header="New customer" :value="5434" :change="10" />
+      <Stat
+        header="New customer"
+        :value="5434"
+        :change="10"
+      />
     </div>
     <div class="grid grid-cols-1 @7xl:grid-cols-2 gap-base">
       <BarChart

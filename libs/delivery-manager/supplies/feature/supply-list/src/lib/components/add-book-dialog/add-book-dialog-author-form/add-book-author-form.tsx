@@ -4,16 +4,16 @@ import axios from 'axios';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { Category, Paginated } from '@e-commerce/shared/api-models';
+import { Author } from '@e-commerce/shared/api-models';
 
-type AddCategoryBody = {
+type AddAuthorBody = {
   name: string;
 };
 
-export default function AddBookDialogCategoryForm({
+export default function AddBookDialogAuthorForm({
   onClose,
 }: {
-  onClose: (category?: Category) => void;
+  onClose: (author?: Author) => void;
 }) {
   const toast = useToastStore();
   const {
@@ -22,33 +22,33 @@ export default function AddBookDialogCategoryForm({
     formState: { errors },
   } = useForm<{ name: string }>();
 
-  const { mutate, isLoading } = useMutation<Category, Error, AddCategoryBody>({
+  const { mutate, isLoading } = useMutation<Author, Error, AddAuthorBody>({
     mutationFn: (body) =>
       axios
-        .post(`${import.meta.env.VITE_API_URL}/categories`, body)
+        .post(`${import.meta.env.VITE_API_URL}/authors`, body)
         .then(({ data }) => data),
-    onSuccess(category) {
+    onSuccess(author) {
       toast.show({
-        detail: 'Category has been added',
+        detail: 'Author has been added',
         summary: 'Success',
         severity: 'success',
       });
-      onClose(category);
+      onClose(author);
     },
   });
 
-  const { data: categories } = useQuery<Category[]>({
-    queryKey: ['categories'],
+  const { data: authors } = useQuery<Author[]>({
+    queryKey: ['authors'],
     queryFn: async () => {
-      const response = await axios.get<Paginated<Category>>(
-        `${import.meta.env.VITE_API_URL}/categories`,
+      const response = await axios.get<Author[]>(
+        `${import.meta.env.VITE_API_URL}/authors`,
       );
 
-      return response.data.items;
+      return response.data;
     },
   });
 
-  const onAddCategory: SubmitHandler<{ name: string }> = (state) => {
+  const onAddAuthor: SubmitHandler<{ name: string }> = (state) => {
     const formErrors = Object.values(errors);
 
     if (formErrors.some((e) => !!e)) return;
@@ -59,15 +59,15 @@ export default function AddBookDialogCategoryForm({
   return (
     <form
       className="rounded-base flex flex-col gap-8 w-full max-w-[648px]"
-      onSubmit={handleSubmit(onAddCategory)}
+      onSubmit={handleSubmit(onAddAuthor)}
     >
       <div className="flex flex-col gap-1">
-        <label htmlFor="name">What is the category name?</label>
+        <label htmlFor="name">What is the author name?</label>
         <InputText
           {...register('name', {
             required: true,
             validate: (value) =>
-              categories?.findIndex((c) =>
+              authors?.findIndex((c) =>
                 c.name.toLowerCase().localeCompare(value.toLowerCase()),
               ) !== -1,
           })}
@@ -80,7 +80,7 @@ export default function AddBookDialogCategoryForm({
         )}
         {errors.name?.type === 'validate' && (
           <span className="text-red-300 text-base">
-            This category is already added
+            This author is already added
           </span>
         )}
       </div>
@@ -91,7 +91,7 @@ export default function AddBookDialogCategoryForm({
           label="Cancel"
           onClick={() => onClose()}
         />
-        <Button label="Add category" type="submit" loading={isLoading} />
+        <Button label="Add author" type="submit" loading={isLoading} />
       </div>
     </form>
   );

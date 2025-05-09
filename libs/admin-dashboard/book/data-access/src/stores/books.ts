@@ -31,7 +31,6 @@ export const useBooksStore = defineStore('books', () => {
   const bucket = 'image-covers';
 
   const coverImageUrl = ref<string>('');
-  const coverImagePath = ref<string>('');
   const uploadLoading = ref<boolean>(false);
 
   async function getBooks() {
@@ -103,7 +102,6 @@ export const useBooksStore = defineStore('books', () => {
         {
           ...body,
           coverImage: coverImageUrl.value,
-          coverImagePath: coverImagePath.value,
         },
       );
 
@@ -262,7 +260,7 @@ export const useBooksStore = defineStore('books', () => {
       severity: 'success',
     });
     coverImageUrl.value = response.signedUrl;
-    coverImagePath.value = data.path;
+    // coverImagePath.value = data.path;
     uploadLoading.value = false;
   }
 
@@ -288,7 +286,6 @@ export const useBooksStore = defineStore('books', () => {
     if (!data) return;
 
     coverImageUrl.value = '';
-    coverImagePath.value = '';
 
     deleteLoading.value = false;
     toast.add({
