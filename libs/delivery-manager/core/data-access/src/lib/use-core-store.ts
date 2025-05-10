@@ -2,10 +2,12 @@ import { create } from 'zustand';
 
 type CoreState = {
   isDark: boolean;
-  setTheme: () => void;
+  setTheme: (isDark: boolean) => void;
 };
 
 export const useCoreStore = create<CoreState>((set) => ({
   isDark: true,
-  setTheme: () => set((state) => ({ isDark: !state.isDark })),
+  setTheme: (isDark: boolean) => {
+    set((state) => ({ isDark }));
+  },
 }));

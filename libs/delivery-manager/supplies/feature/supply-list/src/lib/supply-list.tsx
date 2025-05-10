@@ -3,7 +3,6 @@ import { Inventory, Paginated } from '@e-commerce/shared/api-models';
 import axios from 'axios';
 import { Paginator } from 'primereact/paginator';
 import {
-  SortBy,
   useSuppliesStore,
 } from '@e-commerce/delivery-manager/supplies/data-access';
 import { FormEvent, useState } from 'react';
@@ -119,7 +118,7 @@ export function SupplyList() {
       </div>
       <div className="w-full rounded-base p-base bg-content-background">
         <div className="overflow-x-auto">
-          <DataTable loading={isLoading} value={data?.items}>
+          <DataTable className="overflow-hidden rounded-base" tableClassName='rounded-base overflow-hidden' loading={isLoading} value={data?.items}>
             <Column header="ID" field="id" />
             <Column header="Title" field="book" body={titleTemplate} />
             <Column header="Quantity" field="quantity" />

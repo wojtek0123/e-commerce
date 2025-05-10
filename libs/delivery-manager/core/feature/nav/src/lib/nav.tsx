@@ -1,10 +1,11 @@
 import { Link, NavLink } from 'react-router-dom';
-import { useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { useAuthApi } from '@e-commerce/delivery-manager/auth/api';
 import { useCoreStore } from '@e-commerce/delivery-manager/core/data-access';
 import { useToastStore } from '@e-commerce/delivery-manager/shared/data-access';
 import { Divider } from 'primereact/divider';
 import { Toolbar } from 'primereact/toolbar';
+import { PrimeReactContext } from 'primereact/api';
 
 export function Nav() {
   const [isExpanded, setIsExpanded] = useState(true);
@@ -12,7 +13,9 @@ export function Nav() {
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const { logout } = useAuthApi();
   const toast = useToastStore();
-  const { isDark, setTheme } = useCoreStore();
+  const [isDark, setIsDark] = useState(true);
+  const { changeTheme } = useContext(PrimeReactContext)
+
 
   function expandCollapse() {
     setIsExpanded((isExpanded) => !isExpanded);
@@ -35,6 +38,19 @@ export function Nav() {
       severity: 'success',
       summary: 'Success',
     });
+  }
+
+  function toggleTheme() {
+    const currentThemeLink = (document.getElementById('theme-link') as HTMLLinkElement).href
+    const currentTheme = new URL(currentThemeLink).pathname
+    const newTheme = currentTheme.replace(currentTheme.includes('dark') ? 'dark' : 'light', currentTheme.includes('dark') ? 'light' : 'dark')
+
+
+    setIsDark(newTheme.includes('dark'))
+
+
+
+    changeTheme?.(currentTheme, newTheme, 'theme-link');
   }
 
   return (
@@ -101,7 +117,7 @@ export function Nav() {
                   to="/orders/list"
                   className={({ isActive }) =>
                     isActive
-                      ? 'bg-gray-900 px-3 h-10 flex items-center gap-4 rounded-base'
+                      ? 'bg-surface-200 px-3 h-10 flex items-center gap-4 rounded-base'
                       : 'px-3 h-10 flex items-center gap-4 rounded-base'
                   }
                 >
@@ -113,7 +129,7 @@ export function Nav() {
                   to="/supplies/list"
                   className={({ isActive }) =>
                     isActive
-                      ? 'bg-gray-900 px-3 h-10 flex items-center gap-4 rounded-base'
+                      ? 'bg-surface-200 px-3 h-10 flex items-center gap-4 rounded-base'
                       : 'px-3 h-10 flex items-center gap-4 rounded-base'
                   }
                 >
@@ -124,6 +140,13 @@ export function Nav() {
             </div>
 
             <div className="flex flex-col gap-2">
+              <button
+                onClick={toggleTheme}
+                className="px-3 h-10 flex items-center gap-4"
+              >
+                {isDark ? <i className="pi pi-moon"></i> : <i className="pi pi-sun"></i>}
+                {isLabelShowed && <span>{isDark ? 'Dark' : 'Light'}</span>}
+              </button>
               <button
                 className="px-3 h-10 flex items-center gap-4"
                 onClick={onLogout}

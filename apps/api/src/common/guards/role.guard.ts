@@ -11,7 +11,7 @@ export class RolesGuard implements CanActivate {
   constructor(
     private reflector: Reflector,
     private prisma: PrismaService,
-  ) {}
+  ) { }
 
   async canActivate(context: ExecutionContext) {
     const requiredRoles = this.reflector.get(Roles, context.getHandler());
@@ -32,9 +32,7 @@ export class RolesGuard implements CanActivate {
 
     const userId = authToken.sub;
 
-    // TODO: Check if access token is not expired
-
-    const user = await this.prisma.user.findUnique({
+    const user = await this.prisma.user.findUniqueOrThrow({
       where: { id: userId, refreshToken: { not: null } },
       select: { role: true },
     });

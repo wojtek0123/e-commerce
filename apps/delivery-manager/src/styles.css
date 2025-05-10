@@ -1,8 +1,8 @@
 @layer tailwind-base, primereact, tailwind-utilities;
 
 /* IMPORTANT: In "styled" mode you must add the PrimeReact Theme here. Do NOT include in "unstyled" mode */
-@import 'primereact/resources/themes/lara-light-blue/theme.css'
-  layer(primereact);
+/* @import 'primereact/resources/themes/lara-dark-blue/theme.css' */
+/* layer(primereact); */
 
 @layer tailwind-base {
   @tailwind base;
@@ -13,9 +13,6 @@
   @tailwind utilities;
 }
 
-html {
-  font-size: 14px;
-}
 
 body {
   min-height: 100vh;
@@ -23,18 +20,6 @@ body {
   width: 100%;
   overflow-x: hidden;
   font-family: var(--font-family);
-}
-
-/* .wrapper { */
-/*   @apply rounded-base bg-neutral p-base rounded-base; */
-/* } */
-
-.p-button {
-  padding: 0.25rem 0.75rem;
-}
-
-.p-button-label {
-  font-weight: normal;
 }
 
 .p-dialog {

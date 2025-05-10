@@ -178,7 +178,7 @@ export function OrderList() {
 
       <div className="w-full p-base bg-content-background rounded-base">
         <div className="overflow-x-auto ">
-          <DataTable value={orders} loading={isLoading}>
+          <DataTable className='rounded-base overflow-hidden' tableClassName='rounded-base overflow-hidden' sortOrder={-1} sortField='createdAt' value={orders} loading={isLoading}>
             <Column header="Order no" field="id" />
             <Column header="Created at" field="createdAt" sortable />
             <Column
