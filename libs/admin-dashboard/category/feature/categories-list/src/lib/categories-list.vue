@@ -14,7 +14,7 @@ import { computed } from 'vue';
 
 const store = useCategoriesStore();
 
-const breadcrumbs = ref([{ label: 'categories' }]);
+const breadcrumbs = ref([{ label: 'categories', route: '/categories/list' }]);
 const home = ref({
   icon: 'pi pi-home',
   route: '/',
@@ -40,7 +40,10 @@ onMounted(() => {
 </script>
 
 <template>
-  <Dialog v-model:visible="isDeleteDialogVisible" header="Delete confirmation">
+  <Dialog
+    v-model:visible="isDeleteDialogVisible"
+    header="Delete confirmation"
+  >
     <div class="flex flex-col gap-4">
       <div class="flex flex-col gap-4">
         <p>
@@ -68,18 +71,46 @@ onMounted(() => {
           class="w-full"
           @click="isDeleteDialogVisible = false"
         />
-        <Button label="Confirm" class="w-full" @click="deleteCategories" />
+        <Button
+          label="Confirm"
+          class="w-full"
+          @click="deleteCategories"
+        />
       </div>
     </div>
   </Dialog>
   <div class="flex flex-col gap-base">
     <div
-      class="flex flex-col bg-content-background pt-2 pb-4 xl:pb-2 xl:pl-2 xl:pr-4 rounded-base xl:flex-row justify-between items-center gap-base"
+      class="flex flex-col bg-content-background pt-2 pb-4 xl:pb-2 xl:pl-2 xl:pr-4 rounded-base xl:flex-row justify-between xl:items-center gap-base"
     >
-      <Breadcrumb :home="home" :model="breadcrumbs" />
+      <Breadcrumb
+        :home="home"
+        :model="breadcrumbs"
+      >
+        <template #item="{ item, props }">
+          <router-link
+            v-if="item.route"
+            v-slot="{ href, navigate }"
+            :to="item.route"
+            custom
+          >
+            <a
+              :href="href"
+              v-bind="props.action"
+              @click="navigate"
+            >
+              <span :class="[item.icon, 'text-color']" />
+              <span class="text-primary font-semibold">{{ item.label }}</span>
+            </a>
+          </router-link>
+        </template>
+      </Breadcrumb>
     </div>
 
-    <div v-if="store.error" class="flex flex-col items-center gap-4 mt-10">
+    <div
+      v-if="store.error"
+      class="flex flex-col items-center gap-4 mt-10"
+    >
       <p class="text-5xl text-center">
         {{ store.error }}
       </p>
@@ -117,32 +148,47 @@ onMounted(() => {
         table-class="w-full min-w-[50rem]"
         class="w-full"
       >
-        <Column selection-mode="multiple" header-class="w-12" />
-        <Column field="id" header="ID">
+        <Column
+          selection-mode="multiple"
+          header-class="w-12"
+        />
+        <Column
+          field="id"
+          header="ID"
+        >
           <template #loading>
             <div
               class="flex items-center"
               :style="{ height: '17px', 'flex-grow': '1', overflow: 'hidden' }"
             >
-              <Skeleton width="60%" height="1rem" />
+              <Skeleton
+                width="60%"
+                height="1rem"
+              />
             </div>
           </template>
         </Column>
-        <Column field="name" header="Name">
+        <Column
+          field="name"
+          header="Name"
+        >
           <template #loading>
             <div
               class="flex items-center"
               :style="{ height: '17px', 'flex-grow': '1', overflow: 'hidden' }"
             >
-              <Skeleton width="60%" height="1rem" />
+              <Skeleton
+                width="60%"
+                height="1rem"
+              />
             </div>
           </template>
         </Column>
 
         <Column class="w-24 !text-end">
-          <template #body="{ data }">
-            <!-- <viewBookDetails :category="{ ...data }" /> -->
-          </template>
+          <!--<template #body="{ data }">
+            <ViewBookDetails :category="{ ...data }" />
+          </template>-->
         </Column>
       </DataTable>
     </div>

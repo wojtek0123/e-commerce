@@ -18,12 +18,13 @@ const store = useBooksStore();
 const confirm = useConfirm();
 
 const home = ref({
-  label: 'home',
+  icon: 'pi pi-home',
   route: '/',
 });
 const breadcrumbs = ref([
   {
     label: 'books',
+    route: '/books/list'
   },
 ]);
 
@@ -64,16 +65,19 @@ onMounted(() => {
   <ConfirmDialog />
   <div class="flex flex-col gap-base">
     <div
-      class="flex flex-col bg-content-background p-base rounded-base sm:flex-row justify-between sm:items-center gap-base"
-    >
-      <Breadcrumb class="min-w-max" :home="home" :model="breadcrumbs" />
-      <InputText
-        v-model="store.search"
-        type="text"
-        placeholder="Search book by title..."
-        class="w-full h-fit max-w-[30rem]"
-        @value-change="onSearchInput"
-      />
+      class="flex flex-col bg-content-background p-base rounded-base sm:flex-row justify-between sm:items-center gap-base">
+      <Breadcrumb class="min-w-max" :home="home" :model="breadcrumbs">
+        <template #item="{ item, props }">
+          <router-link v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
+            <a :href="href" v-bind="props.action" @click="navigate">
+              <span :class="[item.icon, 'text-color']" />
+              <span class="text-primary font-semibold">{{ item.label }}</span>
+            </a>
+          </router-link>
+        </template>
+      </Breadcrumb>
+      <InputText v-model="store.search" type="text" placeholder="Search book by title..."
+        class="w-full h-fit max-w-[30rem]" @value-change="onSearchInput" />
     </div>
 
     <div v-if="store.error" class="flex flex-col items-center gap-4 mt-10">
@@ -81,71 +85,39 @@ onMounted(() => {
       <p class="text-xl text-muted-color">
         Unable to load books. Please try again.
       </p>
-      <Button
-        label="Retry"
-        icon="pi pi-refresh"
-        @click="retryGettingBooks()"
-        severity="secondary"
-      ></Button>
+      <Button label="Retry" icon="pi pi-refresh" @click="retryGettingBooks()" severity="secondary"></Button>
     </div>
 
-    <div
-      class="bg-content-background w-full p-4 rounded-base flex flex-col gap-base"
-      v-else
-    >
+    <div class="bg-content-background w-full p-4 rounded-base flex flex-col gap-base" v-else>
       <div class="flex flex-items gap-4">
         <AddBookDrawer />
-        <Button
-          v-if="store.selectedBooks.length !== 0"
-          severity="danger"
-          text
-          :outlined="true"
-          icon="pi pi-trash"
-          @click="deleteBooks()"
-        />
+        <Button v-if="store.selectedBooks.length !== 0" severity="danger" text :outlined="true" icon="pi pi-trash"
+          @click="deleteBooks()" />
       </div>
-      <DataTable
-        v-model:selection="store.selectedBooks"
-        :value="store.books"
-        :loading="store.loading"
-        table-class="w-full min-w-[50rem]"
-        class="w-full"
-      >
+      <DataTable v-model:selection="store.selectedBooks" :value="store.books" :loading="store.loading"
+        table-class="w-full min-w-[50rem]" class="w-full">
         <Column selection-mode="multiple" header-class="w-12"></Column>
         <Column field="id" header="ID">
           <template #loading>
-            <div
-              class="flex items-center"
-              :style="{ height: '17px', 'flex-grow': '1', overflow: 'hidden' }"
-            >
+            <div class="flex items-center" :style="{ height: '17px', 'flex-grow': '1', overflow: 'hidden' }">
               <Skeleton width="60%" height="1rem" />
             </div>
           </template>
         </Column>
         <Column field="title" header="Title">
           <template #loading>
-            <div
-              class="flex items-center"
-              :style="{ height: '17px', 'flex-grow': '1', overflow: 'hidden' }"
-            >
+            <div class="flex items-center" :style="{ height: '17px', 'flex-grow': '1', overflow: 'hidden' }">
               <Skeleton width="60%" height="1rem" />
             </div>
           </template>
         </Column>
         <Column field="tag" header="Tag">
           <template #body="book">
-            <Tag
-              v-if="book.data.tag"
-              :value="book.data.tag"
-              severity="secondary"
-            ></Tag>
+            <Tag v-if="book.data.tag" :value="book.data.tag" severity="secondary"></Tag>
             <span v-if="!book.data.tag">-</span>
           </template>
           <template #loading>
-            <div
-              class="flex items-center"
-              :style="{ height: '17px', 'flex-grow': '1', overflow: 'hidden' }"
-            >
+            <div class="flex items-center" :style="{ height: '17px', 'flex-grow': '1', overflow: 'hidden' }">
               <Skeleton width="60%" height="1rem" />
             </div>
           </template>
@@ -160,10 +132,7 @@ onMounted(() => {
           </template>
 
           <template #loading>
-            <div
-              class="flex items-center"
-              :style="{ height: '17px', 'flex-grow': '1', overflow: 'hidden' }"
-            >
+            <div class="flex items-center" :style="{ height: '17px', 'flex-grow': '1', overflow: 'hidden' }">
               <Skeleton width="60%" height="1rem" />
             </div>
           </template>
