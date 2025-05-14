@@ -1,0 +1,8 @@
+<lib-accordion>
+  @for (item of items(); track item.question; let index = $index) {
+    <lib-accordion-panel [key]="index">
+      <span slot="header" class="font-bold text-xl">{{ item.question }}</span>
+      <p slot="content" class="px-2">{{ item.answer }}</p>
+    </lib-accordion-panel>
+  }
+</lib-accordion>

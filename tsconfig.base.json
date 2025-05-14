@@ -189,6 +189,12 @@
       "@e-commerce/client-web/shared/utils": [
         "libs/client-web/shared/utils/src/index.ts"
       ],
+      "@e-commerce/client-web/support/feature/faq": [
+        "libs/client-web/support/feature/faq/src/index.ts"
+      ],
+      "@e-commerce/client-web/support/feature/shell": [
+        "libs/client-web/support/feature/shell/src/index.ts"
+      ],
       "@e-commerce/deliery-manager/orders/data-access": [
         "libs/delivery-manager/orders/data-access/src/index.ts"
       ],

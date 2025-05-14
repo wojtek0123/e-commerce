@@ -41,6 +41,10 @@ export const APP_ROUTES_FEATURE = {
     ORDER_SUMMARY: 'order-summary',
     PAYMENT_STATUS: 'payment-status',
   } as const,
+  SUPPORT: {
+    BASE: 'support',
+    FAQ: 'faq'
+  }
 } as const;
 
 const AUTH_FEATURE_PATHS = {
@@ -75,13 +79,19 @@ const CART_FEATURE_PATHS = {
     `/${APP_ROUTES_FEATURE.CART.BASE}/${APP_ROUTES_FEATURE.CART.PAYMENT_STATUS}/${id}`,
 } as const;
 
+const SUPPORT_FEATURE_PATHS = {
+  FAQ: () => `/${APP_ROUTES_FEATURE.SUPPORT.BASE}/${APP_ROUTES_FEATURE.SUPPORT.FAQ}`
+} as const
+
 const APP_ROUTE_PATHS = {
   HOME: () => `/${APP_ROUTES_FEATURE.HOME.BASE}`,
   ...AUTH_FEATURE_PATHS,
   ...BROWSE_FEATURE_PATHS,
   ...ACCOUNT_FEATURE_PATHS,
   ...CART_FEATURE_PATHS,
+  ...SUPPORT_FEATURE_PATHS
 } as const;
+
 
 export const provideAppRoutePaths: Provider = {
   provide: APP_ROUTE_PATHS_TOKEN,
