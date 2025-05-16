@@ -28,55 +28,25 @@ function onSubmit(event: FormSubmitEvent) {
 </script>
 
 <template>
-  <div class="flex flex-col w-full mb-8">
+  <div class="flex flex-col w-full mb-8 p-base sm:p-0">
     <h2 class="text-3xl xl:text-4xl">Welcome!</h2>
     <div class="flex items-center text-base">
       <span>You can log in into admin dashboard if you have access</span>
     </div>
   </div>
-  <Form
-    @submit="onSubmit"
-    :resolver="resolver"
-    class="w-full flex flex-col gap-2"
-  >
-    <FormField
-      v-slot="$field"
-      initial-value=""
-      class="flex flex-col gap-1"
-      name="email"
-    >
+  <Form @submit="onSubmit" :resolver="resolver" class="w-full flex flex-col gap-2 p-base sm:p-0">
+    <FormField v-slot="$field" initial-value="" class="flex flex-col gap-1" name="email">
       <label class="text-muted-color">What is your email address?</label>
       <InputText type="text" fluid placeholder="Email" />
-      <Message
-        v-if="$field.invalid"
-        severity="error"
-        size="small"
-        variant="simple"
-        >{{ $field.error?.message }}</Message
-      >
+      <Message v-if="$field.invalid" severity="error" size="small" variant="simple">{{ $field.error?.message }}
+      </Message>
     </FormField>
 
-    <FormField
-      v-slot="$field"
-      initial-value=""
-      class="flex flex-col gap-1"
-      name="password"
-    >
+    <FormField v-slot="$field" initial-value="" class="flex flex-col gap-1" name="password">
       <label class="text-muted-color">What is your password?</label>
-      <Password
-        name="password"
-        :feedback="false"
-        :toggle-mask="true"
-        fluid
-        placeholder="Password"
-      />
-      <Message
-        v-if="$field.invalid"
-        severity="error"
-        size="small"
-        variant="simple"
-        >{{ $field.error?.message }}</Message
-      >
+      <Password name="password" :feedback="false" :toggle-mask="true" fluid placeholder="Password" />
+      <Message v-if="$field.invalid" severity="error" size="small" variant="simple">{{ $field.error?.message }}
+      </Message>
     </FormField>
     <Button class="mt-2" type="submit" label="Log in" fluid />
   </Form>
