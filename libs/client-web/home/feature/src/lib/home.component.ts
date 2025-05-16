@@ -36,6 +36,7 @@ export class HomeComponent implements OnDestroy {
 
   booksUrl = this.#appRoutePaths.BOOKS();
   bestsellerBooks = this.#homeStore.bestsellersBooks;
+  faqUrl = this.#appRoutePaths.FAQ();
   incomingBooks = this.#homeStore.incomingBooks;
   newBooks = this.#homeStore.newBooks;
   loading = this.#homeStore.loading;
