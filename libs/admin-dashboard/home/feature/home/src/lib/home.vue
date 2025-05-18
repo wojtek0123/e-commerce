@@ -63,7 +63,7 @@ const groupedOrders = computed(() => {
 const chartData = computed(() => {
   const dates = Object.keys(groupedOrders.value).sort();
 
-  const max = Object.values(groupedOrders.value).reduce((acc, value) => {
+  const max = Object.values<number>(groupedOrders.value).reduce((acc, value) => {
     if (value > acc) return value;
 
     return acc;
@@ -148,14 +148,29 @@ const todayOrders = computed(() => {
   }, 0);
 });
 
-const todayCustomers = computed(() => {
-  const today = new Date();
+const customersChange = computed(() => {
+  const now = new Date();
+  const twentyFourHoursAgo = new Date(now.setHours(now.getHours() - 24));
 
   return store.customers.reduce((acc, customer) => {
     const customerCreatedAt = new Date(customer.createdAt);
-    const date = customerCreatedAt.toISOString().split('T')[0];
 
-    if (date === today.toISOString().split('T')[0]) {
+    if (customerCreatedAt >= twentyFourHoursAgo) {
+      return acc + 1;
+    }
+
+    return acc;
+  }, 0);
+});
+
+const booksChange = computed(() => {
+  const now = new Date();
+  const twentyFourHoursAgo = new Date(now.setHours(now.getHours() - 24));
+
+  return store.books.reduce((acc, book) => {
+    const customerCreatedAt = new Date(book.createdAt);
+
+    if (customerCreatedAt >= twentyFourHoursAgo) {
       return acc + 1;
     }
 
@@ -170,8 +185,6 @@ const groupBooksByCategory = computed(() => {
 });
 
 const pieChartBooks = computed(() => {
-  // const dates = Object.(groupBooksByCategory.value).sort();
-
   const groupByBooks = groupBooksByCategory.value;
 
   return {
@@ -205,47 +218,43 @@ onMounted(() => {
 
 <template>
   <div class="@container flex flex-col gap-base">
-    <div class="grid grid-cols-2 @3xl:grid-cols-3 @6xl:grid-cols-6 gap-base">
+    <div class="grid grid-cols-1 @xl:grid-cols-2 @3xl:grid-cols-3 gap-base">
       <Stat
-        header="Total income"
+        icon="pi pi-dollar"
+        header="Total revenue"
         :value="store.totalIncome"
-        :change="totalIncome.todayIncome + '$'"
+        :change="totalIncome.todayIncome"
         unit="$"
       />
       <Stat
         header="Total orders"
+        icon="pi pi-book"
+        info="Daily change"
         :value="store.totalOrders"
         :change="todayOrders"
       />
       <Stat
+        icon="pi pi-book"
         header="Total books"
         :value="store.booksTotal"
+        :change="booksChange"
       />
       <Stat
-        header="Total revenue"
-        :value="123400"
-        :change="10"
-      />
-      <Stat
+        icon="pi pi-user"
         header="Total customers"
         :value="store.customers.length"
-        :change="todayCustomers"
-      />
-      <Stat
-        header="New customer"
-        :value="5434"
-        :change="10"
+        :change="customersChange"
       />
     </div>
     <div class="grid grid-cols-1 @7xl:grid-cols-2 gap-base">
       <BarChart
-        v-if="!store.loading && store.orders.length > 0"
+        v-if="!store.loading && store.orders.length !== undefined"
         :data="chartData"
         class="w-full"
       />
 
       <BarChart
-        v-if="!store.loading && store.orders.length > 0"
+        v-if="!store.loading && store.orders.length !== undefined"
         class="w-full"
         :data="chartOrderPriceData"
       />

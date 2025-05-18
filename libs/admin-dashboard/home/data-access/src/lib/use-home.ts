@@ -21,10 +21,9 @@ export const useHomeStore = defineStore('home', () => {
 
   const totalOrders = ref(0);
   const totalIncome = ref(0);
-
   const today = ref(new Date());
   const priorDate = ref(
-    new Date(today.value.getTime() - 30 * 24 * 60 * 60 * 1000),
+    new Date(today.value.setHours(today.value.getHours() - 24)),
   );
 
   async function getOrders() {
@@ -59,11 +58,11 @@ export const useHomeStore = defineStore('home', () => {
     error.value = null;
 
     try {
-      const response = await axios.get<OrderDetails[]>(
+      const response = await axios.get<Paginated<OrderDetails>>(
         `${import.meta.env.VITE_API_URL}/order-details`,
       );
-      totalOrders.value = response.data.length;
-      totalIncome.value = +response.data
+      totalOrders.value = response.data.items.length || 0;
+      totalIncome.value = +response.data.items
         .reduce((acc, order) => acc + order.total, 0)
         .toFixed(2);
     } catch (e: unknown) {

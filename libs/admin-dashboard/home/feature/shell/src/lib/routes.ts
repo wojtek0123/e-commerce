@@ -1,5 +1,4 @@
 import { RouteRecordRaw } from 'vue-router';
-import { homeRoutes } from '@e-commerce/admin-dashboard/home/feature/home';
 
 export const homeShellRoutes: RouteRecordRaw[] = [
   {
@@ -7,7 +6,10 @@ export const homeShellRoutes: RouteRecordRaw[] = [
     children: [
       {
         path: '',
-        children: [...homeRoutes],
+        component: () =>
+          import('@e-commerce/admin-dashboard/home/feature/home').then(
+            (c) => c.Home,
+          ),
       },
     ],
   },

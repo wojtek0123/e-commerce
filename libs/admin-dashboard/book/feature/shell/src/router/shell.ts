@@ -1,4 +1,5 @@
 import { RouteRecordRaw } from 'vue-router';
+import { BookList } from '@e-commerce/admin-dashboard/book/feature/book-list';
 
 export const shellRouter: RouteRecordRaw[] = [
   {
@@ -8,10 +9,7 @@ export const shellRouter: RouteRecordRaw[] = [
       {
         path: 'list',
         name: 'book-list',
-        component: () =>
-          import('@e-commerce/admin-dashboard/book/feature/book-list').then(
-            (c) => c.BookList,
-          ),
+        component: BookList,
       },
     ],
   },

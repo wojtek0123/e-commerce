@@ -1,1 +1,1 @@
-export * from './lib/router';
+export { default as Home } from './lib/home.vue';

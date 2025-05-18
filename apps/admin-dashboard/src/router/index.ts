@@ -1,10 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import { shellRouter } from '@e-commerce/admin-dashboard/book/feature/shell';
+import { shellRouter as bookShell } from '@e-commerce/admin-dashboard/book/feature/shell';
 import { shellRouter as authRouter } from '@e-commerce/admin-dashboard/auth/feature/shell';
 import { useAuthService } from '@e-commerce/admin-dashboard/auth/api';
 import MainLayout from '../views/main-layout.vue';
 import { categoriesShellRoutes } from '@e-commerce/admin-dashboard/category/feature/shell';
-import { homeShellRoutes } from '@e-commerce/admin-dashboard/home/feature/shell';
+import { Home } from '@e-commerce/admin-dashboard/home/feature/home';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -17,12 +17,12 @@ const router = createRouter({
         {
           path: '',
           name: 'home',
-          children: homeShellRoutes,
+          component: Home,
         },
         {
           path: '/books',
           name: 'books',
-          children: shellRouter,
+          children: bookShell,
         },
         {
           path: '/categories',
