@@ -33,7 +33,17 @@ import {
   untracked,
 } from '@angular/core';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { filter, forkJoin, map, of, pipe, skip, switchMap, tap } from 'rxjs';
+import {
+  filter,
+  forkJoin,
+  map,
+  of,
+  pipe,
+  skip,
+  switchMap,
+  takeUntil,
+  tap,
+} from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
 import { Filter } from '../../models/filter.model';
 import {
@@ -553,14 +563,14 @@ export const BooksStore = signalStore(
           const requests = {
             categories$: params.categories
               ? store._categoryApi.getCategories$({
-                nameIn: getSelectedItemsFromQueryParam(params.categories),
-              })
+                  nameIn: getSelectedItemsFromQueryParam(params.categories),
+                })
               : of([]),
 
             authors$: params.authors
               ? store._authorApi.getAll$({
-                nameIn: getSelectedItemsFromQueryParam(params.authors),
-              })
+                  nameIn: getSelectedItemsFromQueryParam(params.authors),
+                })
               : of([]),
 
             tags$: of(
@@ -658,11 +668,11 @@ export const BooksStore = signalStore(
                 ...(params.size && { size: Number(params.size) }),
                 ...(params.sortBy &&
                   params.sortByMode && {
-                  sort: {
-                    direction: params.sortByMode as BooksSortDirection,
-                    key: params.sortBy as BooksSortKey,
-                  },
-                }),
+                    sort: {
+                      direction: params.sortByMode as BooksSortDirection,
+                      key: params.sortBy as BooksSortKey,
+                    },
+                  }),
                 filters: {
                   multiSelect: {
                     ...state.filters.multiSelect,
@@ -781,7 +791,7 @@ export const BooksStore = signalStore(
     },
   })),
   withHooks({
-    onInit(store, _destroyRef = inject(DestroyRef)) {
+    onInit(store, _destroyRef = inject(DestroyRef), router = inject(Router)) {
       store.getAllFilters();
       store._deserializeQueryParamsFilters({
         queryParam: store._route.snapshot.queryParamMap,
@@ -803,6 +813,12 @@ export const BooksStore = signalStore(
             }),
             map(() => store._route.snapshot.queryParamMap),
             takeUntilDestroyed(_destroyRef),
+            takeUntil(
+              of(router.url).pipe(
+                skip(1),
+                filter((url) => !url.includes('browse/books')),
+              ),
+            ),
           )
           .subscribe((queryParam) => {
             store._deserializeQueryParamsFilters({ queryParam });

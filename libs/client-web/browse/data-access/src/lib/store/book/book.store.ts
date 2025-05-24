@@ -90,7 +90,7 @@ export const BookStore = signalStore(
       message: string;
     }>(
       pipe(
-        map((body) => ({ bookId: getState(store).book!.id, ...body })),
+        map((body) => ({ bookId: getState(store).book?.id ?? '', ...body })),
         filter(({ bookId }) => !!bookId),
         tap(() =>
           patchState(store, (state) => ({

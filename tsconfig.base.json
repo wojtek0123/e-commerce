@@ -60,6 +60,15 @@
       "@e-commerce/admin-dashboard/home/feature/shell": [
         "libs/admin-dashboard/home/feature/shell/src/index.ts"
       ],
+      "@e-commerce/admin-dashboard/user/data-access": [
+        "libs/admin-dashboard/user/data-access/src/index.ts"
+      ],
+      "@e-commerce/admin-dashboard/user/feature/shell": [
+        "libs/admin-dashboard/user/feature/shell/src/index.ts"
+      ],
+      "@e-commerce/admin-dashboard/user/feature/user-list": [
+        "libs/admin-dashboard/user/feature/user-list/src/index.ts"
+      ],
       "@e-commerce/client-web/account/api": [
         "libs/client-web/account/api/src/index.ts"
       ],

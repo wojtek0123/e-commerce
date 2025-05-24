@@ -9,6 +9,7 @@ import { NgTemplateOutlet } from '@angular/common';
 import {
   afterNextRender,
   Component,
+  computed,
   inject,
   Injector,
   OnDestroy,

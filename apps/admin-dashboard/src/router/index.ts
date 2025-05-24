@@ -5,6 +5,8 @@ import { useAuthService } from '@e-commerce/admin-dashboard/auth/api';
 import MainLayout from '../views/main-layout.vue';
 import { categoriesShellRoutes } from '@e-commerce/admin-dashboard/category/feature/shell';
 import { Home } from '@e-commerce/admin-dashboard/home/feature/home';
+import { UsersList } from '@e-commerce/admin-dashboard/user/feature/user-list';
+import { usersShellRoutes } from '@e-commerce/admin-dashboard/user/feature/shell';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -28,6 +30,11 @@ const router = createRouter({
           path: '/categories',
           name: 'categories',
           children: categoriesShellRoutes,
+        },
+        {
+          path: '/users',
+          name: 'users',
+          children: usersShellRoutes,
         },
       ],
     },

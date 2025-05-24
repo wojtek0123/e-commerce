@@ -17,7 +17,46 @@ describe('BookStore', () => {
   const mockBook: BookDetails = {
     id: '1',
     title: 'Test Book',
-    productInventory: { id: '', updatedAt: '', createdAt: '', quantity: 5 },
+    inventory: {
+      id: '',
+      updatedAt: '',
+      createdAt: '',
+      quantity: 5,
+      book: {
+        id: '1',
+        title: 'Test Book',
+        reviews: [
+          {
+            createdAt: '',
+            updatedAt: '',
+            userId: '1',
+            message: 'test',
+            id: 'test-review-1',
+            name: 'test',
+            rating: 5,
+          },
+        ],
+        authors: [
+          {
+            id: 'author-1',
+            name: 'test author',
+          },
+        ],
+        createdAt: '2024-01-23',
+        updatedAt: '2024-01-23',
+        categoryId: '1',
+        category: {
+          id: '12',
+          name: 'action',
+        },
+        description: '',
+        price: 23.99,
+        pages: 300,
+        publishedDate: '2024-01-23',
+        coverImage: '',
+        language: 'polish',
+      },
+    },
     reviews: [
       {
         createdAt: '',

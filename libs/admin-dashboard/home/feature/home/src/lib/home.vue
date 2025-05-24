@@ -37,7 +37,7 @@ const groupedByOrderPrice = computed(() => {
 const groupedOrders = computed(() => {
   const dates: string[] = [];
   for (let i = 0; i < 30; i++) {
-    const date = new Date(store.priorDate.getTime() + i * 24 * 60 * 60 * 1000);
+    const date = new Date(store.priorDate.getTime() - i * 24 * 60 * 60 * 1000);
     dates.push(date.toISOString().split('T')[0]);
   }
 
