@@ -3,10 +3,7 @@
     <div
       class="flex flex-col bg-content-background pt-2 pb-4 xl:pb-2 xl:pl-2 xl:pr-4 rounded-base xl:flex-row justify-between xl:items-center gap-base"
     >
-      <Breadcrumb
-        :home="home"
-        :model="breadcrumbs"
-      >
+      <Breadcrumb :home="home" :model="breadcrumbs">
         <template #item="{ item, props }">
           <router-link
             v-if="item.route"
@@ -14,11 +11,7 @@
             :to="item.route"
             custom
           >
-            <a
-              :href="href"
-              v-bind="props.action"
-              @click="navigate"
-            >
+            <a :href="href" v-bind="props.action" @click="navigate">
               <span :class="[item.icon, 'text-color']" />
               <span class="text-primary font-semibold">{{ item.label }}</span>
             </a>
@@ -27,10 +20,7 @@
       </Breadcrumb>
     </div>
 
-    <div
-      v-if="store.error"
-      class="flex flex-col items-center gap-4 mt-10"
-    >
+    <div v-if="store.error" class="flex flex-col items-center gap-4 mt-10">
       <p class="text-5xl text-center">
         {{ store.error }}
       </p>
@@ -51,6 +41,7 @@
       class="bg-content-background w-full p-4 rounded-base flex flex-col gap-base"
     >
       <div class="flex flex-items gap-4">
+        <AddUserDrawer />
         <!-- <AddCategoryFormDrawer /> -->
         <!-- <Button
           v-if="store.selectedUsers.length !== 0"
@@ -68,39 +59,24 @@
         table-class="w-full min-w-[50rem]"
         class="w-full"
       >
-        <Column
-          selection-mode="multiple"
-          header-class="w-12"
-        />
-        <Column
-          field="id"
-          header="ID"
-        >
+        <Column selection-mode="multiple" header-class="w-12" />
+        <Column field="id" header="ID">
           <template #loading>
             <div
               class="flex items-center"
               :style="{ height: '17px', 'flex-grow': '1', overflow: 'hidden' }"
             >
-              <Skeleton
-                width="60%"
-                height="1rem"
-              />
+              <Skeleton width="60%" height="1rem" />
             </div>
           </template>
         </Column>
-        <Column
-          field="email"
-          header="Email"
-        >
+        <Column field="email" header="Email">
           <template #loading>
             <div
               class="flex items-center"
               :style="{ height: '17px', 'flex-grow': '1', overflow: 'hidden' }"
             >
-              <Skeleton
-                width="60%"
-                height="1rem"
-              />
+              <Skeleton width="60%" height="1rem" />
             </div>
           </template>
         </Column>
@@ -115,9 +91,9 @@
         </Column>
 
         <Column class="w-24 !text-end">
-          <!--<template #body="{ data }">
-            <ViewBookDetails :category="{ ...data }" />
-          </template>-->
+          <template #body="{ data }">
+            <!-- <AddUserDrawer :user="data" /> -->
+          </template>
         </Column>
       </DataTable>
     </div>
@@ -135,6 +111,7 @@ import Dialog from 'primevue/dialog';
 import Tag from 'primevue/tag';
 import { ref, onMounted } from 'vue';
 import { useUserStore } from '@e-commerce/admin-dashboard/user/data-access';
+import AddUserDrawer from './components/add-user-drawer/add-user-drawer.vue';
 
 const store = useUserStore();
 
