@@ -1,10 +1,9 @@
 import { inject } from '@angular/core';
 import { CountryApiService } from '@e-commerce/client-web/shared/data-access/api-services';
-import { ResponseError } from '@e-commerce/shared/api-models';
+import { ResponseError, Country } from '@e-commerce/shared/api-models';
 import { tapResponse } from '@ngrx/operators';
 import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { Country } from '@prisma/client';
 import { debounce, of, pipe, switchMap, timer } from 'rxjs';
 import { MessageService } from 'primeng/api';
 
