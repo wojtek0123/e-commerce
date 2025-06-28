@@ -108,7 +108,7 @@ export const useBooksStore = defineStore('books', () => {
     addLoading.value = true;
 
     try {
-      await axios.post(`${import.meta.env.VITE_API_URL}/category`, body);
+      await axios.post(`${import.meta.env.VITE_API_URL}/categories`, body);
     } catch (e: unknown) {
       let message: string;
       if (e instanceof AxiosError) {
@@ -365,6 +365,6 @@ export const useBooksStore = defineStore('books', () => {
     deleteBooks,
     selectedBooks,
     addPublisher,
-    addCategory
+    addCategory,
   };
 });

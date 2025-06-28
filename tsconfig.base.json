@@ -45,6 +45,15 @@
       "@e-commerce/admin-dashboard/category/feature/shell": [
         "libs/admin-dashboard/category/feature/shell/src/index.ts"
       ],
+      "@e-commerce/admin-dashboard/country/data-access": [
+        "libs/admin-dashboard/country/data-access/src/index.ts"
+      ],
+      "@e-commerce/admin-dashboard/country/feature/country-list": [
+        "libs/admin-dashboard/country/feature/country-list/src/index.ts"
+      ],
+      "@e-commerce/admin-dashboard/country/feature/shell": [
+        "libs/admin-dashboard/country/feature/shell/src/index.ts"
+      ],
       "@e-commerce/admin-dashboard/core/data-access": [
         "libs/admin-dashboard/core/data-access/src/index.ts"
       ],

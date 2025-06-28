@@ -1,0 +1,32 @@
+{
+  "name": "admin-dashboard-country-feature-country-list",
+  "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/admin-dashboard/country/feature/country-list/src",
+  "projectType": "library",
+  "tags": ["scope:admin-dashboard", "type:feature", "domain:country"],
+  "targets": {
+    "build": {
+      "executor": "@nx/vite:build",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "outputPath": "dist/libs/admin-dashboard/country/feature/country-list"
+      },
+      "configurations": {
+        "development": {
+          "mode": "development"
+        },
+        "production": {
+          "mode": "production"
+        }
+      }
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "outputs": ["{options.reportsDirectory}"],
+      "options": {
+        "reportsDirectory": "../../../../../coverage/libs/admin-dashboard/country/feature/country-list"
+      }
+    }
+  }
+}

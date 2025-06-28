@@ -5,59 +5,52 @@ import { ref, onMounted } from 'vue';
 import { z } from 'zod';
 import { zodResolver } from '@primevue/forms/resolvers/zod';
 import { Form, FormField, FormSubmitEvent } from '@primevue/forms';
-import { useUserStore } from '@e-commerce/admin-dashboard/user/data-access';
+import { useCountryStore } from '@e-commerce/admin-dashboard/country/data-access';
 import InputText from 'primevue/inputtext';
 import Message from 'primevue/message';
-import Select from 'primevue/select';
-import { Role } from '@e-commerce/shared/api-models';
-import { User } from '@e-commerce/shared/api-models';
+import { Country } from '@e-commerce/shared/api-models';
 
 const visible = ref(false);
-const { user } = defineProps<{ user?: User }>();
-const roles = ref<{ name: string; value: Role }[]>([
-  { name: 'Admin', value: 'ADMIN' },
-  { name: 'User', value: 'USER' },
-]);
-console.log(user)
-const store = useUserStore();
+const { country } = defineProps<{ country?: Country }>();
+
+const store = useCountryStore();
 const resolver = zodResolver(
   z.object({
-    email: z.string().email({ message: 'Invalid email address' }),
-    password: z
+    name: z.string().min(1, { message: 'Name is required' }),
+    code: z
       .string()
-      .min(6, { message: 'Password must be at least 6 characters' }),
-    role: z.string().min(1, { message: 'Role is required' }),
+      .min(1, { message: 'Code is required' })
+      .max(3, { message: 'Code must be 3 characters long' }),
   }),
 );
 
 function submit(event: FormSubmitEvent) {
   if (!event.valid) return;
 
-  const { email, password, role } = event.states;
+  const { name, code } = event.states;
 
   store
-    .addUser({
-      email: email.value,
-      password: password.value,
-      role: role.value,
+    .addCountry({
+      name: name.value,
+      code: code.value,
     })
     .then(() => {
       visible.value = false;
     })
     .catch((error) => {
-      console.error('Error adding user:', error);
+      console.error('Error adding country:', error);
     });
 }
 
-onMounted(() => {
-
-})
+onMounted(() => {});
 </script>
 
 <template>
   <Button
     text
-    icon="pi pi-plus"
+    :icon="!!country ? 'pi pi-pencil' : 'pi pi-plus'"
+    :severity="!!country ? 'secondary' : 'primary'"
+    title="Add country"
     @click="visible = true"
   />
   <Drawer
@@ -66,7 +59,7 @@ onMounted(() => {
   >
     <Form
       :resolver="resolver"
-      :initial-value="{email: user.email, password: '', role: user.role}"
+      :initial-value="{ name: country?.name || '', code: country?.code || '' }"
       class="flex flex-col h-full justify-between gap-2 w-full max-w-[120rem]"
       @submit="submit"
     >
@@ -74,11 +67,11 @@ onMounted(() => {
         <FormField
           v-slot="$field"
           class="flex flex-col gap-1"
-          name="email"
+          name="name"
         >
-          <label class="text-muted-color">Email</label>
+          <label class="text-muted-color">Name</label>
           <InputText
-            id="email"
+            id="name"
             fluid
           />
           <Message
@@ -94,37 +87,11 @@ onMounted(() => {
         <FormField
           v-slot="$field"
           class="flex flex-col gap-1"
-          name="password"
+          name="code"
         >
-          <label class="text-muted-color">Password</label>
+          <label class="text-muted-color">Code</label>
           <InputText
-            id="password"
-            type="password"
-            fluid
-          />
-          <Message
-            v-if="$field.invalid"
-            severity="error"
-            variant="simple"
-            size="small"
-          >
-            {{ $field.error.message }}
-          </Message>
-        </FormField>
-
-        <FormField
-          v-slot="$field"
-          class="flex flex-col gap-1"
-          name="role"
-        >
-          <label class="text-muted-color">Role</label>
-          <Select
-            id="role"
-            :options="roles"
-            option-label="name"
-            option-value="value"
-            placeholder="Select a role"
-            class="w-full"
+            id="code"
             fluid
           />
           <Message
@@ -139,7 +106,7 @@ onMounted(() => {
       </div>
       <Button
         class="min-h-max"
-        label="Add User"
+        label="Add country"
         type="submit"
         :loading="false"
       />
