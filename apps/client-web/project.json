@@ -17,6 +17,7 @@
         "inlineStyleLanguage": "scss",
         "assets": [
           "apps/client-web/src/assets",
+          "apps/client-web/src/robots.txt",
           {
             "glob": "**/*",
             "input": "apps/client-web/public"

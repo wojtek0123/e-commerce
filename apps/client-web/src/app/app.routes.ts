@@ -6,6 +6,7 @@ export const appRoutes: Route[] = [
     path: APP_ROUTES_FEATURE.HOME.BASE,
     loadChildren: () =>
       import('@e-commerce/client-web/home/feature').then((r) => r.homeRoutes),
+    title: 'StoryStash',
   },
   {
     path: APP_ROUTES_FEATURE.AUTH.BASE,
@@ -16,6 +17,7 @@ export const appRoutes: Route[] = [
   },
   {
     path: APP_ROUTES_FEATURE.BROWSE.BASE,
+    title: 'Book search',
     loadChildren: () =>
       import('@e-commerce/client-web/browse/feature/shell').then(
         (r) => r.browseShellRoutes,
@@ -37,7 +39,10 @@ export const appRoutes: Route[] = [
   },
   {
     path: APP_ROUTES_FEATURE.SUPPORT.BASE,
-    loadChildren: () => import('@e-commerce/client-web/support/feature/shell').then(r => r.shellRoutes)
+    loadChildren: () =>
+      import('@e-commerce/client-web/support/feature/shell').then(
+        (r) => r.shellRoutes,
+      ),
   },
   {
     path: '**',

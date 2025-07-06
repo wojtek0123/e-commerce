@@ -12,16 +12,23 @@ export class ThemeService {
   constructor() {
     afterNextRender(() => {
       this.htmlElement = document.querySelector('html');
-
-      const userPreference = window.matchMedia(
-        '(prefers-color-scheme: dark)',
-      ).matches;
+      const favicon = document.getElementById('favicon') as HTMLLinkElement;
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 
       const isDark: boolean | null = JSON.parse(
         localStorage.getItem(LOCAL_STORAGE_THEME_NAME) ?? 'null',
       );
 
-      this.setMode(isDark === null ? userPreference : isDark);
+      this.setMode(isDark === null ? mediaQuery.matches : isDark);
+
+      mediaQuery.addEventListener('change', () => {
+        if (favicon) {
+          favicon.href = window.matchMedia('(prefers-color-scheme: dark)')
+            .matches
+            ? 'book-light.svg'
+            : 'book-dark.svg';
+        }
+      });
     });
   }
 

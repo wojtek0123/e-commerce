@@ -17,11 +17,18 @@ import { APP_ROUTE_PATHS_TOKEN } from '@e-commerce/client-web/shared/app-config'
 import { BooksGridComponent } from '@e-commerce/client-web/shared/ui';
 import { Book, BookTag } from '@e-commerce/shared/api-models';
 import { ButtonModule } from 'primeng/button';
+import { ToLowerCasePipe } from './pipe/to-lower-case.pipe';
 
 @Component({
   selector: 'lib-home',
   standalone: true,
-  imports: [RouterLink, ButtonModule, NgOptimizedImage, BooksGridComponent],
+  imports: [
+    RouterLink,
+    ButtonModule,
+    NgOptimizedImage,
+    BooksGridComponent,
+    ToLowerCasePipe,
+  ],
   templateUrl: './home.component.html',
   host: {
     class: 'flex flex-col gap-base',

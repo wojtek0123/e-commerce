@@ -8,6 +8,7 @@
       [alt]="book().title + 'cover image'"
       class="!h-full !w-auto mx-auto !aspect-[3/4] object-fill rounded-base"
       [ngSrc]="book().coverImage || 'assets/images/image-not-found.webp'"
+      priority
       width="480"
       height="640"
     />

@@ -1,12 +1,16 @@
+import { inject } from '@angular/core';
 import {
   AngularNodeAppEngine,
   createNodeRequestHandler,
   isMainModule,
   writeResponseToNodeResponse,
 } from '@angular/ssr/node';
+import { API_URL } from '@e-commerce/client-web/shared/app-config';
+import { Book } from '@e-commerce/shared/api-models';
 import express from 'express';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { SitemapStream, streamToPromise } from 'sitemap';
 
 const serverDistFolder = dirname(fileURLToPath(import.meta.url));
 const browserDistFolder = resolve(serverDistFolder, '../browser');
@@ -36,6 +40,34 @@ app.use(
     redirect: false,
   }),
 );
+
+app.use('/robots.txt', (req, res) => {
+  res.sendFile(`${browserDistFolder}/robots.txt`);
+});
+
+app.use('/sitemap.xml', async (req, res) => {
+  const sitemap = new SitemapStream({ hostname: 'https://localhost:4200' });
+
+  res.header('Content-Type', 'application/xml');
+
+  sitemap.write({ url: '/', priority: 1.0 });
+  sitemap.write({ url: '/browse', priority: 0.8 });
+
+  const books: Book[] = await fetch(`http://localhost:3000/books`)
+    .then((response) => response.json())
+    .then((books) => books.items);
+
+  books.forEach((book) => {
+    sitemap.write({
+      url: `/browse/${book.id}`,
+      changefreq: 'weekly',
+      priority: 0.7,
+    });
+  });
+
+  sitemap.end();
+  streamToPromise(sitemap).then((sm) => res.send(sm.toString()));
+});
 
 /**
  * Handle all other requests by rendering the Angular application.

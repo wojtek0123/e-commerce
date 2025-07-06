@@ -11,6 +11,7 @@ export const authShellRoutes: Route[] = [
     children: [
       {
         path: APP_ROUTES_FEATURE.AUTH.LOGIN,
+        title: 'Login',
         loadChildren: () =>
           import('@e-commerce/client-web/auth/feature/login').then(
             (r) => r.loginRoutes,
@@ -18,6 +19,7 @@ export const authShellRoutes: Route[] = [
       },
       {
         path: APP_ROUTES_FEATURE.AUTH.REGISTER,
+        title: 'Register',
         loadChildren: () =>
           import('@e-commerce/client-web/auth/feature/register').then(
             (r) => r.registerRoutes,
