@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCountryDto } from './dto/create-country.dto';
 import { UpdateCountryDto } from './dto/update-country.dto';
 import { PrismaService } from '../prisma/prisma.service';
@@ -18,15 +18,33 @@ export class CountriesService {
     });
   }
 
-  findOne(id: Country['id']) {
-    return this.prisma.country.findUnique({ where: { id } });
+  async findOne(id: Country['id']) {
+    const country = await this.prisma.country.findUnique({ where: { id } });
+
+    if (!country) {
+      throw new NotFoundException('Not found a country with id: ' + id);
+    }
+
+    return country;
   }
 
-  update(id: Country['id'], data: UpdateCountryDto) {
+  async update(id: Country['id'], data: UpdateCountryDto) {
+    const country = await this.prisma.country.findUnique({ where: { id } });
+
+    if (!country) {
+      throw new NotFoundException('Not found a country with id: ' + id);
+    }
+
     return this.prisma.country.update({ where: { id }, data });
   }
 
-  remove(id: Country['id']) {
+  async remove(id: Country['id']) {
+    const country = await this.prisma.country.findUnique({ where: { id } });
+
+    if (!country) {
+      throw new NotFoundException('Not found a country with id: ' + id);
+    }
+
     return this.prisma.country.delete({ where: { id } });
   }
 }

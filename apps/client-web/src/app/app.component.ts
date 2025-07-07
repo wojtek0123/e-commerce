@@ -16,27 +16,59 @@ import { MessageBusService } from '@e-commerce/client-web/shared/data-access/ser
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FavouriteBooksListService } from '@e-commerce/client-web/account/api';
 import { UnauthorizedDialogComponent } from './components/unauthorized-dialog/unauthorized-dialog.component';
+import { Meta } from '@angular/platform-browser';
+import { defaultDescription } from '@e-commerce/client-web/shared/utils';
 
 const borderRadius = '1rem' as const;
-const MyPreset = definePreset(Aura, {
-  semantic: {
-    primary: {
-      50: '{blue.50}',
-      100: '{blue.100}',
-      200: '{blue.200}',
-      300: '{blue.300}',
-      400: '{blue.400}',
-      500: '{blue.500}',
-      600: '{blue.600}',
-      700: '{blue.700}',
-      800: '{blue.800}',
-      900: '{blue.900}',
-      950: '{blue.950}',
-    },
-  },
+const Noir = definePreset(Aura, {
   components: {
     button: {
       borderRadius,
+    },
+  },
+  semantic: {
+    primary: {
+      50: '{zinc.50}',
+      100: '{zinc.100}',
+      200: '{zinc.200}',
+      300: '{zinc.300}',
+      400: '{zinc.400}',
+      500: '{zinc.500}',
+      600: '{zinc.600}',
+      700: '{zinc.700}',
+      800: '{zinc.800}',
+      900: '{zinc.900}',
+      950: '{zinc.950}',
+    },
+    colorScheme: {
+      light: {
+        primary: {
+          color: '{zinc.950}',
+          inverseColor: '#ffffff',
+          hoverColor: '{zinc.900}',
+          activeColor: '{zinc.800}',
+        },
+        highlight: {
+          background: '{zinc.950}',
+          focusBackground: '{zinc.700}',
+          color: '#ffffff',
+          focusColor: '#ffffff',
+        },
+      },
+      dark: {
+        primary: {
+          color: '{zinc.50}',
+          inverseColor: '{zinc.950}',
+          hoverColor: '{zinc.100}',
+          activeColor: '{zinc.200}',
+        },
+        highlight: {
+          background: 'rgba(250, 250, 250, .16)',
+          focusBackground: 'rgba(250, 250, 250, .24)',
+          color: 'rgba(255,255,255,.87)',
+          focusColor: 'rgba(255,255,255,.87)',
+        },
+      },
     },
   },
 });
@@ -60,12 +92,19 @@ export class AppComponent implements OnInit {
   #primeng = inject(PrimeNG);
   #messageBusService = inject(MessageBusService);
   #destroyRef = inject(DestroyRef);
+  #meta = inject(Meta);
 
   event$ = this.#messageBusService.event$;
 
   ngOnInit(): void {
+    this.#setTheme();
+    this.#subscribeToEventChange();
+    this.#setPageDescription();
+  }
+
+  #setTheme() {
     this.#primeng.theme.set({
-      preset: MyPreset,
+      preset: Noir,
       options: {
         darkModeSelector: '.dark',
         cssLayer: {
@@ -74,7 +113,9 @@ export class AppComponent implements OnInit {
         },
       },
     });
+  }
 
+  #subscribeToEventChange() {
     this.event$
       .pipe(takeUntilDestroyed(this.#destroyRef))
       .subscribe((event) => {
@@ -93,5 +134,12 @@ export class AppComponent implements OnInit {
           this.#cartService.getShoppingSession();
         }
       });
+  }
+
+  #setPageDescription() {
+    this.#meta.updateTag({
+      name: 'description',
+      content: defaultDescription,
+    });
   }
 }

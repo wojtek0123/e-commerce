@@ -18,6 +18,7 @@ const roles = ref<{ name: string; value: Role }[]>([
   { name: 'Admin', value: 'ADMIN' },
   { name: 'User', value: 'USER' },
 ]);
+console.log(user)
 const store = useUserStore();
 const resolver = zodResolver(
   z.object({
@@ -48,31 +49,38 @@ function submit(event: FormSubmitEvent) {
     });
 }
 
-onMounted(() => {});
+onMounted(() => {
+
+})
 </script>
 
 <template>
   <Button
     text
-    :icon="!!user ? 'pi pi-pencil' : 'pi pi-plus'"
-    :severity="!!user ? 'secondary' : 'primary'"
+    icon="pi pi-plus"
     @click="visible = true"
   />
-  <Drawer v-model:visible="visible" class="max-w-[40rem] w-full rounded-r-base">
+  <Drawer
+    v-model:visible="visible"
+    class="max-w-[40rem] w-full rounded-r-base"
+  >
     <Form
       :resolver="resolver"
-      :initial-values="{
-        email: user?.email || '',
-        password: '',
-        role: user?.role || '',
-      }"
+      :initial-value="{email: user.email, password: '', role: user.role}"
       class="flex flex-col h-full justify-between gap-2 w-full max-w-[120rem]"
       @submit="submit"
     >
       <div class="flex flex-col gap-4">
-        <FormField v-slot="$field" class="flex flex-col gap-1" name="email">
+        <FormField
+          v-slot="$field"
+          class="flex flex-col gap-1"
+          name="email"
+        >
           <label class="text-muted-color">Email</label>
-          <InputText id="email" fluid />
+          <InputText
+            id="email"
+            fluid
+          />
           <Message
             v-if="$field.invalid"
             severity="error"
@@ -83,9 +91,17 @@ onMounted(() => {});
           </Message>
         </FormField>
 
-        <FormField v-slot="$field" class="flex flex-col gap-1" name="password">
+        <FormField
+          v-slot="$field"
+          class="flex flex-col gap-1"
+          name="password"
+        >
           <label class="text-muted-color">Password</label>
-          <InputText id="password" type="password" fluid />
+          <InputText
+            id="password"
+            type="password"
+            fluid
+          />
           <Message
             v-if="$field.invalid"
             severity="error"
@@ -96,7 +112,11 @@ onMounted(() => {});
           </Message>
         </FormField>
 
-        <FormField v-slot="$field" class="flex flex-col gap-1" name="role">
+        <FormField
+          v-slot="$field"
+          class="flex flex-col gap-1"
+          name="role"
+        >
           <label class="text-muted-color">Role</label>
           <Select
             id="role"

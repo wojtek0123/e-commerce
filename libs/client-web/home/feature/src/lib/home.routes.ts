@@ -5,6 +5,7 @@ import { CartService } from '@e-commerce/client-web/cart/api';
 export const homeRoutes: Route[] = [
   {
     path: '',
+    title: 'StoryStash',
     loadComponent: () =>
       import('./home.component').then((c) => c.HomeComponent),
     providers: [HomeStore, CartService],

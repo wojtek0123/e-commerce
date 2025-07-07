@@ -20,6 +20,7 @@
         libNavButton
         size="large"
         [routerLink]="urls().home"
+        [routerLinkActiveOptions]="{ exact: true }"
         routerLinkActive="bg-surface-50 dark:bg-surface-800 rounded-base"
         icon="pi pi-home"
       />
@@ -27,6 +28,7 @@
         libNavButton
         size="large"
         [routerLink]="urls().orders"
+        routerLinkActive="bg-surface-50 dark:bg-surface-800 rounded-base"
         icon="pi pi-user"
       />
       <lib-cart-sidebar />
@@ -35,10 +37,10 @@
 </div>
 
 <p-drawer libDrawerLeft [(visible)]="isMobileDrawerOpened">
-  <p-header>
+  <ng-template #header>
     <ng-container [ngTemplateOutlet]="logo" />
-  </p-header>
-  <div class="flex flex-col">
+  </ng-template>
+  <div class="flex flex-col mt-4">
     <ng-container [ngTemplateOutlet]="links" />
   </div>
 </p-drawer>
@@ -57,6 +59,7 @@
             <a
               [routerLink]="urls().home"
               routerLinkActive="bg-surface-50 dark:bg-surface-800 rounded-base"
+              [routerLinkActiveOptions]="{ exact: true }"
               class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700"
               aria-label="Home"
             >
@@ -121,7 +124,7 @@
         } @else {
           <a
             [routerLink]="urls().login"
-            routerLinkActive="bg-surface-100 dark:bg-surface-700"
+            routerLinkActive="bg-surface-100 dark:bg-surface-800"
             class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700"
             aria-label="Log in"
           >
@@ -132,7 +135,7 @@
           </a>
           <a
             [routerLink]="urls().register"
-            routerLinkActive="bg-surface-100 dark:bg-surface-700"
+            routerLinkActive="bg-surface-100 dark:bg-surface-800"
             class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700"
             aria-label="Register"
           >
@@ -197,7 +200,7 @@
         <a
           (click)="toggleMobileMenuDrawer()"
           [routerLink]="menuItem.routerLink"
-          routerLinkActive="bg-surface-100 dark:bg-surface-700"
+          routerLinkActive="bg-surface-100 dark:bg-surface-800"
           class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700"
           [name]="menuItem.label"
           aria-label="Account link"

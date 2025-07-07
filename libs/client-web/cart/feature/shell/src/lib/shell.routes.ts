@@ -14,6 +14,7 @@ export const cartShellRoutes: Route[] = [
     children: [
       {
         path: APP_ROUTES_FEATURE.CART.ORDER_PROCESS,
+        title: 'Order process',
         loadChildren: () =>
           import('@e-commerce/client-web/cart/feature/order-process').then(
             (r) => r.orderProcessRoutes,
@@ -21,6 +22,7 @@ export const cartShellRoutes: Route[] = [
       },
       {
         path: APP_ROUTES_FEATURE.CART.PAYMENT_STATUS,
+        title: 'Payment status',
         loadChildren: () =>
           import('@e-commerce/client-web/cart/feature/payment-status').then(
             (r) => r.paymentStatusRoutes,
@@ -28,6 +30,7 @@ export const cartShellRoutes: Route[] = [
       },
       {
         path: APP_ROUTES_FEATURE.CART.ORDER_SUMMARY,
+        title: 'Order summary',
         loadChildren: () =>
           import('@e-commerce/client-web/cart/feature/order-summary').then(
             (r) => r.orderSummaryRoutes,

@@ -1,7 +1,10 @@
 @for (_ of stars(); track $index; let index = $index) {
+  @let rateNumber = index + 1;
   <button
-    (click)="setRate($event, index + 1)"
+    (click)="setRate($event, rateNumber)"
     [class.pointer-events-none]="readonly() || disabled()"
+    [disabled]="readonly() || disabled()"
+    [attr.aria-label]="'Rate ' + rateNumber"
   >
     @if (
       rate() < index + 1 && rate() % index < 1 && rate() !== 0 && readonly()
@@ -21,8 +24,8 @@
     } @else {
       <span
         class="pi"
-        [class.pi-star]="rate() < index + 1"
-        [class.pi-star-fill]="rate() >= index + 1"
+        [class.pi-star]="rate() < rateNumber"
+        [class.pi-star-fill]="rate() >= rateNumber"
       ></span>
     }
   </button>

@@ -9,6 +9,7 @@ export const accountShellRoutes: Route[] = [
     children: [
       {
         path: APP_ROUTES_FEATURE.ACCOUNT.ORDERS,
+        title: 'Orders',
         loadChildren: () =>
           import('@e-commerce/client-web/account/feature/orders').then(
             (r) => r.ordersRoutes,
@@ -16,6 +17,7 @@ export const accountShellRoutes: Route[] = [
       },
       {
         path: APP_ROUTES_FEATURE.ACCOUNT.INFORMATION,
+        title: 'Information',
         loadChildren: () =>
           import('@e-commerce/client-web/account/feature/information').then(
             (r) => r.informationRoutes,
@@ -23,6 +25,7 @@ export const accountShellRoutes: Route[] = [
       },
       {
         path: APP_ROUTES_FEATURE.ACCOUNT.FAVOURITE_BOOKS_LIST,
+        title: 'Favourite books',
         loadChildren: () =>
           import(
             '@e-commerce/client-web/account/feature/favourite-books-list'

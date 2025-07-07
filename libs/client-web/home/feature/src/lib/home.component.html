@@ -19,6 +19,7 @@
   <img
     class="w-full h-auto"
     ngSrc="assets/images/books-home.webp"
+    alt="Five books lie one on top of the other"
     width="640"
     height="415"
     priority
@@ -27,14 +28,14 @@
 <main class="flex gap-8 xl:gap-16 mt-16 flex-col">
   @for (section of sections(); track section.name) {
     <section class="flex flex-col items-center w-full mx-auto gap-base">
-      <div class="flex items-center justify-between w-full capitalize">
-        <h2 class="text-4xl">{{ section.name }}</h2>
+      <div class="flex items-center justify-between w-full">
+        <h2 class="text-4xl capitalize">{{ section.name }}</h2>
         <a
           [routerLink]="booksUrl"
           [queryParams]="section.queryParams"
           [state]="{ clearFilters: true }"
         >
-          See more
+          See more {{ section.name | toLowerCase }} books
         </a>
       </div>
       <lib-books-grid
