@@ -19,7 +19,6 @@ import {
   provideApiUrl,
   provideLocalStorageKeys,
   provideAppRoutePaths,
-} from '@e-commerce/client-web/shared/app-config';
 import { provideStore } from '@ngrx/store';
 import { MessageService } from 'primeng/api';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
