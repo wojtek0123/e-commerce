@@ -27,6 +27,11 @@ const router = createRouter({
           children: bookShell,
         },
         {
+          path: '/publishers',
+          name: 'publishers',
+          children: (await import('@e-commerce/admin-dashboard/publisher/feature/shell')).shellRouter,
+        },
+        {
           path: '/categories',
           name: 'categories',
           children: categoriesShellRoutes,

@@ -41,7 +41,7 @@
         label="Retry"
         icon="pi pi-refresh"
         severity="secondary"
-        :loading="true"
+        :loading="store.loading"
         @click="retry()"
       />
     </div>

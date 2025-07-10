@@ -45,6 +45,12 @@
       "@e-commerce/admin-dashboard/category/feature/shell": [
         "libs/admin-dashboard/category/feature/shell/src/index.ts"
       ],
+      "@e-commerce/admin-dashboard/core/data-access": [
+        "libs/admin-dashboard/core/data-access/src/index.ts"
+      ],
+      "@e-commerce/admin-dashboard/core/domain": [
+        "libs/admin-dashboard/core/domain/src/index.ts"
+      ],
       "@e-commerce/admin-dashboard/country/data-access": [
         "libs/admin-dashboard/country/data-access/src/index.ts"
       ],
@@ -54,12 +60,6 @@
       "@e-commerce/admin-dashboard/country/feature/shell": [
         "libs/admin-dashboard/country/feature/shell/src/index.ts"
       ],
-      "@e-commerce/admin-dashboard/core/data-access": [
-        "libs/admin-dashboard/core/data-access/src/index.ts"
-      ],
-      "@e-commerce/admin-dashboard/core/domain": [
-        "libs/admin-dashboard/core/domain/src/index.ts"
-      ],
       "@e-commerce/admin-dashboard/home/data-access": [
         "libs/admin-dashboard/home/data-access/src/index.ts"
       ],
@@ -68,6 +68,15 @@
       ],
       "@e-commerce/admin-dashboard/home/feature/shell": [
         "libs/admin-dashboard/home/feature/shell/src/index.ts"
+      ],
+      "@e-commerce/admin-dashboard/publisher/data-access": [
+        "libs/admin-dashboard/publisher/data-access/src/index.ts"
+      ],
+      "@e-commerce/admin-dashboard/publisher/feature/publisher-list": [
+        "libs/admin-dashboard/publisher/feature/publisher-list/src/index.ts"
+      ],
+      "@e-commerce/admin-dashboard/publisher/feature/shell": [
+        "libs/admin-dashboard/publisher/feature/shell/src/index.ts"
       ],
       "@e-commerce/admin-dashboard/user/data-access": [
         "libs/admin-dashboard/user/data-access/src/index.ts"

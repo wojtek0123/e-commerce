@@ -1,0 +1,1 @@
+export { default as PublisherList } from './lib/publisher-list.vue';

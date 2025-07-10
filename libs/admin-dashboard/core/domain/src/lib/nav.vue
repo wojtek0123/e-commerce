@@ -102,6 +102,16 @@ const authService = useAuthService();
               <i class="pi pi-objects-column"></i>
               <span v-if="store.isExpanded">Countries</span>
             </RouterLink>
+
+
+            <RouterLink
+              to="/publishers"
+              activeClass="bg-surface-50 dark:bg-surface-800"
+              class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700 cursorpointer"
+            >
+              <i class="pi pi-objects-column"></i>
+              <span v-if="store.isExpanded">Publishers</span>
+            </RouterLink>
           </ul>
         </div>
 
