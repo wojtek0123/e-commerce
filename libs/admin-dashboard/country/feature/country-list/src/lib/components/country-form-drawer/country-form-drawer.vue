@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import Drawer from 'primevue/drawer';
 import Button from 'primevue/button';
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 import { z } from 'zod';
 import { zodResolver } from '@primevue/forms/resolvers/zod';
 import { Form, FormField, FormSubmitEvent } from '@primevue/forms';
@@ -42,7 +42,10 @@ function submit(event: FormSubmitEvent) {
     });
 }
 
-onMounted(() => {});
+const initialValues = ref({
+  name: country?.name || '',
+  code: country?.code || '',
+});
 </script>
 
 <template>
@@ -53,27 +56,17 @@ onMounted(() => {});
     title="Add country"
     @click="visible = true"
   />
-  <Drawer
-    v-model:visible="visible"
-    class="max-w-[40rem] w-full rounded-r-base"
-  >
+  <Drawer v-model:visible="visible" class="max-w-[40rem] w-full rounded-r-base">
     <Form
       :resolver="resolver"
-      :initial-value="{ name: country?.name || '', code: country?.code || '' }"
+      :initial-values="initialValues"
       class="flex flex-col h-full justify-between gap-2 w-full max-w-[120rem]"
       @submit="submit"
     >
       <div class="flex flex-col gap-4">
-        <FormField
-          v-slot="$field"
-          class="flex flex-col gap-1"
-          name="name"
-        >
+        <FormField v-slot="$field" class="flex flex-col gap-1" name="name">
           <label class="text-muted-color">Name</label>
-          <InputText
-            id="name"
-            fluid
-          />
+          <InputText id="name" fluid />
           <Message
             v-if="$field.invalid"
             severity="error"
@@ -84,16 +77,9 @@ onMounted(() => {});
           </Message>
         </FormField>
 
-        <FormField
-          v-slot="$field"
-          class="flex flex-col gap-1"
-          name="code"
-        >
+        <FormField v-slot="$field" class="flex flex-col gap-1" name="code">
           <label class="text-muted-color">Code</label>
-          <InputText
-            id="code"
-            fluid
-          />
+          <InputText id="code" fluid />
           <Message
             v-if="$field.invalid"
             severity="error"

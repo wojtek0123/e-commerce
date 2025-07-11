@@ -32,7 +32,11 @@ export class PublishersService {
     return this.prisma.publisher.update({ where, data });
   }
 
-  remove(where: Prisma.PublisherWhereUniqueInput) {
-    return this.prisma.publisher.delete({ where });
+  remove(ids: string) {
+    const parsedIds = ids.split(',');
+
+    return this.prisma.publisher.deleteMany({
+      where: { id: { in: parsedIds } },
+    });
   }
 }

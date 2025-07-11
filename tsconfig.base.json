@@ -78,6 +78,15 @@
       "@e-commerce/admin-dashboard/publisher/feature/shell": [
         "libs/admin-dashboard/publisher/feature/shell/src/index.ts"
       ],
+      "@e-commerce/admin-dashboard/shipping-method/data-access": [
+        "libs/admin-dashboard/shipping-method/data-access/src/index.ts"
+      ],
+      "@e-commerce/admin-dashboard/shipping-method/feature/shell": [
+        "libs/admin-dashboard/shipping-method/feature/shell/src/index.ts"
+      ],
+      "@e-commerce/admin-dashboard/shipping-method/feature/shipping-method-list": [
+        "libs/admin-dashboard/shipping-method/feature/shipping-method-list/src/index.ts"
+      ],
       "@e-commerce/admin-dashboard/user/data-access": [
         "libs/admin-dashboard/user/data-access/src/index.ts"
       ],

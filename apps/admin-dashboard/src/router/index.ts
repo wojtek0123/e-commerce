@@ -1,12 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import { shellRouter as bookShell } from '@e-commerce/admin-dashboard/book/feature/shell';
-import { shellRouter as authRouter } from '@e-commerce/admin-dashboard/auth/feature/shell';
 import { useAuthService } from '@e-commerce/admin-dashboard/auth/api';
 import MainLayout from '../views/main-layout.vue';
-import { categoriesShellRoutes } from '@e-commerce/admin-dashboard/category/feature/shell';
 import { Home } from '@e-commerce/admin-dashboard/home/feature/home';
-import { usersShellRoutes } from '@e-commerce/admin-dashboard/user/feature/shell';
-import { countriesShellRoutes } from '@e-commerce/admin-dashboard/country/feature/shell';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -19,39 +14,61 @@ const router = createRouter({
         {
           path: '',
           name: 'home',
-          component: Home,
+          component: (
+            await import('@e-commerce/admin-dashboard/home/feature/home')
+          ).Home,
         },
         {
           path: '/books',
           name: 'books',
-          children: bookShell,
+          children: (
+            await import('@e-commerce/admin-dashboard/book/feature/shell')
+          ).shellRouter,
         },
         {
           path: '/publishers',
           name: 'publishers',
-          children: (await import('@e-commerce/admin-dashboard/publisher/feature/shell')).shellRouter,
+          children: (
+            await import('@e-commerce/admin-dashboard/publisher/feature/shell')
+          ).shellRouter,
+        },
+        {
+          path: '/shipping-methods',
+          name: 'shipping-methods',
+          children: (
+            await import(
+              '@e-commerce/admin-dashboard/shipping-method/feature/shell'
+            )
+          ).shellRouter,
         },
         {
           path: '/categories',
           name: 'categories',
-          children: categoriesShellRoutes,
+          children: (
+            await import('@e-commerce/admin-dashboard/category/feature/shell')
+          ).categoriesShellRoutes,
         },
         {
           path: '/users',
           name: 'users',
-          children: usersShellRoutes,
+          children: (
+            await import('@e-commerce/admin-dashboard/user/feature/shell')
+          ).usersShellRoutes,
         },
         {
           path: '/countries',
           name: 'countries',
-          children: countriesShellRoutes,
+          children: (
+            await import('@e-commerce/admin-dashboard/country/feature/shell')
+          ).countriesShellRoutes,
         },
       ],
     },
     {
       path: '/auth',
       name: 'auth',
-      children: authRouter,
+      children: (await import('@e-commerce/admin-dashboard/auth/feature/shell'))
+        .shellRouter,
     },
     { path: '/:pathMatch(.*)*', redirect: 'books/list' },
   ],

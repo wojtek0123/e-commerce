@@ -11,11 +11,11 @@ import {
 } from '@nestjs/common';
 import { PublishersService } from './publishers.service';
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiCreatedResponse,
   ApiOkResponse,
   ApiOperation,
-  ApiParam,
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
@@ -32,6 +32,7 @@ export class PublishersController {
   @ApiOperation({ summary: 'Create a publisher' })
   @ApiCreatedResponse({ type: PublisherDto })
   @ApiBody({ description: '', type: PublisherDto })
+  @ApiBearerAuth()
   @UseGuards(RolesGuard)
   @Roles([Role.ADMIN])
   create(@Body() data: Prisma.PublisherCreateInput) {
@@ -56,6 +57,7 @@ export class PublishersController {
   @Patch(':id')
   @ApiOperation({ summary: 'Update a publisher' })
   @ApiCreatedResponse({ type: PublisherDto })
+  @ApiBearerAuth()
   @ApiBody({ description: '', type: PublisherDto })
   @UseGuards(RolesGuard)
   @Roles([Role.ADMIN])
@@ -63,12 +65,14 @@ export class PublishersController {
     return this.publishersService.update({ id }, data);
   }
 
-  @Delete(':id')
-  @ApiOperation({ summary: 'Delete a publisher' })
+  @Delete()
+  @ApiOperation({ summary: 'Delete publishers' })
   @ApiOkResponse({ type: PublisherDto })
+  @ApiBearerAuth()
+  @ApiQuery({ name: 'ids', required: true })
   @UseGuards(RolesGuard)
   @Roles([Role.ADMIN])
-  remove(@Param('id') id: string) {
-    return this.publishersService.remove({ id });
+  remove(@Query('ids') ids: string) {
+    return this.publishersService.remove(ids);
   }
 }

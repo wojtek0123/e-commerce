@@ -88,7 +88,7 @@ export class CategoriesController {
   @UseGuards(RolesGuard)
   @Roles([Role.ADMIN])
   @ApiOkResponse({ type: Category })
-  @ApiOperation({ summary: 'Remove a category' })
+  @ApiOperation({ summary: 'Remove categories' })
   @ApiQuery({ name: 'ids', required: true })
   @ApiBearerAuth()
   remove(@Query('ids') ids: string) {

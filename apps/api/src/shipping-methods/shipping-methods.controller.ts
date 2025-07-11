@@ -7,14 +7,17 @@ import {
   Param,
   Delete,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { ShippingMethodsService } from './shipping-methods.service';
 import { CreateShippingMethodDto } from './dto/create-shipping-method.dto';
 import { UpdateShippingMethodDto } from './dto/update-shipping-method.dto';
 import {
+  ApiBearerAuth,
   ApiCreatedResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
 import { ShippingMethod } from './entities/shipping-method.entity';
@@ -63,12 +66,13 @@ export class ShippingMethodsController {
     return this.shippingMethodsService.update(id, updateShippingMethodDto);
   }
 
-  @Delete(':id')
-  @ApiOkResponse({ type: ShippingMethod })
-  @ApiOperation({ summary: 'Remove specific shipping method' })
+  @Delete()
   @UseGuards(RolesGuard)
   @Roles([Role.ADMIN])
-  remove(@Param('id') id: string) {
-    return this.shippingMethodsService.remove(id);
+  @ApiOperation({ summary: 'Remove shipping methods' })
+  @ApiQuery({ name: 'ids', required: true })
+  @ApiBearerAuth()
+  remove(@Query('ids') ids: string) {
+    return this.shippingMethodsService.remove(ids);
   }
 }

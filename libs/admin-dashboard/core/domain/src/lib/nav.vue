@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router';
 import Toolbar from 'primevue/toolbar';
-import Button from 'primevue/button';
 import Divider from 'primevue/divider';
 import { useCoreStore } from '@e-commerce/admin-dashboard/core/data-access';
 import { useAuthService } from '@e-commerce/admin-dashboard/auth/api';
@@ -19,18 +18,60 @@ const authService = useAuthService();
         <div
           class="mx-auto max-w-lg w-full flex items-center justify-evenly gap-4"
         >
-          <Button
-            size="large"
-            text
-            icon="pi pi-bars"
-            class="text-muted-color h-10 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700"
-          />
           <RouterLink
             to="/"
-            active-class="bg-surface-50 dark:bg-surface-800 rounded-base"
-            class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700 cursorpointer"
+            exact-active-class="bg-surface-50 dark:bg-surface-800 rounded-base"
+            class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700"
           >
             <i class="pi pi-home"></i>
+          </RouterLink>
+
+          <RouterLink
+            to="/books"
+            active-class="bg-surface-50 dark:bg-surface-800 rounded-base"
+            class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700"
+          >
+            <i class="pi pi-book"></i>
+          </RouterLink>
+
+          <RouterLink
+            to="/categories"
+            active-class="bg-surface-50 dark:bg-surface-800 rounded-base"
+            class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700"
+          >
+            <i class="pi pi-objects-column"></i>
+          </RouterLink>
+
+          <RouterLink
+            to="/users"
+            active-class="bg-surface-50 dark:bg-surface-800 rounded-base"
+            class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700"
+          >
+            <i class="pi pi-user"></i>
+          </RouterLink>
+
+          <RouterLink
+            to="/countries"
+            active-class="bg-surface-50 dark:bg-surface-800 rounded-base"
+            class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700"
+          >
+            <i class="pi pi-map"></i>
+          </RouterLink>
+
+          <RouterLink
+            to="/publishers"
+            active-class="bg-surface-50 dark:bg-surface-800 rounded-base"
+            class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700"
+          >
+            <i class="pi pi-users"></i>
+          </RouterLink>
+
+          <RouterLink
+            to="/shipping-methods"
+            active-class="bg-surface-50 dark:bg-surface-800 rounded-base"
+            class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700"
+          >
+            <i class="pi pi-truck"></i>
           </RouterLink>
         </div>
       </template>
@@ -61,6 +102,7 @@ const authService = useAuthService();
               to="/"
               exact-active-class="bg-surface-50 dark:bg-surface-800 rounded-base"
               class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700"
+              title="Home"
             >
               <i class="pi pi-home"></i>
             </RouterLink>
@@ -70,7 +112,8 @@ const authService = useAuthService();
             <RouterLink
               to="/books"
               activeClass="bg-surface-50 dark:bg-surface-800"
-              class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700 cursorpointer"
+              class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700"
+              title="Books"
             >
               <i class="pi pi-book"></i>
               <span v-if="store.isExpanded">Books</span>
@@ -79,7 +122,8 @@ const authService = useAuthService();
             <RouterLink
               to="/categories"
               activeClass="bg-surface-50 dark:bg-surface-800"
-              class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700 cursorpointer"
+              class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700"
+              title="Categories"
             >
               <i class="pi pi-objects-column"></i>
               <span v-if="store.isExpanded">Categories</span>
@@ -88,29 +132,41 @@ const authService = useAuthService();
             <RouterLink
               to="/users"
               activeClass="bg-surface-50 dark:bg-surface-800"
-              class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700 cursorpointer"
+              class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700"
+              title="Users"
             >
-              <i class="pi pi-objects-column"></i>
+              <i class="pi pi-user"></i>
               <span v-if="store.isExpanded">Users</span>
             </RouterLink>
 
             <RouterLink
               to="/countries"
               activeClass="bg-surface-50 dark:bg-surface-800"
-              class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700 cursorpointer"
+              class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700"
+              title="Countries"
             >
-              <i class="pi pi-objects-column"></i>
+              <i class="pi pi-map"></i>
               <span v-if="store.isExpanded">Countries</span>
             </RouterLink>
-
 
             <RouterLink
               to="/publishers"
               activeClass="bg-surface-50 dark:bg-surface-800"
-              class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700 cursorpointer"
+              class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700"
+              title="Publishers"
             >
-              <i class="pi pi-objects-column"></i>
+              <i class="pi pi-users"></i>
               <span v-if="store.isExpanded">Publishers</span>
+            </RouterLink>
+
+            <RouterLink
+              to="/shipping-methods"
+              activeClass="bg-surface-50 dark:bg-surface-800"
+              class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700"
+              title="Shipping methods"
+            >
+              <i class="pi pi-truck"></i>
+              <span v-if="store.isExpanded">Shipping methods</span>
             </RouterLink>
           </ul>
         </div>
@@ -119,6 +175,7 @@ const authService = useAuthService();
           <button
             class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700"
             @click="authService.logout"
+            title="Log out"
           >
             <i class="pi pi-sign-out"></i>
             <span v-if="store.isExpanded">Log out</span>
@@ -127,6 +184,7 @@ const authService = useAuthService();
           <button
             class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700"
             @click="store.toggleTheme"
+            title="Toggle theme"
           >
             <i v-if="store.isDark" class="pi pi-moon"></i>
             <i v-if="!store.isDark" class="pi pi-sun"></i>
@@ -137,6 +195,7 @@ const authService = useAuthService();
           <button
             class="text-muted-color px-3 h-10 flex items-center gap-4 !rounded-base overflow-hidden hover:bg-surface-100 hover:dark:bg-surface-700"
             @click="store.toggleExpandCollapse"
+            title="Collapse/Expand"
           >
             <i v-if="store.isExpanded" class="pi pi-arrow-left"></i>
             <i v-if="!store.isExpanded" class="pi pi-arrow-right"></i>

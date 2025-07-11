@@ -196,6 +196,9 @@ export const useBooksStore = defineStore('books', () => {
         return;
       }
 
+      books.value = books.value.filter(
+        (book) => !selectedBooks.value.includes(book),
+      );
       selectedBooks.value = [];
     } catch (e: unknown) {
       let message: string;

@@ -1,0 +1,32 @@
+{
+  "name": "admin-dashboard-shipping-method-feature-shell",
+  "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/admin-dashboard/shipping-method/feature/shell/src",
+  "projectType": "library",
+  "tags": ["scope:admin-dashboard", "type:shell", "domain:shipping-method"],
+  "targets": {
+    "build": {
+      "executor": "@nx/vite:build",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "outputPath": "dist/libs/admin-dashboard/shipping-method/feature/shell"
+      },
+      "configurations": {
+        "development": {
+          "mode": "development"
+        },
+        "production": {
+          "mode": "production"
+        }
+      }
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "outputs": ["{options.reportsDirectory}"],
+      "options": {
+        "reportsDirectory": "../../../../../coverage/libs/admin-dashboard/shipping-method/feature/shell"
+      }
+    }
+  }
+}

@@ -79,6 +79,9 @@ export const usePublisherStore = defineStore('publisher', () => {
         params: { ids },
       });
 
+      publishers.value = publishers.value.filter(
+        (publisher) => !selectedPublishers.value.includes(publisher),
+      );
       selectedPublishers.value = [];
     } catch (e: unknown) {
       let message: string;

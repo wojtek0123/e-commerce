@@ -28,7 +28,8 @@ export const useCategoriesStore = defineStore('categories', () => {
     } catch (e: unknown) {
       if (e instanceof AxiosError) {
         error.value =
-          e.response?.data?.message ?? 'Error occurred while fetching books';
+          e.response?.data?.message ??
+          'Error occurred while fetching categories';
       } else {
         error.value = 'An unexpected error occurred';
       }
@@ -56,7 +57,8 @@ export const useCategoriesStore = defineStore('categories', () => {
     } catch (e: unknown) {
       if (e instanceof AxiosError) {
         error.value =
-          e.response?.data?.message ?? 'Error occurred while fetching books';
+          e.response?.data?.message ??
+          'Error occurred while fetching categories';
       } else {
         error.value = 'An unexpected error occurred';
       }
@@ -82,10 +84,10 @@ export const useCategoriesStore = defineStore('categories', () => {
         throw new Error('Something went wrong!');
       }
 
-      selectedCategories.value = [];
       categories.value = categories.value.filter(
         ({ id }) => !ids.split(',').includes(id),
       );
+      selectedCategories.value = [];
     } catch (e: unknown) {
       let message: string;
       if (e instanceof AxiosError) {
