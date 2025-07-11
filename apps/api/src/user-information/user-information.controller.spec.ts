@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { UserInformationsController } from './user-informations.controller';
-import { UserInformationsService } from './user-informations.service';
+import { UserInformationsController } from './user-information.controller';
+import { UserInformationsService } from './user-information.service';
 
 describe('UserInformationsController', () => {
   let controller: UserInformationsController;
@@ -11,7 +11,9 @@ describe('UserInformationsController', () => {
       providers: [UserInformationsService],
     }).compile();
 
-    controller = module.get<UserInformationsController>(UserInformationsController);
+    controller = module.get<UserInformationsController>(
+      UserInformationsController,
+    );
   });
 
   it('should be defined', () => {

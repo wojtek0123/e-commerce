@@ -9,7 +9,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { getUserIdFromAccessToken } from '../common/utils/get-user-id-from-access-token';
 
 @Injectable()
-export class UserInformationsService {
+export class UserInformationService {
   constructor(private prisma: PrismaService) {}
 
   create(data: CreateUserInformationDto) {
@@ -17,7 +17,7 @@ export class UserInformationsService {
   }
 
   findAll() {
-    return `This action returns all userInformations`;
+    return `This action returns all user information`;
   }
 
   async findOne(authHeader: string) {
@@ -34,7 +34,7 @@ export class UserInformationsService {
     return userInformation;
   }
 
-  update(id: number, updateUserInformationDto: UpdateUserInformationDto) {
+  update(id: number, data: UpdateUserInformationDto) {
     return `This action updates a #${id} userInformation`;
   }
 

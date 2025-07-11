@@ -12,7 +12,7 @@ import { ConfigModule } from '@nestjs/config';
 import { CartItemsModule } from '../cart-items/cart-items.module';
 import { UserAddressesModule } from '../user-addresses/user-addresses.module';
 import { ShoppingSessionsModule } from '../shopping-sessions/shopping-sessions.module';
-import { Inventoriesnodule } from '../inventories/inventories.module';
+import { InventoriesModule } from '../inventories/inventories.module';
 import { CountriesModule } from '../countries/countries.module';
 import { ShippingMethodsModule } from '../shipping-methods/shipping-methods.module';
 import { OrderDetailsModule } from '../order-details/order-details.module';
@@ -23,7 +23,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { join } from 'path';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { BookReviewsModule } from '../book-reviews/book-reviews.module';
-import { UserInformationsModule } from '../user-informations/user-informations.module';
+import { UserInformationModule } from '../user-information/user-information.module';
 
 @Module({
   controllers: [AppController],
@@ -57,7 +57,7 @@ import { UserInformationsModule } from '../user-informations/user-informations.m
     CartItemsModule,
     UserAddressesModule,
     ShoppingSessionsModule,
-    Inventoriesnodule,
+    InventoriesModule,
     CountriesModule,
     ShippingMethodsModule,
     OrderDetailsModule,
@@ -65,7 +65,7 @@ import { UserInformationsModule } from '../user-informations/user-informations.m
     CreditCardsModule,
     FavouriteBooksListsModule,
     BookReviewsModule,
-    UserInformationsModule,
+    UserInformationModule,
   ],
 })
 export class AppModule {}

@@ -9,28 +9,34 @@ import {
   Delete,
   UseGuards,
 } from '@nestjs/common';
-import { UserInformationsService } from './user-informations.service';
+import { UserInformationService } from './user-information.service';
 import { CreateUserInformationDto } from './dto/create-user-information.dto';
 import { UpdateUserInformationDto } from './dto/update-user-information.dto';
-import { ApiBearerAuth, ApiOkResponse, ApiOperation } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import { UserInformation } from './entities/user-information.entity';
 import { Roles, RolesGuard } from '../common/guards/role.guard';
 import { Role } from '@prisma/client';
 
-@Controller('user-informations')
-export class UserInformationsController {
+@Controller('user-information')
+@ApiTags('user-information')
+export class UserInformationController {
   constructor(
-    private readonly userInformationsService: UserInformationsService,
+    private readonly userInformationService: UserInformationService,
   ) {}
 
   @Post()
   create(@Body() createUserInformationDto: CreateUserInformationDto) {
-    return this.userInformationsService.create(createUserInformationDto);
+    return this.userInformationService.create(createUserInformationDto);
   }
 
   @Get()
   findAll() {
-    return this.userInformationsService.findAll();
+    return this.userInformationService.findAll();
   }
 
   @Get()
@@ -40,7 +46,7 @@ export class UserInformationsController {
   @Roles([Role.ADMIN, Role.USER])
   @ApiBearerAuth()
   findOne(@Headers('authorization') authHeader: string) {
-    return this.userInformationsService.findOne(authHeader);
+    return this.userInformationService.findOne(authHeader);
   }
 
   @Patch(':id')
@@ -48,11 +54,11 @@ export class UserInformationsController {
     @Param('id') id: string,
     @Body() updateUserInformationDto: UpdateUserInformationDto,
   ) {
-    return this.userInformationsService.update(+id, updateUserInformationDto);
+    return this.userInformationService.update(+id, updateUserInformationDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.userInformationsService.remove(+id);
+    return this.userInformationService.remove(+id);
   }
 }
