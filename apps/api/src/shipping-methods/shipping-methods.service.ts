@@ -24,11 +24,7 @@ export class ShippingMethodsService {
     return this.prisma.shippingMethod.update({ where: { id }, data });
   }
 
-  remove(ids: string) {
-    const parsedIds = ids.split(',');
-
-    return this.prisma.category.deleteMany({
-      where: { id: { in: parsedIds } },
-    });
+  remove(id: string) {
+    return this.prisma.shippingMethod.delete({ where: { id } });
   }
 }

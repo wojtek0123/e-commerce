@@ -10,8 +10,8 @@ import { usePublisherStore } from '@e-commerce/admin-dashboard/publisher/data-ac
 import { onMounted, ref } from 'vue';
 import { useConfirm } from 'primevue/useconfirm';
 import { debounce } from 'lodash-es';
-import ViewPublisherDetails from './components/view-publisher-details.vue';
-import AddPublisher from './components/add-publisher.vue';
+import PublisherFormDrawer from './publisher-form-drawer/publisher-form-drawer.vue';
+import { Publisher } from '@e-commerce/shared/api-models';
 
 const store = usePublisherStore();
 const confirm = useConfirm();
@@ -31,7 +31,7 @@ function retryGettingPublishers() {
   store.getPublishers();
 }
 
-function deleteBooks() {
+function deletePublisher({ id }: Publisher) {
   confirm.require({
     message: 'Are you sure you want to proceed?',
     header: 'Confirmation',
@@ -46,7 +46,7 @@ function deleteBooks() {
       severity: 'danger',
     },
     accept: () => {
-      store.deletePublishers();
+      store.deletePublisher(id);
     },
   });
 }
@@ -64,7 +64,7 @@ onMounted(() => {
   <ConfirmDialog />
   <div class="flex flex-col gap-base">
     <div
-      class="flex flex-col bg-content-background p-base rounded-base sm:flex-row justify-between sm:items-center gap-base"
+      class="flex flex-col bg-content-background p-2 rounded-base sm:flex-row justify-between sm:items-center gap-base"
     >
       <Breadcrumb class="min-w-max" :home="home" :model="breadcrumbs">
         <template #item="{ item, props }">
@@ -81,13 +81,13 @@ onMounted(() => {
           </router-link>
         </template>
       </Breadcrumb>
-      <InputText
-        v-model="store.search"
-        type="text"
-        placeholder="Search book by title..."
-        class="w-full h-fit max-w-[30rem]"
-        @value-change="onSearchInput"
-      />
+      <!--      <InputText-->
+      <!--        v-model="store.search"-->
+      <!--        type="text"-->
+      <!--        placeholder="Search publisher by name..."-->
+      <!--        class="w-full h-fit max-w-[30rem]"-->
+      <!--        @value-change="onSearchInput"-->
+      <!--      />-->
     </div>
 
     <div v-if="store.error" class="flex flex-col items-center gap-4 mt-10">
@@ -109,19 +109,7 @@ onMounted(() => {
       v-else
       class="bg-content-background w-full p-4 rounded-base flex flex-col gap-base"
     >
-      <div class="flex flex-items gap-4">
-        <AddPublisher />
-        <Button
-          v-if="store.selectedPublishers.length !== 0"
-          severity="danger"
-          text
-          :outlined="true"
-          icon="pi pi-trash"
-          @click="deleteBooks()"
-        />
-      </div>
       <DataTable
-        v-model:selection="store.selectedPublishers"
         :value="store.publishers"
         :loading="store.loading"
         table-class="w-full min-w-[50rem]"
@@ -150,8 +138,23 @@ onMounted(() => {
         </Column>
 
         <Column class="w-24 !text-end">
+          <template #header>
+            <div class="flex justify-end w-full">
+              <PublisherFormDrawer />
+            </div>
+          </template>
           <template #body="{ data }">
-            <ViewPublisherDetails :publisher="{ ...data }" />
+            <div class="flex items-center gap-1">
+              <PublisherFormDrawer :publisher="{ ...data }" />
+              <Button
+                severity="danger"
+                text
+                :outlined="true"
+                v-tooltip.left="'Delete'"
+                icon="pi pi-trash"
+                @click="deletePublisher(data)"
+              />
+            </div>
           </template>
         </Column>
       </DataTable>

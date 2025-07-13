@@ -7,7 +7,7 @@ export const useCountryStore = defineStore('country', () => {
   const countries = ref<Country[]>([]);
   const loading = ref(false);
   const error = ref<string | null>(null);
-  const selectedCountries = ref<Country[]>([]);
+  const drawerLoading = ref(false);
 
   async function getCountries() {
     loading.value = true;
@@ -33,7 +33,7 @@ export const useCountryStore = defineStore('country', () => {
   }
 
   async function addCountry(params: { name: string; code: string }) {
-    loading.value = true;
+    drawerLoading.value = true;
     error.value = null;
 
     try {
@@ -50,7 +50,58 @@ export const useCountryStore = defineStore('country', () => {
         error.value = 'An unexpected error occurred';
       }
     } finally {
-      loading.value = false;
+      drawerLoading.value = false;
+    }
+  }
+
+  async function updateCountry(
+    id: Country['id'],
+    body: { name: string; code: string },
+  ) {
+    drawerLoading.value = true;
+    error.value = null;
+
+    try {
+      const response = await axios.patch<Country>(
+        `${import.meta.env.VITE_API_URL}/countries/${id}`,
+        body,
+      );
+      const index = countries.value.findIndex((c) => c.id === id);
+
+      if (index !== -1) {
+        countries.value[index] = response.data;
+      }
+    } catch (e: unknown) {
+      if (e instanceof AxiosError) {
+        error.value =
+          e.response?.data?.message ?? 'Error occurred while updating user';
+      } else {
+        error.value = 'An unexpected error occurred';
+      }
+    } finally {
+      drawerLoading.value = false;
+    }
+  }
+
+  async function deleteCountry(id: Country['id']) {
+    drawerLoading.value = true;
+    error.value = null;
+
+    try {
+      await axios.delete<Country>(
+        `${import.meta.env.VITE_API_URL}/countries/${id}`,
+      );
+
+      countries.value = countries.value.filter((c) => c.id !== id);
+    } catch (e: unknown) {
+      if (e instanceof AxiosError) {
+        error.value =
+          e.response?.data?.message ?? 'Error occurred while deleting a user';
+      } else {
+        error.value = 'An unexpected error occurred';
+      }
+    } finally {
+      drawerLoading.value = false;
     }
   }
 
@@ -60,6 +111,8 @@ export const useCountryStore = defineStore('country', () => {
     error,
     getCountries,
     addCountry,
-    selectedCountries,
+    updateCountry,
+    drawerLoading,
+    deleteCountry,
   };
 });

@@ -1,7 +1,8 @@
 <template>
+  <ConfirmDialog />
   <div class="flex flex-col gap-base">
     <div
-      class="flex flex-col bg-content-background pt-2 pb-4 xl:pb-2 xl:pl-2 xl:pr-4 rounded-base xl:flex-row justify-between xl:items-center gap-base"
+      class="flex flex-col bg-content-background p-2 rounded-base xl:flex-row justify-between xl:items-center gap-base"
     >
       <Breadcrumb :home="home" :model="breadcrumbs">
         <template #item="{ item, props }">
@@ -40,26 +41,12 @@
       v-else
       class="bg-content-background w-full p-4 rounded-base flex flex-col gap-base"
     >
-      <div class="flex flex-items gap-4">
-        <CountryFormDrawer />
-        <!-- <AddCategoryFormDrawer /> -->
-        <!-- <Button
-          v-if="store.selectedUsers.length !== 0"
-          severity="danger"
-          text
-          :outlined="true"
-          icon="pi pi-trash"
-          @click="isDeleteDialogVisible = true"
-        /> -->
-      </div>
       <DataTable
-        v-model:selection="store.selectedCountries"
         :value="store.countries"
         :loading="store.loading"
         table-class="w-full min-w-[50rem]"
         class="w-full"
       >
-        <Column selection-mode="multiple" header-class="w-12" />
         <Column field="id" header="ID">
           <template #loading>
             <div
@@ -81,9 +68,35 @@
           </template>
         </Column>
 
+        <Column field="code" header="Code">
+          <template #loading>
+            <div
+              class="flex items-center"
+              :style="{ height: '17px', 'flex-grow': '1', overflow: 'hidden' }"
+            >
+              <Skeleton width="60%" height="1rem" />
+            </div>
+          </template>
+        </Column>
         <Column class="w-24 !text-end">
+          <template #header>
+            <div class="flex justify-end w-full">
+              <CountryFormDrawer />
+            </div>
+          </template>
           <template #body="{ data }">
-            <CountryFormDrawer :country="data" />
+            <div class="flex items-center gap-1">
+              <CountryFormDrawer :country="{ ...data }" />
+
+              <Button
+                severity="danger"
+                text
+                v-tooltip.left="'Delete'"
+                :outlined="true"
+                icon="pi pi-trash"
+                @click="deleteCountry(data)"
+              />
+            </div>
           </template>
         </Column>
       </DataTable>
@@ -99,9 +112,13 @@ import Column from 'primevue/column';
 import Skeleton from 'primevue/skeleton';
 import { ref, onMounted } from 'vue';
 import { useCountryStore } from '@e-commerce/admin-dashboard/country/data-access';
-import CountryFormDrawer from './components/country-form-drawer/country-form-drawer.vue';
+import CountryFormDrawer from './country-form-drawer/country-form-drawer.vue';
+import { Country } from '@e-commerce/shared/api-models';
+import { useConfirm } from 'primevue/useconfirm';
+import ConfirmDialog from 'primevue/confirmdialog';
 
 const store = useCountryStore();
+const confirm = useConfirm();
 
 const breadcrumbs = ref([
   {
@@ -116,6 +133,26 @@ const home = ref({
 
 function retry() {
   store.getCountries();
+}
+
+function deleteCountry({ id }: Country) {
+  confirm.require({
+    message: 'Are you sure you want to proceed?',
+    header: 'Confirmation',
+    icon: 'pi pi-exclamation-triangle',
+    rejectProps: {
+      label: 'Cancel',
+      severity: 'secondary',
+      outlined: true,
+    },
+    acceptProps: {
+      label: 'Delete',
+      severity: 'danger',
+    },
+    accept: () => {
+      store.deleteCountry(id);
+    },
+  });
 }
 
 onMounted(() => {

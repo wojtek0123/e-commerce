@@ -8,10 +8,15 @@ import InputText from 'primevue/inputtext';
 import { ref } from 'vue';
 import Message from 'primevue/message';
 import { useCategoriesStore } from '@e-commerce/admin-dashboard/category/data-access';
+import { Category } from '@e-commerce/shared/api-models';
 
 const store = useCategoriesStore();
 
 const visible = ref(false);
+
+const { category } = defineProps<{
+  category?: Category;
+}>();
 
 const resolver = zodResolver(
   z.object({
@@ -19,21 +24,36 @@ const resolver = zodResolver(
   }),
 );
 
+const initialValues = ref({
+  name: category?.name ?? '',
+});
+
 function submit(event: FormSubmitEvent) {
   if (!event.valid) return;
 
   const { name } = event.states;
 
-  store.addCategory({ name: name.value }).then(() => {
+  (category
+    ? store.updateCategory(category.id, { name: name.value })
+    : store.addCategory({ name: name.value })
+  ).then(() => {
     visible.value = false;
   });
 }
 </script>
 
 <template>
-  <Button text icon="pi pi-plus" @click="visible = true" />
+  <Button
+    text
+    v-tooltip.left="!!category ? 'Update' : 'Add'"
+    :icon="!!category ? 'pi pi-pencil' : 'pi pi-plus'"
+    severity="primary"
+    :title="category ? 'Update category' : 'Add category'"
+    @click="visible = true"
+  />
   <Drawer v-model:visible="visible" class="max-w-[40rem] w-full rounded-r-base">
     <Form
+      :initial-values="initialValues"
       :resolver="resolver"
       class="flex flex-col h-full justify-between gap-2 w-full max-w-[120rem]"
       @submit="submit"
@@ -56,7 +76,7 @@ function submit(event: FormSubmitEvent) {
       <Button
         :loading="store.popupLoading"
         class="min-h-max"
-        label="Add category"
+        :label="(category ? 'Update' : 'Add') + ' category'"
         type="submit"
       />
     </Form>

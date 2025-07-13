@@ -29,16 +29,21 @@ function submit(event: FormSubmitEvent) {
 
   const { name, code } = event.states;
 
-  store
-    .addCountry({
-      name: name.value,
-      code: code.value,
-    })
+  (!!country
+    ? store.updateCountry(country.id, {
+        name: name.value,
+        code: code.value,
+      })
+    : store.addCountry({
+        name: name.value,
+        code: code.value,
+      })
+  )
     .then(() => {
       visible.value = false;
     })
     .catch((error) => {
-      console.error('Error adding country:', error);
+      console.error(`Error ${country ? 'updating' : 'adding'} country:`, error);
     });
 }
 
@@ -51,6 +56,7 @@ const initialValues = ref({
 <template>
   <Button
     text
+    v-tooltip.left="!!country ? 'Update' : 'Add'"
     :icon="!!country ? 'pi pi-pencil' : 'pi pi-plus'"
     :severity="!!country ? 'secondary' : 'primary'"
     title="Add country"
@@ -92,9 +98,9 @@ const initialValues = ref({
       </div>
       <Button
         class="min-h-max"
-        label="Add country"
+        :label="(!!country ? 'Update' : 'Add') + ' country'"
         type="submit"
-        :loading="false"
+        :loading="store.drawerLoading"
       />
     </Form>
   </Drawer>

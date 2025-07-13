@@ -7,7 +7,7 @@ export const useUserStore = defineStore('user', () => {
   const users = ref<User[]>([]);
   const loading = ref(false);
   const error = ref<string | null>(null);
-  const selectedUsers = ref<User[]>([]);
+  const popupLoading = ref(false);
 
   async function getUsers() {
     loading.value = true;
@@ -22,7 +22,7 @@ export const useUserStore = defineStore('user', () => {
     } catch (e: unknown) {
       if (e instanceof AxiosError) {
         error.value =
-          e.response?.data?.message ?? 'Error occurred while fetching books';
+          e.response?.data?.message ?? 'Error occurred while fetching users';
       } else {
         error.value = 'An unexpected error occurred';
       }
@@ -31,18 +31,60 @@ export const useUserStore = defineStore('user', () => {
     }
   }
 
-  async function addUser(params: {
+  async function updateUser(
+    user: User,
+    body: {
+      email?: string;
+      password?: string;
+      role?: Role;
+    },
+  ) {
+    popupLoading.value = true;
+    error.value = null;
+
+    body = Object.fromEntries(
+      Object.entries(body).filter(
+        ([key, value]) => user[key as keyof User] !== value && !!value,
+      ),
+    );
+
+    (body as typeof body & { newPassword?: string })['newPassword'] =
+      body.password;
+    delete body.password;
+
+    try {
+      const response = await axios.patch<User>(
+        `${import.meta.env.VITE_API_URL}/users/${user.id}`,
+        body,
+      );
+
+      users.value = users.value.map((u) =>
+        u.id === user.id ? { ...response.data } : u,
+      );
+    } catch (e: unknown) {
+      if (e instanceof AxiosError) {
+        error.value =
+          e.response?.data?.message ?? 'Error occurred while updating user';
+      } else {
+        error.value = 'An unexpected error occurred';
+      }
+    } finally {
+      popupLoading.value = false;
+    }
+  }
+
+  async function addUser(body: {
     email: string;
     password: string;
     role?: Role;
   }) {
-    loading.value = true;
+    popupLoading.value = true;
     error.value = null;
 
     try {
       const response = await axios.post<User>(
         `${import.meta.env.VITE_API_URL}/users`,
-        params,
+        body,
       );
       users.value.push(response.data);
     } catch (e: unknown) {
@@ -53,7 +95,7 @@ export const useUserStore = defineStore('user', () => {
         error.value = 'An unexpected error occurred';
       }
     } finally {
-      loading.value = false;
+      popupLoading.value = false;
     }
   }
 
@@ -63,6 +105,7 @@ export const useUserStore = defineStore('user', () => {
     error,
     getUsers,
     addUser,
-    selectedUsers,
+    updateUser,
+    popupLoading,
   };
 });

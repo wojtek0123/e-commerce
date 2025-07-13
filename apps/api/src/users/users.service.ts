@@ -13,6 +13,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { ConfigService } from '@nestjs/config';
 import { Role } from '@prisma/client';
 import { parseQueryParams } from '../common/utils/parse-query-params';
+import { decode } from 'jsonwebtoken';
 
 @Injectable()
 export class UsersService {
@@ -53,6 +54,7 @@ export class UsersService {
           role: { in: validatedRoles as Role[] },
         }),
       },
+      orderBy: { createdAt: 'asc' },
     });
   }
 
@@ -77,7 +79,52 @@ export class UsersService {
     return user;
   }
 
-  async update(authHeader: string, id: string, body: UpdateUserDto) {
+  async updateForAdmin(id: string, body: UpdateUserDto) {
+    const user = await this.prisma.user.findUnique({ where: { id } });
+
+    if (!user) {
+      throw new NotFoundException();
+    }
+
+    let hashedPassword: string | undefined;
+
+    if (body.newPassword) {
+      hashedPassword = await hash(
+        body.newPassword.toString(),
+        +this.config.get<string>('ROUNDS_OF_HASHING'),
+      );
+    }
+
+    if (body.email) {
+      const isEmailUsed = await this.prisma.user.findFirst({
+        where: { email: body.email },
+      });
+
+      if (isEmailUsed) {
+        throw new ConflictException('Email is already used');
+      }
+    }
+
+    return this.prisma.user.update({
+      where: { id },
+      data: {
+        ...(hashedPassword && { password: hashedPassword }),
+        ...(body.email && { email: body.email }),
+        ...(body.role && { role: body.role }),
+      },
+      select: {
+        password: false,
+        id: true,
+        createdAt: true,
+        email: true,
+        role: true,
+        updatedAt: true,
+        userInformation: true,
+      },
+    });
+  }
+
+  async updateForUser(authHeader: string, id: string, body: UpdateUserDto) {
     const user = await this.prisma.user.findUnique({ where: { id } });
 
     if (!user) {
@@ -85,6 +132,7 @@ export class UsersService {
     }
 
     const userId = getUserIdFromAccessToken(authHeader);
+    let hashedPassword: string | undefined;
 
     if (userId !== id) {
       throw new UnauthorizedException();
@@ -93,8 +141,6 @@ export class UsersService {
     if (!body.password && body.email) {
       throw new BadRequestException('Current password is required');
     }
-
-    let hashedPassword: string | undefined;
 
     if (body.password) {
       const isPasswordCorrect = await compare(body.password, user.password);

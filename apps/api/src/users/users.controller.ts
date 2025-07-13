@@ -12,9 +12,12 @@ import {
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
+  ApiBody,
   ApiCreatedResponse,
+  ApiHeaders,
   ApiOkResponse,
   ApiOperation,
+  ApiParam,
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
@@ -24,6 +27,7 @@ import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
 import { Role } from '@prisma/client';
 import { Roles, RolesGuard } from '../common/guards/role.guard';
+import { decode } from 'jsonwebtoken';
 
 @ApiTags('users')
 @Controller('users')
@@ -66,12 +70,20 @@ export class UsersController {
   @UseGuards(RolesGuard)
   @Roles([Role.ADMIN, Role.USER])
   @ApiBearerAuth()
+  // @ApiParam({ name: 'id', type: String, required: true })
+  // @ApiBody({ type: UpdateUserDto, required: true })
   update(
     @Param('id') id: string,
     @Body() body: UpdateUserDto,
     @Headers('authorization') authHeader: string,
   ) {
-    return this.usersService.update(authHeader, id, body);
+    const isAdmin = decode(authHeader.split(' ')[1])?.['role'] === Role.ADMIN;
+
+    if (isAdmin) {
+      return this.usersService.updateForAdmin(id, body);
+    } else {
+      return this.usersService.updateForUser(authHeader, id, body);
+    }
   }
 
   @Delete(':id')

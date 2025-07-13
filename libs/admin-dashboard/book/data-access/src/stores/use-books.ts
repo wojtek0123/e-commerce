@@ -15,8 +15,6 @@ import { useToast } from 'primevue/usetoast';
 export const useBooksStore = defineStore('books', () => {
   const toast = useToast();
 
-  const selectedBooks = ref<Book[]>([]);
-
   const books = ref<Book[]>([]);
   const loading = ref(false);
   const error = ref<string | null>(null);
@@ -173,39 +171,79 @@ export const useBooksStore = defineStore('books', () => {
     }
   }
 
-  async function deleteBooks() {
+  async function updateBook(
+    id: Book['id'],
+    body: {
+      title: string;
+      description: string;
+      language: string;
+      pages: number;
+      price: number;
+      publishedDate?: string;
+      publisherId?: Publisher['id'];
+      categoryId: Category['id'];
+      quantity: number;
+      tag?: BookTag;
+      authorsId: string[];
+      publisherName?: string;
+      coverImage?: string;
+    },
+  ) {
+    addLoading.value = true;
+
+    try {
+      const response = await axios.patch(
+        `${import.meta.env.VITE_API_URL}/books/${id}`,
+        {
+          ...body,
+          coverImage: coverImageUrl.value || body.coverImage,
+        },
+      );
+
+      books.value = books.value.map((book) =>
+        book.id === id ? { ...book, ...response.data } : book,
+      );
+    } catch (e: unknown) {
+      let message: string;
+      if (e instanceof AxiosError) {
+        message =
+          e.response?.data?.message ?? 'Error occurred while updating book';
+      } else {
+        message = 'An unexpected error occurred';
+      }
+
+      toast.add({
+        summary: 'Error',
+        detail: message,
+        severity: 'error',
+      });
+    } finally {
+      addLoading.value = false;
+    }
+  }
+
+  async function deleteBook({ id, coverImage }: Book) {
     loading.value = true;
     try {
-      const ids = selectedBooks.value
-        .map((selectedBook) => selectedBook.id)
-        .join(',');
+      await axios.delete(`${import.meta.env.VITE_API_URL}/books/${id}`);
 
-      await axios.delete(`${import.meta.env.VITE_API_URL}/books`, {
-        params: { ids },
-      });
-
-      const coverImagePaths = selectedBooks.value
-        .map((selectBook) => selectBook.coverImage ?? '')
-        .filter((path) => !!path);
+      const coverImagePath = coverImage;
 
       const { error } = await supabase.storage
         .from(bucket)
-        .remove(coverImagePaths);
+        .remove([coverImagePath || '']);
 
       if (error) {
         return;
       }
 
-      books.value = books.value.filter(
-        (book) => !selectedBooks.value.includes(book),
-      );
-      selectedBooks.value = [];
+      books.value = books.value.filter((book) => book.id !== id);
     } catch (e: unknown) {
       let message: string;
       if (e instanceof AxiosError) {
         message =
           e.response?.data?.message ??
-          `Error occurred while deleting the ${selectedBooks.value.length === 0 ? 'book' : 'books'}`;
+          `Error occurred while deleting the book with id ${id}`;
       } else {
         message = 'An unexpected error occurred';
       }
@@ -311,7 +349,6 @@ export const useBooksStore = defineStore('books', () => {
       severity: 'success',
     });
     coverImageUrl.value = response.signedUrl;
-    // coverImagePath.value = data.path;
     uploadLoading.value = false;
   }
 
@@ -365,9 +402,9 @@ export const useBooksStore = defineStore('books', () => {
     deleteUploadedCoverImage,
     addLoading,
     deleteLoading,
-    deleteBooks,
-    selectedBooks,
+    deleteBook,
     addPublisher,
     addCategory,
+    updateBook,
   };
 });

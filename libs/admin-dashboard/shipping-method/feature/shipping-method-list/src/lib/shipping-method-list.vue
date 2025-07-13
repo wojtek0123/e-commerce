@@ -3,16 +3,17 @@ import Breadcrumb from 'primevue/breadcrumb';
 import Button from 'primevue/button';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
-import Message from 'primevue/message';
 import Skeleton from 'primevue/skeleton';
-import Dialog from 'primevue/dialog';
 import { useShippingMethodStore } from '@e-commerce/admin-dashboard/shipping-method/data-access';
 import { onMounted } from 'vue';
 import { ref } from 'vue';
 import ShippingMethodFormDrawer from '../lib/shipping-method-form-drawer/shipping-method-form-drawer.vue';
-import { computed } from 'vue';
+import { ShippingMethod } from '@e-commerce/shared/api-models';
+import { useConfirm } from 'primevue';
+import ConfirmDialog from 'primevue/confirmdialog';
 
 const store = useShippingMethodStore();
+const confirm = useConfirm();
 
 const breadcrumbs = ref([
   { label: 'shipping methods', route: '/shipping-method/list' },
@@ -21,18 +22,24 @@ const home = ref({
   icon: 'pi pi-home',
   route: '/',
 });
-const isDeleteDialogVisible = ref(false);
-const isMoreThanOneCategorySelected = computed(
-  () => store.selectedShippingMethods.length > 1,
-);
 
-function retry() {
-  store.getShippingMethods();
-}
-
-function deleteShippingMethods() {
-  store.deleteShippingMethods().then(() => {
-    isDeleteDialogVisible.value = false;
+function deleteShippingMethod({ id }: ShippingMethod) {
+  confirm.require({
+    message: 'Are you sure you want to proceed?',
+    header: 'Confirmation',
+    icon: 'pi pi-exclamation-triangle',
+    rejectProps: {
+      label: 'Cancel',
+      severity: 'secondary',
+      outlined: true,
+    },
+    acceptProps: {
+      label: 'Delete',
+      severity: 'danger',
+    },
+    accept: () => {
+      store.deleteShippingMethod(id);
+    },
   });
 }
 
@@ -42,41 +49,10 @@ onMounted(() => {
 </script>
 
 <template>
-  <Dialog v-model:visible="isDeleteDialogVisible" header="Delete confirmation">
-    <div class="flex flex-col gap-4">
-      <div class="flex flex-col gap-4">
-        <p>
-          Are you sure you want to delete
-          {{
-            isMoreThanOneCategorySelected
-              ? 'these shipping methods'
-              : 'this shipping method'
-          }}?
-        </p>
-        <Message severity="error">
-          You can delete books related to
-          {{
-            isMoreThanOneCategorySelected
-              ? 'these shipping methods'
-              : 'this shipping method'
-          }}!
-        </Message>
-      </div>
-      <div class="flex items-center gap-4 w-full">
-        <Button
-          outlined
-          severity="secondary"
-          label="Cancel"
-          class="w-full"
-          @click="isDeleteDialogVisible = false"
-        />
-        <Button label="Confirm" class="w-full" @click="deleteShippingMethods" />
-      </div>
-    </div>
-  </Dialog>
+  <ConfirmDialog />
   <div class="flex flex-col gap-base">
     <div
-      class="flex flex-col bg-content-background pt-2 pb-4 xl:pb-2 xl:pl-2 xl:pr-4 rounded-base xl:flex-row justify-between xl:items-center gap-base"
+      class="flex flex-col bg-content-background p-2 rounded-base xl:flex-row justify-between xl:items-center gap-base"
     >
       <Breadcrumb :home="home" :model="breadcrumbs">
         <template #item="{ item, props }">
@@ -107,7 +83,7 @@ onMounted(() => {
         icon="pi pi-refresh"
         severity="secondary"
         :toading="store.popupLoading"
-        @click="retry()"
+        @click="store.getShippingMethods()"
       />
     </div>
 
@@ -115,19 +91,7 @@ onMounted(() => {
       v-else
       class="bg-content-background w-full p-4 rounded-base flex flex-col gap-base"
     >
-      <div class="flex flex-items gap-4">
-        <ShippingMethodFormDrawer />
-        <Button
-          v-if="store.selectedShippingMethods.length !== 0"
-          severity="danger"
-          text
-          :outlined="true"
-          icon="pi pi-trash"
-          @click="isDeleteDialogVisible = true"
-        />
-      </div>
       <DataTable
-        v-model:selection="store.selectedShippingMethods"
         :value="store.shippingMethods"
         :loading="store.loading"
         table-class="w-full min-w-[50rem]"
@@ -178,8 +142,23 @@ onMounted(() => {
         </Column>
 
         <Column class="w-24 !text-end">
+          <template #header>
+            <div class="flex justify-end w-full">
+              <ShippingMethodFormDrawer />
+            </div>
+          </template>
           <template #body="{ data }">
-            <ShippingMethodFormDrawer :shipping-method="{ ...data }" />
+            <div class="flex items-center gap-1">
+              <ShippingMethodFormDrawer :shipping-method="data" />
+              <Button
+                severity="danger"
+                v-tooltip.left="'Delete'"
+                text
+                :outlined="true"
+                icon="pi pi-trash"
+                @click="deleteShippingMethod(data)"
+              />
+            </div>
           </template>
         </Column>
       </DataTable>

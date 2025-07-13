@@ -16,6 +16,7 @@ import {
   ApiCreatedResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiParam,
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
@@ -110,14 +111,14 @@ export class BooksController {
     return this.booksService.update(id, data);
   }
 
-  @Delete()
+  @Delete(':id')
   @ApiOperation({ summary: 'Delete a book' })
   @ApiOkResponse({ type: Book })
   @ApiBearerAuth()
-  @ApiQuery({ name: 'ids', required: true })
   @UseGuards(RolesGuard)
+  @ApiParam({ name: 'id', type: String, required: true })
   @Roles([Role.ADMIN])
-  remove(@Query('ids') ids: string) {
-    return this.booksService.remove(ids);
+  remove(@Param('id') id: string) {
+    return this.booksService.remove(id);
   }
 }

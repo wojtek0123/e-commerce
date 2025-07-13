@@ -1,9 +1,10 @@
 <template>
+  <ConfirmDialog />
   <div class="flex flex-col gap-base">
     <div
-      class="flex flex-col bg-content-background pt-2 pb-4 xl:pb-2 xl:pl-2 xl:pr-4 rounded-base xl:flex-row justify-between xl:items-center gap-base"
+      class="flex flex-col bg-content-background !rounded-base xl:flex-row justify-between xl:items-center gap-base"
     >
-      <Breadcrumb :home="home" :model="breadcrumbs">
+      <Breadcrumb :home="home" :model="breadcrumbs" class="rounded-base">
         <template #item="{ item, props }">
           <router-link
             v-if="item.route"
@@ -27,39 +28,25 @@
       <p class="text-xl text-muted-color">
         Unable to load books. Please try again.
       </p>
-      <!-- <Button
+      <Button
         label="Retry"
         icon="pi pi-refresh"
         severity="secondary"
         :loading="store.popupLoading"
-        @click="retry()"
-      /> -->
+        @click="store.getUsers()"
+      />
     </div>
 
     <div
       v-else
       class="bg-content-background w-full p-4 rounded-base flex flex-col gap-base"
     >
-      <div class="flex flex-items gap-4">
-        <AddUserDrawer />
-        <!-- <AddCategoryFormDrawer /> -->
-        <!-- <Button
-          v-if="store.selectedUsers.length !== 0"
-          severity="danger"
-          text
-          :outlined="true"
-          icon="pi pi-trash"
-          @click="isDeleteDialogVisible = true"
-        /> -->
-      </div>
       <DataTable
-        v-model:selection="store.selectedUsers"
         :value="store.users"
         :loading="store.loading"
         table-class="w-full min-w-[50rem]"
         class="w-full"
       >
-        <Column selection-mode="multiple" header-class="w-12" />
         <Column field="id" header="ID">
           <template #loading>
             <div
@@ -91,8 +78,23 @@
         </Column>
 
         <Column class="w-24 !text-end">
+          <template #header>
+            <div class="flex justify-end w-full">
+              <UserFormDrawer />
+            </div>
+          </template>
           <template #body="{ data }">
-            <!-- <AddUserDrawer :user="data" /> -->
+            <div class="flex items-center gap-1">
+              <UserFormDrawer :user="{ ...data }" />
+              <Button
+                severity="danger"
+                v-tooltip.left="'Delete'"
+                text
+                :outlined="true"
+                icon="pi pi-trash"
+                @click="deleteUser(data)"
+              />
+            </div>
           </template>
         </Column>
       </DataTable>
@@ -105,14 +107,16 @@ import Breadcrumb from 'primevue/breadcrumb';
 import Button from 'primevue/button';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
-import Message from 'primevue/message';
 import Skeleton from 'primevue/skeleton';
-import Dialog from 'primevue/dialog';
 import Tag from 'primevue/tag';
 import { ref, onMounted } from 'vue';
 import { useUserStore } from '@e-commerce/admin-dashboard/user/data-access';
-import AddUserDrawer from './components/add-user-drawer/add-user-drawer.vue';
+import UserFormDrawer from './user-form-drawer/user-form-drawer.vue';
+import { useConfirm } from 'primevue/useconfirm';
+import ConfirmDialog from 'primevue/confirmdialog';
+import { User } from '@e-commerce/shared/api-models';
 
+const confirm = useConfirm();
 const store = useUserStore();
 
 const breadcrumbs = ref([
@@ -126,8 +130,24 @@ const home = ref({
   route: '/',
 });
 
-function retry() {
-  store.getUsers();
+function deleteUser(user: User) {
+  confirm.require({
+    message: 'Are you sure you want to proceed?',
+    header: 'Confirmation',
+    icon: 'pi pi-exclamation-triangle',
+    rejectProps: {
+      label: 'Cancel',
+      severity: 'secondary',
+      outlined: true,
+    },
+    acceptProps: {
+      label: 'Delete',
+      severity: 'danger',
+    },
+    accept: () => {
+      // store.deleteUser(user);
+    },
+  });
 }
 
 onMounted(() => {

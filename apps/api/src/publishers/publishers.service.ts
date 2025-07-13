@@ -32,11 +32,7 @@ export class PublishersService {
     return this.prisma.publisher.update({ where, data });
   }
 
-  remove(ids: string) {
-    const parsedIds = ids.split(',');
-
-    return this.prisma.publisher.deleteMany({
-      where: { id: { in: parsedIds } },
-    });
+  remove(id: string) {
+    return this.prisma.publisher.delete({ where: { id } });
   }
 }

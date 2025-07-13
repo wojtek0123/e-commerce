@@ -1,5 +1,4 @@
 import { RouteRecordRaw } from 'vue-router';
-import { BookList } from '@e-commerce/admin-dashboard/book/feature/book-list';
 
 export const shellRouter: RouteRecordRaw[] = [
   {
@@ -7,9 +6,11 @@ export const shellRouter: RouteRecordRaw[] = [
     redirect: { name: 'book-list' },
     children: [
       {
-        path: 'list',
+        path: '',
         name: 'book-list',
-        component: BookList,
+        component: await import(
+          '@e-commerce/admin-dashboard/book/feature/book-list'
+        ).then((c) => c.BookList),
       },
     ],
   },

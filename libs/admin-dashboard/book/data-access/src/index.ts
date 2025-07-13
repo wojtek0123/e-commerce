@@ -1,1 +1,1 @@
-export * from './stores/books';
+export * from './stores/use-books';

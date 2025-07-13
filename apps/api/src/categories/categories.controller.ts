@@ -18,6 +18,7 @@ import {
   ApiCreatedResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiParam,
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
@@ -84,14 +85,14 @@ export class CategoriesController {
     return this.categoriesService.update(id, updateCategoryDto);
   }
 
-  @Delete()
+  @Delete(':id')
   @UseGuards(RolesGuard)
   @Roles([Role.ADMIN])
   @ApiOkResponse({ type: Category })
-  @ApiOperation({ summary: 'Remove categories' })
-  @ApiQuery({ name: 'ids', required: true })
+  @ApiOperation({ summary: 'Remove a category' })
+  @ApiParam({ name: 'id', type: String, required: true })
   @ApiBearerAuth()
-  remove(@Query('ids') ids: string) {
-    return this.categoriesService.remove(ids);
+  remove(@Param('id') id: string) {
+    return this.categoriesService.remove(id);
   }
 }

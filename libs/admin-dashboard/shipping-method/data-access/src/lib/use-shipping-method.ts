@@ -12,7 +12,6 @@ export const useShippingMethodStore = defineStore('shipping-method', () => {
   const popupLoading = ref(false);
   const error = ref<string | null>();
   const search = ref<string | null>(null);
-  const selectedShippingMethods = ref<ShippingMethod[]>([]);
 
   async function getShippingMethods() {
     loading.value = true;
@@ -109,17 +108,12 @@ export const useShippingMethodStore = defineStore('shipping-method', () => {
     }
   }
 
-  async function deleteShippingMethods() {
+  async function deleteShippingMethod(id: ShippingMethod['id']) {
     popupLoading.value = true;
 
     try {
-      const ids = selectedShippingMethods.value.map(({ id }) => id).join(',');
-
       const respose = await axios.delete(
-        `${import.meta.env.VITE_API_URL}/shipping-methods`,
-        {
-          params: { ids },
-        },
+        `${import.meta.env.VITE_API_URL}/shipping-methods/${id}`,
       );
 
       if (respose.status !== 200) {
@@ -127,15 +121,14 @@ export const useShippingMethodStore = defineStore('shipping-method', () => {
       }
 
       shippingMethods.value = shippingMethods.value.filter(
-        ({ id }) => !ids.split(',').includes(id),
+        (method) => method.id !== id,
       );
-      selectedShippingMethods.value = [];
     } catch (e: unknown) {
       let message: string;
       if (e instanceof AxiosError) {
         message =
           e.response?.data?.message ??
-          `Error occurred while deleting the ${selectedShippingMethods.value.length === 0 ? 'shipping method' : 'shipping methods'}`;
+          `Error occurred while deleting the shipping methods`;
       } else {
         message = 'An unexpected error occurred';
       }
@@ -158,8 +151,7 @@ export const useShippingMethodStore = defineStore('shipping-method', () => {
     error,
     getShippingMethods,
     addShippingMethod,
-    selectedShippingMethods,
-    deleteShippingMethods,
+    deleteShippingMethod,
     updateShippingMethod,
   };
 });

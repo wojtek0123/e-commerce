@@ -2,6 +2,7 @@ import { Author } from './author.model';
 import { BookReview } from './book-review.model';
 import { Category } from './category.model';
 import { Inventory } from './inventory.model';
+import { Publisher } from './publisher.model';
 
 export interface Book {
   id: string;
@@ -16,6 +17,10 @@ export interface Book {
   language?: string;
   tag?: BookTag;
   price: number;
+  publisher: Publisher;
+  inventory: {
+    quantity: number;
+  };
   authors: Author[];
   category: Category;
   reviews: BookReview[];

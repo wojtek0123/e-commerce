@@ -75,11 +75,7 @@ export class CategoriesService {
     return updatedCategory;
   }
 
-  remove(ids: string) {
-    const parsedIds = ids.split(',');
-
-    return this.prisma.category.deleteMany({
-      where: { id: { in: parsedIds } },
-    });
+  remove(id: string) {
+    return this.prisma.category.delete({ where: { id } });
   }
 }

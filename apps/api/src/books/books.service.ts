@@ -4,6 +4,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateBookDto } from './dto/create-book.dto';
 import { parseQueryParams } from '../common/utils/parse-query-params';
 import { parseNumber } from '../common/utils/parse-number';
+import { Book } from './entities/book.entity';
 
 @Injectable()
 export class BooksService {
@@ -115,6 +116,10 @@ export class BooksService {
             authors: { include: { author: true } },
             category: true,
             reviews: true,
+            publisher: true,
+            inventory: {
+              select: { quantity: true },
+            },
           },
           ...(pageNumber &&
             sizeNumber && { skip: (pageNumber - 1) * sizeNumber }),
@@ -160,9 +165,7 @@ export class BooksService {
     return this.prisma.book.update({ where: { id }, data });
   }
 
-  remove(ids: string) {
-    const parsedIds = ids.split(',');
-
-    return this.prisma.book.deleteMany({ where: { id: { in: parsedIds } } });
+  remove(id: Book['id']) {
+    return this.prisma.book.delete({ where: { id } });
   }
 }

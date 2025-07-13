@@ -28,23 +28,11 @@ export class CountriesService {
     return country;
   }
 
-  async update(id: Country['id'], data: UpdateCountryDto) {
-    const country = await this.prisma.country.findUnique({ where: { id } });
-
-    if (!country) {
-      throw new NotFoundException('Not found a country with id: ' + id);
-    }
-
+  update(id: Country['id'], data: UpdateCountryDto) {
     return this.prisma.country.update({ where: { id }, data });
   }
 
-  async remove(id: Country['id']) {
-    const country = await this.prisma.country.findUnique({ where: { id } });
-
-    if (!country) {
-      throw new NotFoundException('Not found a country with id: ' + id);
-    }
-
+  remove(id: Country['id']) {
     return this.prisma.country.delete({ where: { id } });
   }
 }

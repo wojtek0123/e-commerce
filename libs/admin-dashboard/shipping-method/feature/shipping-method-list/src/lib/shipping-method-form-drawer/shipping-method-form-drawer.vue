@@ -73,6 +73,7 @@ const initialValues = ref({
 <template>
   <Button
     text
+    v-tooltip.left="!!shippingMethod ? 'Update' : 'Add'"
     :icon="!!shippingMethod ? 'pi pi-pencil' : 'pi pi-plus'"
     :severity="!!shippingMethod ? 'secondary' : 'primary'"
     title="Add country"
@@ -138,7 +139,7 @@ const initialValues = ref({
       </div>
       <Button
         class="min-h-max"
-        :label="(shippingMethod ? 'Update ' : 'Add') + 'shipping method'"
+        :label="(shippingMethod ? 'Update ' : 'Add') + ' shipping method'"
         type="submit"
         :loading="store.popupLoading"
       />

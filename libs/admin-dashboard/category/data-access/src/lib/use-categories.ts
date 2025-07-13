@@ -12,7 +12,6 @@ export const useCategoriesStore = defineStore('categories', () => {
   const popupLoading = ref(false);
   const error = ref<string | null>();
   const search = ref<string | null>(null);
-  const selectedCategories = ref<Category[]>([]);
 
   async function getCategories() {
     loading.value = true;
@@ -57,8 +56,7 @@ export const useCategoriesStore = defineStore('categories', () => {
     } catch (e: unknown) {
       if (e instanceof AxiosError) {
         error.value =
-          e.response?.data?.message ??
-          'Error occurred while fetching categories';
+          e.response?.data?.message ?? 'Error occurred while adding category';
       } else {
         error.value = 'An unexpected error occurred';
       }
@@ -67,17 +65,42 @@ export const useCategoriesStore = defineStore('categories', () => {
     }
   }
 
-  async function deleteCategories() {
+  async function updateCategory(id: Category['id'], body: { name: string }) {
+    popupLoading.value = true;
+    try {
+      const { data } = await axios.patch<Category>(
+        `${import.meta.env.VITE_API_URL}/categories/${id}`,
+        body,
+      );
+
+      toast.add({
+        summary: 'Success',
+        detail: 'Category has been added',
+        severity: 'success',
+        life: 5000,
+      });
+
+      const index = categories.value.findIndex((c) => c.id === id);
+      categories.value[index] = data;
+    } catch (e: unknown) {
+      if (e instanceof AxiosError) {
+        error.value =
+          e.response?.data?.message ??
+          'Error occurred while updating category with id: ' + id;
+      } else {
+        error.value = 'An unexpected error occurred';
+      }
+    } finally {
+      popupLoading.value = false;
+    }
+  }
+
+  async function deleteCategory(id: Category['id']) {
     popupLoading.value = true;
 
     try {
-      const ids = selectedCategories.value.map(({ id }) => id).join(',');
-
       const respose = await axios.delete(
-        `${import.meta.env.VITE_API_URL}/categories`,
-        {
-          params: { ids },
-        },
+        `${import.meta.env.VITE_API_URL}/categories/${id}`,
       );
 
       if (respose.status !== 200) {
@@ -85,15 +108,14 @@ export const useCategoriesStore = defineStore('categories', () => {
       }
 
       categories.value = categories.value.filter(
-        ({ id }) => !ids.split(',').includes(id),
+        (category) => category.id !== id,
       );
-      selectedCategories.value = [];
     } catch (e: unknown) {
       let message: string;
       if (e instanceof AxiosError) {
         message =
-          e.response?.data?.message ??
-          `Error occurred while deleting the ${selectedCategories.value.length === 0 ? 'category' : 'categories'}`;
+          e.response?.data?.error ??
+          `Error occurred while deleting the category with id: ${id}`;
       } else {
         message = 'An unexpected error occurred';
       }
@@ -116,7 +138,7 @@ export const useCategoriesStore = defineStore('categories', () => {
     error,
     getCategories,
     addCategory,
-    selectedCategories,
-    deleteCategories,
+    deleteCategory,
+    updateCategory,
   };
 });

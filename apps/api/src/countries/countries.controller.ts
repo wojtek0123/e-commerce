@@ -16,6 +16,7 @@ import {
   ApiCreatedResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiParam,
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
@@ -66,6 +67,7 @@ export class CountriesController {
   @ApiOkResponse({ type: Country })
   @ApiOperation({ description: 'Delete country' })
   @Roles([Role.ADMIN])
+  @ApiParam({ name: 'id', type: String, required: true })
   remove(@Param('id') id: string) {
     return this.countriesService.remove(id);
   }

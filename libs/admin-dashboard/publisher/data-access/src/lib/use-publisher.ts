@@ -7,12 +7,10 @@ import { useToast } from 'primevue/usetoast';
 export const usePublisherStore = defineStore('publisher', () => {
   const toast = useToast();
 
-  const selectedPublishers = ref<Publisher[]>([]);
-
   const publishers = ref<Publisher[]>([]);
   const loading = ref(false);
   const error = ref<string | null>(null);
-  const addLoading = ref(false);
+  const drawerLoading = ref(false);
   const deleteLoading = ref(false);
   const search = ref<string | null>(null);
 
@@ -40,7 +38,7 @@ export const usePublisherStore = defineStore('publisher', () => {
   }
 
   async function addPublisher(body: { name: string }) {
-    addLoading.value = true;
+    drawerLoading.value = true;
 
     try {
       const response = await axios.post(
@@ -64,31 +62,55 @@ export const usePublisherStore = defineStore('publisher', () => {
         severity: 'error',
       });
     } finally {
-      addLoading.value = false;
+      drawerLoading.value = false;
     }
   }
 
-  async function deletePublishers() {
+  async function updatePublisher(id: Publisher['id'], body: { name: string }) {
+    drawerLoading.value = true;
+
+    try {
+      const response = await axios.patch(
+        `${import.meta.env.VITE_API_URL}/publishers/${id}`,
+        body,
+      );
+
+      publishers.value = publishers.value.map((publisher) =>
+        publisher.id === id ? response.data : publisher,
+      );
+    } catch (e: unknown) {
+      let message: string;
+      if (e instanceof AxiosError) {
+        message =
+          e.response?.data?.message ?? 'Error occurred while adding publisher';
+      } else {
+        message = 'An unexpected error occurred';
+      }
+
+      toast.add({
+        summary: 'Error',
+        detail: message,
+        severity: 'error',
+      });
+    } finally {
+      drawerLoading.value = false;
+    }
+  }
+
+  async function deletePublisher(id: Publisher['id']) {
     loading.value = true;
     try {
-      const ids = selectedPublishers.value
-        .map((selectedPublisher) => selectedPublisher.id)
-        .join(',');
-
-      await axios.delete(`${import.meta.env.VITE_API_URL}/publishers`, {
-        params: { ids },
-      });
+      await axios.delete(`${import.meta.env.VITE_API_URL}/publishers/${id}`);
 
       publishers.value = publishers.value.filter(
-        (publisher) => !selectedPublishers.value.includes(publisher),
+        (publisher) => publisher.id !== id,
       );
-      selectedPublishers.value = [];
     } catch (e: unknown) {
       let message: string;
       if (e instanceof AxiosError) {
         message =
           e.response?.data?.message ??
-          `Error occurred while deleting the ${selectedPublishers.value.length === 0 ? 'publisher' : 'publishers'}`;
+          `Error occurred while deleting the publisher`;
       } else {
         message = 'An unexpected error occurred';
       }
@@ -110,10 +132,10 @@ export const usePublisherStore = defineStore('publisher', () => {
     search,
     error,
     getPublishers,
-    addLoading,
+    drawerLoading,
     deleteLoading,
-    deletePublishers,
-    selectedPublishers,
+    deletePublisher,
     addPublisher,
+    updatePublisher,
   };
 });

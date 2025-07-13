@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import Drawer from 'primevue/drawer';
 import Button from 'primevue/button';
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 import { z } from 'zod';
 import { zodResolver } from '@primevue/forms/resolvers/zod';
 import { Form, FormField, FormSubmitEvent } from '@primevue/forms';
@@ -14,18 +14,23 @@ import { User } from '@e-commerce/shared/api-models';
 
 const visible = ref(false);
 const { user } = defineProps<{ user?: User }>();
+
 const roles = ref<{ name: string; value: Role }[]>([
   { name: 'Admin', value: 'ADMIN' },
   { name: 'User', value: 'USER' },
 ]);
-console.log(user)
+
+const initialValues = ref({
+  email: user?.email || '',
+  password: '',
+  role: user?.role || '',
+});
+
 const store = useUserStore();
 const resolver = zodResolver(
   z.object({
     email: z.string().email({ message: 'Invalid email address' }),
-    password: z
-      .string()
-      .min(6, { message: 'Password must be at least 6 characters' }),
+    password: z.string(),
     role: z.string().min(1, { message: 'Role is required' }),
   }),
 );
@@ -35,12 +40,13 @@ function submit(event: FormSubmitEvent) {
 
   const { email, password, role } = event.states;
 
-  store
-    .addUser({
-      email: email.value,
-      password: password.value,
-      role: role.value,
-    })
+  const body = {
+    email: email.value,
+    password: password.value,
+    role: role.value as Role,
+  };
+
+  (user ? store.updateUser(user, body) : store.addUser(body))
     .then(() => {
       visible.value = false;
     })
@@ -48,39 +54,28 @@ function submit(event: FormSubmitEvent) {
       console.error('Error adding user:', error);
     });
 }
-
-onMounted(() => {
-
-})
 </script>
 
 <template>
   <Button
     text
-    icon="pi pi-plus"
+    v-tooltip.left="!!user ? 'Update' : 'Add'"
+    :icon="!!user ? 'pi pi-pencil' : 'pi pi-plus'"
+    severity="primary"
+    :title="!!user ? 'Update book' : 'Add book'"
     @click="visible = true"
   />
-  <Drawer
-    v-model:visible="visible"
-    class="max-w-[40rem] w-full rounded-r-base"
-  >
+  <Drawer v-model:visible="visible" class="max-w-[40rem] w-full rounded-r-base">
     <Form
       :resolver="resolver"
-      :initial-value="{email: user.email, password: '', role: user.role}"
+      :initial-values="initialValues"
       class="flex flex-col h-full justify-between gap-2 w-full max-w-[120rem]"
       @submit="submit"
     >
       <div class="flex flex-col gap-4">
-        <FormField
-          v-slot="$field"
-          class="flex flex-col gap-1"
-          name="email"
-        >
+        <FormField v-slot="$field" class="flex flex-col gap-1" name="email">
           <label class="text-muted-color">Email</label>
-          <InputText
-            id="email"
-            fluid
-          />
+          <InputText id="email" fluid />
           <Message
             v-if="$field.invalid"
             severity="error"
@@ -91,17 +86,9 @@ onMounted(() => {
           </Message>
         </FormField>
 
-        <FormField
-          v-slot="$field"
-          class="flex flex-col gap-1"
-          name="password"
-        >
+        <FormField v-slot="$field" class="flex flex-col gap-1" name="password">
           <label class="text-muted-color">Password</label>
-          <InputText
-            id="password"
-            type="password"
-            fluid
-          />
+          <InputText id="password" type="password" fluid />
           <Message
             v-if="$field.invalid"
             severity="error"
@@ -112,11 +99,7 @@ onMounted(() => {
           </Message>
         </FormField>
 
-        <FormField
-          v-slot="$field"
-          class="flex flex-col gap-1"
-          name="role"
-        >
+        <FormField v-slot="$field" class="flex flex-col gap-1" name="role">
           <label class="text-muted-color">Role</label>
           <Select
             id="role"
@@ -139,9 +122,9 @@ onMounted(() => {
       </div>
       <Button
         class="min-h-max"
-        label="Add User"
+        :label="(!!user ? 'Update' : 'Add') + ' user'"
         type="submit"
-        :loading="false"
+        :loading="store.popupLoading"
       />
     </Form>
   </Drawer>
