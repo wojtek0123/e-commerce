@@ -5,6 +5,7 @@ import BarChart from './components/BarChart.vue';
 import PieChart from './components/PieChart.vue';
 import Stat from './components/Stat.vue';
 import { Book } from '@e-commerce/shared/api-models';
+import Skeleton from 'primevue/skeleton';
 
 const store = useHomeStore();
 
@@ -63,11 +64,14 @@ const groupedOrders = computed(() => {
 const chartData = computed(() => {
   const dates = Object.keys(groupedOrders.value).sort();
 
-  const max = Object.values<number>(groupedOrders.value).reduce((acc, value) => {
-    if (value > acc) return value;
+  const max = Object.values<number>(groupedOrders.value).reduce(
+    (acc, value) => {
+      if (value > acc) return value;
 
-    return acc;
-  }, 0);
+      return acc;
+    },
+    0,
+  );
 
   return {
     labels: dates.map((date) => {
@@ -191,6 +195,7 @@ const pieChartBooks = computed(() => {
     labels: [...groupByBooks.keys()],
     datasets: [
       {
+        label: 'Books per category',
         data: [...groupByBooks.values()].map((books) => [...books].length),
       },
     ],
@@ -252,12 +257,14 @@ onMounted(() => {
         :data="chartData"
         class="w-full"
       />
+      <Skeleton v-else width="100%" height="37.5rem" class="rounded-base" />
 
       <BarChart
         v-if="!store.loading && store.orders.length !== undefined"
         class="w-full"
         :data="chartOrderPriceData"
       />
+      <Skeleton v-else width="100%" height="37.5rem" class="rounded-base" />
     </div>
 
     <div class="grid grid-cols-1 @7xl:grid-cols-3 gap-base">
@@ -265,6 +272,7 @@ onMounted(() => {
         v-if="!store.loading && store.books.length > 0"
         :data="pieChartBooks"
       />
+      <Skeleton v-else width="100%" height="37.5rem" class="rounded-base" />
     </div>
   </div>
 </template>

@@ -9,7 +9,7 @@ import { nxCopyAssetsPlugin } from '@nx/vite/plugins/nx-copy-assets.plugin';
 export default defineConfig({
   root: __dirname,
   cacheDir:
-    '../../../../../node_modules/.vite/libs/admin-dashboard/category/feature/categories-list',
+    '../../../../../node_modules/.vite/libs/admin-dashboard/category/feature/category-list',
   plugins: [
     vue(),
     nxViteTsPaths(),
@@ -27,7 +27,7 @@ export default defineConfig({
   // See: https://vitejs.dev/guide/build.html#library-mode
   build: {
     outDir:
-      '../../../../../dist/libs/admin-dashboard/category/feature/categories-list',
+      '../../../../../dist/libs/admin-dashboard/category/feature/category-list',
     emptyOutDir: true,
     reportCompressedSize: true,
     commonjsOptions: {
@@ -36,7 +36,7 @@ export default defineConfig({
     lib: {
       // Could also be a dictionary or array of multiple entry points.
       entry: 'src/index.ts',
-      name: 'categories-list',
+      name: 'category-list',
       fileName: 'index',
       // Change this to the formats you want to support.
       // Don't forget to update your package.json as well.
@@ -55,7 +55,7 @@ export default defineConfig({
     reporters: ['default'],
     coverage: {
       reportsDirectory:
-        '../../../../../coverage/libs/admin-dashboard/category/feature/categories-list',
+        '../../../../../coverage/libs/admin-dashboard/category/feature/category-list',
       provider: 'v8',
     },
   },

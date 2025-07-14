@@ -1,10 +1,10 @@
 import { RouteRecordRaw } from 'vue-router';
-import { CategoriesList } from '@e-commerce/admin-dashboard/category/feature/categories-list';
+import { CategoryList } from '@e-commerce/admin-dashboard/category/feature/category-list';
 
 export const categoriesShellRoutes: RouteRecordRaw[] = [
   {
     path: '',
-    name: 'categories-list',
-    component: CategoriesList,
+    name: 'category-list',
+    component: CategoryList,
   },
 ];

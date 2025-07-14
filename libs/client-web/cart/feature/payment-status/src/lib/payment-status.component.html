@@ -1,19 +1,17 @@
-<div class="payment-status">
+<div class="h-content w-full flex items-center justify-center">
   @if (loading()) {
-    <div class="payment-status__container">
-      <p-progress-spinner
-        styleClass="w-4rem h-4rem"
-        strokeWidth="8"
-        fill="transparent"
-        animationDuration=".5s"
+    <div class="flex flex-col gap-14 items-center justify-center">
+      <p-progressbar
+        mode="indeterminate"
+        [style]="{ height: '6px', maxWidth: '32.25rem', width: 'w-fit' }"
       />
-      <span class="payment-status__container__text">
+      <span class="text-center">
         Some secure things are happening that will take money to pay for your
         order
       </span>
     </div>
   } @else {
-    <div class="payment-status__container">
+    <div class="flex flex-col gap-8 items-center justify-center">
       <svg
         class="checkmark"
         xmlns="http://www.w3.org/2000/svg"
@@ -26,7 +24,9 @@
           d="M14.1 27.2l7.1 7.2 16.7-16.8"
         />
       </svg>
-      <span>Pretend that you actually paid for these books :)</span>
+      <span class="text-center"
+        >Pretend that you actually paid for these books :)</span
+      >
       <a
         [routerLink]="ordersUrl"
         [queryParams]="{ orderDetailsId: orderDetailsId() }"

@@ -1,5 +1,5 @@
 {
-  "name": "@e-commerce/admin-dashboard/category/feature/categories-list",
+  "name": "@e-commerce/admin-dashboard/category/feature/category-list",
   "version": "0.0.1",
   "main": "./index.js",
   "types": "./index.d.ts",
