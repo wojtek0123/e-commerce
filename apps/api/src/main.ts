@@ -20,6 +20,7 @@ async function bootstrap() {
       'http://localhost:4201',
       'http://localhost:4202',
       'http://127.0.0.1:4200',
+      'https://storystash.vercel.app',
     ],
   });
 
