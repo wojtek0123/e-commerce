@@ -8,7 +8,7 @@ COPY . .
 
 RUN bun install
 RUN bunx nx reset
-RUN bunx nx build api
+RUN NX_DAEMON=false bunx nx build api
 
 # -------- Stage 2: Run --------
 FROM oven/bun:1.1.3 AS runner
