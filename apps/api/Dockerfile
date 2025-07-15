@@ -1,9 +1,14 @@
-
 # -------- Stage 1: Build --------
 FROM oven/bun:latest AS builder
 
 WORKDIR /app
 
+# Copy only necessary files
+COPY ../../libs ./libs
+COPY ../../package.json ./
+COPY ../../bun.lockb ./
+COPY ../../nx.json ./
+COPY ../../tsconfig.base.json ./
 COPY . .
 
 RUN bun install --production
