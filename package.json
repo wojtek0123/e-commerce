@@ -190,6 +190,7 @@
     "@scarf/scarf",
     "@swc/core",
     "bcrypt",
+    "core-js",
     "cypress",
     "electron",
     "esbuild",
