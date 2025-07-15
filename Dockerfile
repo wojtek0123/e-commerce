@@ -5,8 +5,6 @@ WORKDIR /app
 
 COPY . .
 
-RUN add apt-get update -y && apt-get install -y openssl
-
 RUN bun install
 RUN bunx nx reset
 
