@@ -3,21 +3,18 @@ FROM oven/bun:latest AS builder
 
 WORKDIR /app
 
-# Copy only necessary files
-COPY ../../libs ./libs
-COPY ../../package.json ./
-COPY ../../bun.lockb ./
-COPY ../../nx.json ./
-COPY ../../tsconfig.base.json ./
-COPY . .
+COPY ../../ .
 
-RUN bun install --production
+RUN bun install
 RUN bunx nx reset
+RUN bunx prisma generate
+
 RUN NX_DAEMON=false bunx nx build api
 
-EXPOSE 3000
-
+ENV PORT=3000
+ENV NODE_ENV=production
 CMD ["bun", "/app/dist/apps/api/main.js"]
+EXPOSE 3000
 
 # -------- Stage 2: Run --------
 # FROM oven/bun:1.1.3 AS runner
