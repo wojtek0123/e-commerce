@@ -37,7 +37,7 @@
             {
               "type": "initial",
               "maximumWarning": "500kb",
-              "maximumError": "1mb"
+              "maximumError": "1.5mb"
             },
             {
               "type": "anyComponentStyle",
@@ -46,12 +46,24 @@
             }
           ],
           "outputHashing": "all",
-          "serviceWorker": "apps/client-web/ngsw-config.json"
+          "serviceWorker": "apps/client-web/ngsw-config.json",
+          "fileReplacements": [
+            {
+              "replace": "apps/client-web/src/environments/environment.ts",
+              "with": "apps/client-web/src/environments/environment.prod.ts"
+            }
+          ]
         },
         "development": {
           "optimization": false,
           "extractLicenses": false,
-          "sourceMap": true
+          "sourceMap": true,
+          "fileReplacements": [
+            {
+              "replace": "apps/client-web/src/environments/environment.ts",
+              "with": "apps/client-web/src/environments/environment.ts"
+            }
+          ]
         }
       },
       "defaultConfiguration": "production"

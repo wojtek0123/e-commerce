@@ -16,7 +16,7 @@ import {
   withInterceptors,
 } from '@angular/common/http';
 import {
-  provideApiUrl,
+  API_URL,
   provideLocalStorageKeys,
   provideAppRoutePaths,
 } from '@e-commerce/client-web/shared/app-config';
@@ -30,6 +30,7 @@ import {
   withEventReplay,
   withIncrementalHydration,
 } from '@angular/platform-browser';
+import { environment } from '../environments/environment';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -37,7 +38,10 @@ export const appConfig: ApplicationConfig = {
     provideExperimentalZonelessChangeDetection(),
     provideAppRoutePaths,
     provideLocalStorageKeys,
-    provideApiUrl,
+    {
+      provide: API_URL,
+      useValue: environment.apiUrl,
+    },
     provideRouter(
       appRoutes,
       withComponentInputBinding(),

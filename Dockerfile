@@ -5,8 +5,11 @@ WORKDIR /app
 
 COPY . .
 
+RUN add apt-get update -y && apt-get install -y openssl
+
 RUN bun install
 RUN bunx nx reset
+
 
 RUN cd apps/api && bunx prisma generate
 RUN NX_DAEMON=false bunx nx build api --exclude=admin-dashboard-e2e,client-web-e2e --verbose
