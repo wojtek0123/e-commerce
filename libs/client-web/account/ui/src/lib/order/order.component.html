@@ -1,10 +1,7 @@
 <div class="flex flex-col gap-base min-h-fit w-full">
-  <p-steps
-    [activeIndex]="activeStep()"
-    [readonly]="true"
-    [model]="stepStatuses()"
-    class="bg-content-background rounded-base p-4"
-  />
+  <div class="bg-content-background rounded-base p-4">
+    <lib-steps [steps]="orderDetailsStatuses()" [activeIndex]="activeStep()" />
+  </div>
   <div
     class="bg-content-background rounded-base p-4 flex flex-col gap-6 lg:justify-between lg:flex-row"
   >
@@ -103,7 +100,12 @@
         </tr>
       </ng-template>
       <ng-template #body let-item>
-        <tr>
+        <tr
+          (click)="rowClicked.emit(item)"
+          (keydown.enter)="rowClicked.emit(item)"
+          class="cursor-pointer"
+          tabIndex="0"
+        >
           <td class="h-[11rem] relative">
             <img
               class="aspect-[3/4] max-w-32 object-cover py-4 rounded-base"

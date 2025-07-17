@@ -76,7 +76,11 @@
         (onRetry)="getOrderDetails()"
       />
     } @else if (selectedOrder()) {
-      <lib-order class="w-full" [orderDetails]="selectedOrder()" />
+      <lib-order
+        class="w-full"
+        [orderDetails]="selectedOrder()"
+        (rowClicked)="goToBookDetails($event)"
+      />
     }
   </p-drawer>
 
@@ -93,7 +97,11 @@
         (onRetry)="getOrderDetails()"
       />
     } @else if (selectedOrder()) {
-      <lib-order class="w-full" [orderDetails]="selectedOrder()" />
+      <lib-order
+        class="w-full"
+        [orderDetails]="selectedOrder()"
+        (rowClicked)="goToBookDetails($event)"
+      />
     } @else {
       <div class="text-center mt-12 text-3xl w-full">
         Select order to see details

@@ -10,3 +10,4 @@ export * from './lib/rating-input/rating-input.component';
 export * from './lib/accordion/accordion-panel.component';
 export * from './lib/accordion/accordion.component';
 export * from './lib/user-information/user-information.component';
+export * from './lib/steps/steps.component';

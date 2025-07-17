@@ -4,7 +4,11 @@ import {
   OrderColumn,
   OrdersStore,
 } from '@e-commerce/client-web/account/data-access';
-import { OrderDetails, OrderDetailsBase } from '@e-commerce/shared/api-models';
+import {
+  OrderDetails,
+  OrderDetailsBase,
+  OrderDetailsItem,
+} from '@e-commerce/shared/api-models';
 import { CurrencyPipe, DatePipe, NgTemplateOutlet } from '@angular/common';
 import { SkeletonModule } from 'primeng/skeleton';
 import { OrderComponent } from '@e-commerce/client-web/account/ui';
@@ -16,6 +20,7 @@ import { DrawerLeftDirective } from '@e-commerce/client-web/shared/utils';
 import { DrawerModule } from 'primeng/drawer';
 import { StatusToServerityPipe } from './pipes/status-to-severity.pipe';
 import { ErrorAndRetryMessageComponent } from '@e-commerce/client-web/shared/ui';
+import { APP_ROUTE_PATHS_TOKEN } from '@e-commerce/client-web/shared/app-config';
 
 @Component({
   selector: 'lib-orders',
@@ -42,6 +47,7 @@ export class OrdersComponent implements OnInit {
   private readonly store = inject(OrdersStore);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly appRoutePaths = inject(APP_ROUTE_PATHS_TOKEN);
 
   public orders = this.store.orders;
   public loading = this.store.loading;
@@ -108,5 +114,9 @@ export class OrdersComponent implements OnInit {
 
   public getOrders() {
     this.store.getOrders();
+  }
+
+  public goToBookDetails({ book: { id } }: OrderDetailsItem) {
+    this.router.navigate([this.appRoutePaths.BOOK(id)]);
   }
 }

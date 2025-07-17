@@ -1,0 +1,14 @@
+<div class="flex flex-col items-start">
+  @for (step of steps(); track index; let index = $index; let last = $last) {
+    <div class="flex items-center gap-2">
+      <p-badge
+        [value]="index"
+        [severity]="activeIndex() === index ? 'contrast' : 'secondary'"
+      />
+      <span>{{ step | formatText }}</span>
+    </div>
+    @if (!last) {
+      <p-divider layout="vertical" class="ml-3" />
+    }
+  }
+</div>

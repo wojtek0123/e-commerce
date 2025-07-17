@@ -4,6 +4,7 @@ import {
   Component,
   computed,
   input,
+  output,
   signal,
 } from '@angular/core';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
@@ -13,10 +14,12 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { CurrencyPipe } from '@angular/common';
 import {
   OrderDetails,
+  OrderDetailsItem,
   orderDetailsStatuses,
 } from '@e-commerce/shared/api-models';
 import { DividerModule } from 'primeng/divider';
 import { MenuItem } from 'primeng/api';
+import { StepsComponent } from '@e-commerce/client-web/shared/ui';
 
 @Component({
   selector: 'lib-order',
@@ -34,10 +37,13 @@ import { MenuItem } from 'primeng/api';
     SkeletonModule,
     DividerModule,
     CurrencyPipe,
+    StepsComponent,
   ],
 })
 export class OrderComponent {
   public orderDetails = input.required<OrderDetails | null>();
+
+  public rowClicked = output<OrderDetailsItem>();
 
   public bookCostTotal = computed(() =>
     this.orderDetails()?.orderItems.reduce(
@@ -54,10 +60,8 @@ export class OrderComponent {
       (status) => status === this.orderDetails()?.status,
     ),
   );
-  public stepStatuses = signal<MenuItem[]>(
-    orderDetailsStatuses.map((status) => ({
-      label: status,
-      icon: 'pi pi-setting',
-    })),
-  );
+
+  protected orderDetailsStatuses = signal(
+    orderDetailsStatuses.map((status) => status.replaceAll('_', ' ')),
+  ).asReadonly();
 }
