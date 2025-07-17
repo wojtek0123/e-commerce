@@ -5,6 +5,7 @@
   "prefix": "app",
   "sourceRoot": "apps/client-web/src",
   "tags": ["scope:client-web", "type:app"],
+  "baseHref": "/",
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:application",
