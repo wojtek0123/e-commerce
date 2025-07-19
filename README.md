@@ -15,6 +15,8 @@ Monorepo includes 3 apps, 2 front-end and 1 back-end.
   - sort
   - filter
   - search
+  - save filters
+  - load filters
 - account managment
   - email and password change
   - CRUD operation on user addresses 
@@ -23,6 +25,10 @@ Monorepo includes 3 apps, 2 front-end and 1 back-end.
 ### Admin-dashboard:
 - books managment
 - category management
+
+### Delivery-manager
+- change order status
+- change inventory quantity and add inventory
 
 ### API
 - email sending
@@ -67,9 +73,9 @@ bunx prisma migrate dev --name init
 ```
 - Run dev configuration
 ```
-bunx nx run-many -t serve -p client-web admin-dashboard api
+bunx nx run-many -t serve -p client-web admin-dashboard delivery-manager api
 ```
-Api will be available on `localhost:3000/api`, client-web on `localhost:4200` and admin-dashboard on `localhost:4201`
+Api will be available on `localhost:3000/api`, client-web on `localhost:4200`, admin-dashboard on `localhost:4201` and delivery-manager on `localhost:4202`
 
 ## Usefull commands:
 ### Examples of basic commands to run apps locally
@@ -81,6 +87,11 @@ bunx nx serve client-web
 Run development configuration of admin-dashboard app
 ```
 bunx nx serve admin-dashboard
+```
+
+Run development configuration of delivery-manager app
+```
+bunx nx serve delivery-manager
 ```
 
 Run development configuration of api
