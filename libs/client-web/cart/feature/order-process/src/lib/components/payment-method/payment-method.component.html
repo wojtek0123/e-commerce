@@ -97,8 +97,8 @@
 <lib-confirmation-dialog
   header="Address deletion"
   [isVisible]="isDeleteDialogVisible()"
-  (onCancel)="toggleDeleteDialogConfirmation()"
-  (onConfirm)="deleteCreditCard()"
+  (canceled)="toggleDeleteDialogConfirmation()"
+  (confirmed)="deleteCreditCard()"
 >
   <div>Are you sure you want to <strong>delete</strong> this credit card?</div>
 </lib-confirmation-dialog>

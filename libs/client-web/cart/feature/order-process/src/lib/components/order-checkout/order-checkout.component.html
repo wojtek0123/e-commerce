@@ -32,6 +32,14 @@
         styleClass="rounded-2xl"
       />
     }
+    @if (!isCreditCardSelectedAndCreditCardDataAreProvided()) {
+      <p-message
+        severity="error"
+        icon="pi pi-exclamation-circle"
+        text="Provide credit card data"
+        styleClass="rounded-2xl"
+      />
+    }
     @if (isSixDigitCodeInvalid()) {
       <p-message
         severity="error"

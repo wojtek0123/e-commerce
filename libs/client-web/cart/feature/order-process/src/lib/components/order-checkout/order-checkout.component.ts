@@ -67,11 +67,16 @@ export class OrderCheckoutComponent {
   );
   creditCard = this.#paymentStore.creditCard.data;
 
+  isCreditCardSelectedAndCreditCardDataAreProvided = computed(
+    () => this.selectedPaymentMethod() === 'CREDIT_CARD' && !!this.creditCard(),
+  );
+
   isOrderInvalid = computed(() =>
     [
       !this.isAddressSelected(),
       !this.isShippingMethodSelected(),
       !this.isPaymentMethodSelected(),
+      !this.isCreditCardSelectedAndCreditCardDataAreProvided(),
       this.isCustomerInformationInvalid(),
       this.isSixDigitCodeInvalid() || !this.creditCard,
       this.isCartEmpty(),

@@ -18,14 +18,14 @@ export class ConfirmationDialogComponent {
   header = input.required<string>();
   loading = input<boolean>();
 
-  onConfirm = output<void>();
-  onCancel = output<void>();
+  confirmed = output<void>();
+  canceled = output<void>();
 
   cancel() {
-    this.onCancel.emit();
+    this.canceled.emit();
   }
 
   confirm() {
-    this.onConfirm.emit();
+    this.confirmed.emit();
   }
 }

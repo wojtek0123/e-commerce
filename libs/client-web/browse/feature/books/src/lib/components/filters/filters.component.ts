@@ -24,6 +24,9 @@ import {
   AccordionComponent,
   AccordionPanelComponent,
 } from '@e-commerce/client-web/shared/ui';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { filter, map } from 'rxjs';
 
 @Component({
   selector: 'lib-filters',
@@ -49,13 +52,30 @@ import {
 })
 export class FiltersComponent {
   #booksStore = inject(BooksStore);
+  #breakpointObserver = inject(BreakpointObserver);
 
   selectedTags = this.#booksStore.selectedTags;
   selectedAuthors = this.#booksStore.selectedAuthors;
   selectedCategories = this.#booksStore.selectedCategories;
   selectedPrices = this.#booksStore.enteredPrices;
+  isAnyFilterSelected = this.#booksStore.isAnyFilterSelected;
+
+  activeFiltersCount = this.#booksStore.activeFiltersCount;
 
   isSidebarVisible = signal(false);
+
+  constructor() {
+    this.#breakpointObserver
+      .observe('(min-width: 1280px)')
+      .pipe(
+        map(({ matches }) => matches),
+        filter((matches) => matches),
+        takeUntilDestroyed(),
+      )
+      .subscribe(() => {
+        this.isSidebarVisible.set(false);
+      });
+  }
 
   clearSelectedItems(filter: MultiSelectFilters) {
     this.#booksStore.clearSelectedItems(filter);
@@ -68,5 +88,9 @@ export class FiltersComponent {
   clearPriceFilter() {
     this.#booksStore.setSingleValueFilter(null, 'minPrice');
     this.#booksStore.setSingleValueFilter(null, 'maxPrice');
+  }
+
+  removeActiveFitlers() {
+    this.#booksStore.removeActiveFilters();
   }
 }

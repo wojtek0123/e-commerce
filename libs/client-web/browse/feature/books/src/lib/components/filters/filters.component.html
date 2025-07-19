@@ -9,14 +9,40 @@
   size="large"
   class="xl:hidden"
   [plain]="true"
-  icon="pi pi-bars"
+  [icon]="isAnyFilterSelected() ? 'pi pi-filter-fill' : 'pi pi-filter'"
   (onClick)="isSidebarVisible.set(true)"
 />
 
-<p-drawer libDrawerLeft class="xl:hidden" [(visible)]="isSidebarVisible">
-  @if (isSidebarVisible()) {
-    <ng-container [ngTemplateOutlet]="filters" />
-  }
+<p-drawer
+  libDrawerLeft
+  class="xl:hidden"
+  header="Filters"
+  [(visible)]="isSidebarVisible"
+>
+  <div class="flex flex-col gap-base h-full">
+    <div class="flex flex-col justify-between h-full">
+      <div class="overflow-y-auto">
+        <ng-container [ngTemplateOutlet]="filters" />
+      </div>
+
+      <div
+        class="flex flex-col gap-base pt-base rounded-base border-t border-surface-100"
+      >
+        <p-button
+          styleClass="w-full"
+          [label]="'Clear filters (' + activeFiltersCount() + ')'"
+          severity="contrast"
+          [outlined]="true"
+          (onClick)="removeActiveFitlers()"
+        />
+        <p-button
+          styleClass="w-full"
+          label="Close"
+          (onClick)="isSidebarVisible.set(false)"
+        />
+      </div>
+    </div>
+  </div>
 </p-drawer>
 
 <ng-template #filters>

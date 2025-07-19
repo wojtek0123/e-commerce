@@ -184,18 +184,27 @@ model OrderDetails {
   total                  Float
   createdAt              DateTime             @default(now())
   updatedAt              DateTime             @updatedAt
-  shippingMethodId       String
   userId                 String
-  paymentDetailsId       String               @unique
   status                 OrderStatus          @default(NEW)
   orderAddressId         String               @unique
   orderAddress           OrderAddress         @relation(fields: [orderAddressId], references: [id], onDelete: Cascade)
   orderUserInformationId String               @unique
   orderUserInformation   OrderUserInformation @relation(fields: [orderUserInformationId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  orderShippingMethodId  String               @unique
+  orderShippingMethod    OrderShippingMethod  @relation(fields: [orderShippingMethodId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  paymentDetailsId       String               @unique
   paymentDetails         PaymentDetails       @relation(fields: [paymentDetailsId], references: [id], onDelete: Cascade)
-  shippingMethod         ShippingMethod       @relation(fields: [shippingMethodId], references: [id])
   user                   User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
   orderItems             OrderItem[]
+}
+
+model OrderShippingMethod {
+  id           String        @id @default(uuid())
+  name         String
+  price        Float
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  orderDetails OrderDetails?
 }
 
 model OrderUserInformation {
@@ -205,7 +214,7 @@ model OrderUserInformation {
   phone        String
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
-  srderDetails OrderDetails?
+  orderDetails OrderDetails?
 }
 
 model OrderAddress {
@@ -251,7 +260,6 @@ model ShippingMethod {
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
   deliveryTime String
-  orderDetails OrderDetails[]
 }
 
 enum Role {

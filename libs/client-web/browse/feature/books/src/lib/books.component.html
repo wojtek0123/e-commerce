@@ -15,45 +15,32 @@
       class="flex flex-col bg-content-background pt-2 pb-4 xl:pb-2 xl:pl-2 xl:pr-4 rounded-base xl:flex-row justify-between gap-base"
     >
       <p-breadcrumb [model]="breadcrumbs()" />
-      <div class="flex flex-col xl:flex-row xl:items-center gap-4 px-4 xl:px-0">
-        <div class="flex items-center justify-between gap-4">
-          <div class="flex items-center gap-base w-full">
-            <lib-sort
-              class="hidden xl:flex"
-              [options]="sortOptions()"
-              [sort]="sort()"
-              (onChangeSort)="changeSort($event)"
-            />
-            <lib-search
-              [search]="search()"
-              (debouncedSearchChange)="changeSearch($event)"
-              class="w-full"
-            />
-          </div>
-          <lib-filters class="xl:hidden" />
-        </div>
-
-        <div class="flex items-center justify-between gap-base xl:hidden">
+      <div
+        class="flex flex-col overflow-x-auto xl:flex-row xl:items-center gap-4 px-4 xl:px-0"
+      >
+        <div class="flex items-center gap-base">
           <lib-sort
             [options]="sortOptions()"
             [sort]="sort()"
-            (onChangeSort)="changeSort($event)"
+            (sortChanged)="changeSort($event)"
           />
-
-          <div class="flex items-center gap-base">
-            <lib-save-filters />
-            <lib-load-filters />
-          </div>
+          <lib-search
+            [searchText]="search()"
+            (searchChanged)="changeSearch($event)"
+            class="w-full"
+          />
+          <lib-filters class="xl:hidden" />
+          <lib-save-filters class="xl:hidden" />
+          <lib-load-filters class="xl:hidden" />
         </div>
       </div>
     </div>
-    <div class="flex flex-col gap-base">
-      <lib-active-filters
-        [activeFilters]="activeFilters()"
-        (onClearFilter)="clearFilter($event)"
-        (onClearFilters)="clearFilters()"
-      />
-    </div>
+    <lib-active-filters
+      class="hidden xl:flex"
+      [activeFilters]="activeFilters()"
+      (onClearFilter)="clearFilter($event)"
+      (onClearFilters)="clearFilters()"
+    />
 
     @defer (hydrate on hover) {
       <lib-books-grid

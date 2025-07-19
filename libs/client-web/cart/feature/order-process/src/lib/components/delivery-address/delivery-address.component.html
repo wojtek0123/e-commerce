@@ -43,14 +43,14 @@
 <lib-confirmation-dialog
   header="Address deletion"
   [isVisible]="isDeleteDialogVisible()"
-  (onCancel)="hideDeleteDialog()"
-  (onConfirm)="delete()"
+  (canceled)="hideDeleteDialog()"
+  (confirmed)="delete()"
 >
   <div>Are you sure you want to <strong>delete</strong> this address?</div>
 </lib-confirmation-dialog>
 
 <p-dialog
-  [header]="updatingAddress() ? 'Update address' :  'Add address'"
+  [header]="updatingAddress() ? 'Update address' : 'Add address'"
   [visible]="isFormVisible()"
   [modal]="true"
   styleClass="w-full max-w-[48rem] mx-4 w-full"

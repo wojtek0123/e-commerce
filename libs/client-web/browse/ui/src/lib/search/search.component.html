@@ -1,19 +1,66 @@
-<div class="2xl:min-w-[30rem] w-full relative">
-  <input
-    #searchInput
-    type="text"
-    pInputText
-    [(ngModel)]="search"
-    class="pr-12"
-    [fluid]="true"
-    placeholder="Search by title"
-  />
-  @if (!!search()) {
+<p-button
+  [plain]="true"
+  severity="secondary"
+  icon="pi pi-search"
+  class="xl:hidden"
+  size="large"
+  (onClick)="show()"
+/>
+
+<ng-template #searchTemplate>
+  <div class="flex flex-col gap-base xl:flex-row">
+    <div class="2xl:min-w-[30rem] w-full relative">
+      <lib-label idFor="search-input" class="xl:hidden">
+        What title are you looking for?
+      </lib-label>
+      <input
+        id="search-input"
+        #searchInput
+        type="text"
+        pInputText
+        [attr.ariaLabel]="'What title are you looking for?'"
+        [(ngModel)]="searchText"
+        class="pr-12 h-10 min-w-52"
+        [fluid]="true"
+        placeholder="Search by title"
+      />
+      @if (!!searchText()) {
+        <p-button
+          class="absolute top-10 xl:top-1/2 right-0 mr-2 -translate-y-1/2"
+          icon="pi pi-trash"
+          [text]="true"
+          (onClick)="clearInput()"
+        />
+      }
+    </div>
     <p-button
-      class="absolute top-1/2 right-0 mr-2 -translate-y-1/2"
-      icon="pi pi-trash"
-      [text]="true"
-      (onClick)="clearInput()"
+      class="xl:hidden"
+      styleClass="w-full"
+      severity="secondary"
+      label="Search"
+      (onClick)="search()"
     />
-  }
+
+    <p-button
+      class="hidden xl:flex"
+      [plain]="true"
+      severity="secondary"
+      icon="pi pi-search"
+      size="large"
+      (onClick)="search()"
+    />
+  </div>
+</ng-template>
+
+<p-dialog
+  styleClass="w-full max-w-[32rem] mx-4"
+  header="Find a book"
+  [(visible)]="visible"
+  [modal]="true"
+>
+  <ng-container [ngTemplateOutlet]="searchTemplate" />
+</p-dialog>
+
+<div class="hidden xl:block">
+  <ng-container [ngTemplateOutlet]="searchTemplate" />
 </div>

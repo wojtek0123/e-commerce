@@ -27,12 +27,12 @@ export class SortComponent {
     transform: this.transformOptions,
   });
 
-  onChangeSort = output<BooksSort>();
+  sortChanged = output<BooksSort>();
 
   changeSort(value: string) {
     const [key, direction] = value.split('\t');
 
-    this.onChangeSort.emit({
+    this.sortChanged.emit({
       key: camelCase(key) as BooksSortKey,
       direction: direction as BooksSortDirection,
     });

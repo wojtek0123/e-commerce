@@ -64,8 +64,8 @@
 <lib-confirmation-dialog
   [isVisible]="isDeleteDialogVisible()"
   header="Address deletion"
-  (onCancel)="hideDeleteDialog()"
-  (onConfirm)="delete()"
+  (canceled)="hideDeleteDialog()"
+  (confirmed)="delete()"
 >
   <div>Are you sure you want to <strong>delete</strong> this address?</div>
 </lib-confirmation-dialog>

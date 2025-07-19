@@ -49,7 +49,7 @@ describe('DeleteAddressConfirmationDialogComponent', () => {
   });
 
   it('should emit value when confirm', () => {
-    const spy = jest.spyOn(component.onConfirm, 'emit');
+    const spy = jest.spyOn(component.confirmed, 'emit');
 
     const button = fixture.debugElement.query(
       By.css('[data-testId="confirm-btn"]'),
@@ -63,7 +63,7 @@ describe('DeleteAddressConfirmationDialogComponent', () => {
   });
 
   it('should emit value when cancel', () => {
-    const spy = jest.spyOn(component.onCancel, 'emit');
+    const spy = jest.spyOn(component.canceled, 'emit');
 
     const button = fixture.debugElement.query(
       By.css('[data-testId="cancel-btn"]'),

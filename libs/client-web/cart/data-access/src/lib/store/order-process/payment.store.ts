@@ -173,7 +173,7 @@ export const PaymentStore = signalStore(
         map(() => ({ id: getState(store).creditCard.data?.id })),
         filter(({ id }) => !!id),
         switchMap(({ id }) =>
-          store.creditCardApi.delete$(id!).pipe(
+          store.creditCardApi.delete$(id ?? '').pipe(
             tapResponse({
               next: () => {
                 patchState(store, (state) => ({

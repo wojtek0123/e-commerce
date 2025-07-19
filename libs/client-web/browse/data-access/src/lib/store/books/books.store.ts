@@ -173,6 +173,8 @@ export const BooksStore = signalStore(
     maxPrice: computed(() => filters().singleValue.maxPrice),
     activeFilters: computed(() => _activeFiltersEntities()),
     search: computed(() => filters().singleValue.search),
+    isAnyFilterSelected: computed(() => _activeFiltersEntities().length > 0),
+    activeFiltersCount: computed(() => _activeFiltersEntities().length),
   })),
   withProps(() => ({
     _bookApi: inject(BooksApiService),

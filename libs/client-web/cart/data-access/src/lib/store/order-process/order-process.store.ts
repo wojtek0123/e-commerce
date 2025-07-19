@@ -6,6 +6,7 @@ import {
   ShippingMethod,
   OrderDetails,
   PaymentMethod,
+  UserAddress,
 } from '@e-commerce/shared/api-models';
 import {
   OrderDetailsApiService,
@@ -45,7 +46,7 @@ export const OrderProcessStore = signalStore(
   })),
   withMethods((store) => ({
     checkout: rxMethod<{
-      orderAddress: CreateOrderAddress;
+      orderAddress: CreateOrderAddress & { id: UserAddress['id'] };
       shippingMethodId: ShippingMethod['id'];
       paymentMethod: PaymentMethod;
     }>(
@@ -68,6 +69,7 @@ export const OrderProcessStore = signalStore(
                   patchState(store, { orderDetails, loading: false });
 
                   store.messageBusService.setEvent('checkout-success');
+                  localStorage.setItem('lastUsedAddressId', orderAddress.id);
                 },
                 error: (error: ResponseError) => {
                   store.messageService.add({

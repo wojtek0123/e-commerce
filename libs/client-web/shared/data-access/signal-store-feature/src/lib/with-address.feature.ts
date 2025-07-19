@@ -1,5 +1,9 @@
 import { computed, inject } from '@angular/core';
-import { ResponseError, UserAddress } from '@e-commerce/shared/api-models';
+import {
+  ResponseError,
+  User,
+  UserAddress,
+} from '@e-commerce/shared/api-models';
 import {
   CreateUserAddressBody,
   UserAddressApiService,
@@ -73,6 +77,7 @@ export function withAddress() {
       formType: computed(() => formInfo().type),
       formVisibility: computed(() => formInfo().isVisible),
       isDeleteDialogVisible: computed(() => deleteDialogInfo().isVisible),
+      deletingUserAddressId: computed(() => deleteDialogInfo().id),
     })),
     withMethods(
       (

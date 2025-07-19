@@ -50,6 +50,7 @@ export class DeliveryAddressComponent implements OnInit {
   isFormVisible = this.#addressStore.formVisibility;
 
   isDeleteDialogVisible = this.#addressStore.isDeleteDialogVisible;
+  deletingUserAddressId = this.#addressStore.deletingUserAddressId;
 
   isFormVisibleDelayedToResetForm = toSignal(
     toObservable(this.isFormVisible).pipe(delay(50)),
@@ -77,6 +78,10 @@ export class DeliveryAddressComponent implements OnInit {
 
   delete() {
     this.#addressStore.deleteAddress();
+
+    if (this.selectedAddressId() === this.deletingUserAddressId()) {
+      this.#addressStore.selectAddress(null);
+    }
   }
 
   showDeleteDialog(address: UserAddress) {

@@ -26,7 +26,7 @@ export const AddressStore = signalStore(
     selectedAddressId: computed(() => selectedAddress()?.id ?? null),
   })),
   withMethods((store) => ({
-    selectAddress: (selectedAddress: UserAddress) => {
+    selectAddress: (selectedAddress: UserAddress | null) => {
       patchState(store, { selectedAddress });
     },
   })),
@@ -36,11 +36,19 @@ export const AddressStore = signalStore(
         const addresses = store.addresses();
 
         untracked(() => {
+          const lastUsedAddressId = localStorage.getItem(
+            'lastUsedAddressId',
+          ) as UserAddress['id'] | undefined;
+
           const selectedAddress = store.selectedAddress();
 
           if (addresses.length === 0 || selectedAddress) return;
 
-          store.selectAddress(addresses[0]);
+          const lastUsedAddress = addresses.find(
+            ({ id }) => id === lastUsedAddressId,
+          );
+
+          store.selectAddress(lastUsedAddress ?? null);
         });
       });
     },

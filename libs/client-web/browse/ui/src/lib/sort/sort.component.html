@@ -1,6 +1,7 @@
 <p-select
   [options]="options()"
   [ngModel]="sort()"
+  appendTo="body"
   (ngModelChange)="changeSort($event)"
   class="w-full sm:w-56"
 />

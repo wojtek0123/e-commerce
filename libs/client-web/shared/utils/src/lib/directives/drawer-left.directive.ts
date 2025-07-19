@@ -10,7 +10,8 @@ export class DrawerLeftDirective {
 
   constructor() {
     this.#drawer.styleClass =
-      'max-w-[40rem] w-full rounded-r-base bg-surface-100 dark:bg-surface-950';
+      this.#drawer.styleClass +
+      ` max-w-[40rem] w-full rounded-r-base bg-surface-100 dark:bg-surface-950`;
     this.#drawer.blockScroll = true;
   }
 }
