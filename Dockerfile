@@ -1,4 +1,3 @@
-# -------- Stage 1: Build --------
 FROM oven/bun:latest AS builder
 
 WORKDIR /app
