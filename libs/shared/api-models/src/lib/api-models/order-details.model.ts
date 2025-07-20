@@ -3,6 +3,7 @@ import { ShippingMethod } from './shipping-method.model';
 import { OrderAddress } from './order-address.model';
 import { PaymentDetails } from './payment-details.model';
 import { UserInformation } from './user-information.model';
+import { OrderShippingMethod } from './order-shipping-method.model';
 
 export interface OrderDetailsBase {
   id: string;
@@ -23,7 +24,7 @@ export interface OrderDetails extends OrderDetailsBase {
   orderAddress: OrderAddress;
   orderUserInformation: UserInformation;
   paymentDetailsId: PaymentDetails['id'];
-  shippingMethod: ShippingMethod;
+  orderShippingMethod: OrderShippingMethod;
   orderItems: OrderDetailsItem[];
 }
 

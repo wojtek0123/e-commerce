@@ -76,10 +76,10 @@
       <span class="text-xl">Shipping method</span>
       <div class="flex items-center justify-between gap-4 w-full">
         <span class="text-muted-color">
-          {{ orderDetails()?.shippingMethod?.name }}
+          {{ orderDetails()?.orderShippingMethod?.name }}
         </span>
         <span class="text-muted-color">
-          {{ orderDetails()?.shippingMethod?.price | currency: 'USD' }}
+          {{ orderDetails()?.orderShippingMethod?.price | currency: 'USD' }}
         </span>
       </div>
     </div>
@@ -151,7 +151,9 @@
       <div class="flex items-center gap-6 justify-end">
         <span class="text-xl">Shipping</span>
         <span class="text-muted-color w-48 text-end text-xl">
-          {{ orderDetails()?.shippingMethod?.price ?? 0 | currency: 'USD' }}
+          {{
+            orderDetails()?.orderShippingMethod?.price ?? 0 | currency: 'USD'
+          }}
         </span>
       </div>
       <p-divider />

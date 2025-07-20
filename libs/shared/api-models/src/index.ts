@@ -23,3 +23,4 @@ export * from './lib/api-models/book-review.model';
 export * from './lib/api-models/payment-details.model';
 export * from './lib/api-models/user-information.model';
 export * from './lib/api-models/publisher.model';
+export * from './lib/api-models/order-shipping-method.model';

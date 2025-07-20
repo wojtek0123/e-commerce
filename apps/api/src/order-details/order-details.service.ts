@@ -98,8 +98,11 @@ export class OrderDetailsService {
 
     const order = await this.prisma.orderDetails.create({
       data: {
-        shippingMethod: {
-          connect: { id: shippingMethodId },
+        orderShippingMethod: {
+          create: {
+            name: shippingMethod.name,
+            price: shippingMethod.price,
+          },
         },
         orderUserInformation: {
           create: {
@@ -311,7 +314,7 @@ export class OrderDetailsService {
           },
         },
         orderUserInformation: true,
-        shippingMethod: true,
+        orderShippingMethod: true,
         paymentDetails: true,
         orderItems: {
           include: {
