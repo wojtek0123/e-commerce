@@ -1,40 +1,15 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  input,
-  output,
-} from '@angular/core';
-import { CartItemComponent } from '../cart-item/cart-item.component';
-import { CartItemSkeletonComponent } from '../cart-item-skeleton/cart-item-skeleton.component';
-import { Book, CartItemBase } from '@e-commerce/shared/api-models';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { CartItemSkeletonComponent } from './cart-item-skeleton/cart-item-skeleton.component';
 import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'lib-cart-items',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CartItemComponent, CartItemSkeletonComponent, RouterLink],
+  imports: [CartItemSkeletonComponent, RouterLink],
   templateUrl: './cart-items.component.html',
 })
 export class CartItemsComponent {
-  items = input.required<CartItemBase[]>();
+  itemsCount = input.required<number>();
   loading = input.required<boolean>();
   booksUrl = input.required<string>();
-  readonly = input(false);
-  enableBackToEdit = input(false);
-
-  updateQuantityEvent = output<{ bookId: Book['id']; quantity: number }>();
-  removeEvent = output<Book['id']>();
-  backToEditEvent = output<void>();
-
-  updateQuantity(quantity: CartItemBase['quantity'], bookId: Book['id']) {
-    this.updateQuantityEvent.emit({ bookId, quantity });
-  }
-
-  remove(bookId: Book['id']) {
-    this.removeEvent.emit(bookId);
-  }
-
-  backToEdit() {
-    this.backToEditEvent.emit();
-  }
 }

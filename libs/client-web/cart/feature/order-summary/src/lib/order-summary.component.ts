@@ -9,13 +9,17 @@ import {
   ShippingStore,
 } from '@e-commerce/client-web/cart/data-access';
 import {
+  CartItemComponent,
   CartItemsComponent,
   OrderContainerComponent,
   OrderPriceComponent,
   SectionWrapperComponent,
 } from '@e-commerce/client-web/cart/ui';
 import { APP_ROUTE_PATHS_TOKEN } from '@e-commerce/client-web/shared/app-config';
-import { AddressInformationComponent } from '@e-commerce/client-web/shared/ui';
+import {
+  AddressInformationComponent,
+  ErrorAndRetryMessageComponent,
+} from '@e-commerce/client-web/shared/ui';
 import { PaymentMethod } from '@e-commerce/shared/api-models';
 import { Button } from 'primeng/button';
 
@@ -23,12 +27,14 @@ import { Button } from 'primeng/button';
   selector: 'lib-order-summary',
   imports: [
     CartItemsComponent,
+    CartItemComponent,
     OrderContainerComponent,
     AddressInformationComponent,
     SectionWrapperComponent,
     Button,
     CurrencyPipe,
     OrderPriceComponent,
+    ErrorAndRetryMessageComponent,
   ],
   templateUrl: './order-summary.component.html',
 })
@@ -44,6 +50,7 @@ export class OrderSummaryComponent {
   cartItems = this.#cartStore.cartItems;
   cartTotal = this.#cartStore.total;
   cartItemsLoading = this.#cartStore.loading;
+  cartItemsError = this.#cartStore.error;
   booksUrl = this.#appRoutePaths.BOOKS();
 
   selectedUserAddress = this.#addressStore.selectedAddress;
@@ -60,6 +67,10 @@ export class OrderSummaryComponent {
 
   edit() {
     this.#router.navigate([this.#appRoutePaths.ORDER_PROCESS()]);
+  }
+
+  getCartItems() {
+    this.#cartStore.getShoppingSession();
   }
 
   checkout() {

@@ -1,12 +1,26 @@
 <lib-order-container>
-  <lib-cart-items
-    [items]="cartItems()"
-    [readonly]="true"
-    [enableBackToEdit]="true"
-    [loading]="cartItemsLoading()"
-    [booksUrl]="booksUrl"
-    (backToEditEvent)="edit()"
-  />
+  @if (cartItemsError()) {
+    <lib-error-and-retry-message
+      [error]="cartItemsError()"
+      unableToLoad="cart items"
+      (onRetry)="getCartItems()"
+    />
+  } @else {
+    <lib-cart-items
+      [itemsCount]="cartItems().length"
+      [loading]="cartItemsLoading()"
+      [booksUrl]="booksUrl"
+    >
+      @for (cartItem of cartItems(); track cartItem.book.id) {
+        <lib-cart-item
+          [cartItem]="cartItem"
+          [readonly]="true"
+          [enableBackToEdit]="true"
+          (backToEditEvent)="edit()"
+        />
+      }
+    </lib-cart-items>
+  }
 
   <div class="flex flex-col gap-base">
     <lib-section-wrapper header="Address information">

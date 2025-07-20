@@ -1,0 +1,21 @@
+@if (error()) {
+  <lib-error-and-retry-message
+    (onRetry)="getCartItems()"
+    [error]="error()"
+    unableToLoad="cart items"
+  />
+} @else {
+  <lib-cart-items
+    [loading]="loading()"
+    [itemsCount]="cartItems().length"
+    [booksUrl]="booksUrl"
+  >
+    @for (cartItem of cartItems(); track cartItem.book.id) {
+      <lib-cart-item
+        [cartItem]="cartItem"
+        (deleteEvent)="remove(cartItem.book.id)"
+        (updateQuantityEvent)="updateQuantity($event, cartItem.book.id)"
+      />
+    }
+  </lib-cart-items>
+}

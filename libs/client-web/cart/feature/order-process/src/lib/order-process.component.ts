@@ -4,9 +4,9 @@ import { ShippingMethodComponent } from './components/shipping-method/shipping-m
 import { PaymentMethodComponent } from './components/payment-method/payment-method.component';
 import { OrderPriceSummaryComponent } from './components/order-price-summary/order-price-summary.component';
 import { OrderCheckoutComponent } from './components/order-checkout/order-checkout.component';
-import { CartItemsComponent } from './components/cart-items/cart-items.component';
 import { OrderContainerComponent } from '@e-commerce/client-web/cart/ui';
 import { CustomerInformationComponent } from './components/customer-information/customer-information.component';
+import { OrderCartItemsComponent } from './components/order-cart-items/order-cart-items.component';
 
 @Component({
   selector: 'lib-order-process',
@@ -16,7 +16,7 @@ import { CustomerInformationComponent } from './components/customer-information/
     PaymentMethodComponent,
     OrderPriceSummaryComponent,
     OrderCheckoutComponent,
-    CartItemsComponent,
+    OrderCartItemsComponent,
     OrderContainerComponent,
     CustomerInformationComponent,
   ],

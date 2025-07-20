@@ -21,6 +21,7 @@ Monorepo includes 3 apps, 2 front-end and 1 back-end.
   - email and password change
   - CRUD operation on user addresses 
 - favourite books
+- cart sync between devices when user is logged in
 
 ### Admin-dashboard:
 - books managment

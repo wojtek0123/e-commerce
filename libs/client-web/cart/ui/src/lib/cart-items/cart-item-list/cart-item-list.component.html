@@ -1,0 +1,21 @@
+@for (cartItem of items(); track cartItem.book.id) {
+  <ng-content />
+  <!-- <lib-cart-item -->
+  <!--   [cartItem]="cartItem" -->
+  <!--   [readonly]="readonly()" -->
+  <!--   [enableBackToEdit]="enableBackToEdit()" -->
+  <!--   (backToEditEvent)="backToEdit()" -->
+  <!--   (deleteEvent)="remove(cartItem.book.id)" -->
+  <!--   (updateQuantityEvent)="updateQuantity($event, cartItem.book.id)" -->
+  <!-- /> -->
+} @empty {
+  <div class="flex flex-col items-center justify-center xl:mt-20">
+    <span class="text-2xl xl:text-4xl text-center">
+      Oops! Your cart is empty.
+    </span>
+    <span class="text-lg text-muted-color">
+      Let’s fill it with some great books!
+    </span>
+    <a [routerLink]="booksUrl()" class="underline">Browse books</a>
+  </div>
+}

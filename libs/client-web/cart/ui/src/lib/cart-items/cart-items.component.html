@@ -1,20 +1,13 @@
 <div
   class="flex flex-col gap-base"
-  [class.animate-pulse.pointer-events-none]="loading() && items.length > 0"
+  [class.animate-pulse.pointer-events-none]="loading() && itemsCount() > 0"
 >
-  @if (loading() && items().length === 0) {
+  @if (loading() && itemsCount() === 0) {
     <lib-cart-item-skeleton />
   } @else {
-    @for (cartItem of items(); track cartItem.book.id) {
-      <lib-cart-item
-        [cartItem]="cartItem"
-        [readonly]="readonly()"
-        [enableBackToEdit]="enableBackToEdit()"
-        (backToEditEvent)="backToEdit()"
-        (deleteEvent)="remove(cartItem.book.id)"
-        (updateQuantityEvent)="updateQuantity($event, cartItem.book.id)"
-      />
-    } @empty {
+    @if (itemsCount() > 0) {
+      <ng-content select="lib-cart-item" />
+    } @else {
       <div class="flex flex-col items-center justify-center xl:mt-20">
         <span class="text-2xl xl:text-4xl text-center">
           Oops! Your cart is empty.
