@@ -9,6 +9,8 @@
       <lib-cart-item
         [cartItem]="cartItem"
         [readonly]="readonly()"
+        [enableBackToEdit]="enableBackToEdit()"
+        (backToEditEvent)="backToEdit()"
         (deleteEvent)="remove(cartItem.book.id)"
         (updateQuantityEvent)="updateQuantity($event, cartItem.book.id)"
       />

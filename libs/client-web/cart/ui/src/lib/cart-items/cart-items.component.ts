@@ -20,9 +20,11 @@ export class CartItemsComponent {
   loading = input.required<boolean>();
   booksUrl = input.required<string>();
   readonly = input(false);
+  enableBackToEdit = input(false);
 
   updateQuantityEvent = output<{ bookId: Book['id']; quantity: number }>();
   removeEvent = output<Book['id']>();
+  backToEditEvent = output<void>();
 
   updateQuantity(quantity: CartItemBase['quantity'], bookId: Book['id']) {
     this.updateQuantityEvent.emit({ bookId, quantity });
@@ -30,5 +32,9 @@ export class CartItemsComponent {
 
   remove(bookId: Book['id']) {
     this.removeEvent.emit(bookId);
+  }
+
+  backToEdit() {
+    this.backToEditEvent.emit();
   }
 }

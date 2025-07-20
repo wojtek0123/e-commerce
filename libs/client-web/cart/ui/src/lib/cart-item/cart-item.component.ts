@@ -36,9 +36,11 @@ export class CartItemComponent {
 
   cartItem = input.required<CartItemBase>();
   readonly = input(false);
+  enableBackToEdit = input(false);
 
   updateQuantityEvent = output<number>();
   deleteEvent = output<void>();
+  backToEditEvent = output<void>();
 
   bookDetailsUrl = computed(() =>
     this.#appRoutePaths.BOOK(this.cartItem().book.id),
@@ -63,6 +65,10 @@ export class CartItemComponent {
     this.throttle(() => {
       this.updateQuantityEvent.emit(this.quantity());
     });
+  }
+
+  backToEdit() {
+    this.backToEditEvent.emit();
   }
 
   throttle(callbackFn: () => void, wait: number = WAIT_TIME) {

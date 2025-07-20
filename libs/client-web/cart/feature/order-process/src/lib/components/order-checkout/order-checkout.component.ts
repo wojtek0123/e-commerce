@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  effect,
   inject,
   signal,
 } from '@angular/core';
@@ -67,8 +68,8 @@ export class OrderCheckoutComponent {
   );
   creditCard = this.#paymentStore.creditCard.data;
 
-  isCreditCardSelectedAndCreditCardDataAreProvided = computed(
-    () => this.selectedPaymentMethod() === 'CREDIT_CARD' && !!this.creditCard(),
+  isCreditCardSelectedAndCreditCardDataAreNotProvided = computed(
+    () => this.selectedPaymentMethod() === 'CREDIT_CARD' && !this.creditCard(),
   );
 
   isOrderInvalid = computed(() =>
@@ -76,7 +77,7 @@ export class OrderCheckoutComponent {
       !this.isAddressSelected(),
       !this.isShippingMethodSelected(),
       !this.isPaymentMethodSelected(),
-      !this.isCreditCardSelectedAndCreditCardDataAreProvided(),
+      this.isCreditCardSelectedAndCreditCardDataAreNotProvided(),
       this.isCustomerInformationInvalid(),
       this.isSixDigitCodeInvalid() || !this.creditCard,
       this.isCartEmpty(),

@@ -65,7 +65,17 @@
         <span class="@md:font-bold @lg:text-xl @3xl:text-2xl @6xl:text-3xl">
           {{ cartItem().book.price | currency: 'USD' }}
         </span>
+
+        @if (enableBackToEdit()) {
+          <p-button
+            icon="pi pi-pencil"
+            (onClick)="backToEdit()"
+            [text]="true"
+            ariaLabel="Back to edit"
+          />
+        }
       </span>
+
       @if (!readonly()) {
         <div
           class="flex items-center justify-end @lg:gap-3 @5xl:justify-center"
@@ -96,6 +106,15 @@
             icon="pi pi-plus"
           />
         </div>
+      } @else {
+        @if (enableBackToEdit()) {
+          <p-button
+            icon="pi pi-pencil"
+            (onClick)="backToEdit()"
+            [text]="true"
+            ariaLabel="Back to edit"
+          />
+        }
       }
     </div>
   </div>

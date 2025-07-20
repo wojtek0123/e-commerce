@@ -1,11 +1,16 @@
-<p-button
-  [plain]="true"
-  severity="secondary"
-  icon="pi pi-search"
+<p-overlaybadge
   class="xl:hidden"
-  size="large"
-  (onClick)="show()"
-/>
+  [badgeDisabled]="!hasValue()"
+  severity="danger"
+>
+  <p-button
+    [plain]="true"
+    severity="secondary"
+    icon="pi pi-search"
+    size="large"
+    (onClick)="show()"
+  />
+</p-overlaybadge>
 
 <ng-template #searchTemplate>
   <div class="flex flex-col gap-base xl:flex-row">
@@ -19,7 +24,9 @@
         type="text"
         pInputText
         [attr.ariaLabel]="'What title are you looking for?'"
-        [(ngModel)]="searchText"
+        [ngModel]="searchText()"
+        (ngModelChange)="searchText.set($event)"
+        (keydown.enter)="search()"
         class="pr-12 h-10 min-w-52"
         [fluid]="true"
         placeholder="Search by title"
@@ -58,7 +65,19 @@
   [(visible)]="visible"
   [modal]="true"
 >
-  <ng-container [ngTemplateOutlet]="searchTemplate" />
+  @if (visible()) {
+    <ng-container [ngTemplateOutlet]="searchTemplate" />
+  } @else {
+    <input
+      id="search-input"
+      type="text"
+      pInputText
+      [attr.ariaLabel]="'What title are you looking for?'"
+      class="pr-12 h-10 min-w-52"
+      [fluid]="true"
+      placeholder="Search by title"
+    />
+  }
 </p-dialog>
 
 <div class="hidden xl:block">

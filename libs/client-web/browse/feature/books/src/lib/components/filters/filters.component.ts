@@ -27,6 +27,7 @@ import {
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter, map } from 'rxjs';
+import { OverlayBadgeModule } from 'primeng/overlaybadge';
 
 @Component({
   selector: 'lib-filters',
@@ -45,6 +46,7 @@ import { filter, map } from 'rxjs';
     DrawerLeftDirective,
     AccordionComponent,
     AccordionPanelComponent,
+    OverlayBadgeModule,
   ],
   templateUrl: './filters.component.html',
   styleUrl: './filters.component.scss',

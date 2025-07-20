@@ -4,14 +4,20 @@
   </div>
 </div>
 
-<p-button
-  severity="secondary"
-  size="large"
+<p-overlaybadge
   class="xl:hidden"
-  [plain]="true"
-  [icon]="isAnyFilterSelected() ? 'pi pi-filter-fill' : 'pi pi-filter'"
-  (onClick)="isSidebarVisible.set(true)"
-/>
+  [badgeDisabled]="!isAnyFilterSelected()"
+  severity="danger"
+>
+  <p-button
+    severity="secondary"
+    size="large"
+    class="xl:hidden"
+    [plain]="true"
+    [icon]="isAnyFilterSelected() ? 'pi pi-filter-fill' : 'pi pi-filter'"
+    (onClick)="isSidebarVisible.set(true)"
+  />
+</p-overlaybadge>
 
 <p-drawer
   libDrawerLeft
@@ -25,9 +31,7 @@
         <ng-container [ngTemplateOutlet]="filters" />
       </div>
 
-      <div
-        class="flex flex-col gap-base pt-base rounded-base border-t border-surface-100"
-      >
+      <div class="flex flex-col gap-base pt-base rounded-base">
         <p-button
           styleClass="w-full"
           [label]="'Clear filters (' + activeFiltersCount() + ')'"

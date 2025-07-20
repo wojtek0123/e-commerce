@@ -3,7 +3,10 @@ import {
   Component,
   ElementRef,
   inject,
+  input,
+  linkedSignal,
   model,
+  OnInit,
   output,
   signal,
   viewChild,
@@ -17,6 +20,7 @@ import { BreakpointObserver } from '@angular/cdk/layout';
 import { DialogModule } from 'primeng/dialog';
 import { NgTemplateOutlet } from '@angular/common';
 import { LabelComponent } from '@e-commerce/client-web/shared/ui';
+import { OverlayBadgeModule } from 'primeng/overlaybadge';
 
 @Component({
   selector: 'lib-search',
@@ -28,6 +32,7 @@ import { LabelComponent } from '@e-commerce/client-web/shared/ui';
     DialogModule,
     NgTemplateOutlet,
     LabelComponent,
+    OverlayBadgeModule,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './search.component.html',
@@ -36,15 +41,19 @@ import { LabelComponent } from '@e-commerce/client-web/shared/ui';
     class: 'flex items-center min-h-10 max-w-fit',
   },
 })
-export class SearchComponent {
+export class SearchComponent implements OnInit {
   #breakpointObserver = inject(BreakpointObserver);
 
-  searchText = model<string | null>(null);
+  initialSearchText = input<string | null>(null);
   visible = signal(false);
+
+  searchText = linkedSignal(() => this.initialSearchText());
 
   searchInputRef = viewChild.required<ElementRef>('searchInput');
 
-  searchChanged = output<string>();
+  searchChange = output<string | null>();
+
+  hasValue = signal<boolean>(false);
 
   constructor() {
     this.#breakpointObserver
@@ -58,9 +67,17 @@ export class SearchComponent {
       });
   }
 
+  ngOnInit(): void {
+    this.hasValue.set(!!this.searchText()?.trim());
+  }
+
   clearInput() {
     this.searchInputRef().nativeElement?.focus();
     this.searchText.set(null);
+
+    if (window.innerWidth > 1280) {
+      this.searchChange.emit(this.searchText()?.trim() ?? null);
+    }
   }
 
   show() {
@@ -68,8 +85,10 @@ export class SearchComponent {
   }
 
   search() {
-    this.searchChanged.emit(this.searchText()?.trim() ?? '');
+    this.searchChange.emit(this.searchText()?.trim() ?? null);
 
     this.visible.set(false);
+
+    this.hasValue.set(!!this.searchText()?.trim());
   }
 }

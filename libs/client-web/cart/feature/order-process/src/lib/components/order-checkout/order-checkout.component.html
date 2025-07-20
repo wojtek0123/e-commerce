@@ -32,7 +32,7 @@
         styleClass="rounded-2xl"
       />
     }
-    @if (!isCreditCardSelectedAndCreditCardDataAreProvided()) {
+    @if (isCreditCardSelectedAndCreditCardDataAreNotProvided()) {
       <p-message
         severity="error"
         icon="pi pi-exclamation-circle"
