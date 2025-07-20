@@ -9,7 +9,7 @@ RUN bun install
 RUN bunx nx reset
 
 
-RUN bunx prisma generate
+RUN cd apps/api && bunx prisma generate
 RUN NX_DAEMON=false bunx nx build api --exclude=admin-dashboard-e2e,client-web-e2e --verbose
 
 ENV PORT=3000
