@@ -60,12 +60,12 @@ export class BookDetailsComponent implements OnInit, OnDestroy {
 
   constructor() {
     effect(() => {
-      const title = this.book()?.title;
+      const bookTitle = this.book()?.title;
       const description = this.book()?.description;
 
-      if (!title || !description) return;
+      if (!bookTitle || !description) return;
 
-      this.#title.setTitle(title);
+      this.#title.setTitle(`${bookTitle} | StoryStash`);
       this.#meta.updateTag({ name: 'description', content: description });
     });
   }
@@ -74,7 +74,10 @@ export class BookDetailsComponent implements OnInit, OnDestroy {
     this.#route.paramMap
       .pipe(takeUntilDestroyed(this.#destroyRef))
       .subscribe(() => {
-        this.#title.setTitle(this.book()?.title ?? '');
+        const bookTitle = this.book()?.title;
+        this.#title.setTitle(
+          `${bookTitle ? bookTitle + ' | StoryStash' : 'StoryStash'}`,
+        );
         this.#meta.updateTag({
           name: 'description',
           content: this.book()?.description ?? '',
