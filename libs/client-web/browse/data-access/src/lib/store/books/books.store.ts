@@ -519,7 +519,7 @@ export const BooksStore = signalStore(
           singleValue: {
             minPrice: null,
             maxPrice: null,
-            search: null,
+            search: state.filters.singleValue.search,
           },
         },
       }));
