@@ -1,11 +1,11 @@
 <div
   class="flex flex-col gap-base"
-  [class.animate-pulse.pointer-events-none]="loading() && itemsCount() > 0"
+  [class.animate-pulse.pointer-events-none]="loading() && cartItemsCount() > 0"
 >
-  @if (loading() && itemsCount() === 0) {
+  @if (loading() && cartItemsCount() === 0) {
     <lib-cart-item-skeleton />
   } @else {
-    @if (itemsCount() > 0) {
+    @if (cartItemsCount() > 0) {
       <ng-content select="lib-cart-item" />
     } @else {
       <div class="flex flex-col items-center justify-center xl:mt-20">

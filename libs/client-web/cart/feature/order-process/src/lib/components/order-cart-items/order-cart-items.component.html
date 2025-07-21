@@ -7,7 +7,7 @@
 } @else {
   <lib-cart-items
     [loading]="loading()"
-    [itemsCount]="cartItems().length"
+    [cartItemsCount]="cartItems().length"
     [booksUrl]="booksUrl"
   >
     @for (cartItem of cartItems(); track cartItem.book.id) {

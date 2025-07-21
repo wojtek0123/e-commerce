@@ -14,7 +14,7 @@ export const cartShellRoutes: Route[] = [
     children: [
       {
         path: APP_ROUTES_FEATURE.CART.ORDER_PROCESS,
-        title: 'Order process',
+        title: 'Order process | StoryStash',
         loadChildren: () =>
           import('@e-commerce/client-web/cart/feature/order-process').then(
             (r) => r.orderProcessRoutes,
@@ -22,7 +22,7 @@ export const cartShellRoutes: Route[] = [
       },
       {
         path: APP_ROUTES_FEATURE.CART.PAYMENT_STATUS,
-        title: 'Payment status',
+        title: 'Payment status | StoryStash',
         loadChildren: () =>
           import('@e-commerce/client-web/cart/feature/payment-status').then(
             (r) => r.paymentStatusRoutes,
@@ -30,7 +30,7 @@ export const cartShellRoutes: Route[] = [
       },
       {
         path: APP_ROUTES_FEATURE.CART.ORDER_SUMMARY,
-        title: 'Order summary',
+        title: 'Order summary | StoryStash',
         loadChildren: () =>
           import('@e-commerce/client-web/cart/feature/order-summary').then(
             (r) => r.orderSummaryRoutes,

@@ -186,6 +186,9 @@
       "@e-commerce/client-web/core/data-access": [
         "libs/client-web/core/data-access/src/index.ts"
       ],
+      "@e-commerce/client-web/core/feature/footer": [
+        "libs/client-web/core/feature/footer/src/index.ts"
+      ],
       "@e-commerce/client-web/core/feature/nav": [
         "libs/client-web/core/feature/nav/src/index.ts"
       ],

@@ -85,7 +85,7 @@
   </p-drawer>
 
   <div
-    class="hidden 2xl:flex w-full h-content overflow-y-auto scrollbar-thin 2xl:sticky 2xl:top-4"
+    class="hidden 2xl:flex w-full min-h-content overflow-y-auto scrollbar-thin 2xl:sticky 2xl:top-4"
   >
     @if (selectedOrderLoading()) {
       <ng-container *ngTemplateOutlet="orderLoading" />

@@ -9,7 +9,7 @@ export const accountShellRoutes: Route[] = [
     children: [
       {
         path: APP_ROUTES_FEATURE.ACCOUNT.ORDERS,
-        title: 'Orders',
+        title: 'Orders | StoryStash',
         loadChildren: () =>
           import('@e-commerce/client-web/account/feature/orders').then(
             (r) => r.ordersRoutes,
@@ -17,7 +17,7 @@ export const accountShellRoutes: Route[] = [
       },
       {
         path: APP_ROUTES_FEATURE.ACCOUNT.INFORMATION,
-        title: 'Information',
+        title: 'Information | StoryStash',
         loadChildren: () =>
           import('@e-commerce/client-web/account/feature/information').then(
             (r) => r.informationRoutes,
@@ -25,7 +25,7 @@ export const accountShellRoutes: Route[] = [
       },
       {
         path: APP_ROUTES_FEATURE.ACCOUNT.FAVOURITE_BOOKS_LIST,
-        title: 'Favourite books',
+        title: 'Favourite books | StoryStash',
         loadChildren: () =>
           import(
             '@e-commerce/client-web/account/feature/favourite-books-list'

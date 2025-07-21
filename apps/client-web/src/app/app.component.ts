@@ -18,6 +18,7 @@ import { FavouriteBooksListService } from '@e-commerce/client-web/account/api';
 import { UnauthorizedDialogComponent } from './components/unauthorized-dialog/unauthorized-dialog.component';
 import { Meta } from '@angular/platform-browser';
 import { defaultDescription } from '@e-commerce/client-web/shared/utils';
+import { FooterComponent } from '@e-commerce/client-web/core/feature/footer';
 
 const borderRadius = '1rem' as const;
 const Noir = definePreset(Aura, {
@@ -80,6 +81,7 @@ const Noir = definePreset(Aura, {
     ToastModule,
     NavComponent,
     UnauthorizedDialogComponent,
+    FooterComponent,
   ],
   selector: 'app-root',
   templateUrl: './app.component.html',

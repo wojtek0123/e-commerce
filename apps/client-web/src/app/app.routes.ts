@@ -17,7 +17,7 @@ export const appRoutes: Route[] = [
   },
   {
     path: APP_ROUTES_FEATURE.BROWSE.BASE,
-    title: 'Book search',
+    title: 'Browse books | StoryStash',
     loadChildren: () =>
       import('@e-commerce/client-web/browse/feature/shell').then(
         (r) => r.browseShellRoutes,

@@ -47,10 +47,10 @@
 
 @defer (hydrate on idle) {
   <aside
-    class="hidden justify-between gap-4 xl:h-content overflow-auto scrollbar-thin px-2 py-4 bg-content-background xl:sticky z-[1001] top-4 flex-col rounded-base xl:flex"
+    class="hidden justify-between gap-4 xl:h-nav overflow-auto scrollbar-thin px-2 py-4 bg-content-background xl:sticky z-[1001] top-4 flex-col rounded-base xl:flex"
     [@slideInOut]="isExpanded() ? 'in' : 'out'"
   >
-    <nav class="h-content flex flex-col justify-between">
+    <nav class="h-nav flex flex-col justify-between">
       <div class="flex flex-col">
         <div class="h-9 flex items-center justify-center">
           @if (isLabelShowed?.()) {

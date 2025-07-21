@@ -6,9 +6,13 @@
   <lib-nav />
   @defer {
     <div
-      class="w-full h-full overflow-y-auto p-4 xl:pl-gap xl:p-0 xl:overflow-y-visible"
+      class="w-full overflow-y-auto p-4 xl:pl-gap xl:p-0 xl:overflow-y-visible"
     >
       <router-outlet />
+
+      <div class="mt-4">
+        <lib-footer />
+      </div>
     </div>
   }
 </div>

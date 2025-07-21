@@ -14,8 +14,7 @@ export function Nav() {
   const { logout } = useAuthApi();
   const toast = useToastStore();
   const [isDark, setIsDark] = useState(true);
-  const { changeTheme } = useContext(PrimeReactContext)
-
+  const { changeTheme } = useContext(PrimeReactContext);
 
   function expandCollapse() {
     setIsExpanded((isExpanded) => !isExpanded);
@@ -41,14 +40,16 @@ export function Nav() {
   }
 
   function toggleTheme() {
-    const currentThemeLink = (document.getElementById('theme-link') as HTMLLinkElement).href
-    const currentTheme = new URL(currentThemeLink).pathname
-    const newTheme = currentTheme.replace(currentTheme.includes('dark') ? 'dark' : 'light', currentTheme.includes('dark') ? 'light' : 'dark')
+    const currentThemeLink = (
+      document.getElementById('theme-link') as HTMLLinkElement
+    ).href;
+    const currentTheme = new URL(currentThemeLink).pathname;
+    const newTheme = currentTheme.replace(
+      currentTheme.includes('dark') ? 'dark' : 'light',
+      currentTheme.includes('dark') ? 'light' : 'dark',
+    );
 
-
-    setIsDark(newTheme.includes('dark'))
-
-
+    setIsDark(newTheme.includes('dark'));
 
     changeTheme?.(currentTheme, newTheme, 'theme-link');
   }
@@ -144,7 +145,11 @@ export function Nav() {
                 onClick={toggleTheme}
                 className="px-3 h-10 flex items-center gap-4"
               >
-                {isDark ? <i className="pi pi-moon"></i> : <i className="pi pi-sun"></i>}
+                {isDark ? (
+                  <i className="pi pi-moon"></i>
+                ) : (
+                  <i className="pi pi-sun"></i>
+                )}
                 {isLabelShowed && <span>{isDark ? 'Dark' : 'Light'}</span>}
               </button>
               <button

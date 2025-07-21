@@ -14,8 +14,12 @@ module.exports = {
       gap: { base: '1rem' },
       borderRadius: { base: '1rem' },
       maxWidth: { 'book-card': '22rem' },
-      height: { content: 'calc(100svh - 2 * 1rem)' },
-      maxheight: { content: 'calc(100svh - 2 * 1rem)' },
+      minHeight: { content: 'calc(100svh - 2 * 1rem - 15.25rem - 1rem)' },
+      height: {
+        content: 'calc(100svh - 2 * 1rem - 15.25rem - 1rem)',
+        nav: 'calc(100svh - 2 * 1rem)',
+      },
+      maxheight: { content: 'calc(100svh - 2 * 1rem - 15.25rem - 1rem)' },
       boxShadow: {
         base: '0px 3px 5px rgba(0, 0, 0, 0.02), 0px 0px 2px rgba(0, 0, 0, 0.05), 0px 1px 4px rgba(0,0,0,0.08)',
       },

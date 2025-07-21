@@ -9,7 +9,7 @@ import { RouterLink } from '@angular/router';
   templateUrl: './cart-items.component.html',
 })
 export class CartItemsComponent {
-  itemsCount = input.required<number>();
+  cartItemsCount = input.required<number>();
   loading = input.required<boolean>();
   booksUrl = input.required<string>();
 }
