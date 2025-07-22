@@ -55,7 +55,10 @@ export class BookDetailsComponent implements OnInit, OnDestroy {
       label: 'books',
       routerLink: this.#appRoutePaths.BOOKS(),
     },
-    { label: this.book()?.title },
+    {
+      label: this.book()?.title,
+      routerLink: this.#appRoutePaths.BOOK(this.book()?.id),
+    },
   ]);
 
   constructor() {

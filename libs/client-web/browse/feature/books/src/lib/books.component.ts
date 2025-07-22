@@ -28,6 +28,7 @@ import { SaveFiltersComponent } from './components/save-filters/save-filters.com
 import { LoadFiltersComponent } from './components/load-filters/load-filters.component';
 import { ButtonModule } from 'primeng/button';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { APP_ROUTE_PATHS_TOKEN } from '@e-commerce/client-web/shared/app-config';
 
 @Component({
   selector: 'lib-books',
@@ -54,11 +55,13 @@ export class BooksComponent implements OnInit {
   #cartService = inject(CartService);
   #favouriteBooksListService = inject(FavouriteBooksListService);
   #viewport = inject(ViewportScroller);
+  #appRoutesPaths = inject(APP_ROUTE_PATHS_TOKEN);
 
   breadcrumbs = signal<MenuItem[]>([
     { label: 'home', routerLink: '/' },
     {
       label: 'books',
+      routerLink: this.#appRoutesPaths.BOOKS(),
     },
   ]);
 
