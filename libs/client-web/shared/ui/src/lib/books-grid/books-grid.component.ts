@@ -20,7 +20,7 @@ export class BooksGridComponent {
   books = input.required<Book[]>();
   loading = input<boolean>(false);
   error = input<string | string[] | null>(null);
-  skeletonsCount = input<number>(8);
+  skeletonsCount = input<number>(4);
   pendingBookIds = input<Book['id'][]>([]);
   favouriteBooks = input.required<Book[]>();
   displayOneRow = input<boolean>(false);

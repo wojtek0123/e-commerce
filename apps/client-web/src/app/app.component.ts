@@ -21,7 +21,6 @@ import { defaultDescription } from '@e-commerce/client-web/shared/utils';
 import { FooterComponent } from '@e-commerce/client-web/core/feature/footer';
 import { Router } from '@angular/router';
 import { filter, map } from 'rxjs';
-import { tap } from 'lodash-es';
 import { APP_ROUTES_FEATURE } from '@e-commerce/client-web/shared/app-config';
 
 const borderRadius = '1rem' as const;
@@ -104,14 +103,19 @@ export class AppComponent implements OnInit {
 
   event$ = this.#messageBusService.event$;
 
-  isCartRouteActive = toSignal(
+  isFooterHidden = toSignal(
     this.#router.events.pipe(
       filter((events) => events instanceof NavigationEnd),
-      map(({ url }) => url.includes(this.#appRoutesFeature.CART.BASE)),
+      map(({ url }) =>
+        [
+          this.#appRoutesFeature.CART.BASE,
+          this.#appRoutesFeature.AUTH.BASE,
+        ].some((path) => url.includes(path)),
+      ),
     ),
   );
 
-  isPaymentStatusActive = toSignal(
+  isNavHidden = toSignal(
     this.#router.events.pipe(
       filter((events) => events instanceof NavigationEnd),
       map(({ url }) =>
