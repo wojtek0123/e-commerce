@@ -159,7 +159,7 @@ export class OrderDetailsService {
 
     try {
       await this.mailerService.sendMail({
-        from: 'client-web@e-commerce.com',
+        from: 'storystash@e-commerce.com',
         to: shoppingSession.user.email,
         subject: `Order no. ${order.id}`,
         template: './order-confirmation',

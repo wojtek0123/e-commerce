@@ -13,6 +13,7 @@ import { compare, hash } from 'bcrypt';
 import { Prisma, Role, User } from '@prisma/client';
 import { ConfigService } from '@nestjs/config';
 import { omit } from 'lodash';
+import { MailerService } from '@nestjs-modules/mailer';
 
 @Injectable()
 export class AuthService {
@@ -20,6 +21,7 @@ export class AuthService {
     private prisma: PrismaService,
     private jwtService: JwtService,
     private configService: ConfigService,
+    private readonly mailerService: MailerService,
   ) {}
 
   async login(email: string, password: string, appHeader: string) {
@@ -87,6 +89,17 @@ export class AuthService {
 
     await this.prisma.favouriteBooksList.create({
       data: { userId: user.id },
+    });
+
+    await this.mailerService.sendMail({
+      from: 'storystash@e-commerce.com',
+      to: user.email,
+      subject: 'Welcome Aboard!',
+      template: './register-confirmation',
+      context: {
+        url: 'https://storystash.vercel.app',
+        year: new Date().getFullYear(),
+      },
     });
 
     return { tokens, user };

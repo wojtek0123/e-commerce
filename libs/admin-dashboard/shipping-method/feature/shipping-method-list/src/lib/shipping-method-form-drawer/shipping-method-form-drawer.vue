@@ -28,11 +28,6 @@ function submit(event: FormSubmitEvent) {
 
   const { name, price, deliveryTime } = event.states;
 
-  console.log('Submitting shipping method:', {
-    name: name.value,
-    price: price.value,
-    deliveryTime: deliveryTime.value,
-  });
 
   if (!!shippingMethod) {
     store

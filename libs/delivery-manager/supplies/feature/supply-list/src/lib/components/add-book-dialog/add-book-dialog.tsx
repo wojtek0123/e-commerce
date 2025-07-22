@@ -41,8 +41,7 @@ export const AddBookDialog = () => {
   }
 
   function onDialogHide(imageCoverUrl: string) {
-    console.log('hrererer')
-    deleteImageFromStorage(imageCoverUrl)
+    deleteImageFromStorage(imageCoverUrl);
   }
 
   const deleteImageFromStorage = async (imageCoverUrl: string) => {
@@ -81,7 +80,7 @@ export const AddBookDialog = () => {
     });
     // setImageUploadLoading(false)
     // setImageCoverUrl(null)
-  }
+  };
 
   return (
     <>
