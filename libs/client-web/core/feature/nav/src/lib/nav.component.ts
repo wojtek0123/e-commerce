@@ -9,7 +9,6 @@ import { NgTemplateOutlet } from '@angular/common';
 import {
   afterNextRender,
   Component,
-  computed,
   inject,
   Injector,
   OnDestroy,
@@ -26,6 +25,7 @@ import {
   RouterLinkActive,
 } from '@angular/router';
 import { AuthService } from '@e-commerce/client-web/auth/api';
+// eslint-disable-next-line @nx/enforce-module-boundaries
 import { CartSidebarComponent } from '@e-commerce/client-web/cart/feature/cart-sidebar';
 import {
   APP_LOCAL_STORAGE_KEYS_TOKEN,

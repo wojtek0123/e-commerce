@@ -5,7 +5,7 @@ import {
   inject,
   OnInit,
 } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { NavigationEnd, RouterOutlet } from '@angular/router';
 import { NavComponent } from '@e-commerce/client-web/core/feature/nav';
 import { ToastModule } from 'primeng/toast';
 import Aura from '@primeng/themes/aura';
@@ -13,12 +13,16 @@ import { definePreset } from '@primeng/themes';
 import { CartService } from '@e-commerce/client-web/cart/api';
 import { PrimeNG } from 'primeng/config';
 import { MessageBusService } from '@e-commerce/client-web/shared/data-access/services';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FavouriteBooksListService } from '@e-commerce/client-web/account/api';
 import { UnauthorizedDialogComponent } from './components/unauthorized-dialog/unauthorized-dialog.component';
 import { Meta } from '@angular/platform-browser';
 import { defaultDescription } from '@e-commerce/client-web/shared/utils';
 import { FooterComponent } from '@e-commerce/client-web/core/feature/footer';
+import { Router } from '@angular/router';
+import { filter, map } from 'rxjs';
+import { tap } from 'lodash-es';
+import { APP_ROUTES_FEATURE } from '@e-commerce/client-web/shared/app-config';
 
 const borderRadius = '1rem' as const;
 const Noir = definePreset(Aura, {
@@ -95,8 +99,26 @@ export class AppComponent implements OnInit {
   #messageBusService = inject(MessageBusService);
   #destroyRef = inject(DestroyRef);
   #meta = inject(Meta);
+  #router = inject(Router);
+  #appRoutesFeature = APP_ROUTES_FEATURE;
 
   event$ = this.#messageBusService.event$;
+
+  isCartRouteActive = toSignal(
+    this.#router.events.pipe(
+      filter((events) => events instanceof NavigationEnd),
+      map(({ url }) => url.includes(this.#appRoutesFeature.CART.BASE)),
+    ),
+  );
+
+  isPaymentStatusActive = toSignal(
+    this.#router.events.pipe(
+      filter((events) => events instanceof NavigationEnd),
+      map(({ url }) =>
+        url.includes(this.#appRoutesFeature.CART.PAYMENT_STATUS),
+      ),
+    ),
+  );
 
   ngOnInit(): void {
     this.#setTheme();

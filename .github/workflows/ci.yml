@@ -35,5 +35,5 @@ jobs:
 
       # TODO: fix these two commands
       # Nx Affected runs only tasks affected by the changes in this PR/commit. Learn more: https://nx.dev/ci/features/affected
-      # - run: bun nx affected -t lint test build
+      - run: bun nx affected -t lint build
       # - run: bun nx affected --parallel 1 -t e2e-ci
