@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, linkedSignal, OnInit, signal } from '@angular/core';
 import { TableModule } from 'primeng/table';
 import {
   OrderColumn,
@@ -21,6 +21,9 @@ import { DrawerModule } from 'primeng/drawer';
 import { StatusToServerityPipe } from './pipes/status-to-severity.pipe';
 import { ErrorAndRetryMessageComponent } from '@e-commerce/client-web/shared/ui';
 import { APP_ROUTE_PATHS_TOKEN } from '@e-commerce/client-web/shared/app-config';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { map, tap } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'lib-orders',
@@ -48,6 +51,7 @@ export class OrdersComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly appRoutePaths = inject(APP_ROUTE_PATHS_TOKEN);
+  private readonly breakpointObserver = inject(BreakpointObserver);
 
   public orders = this.store.orders;
   public loading = this.store.loading;
@@ -60,12 +64,10 @@ export class OrdersComponent implements OnInit {
     { header: 'Total', field: 'total' },
   ]);
   public skeletons = signal(new Array(10));
-  protected drawerVisible = computed(() => {
+  protected drawerVisible = linkedSignal(() => {
     const selectedOrderId = this.selectedOrderId();
 
-    if (window.innerWidth >= 1536) {
-      return false;
-    }
+    if (window.innerWidth > 1534) return false;
 
     return !!selectedOrderId;
   });
@@ -73,6 +75,18 @@ export class OrdersComponent implements OnInit {
   public selectedOrder = this.store.selectedOrder.data;
   public selectedOrderLoading = this.store.selectedOrder.loading;
   public selectedOrderError = this.store.selectedOrder.error;
+
+  constructor() {
+    this.breakpointObserver
+      .observe('(max-width: 1534px)')
+      .pipe(
+        map(({ matches }) => matches),
+        takeUntilDestroyed(),
+      )
+      .subscribe((matches) => {
+        this.drawerVisible.set(matches && !!this.selectedOrderId());
+      });
+  }
 
   ngOnInit(): void {
     const id = this.route.snapshot.queryParams['orderDetailsId'];
