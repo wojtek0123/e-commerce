@@ -16,7 +16,7 @@ module.exports = {
       maxWidth: { 'book-card': '22rem' },
       minHeight: { content: 'calc(100svh - 2 * 1rem - 15.25rem - 1rem)' },
       height: {
-        content: 'calc(100svh - 2 * 1rem - 15.25rem - 1rem)',
+        content: 'calc(100svh - 2 * 1rem - 15.25rem - 1rem - 4.25rem)',
         nav: 'calc(100svh - 2 * 1rem)',
       },
       maxheight: { content: 'calc(100svh - 2 * 1rem - 15.25rem - 1rem)' },

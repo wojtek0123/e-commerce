@@ -14,7 +14,7 @@
 
 <ng-template #searchTemplate>
   <div class="flex flex-col gap-base xl:flex-row">
-    <div class="2xl:min-w-[30rem] w-full relative">
+    <div class="w-full relative">
       <lib-label idFor="search-input" class="xl:hidden">
         What title are you looking for?
       </lib-label>
@@ -27,8 +27,7 @@
         [ngModel]="searchText()"
         (ngModelChange)="searchText.set($event)"
         (keydown.enter)="search()"
-        class="pr-12 h-10 min-w-52"
-        [fluid]="true"
+        class="pr-12 h-10"
         placeholder="Search by title"
       />
       @if (!!searchText()) {

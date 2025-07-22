@@ -101,7 +101,7 @@ export class NavComponent implements OnDestroy {
   urls = signal({
     home: this.#appRoutePaths.HOME(),
     books: this.#appRoutePaths.BOOKS(),
-    orders: this.#appRoutePaths.ORDERS(),
+    account: this.#appRoutePaths.ACCOUNT(),
     login: this.#appRoutePaths.LOGIN(),
     register: this.#appRoutePaths.REGISTER(),
     favouriteBooksList: this.#appRoutePaths.FAVOURITE_BOOKS_LIST(),

@@ -1,5 +1,5 @@
 <div
-  class="grid grid-cols-1 relative 2xl:grid-cols-2 gap-base [2800px]:grid-cols-[1fr_0.7fr]"
+  class="grid grid-cols-1 min-h-content relative 2xl:grid-cols-2 gap-base [2800px]:grid-cols-[1fr_0.7fr]"
 >
   @if (error()) {
     <lib-error-and-retry-message
@@ -15,7 +15,7 @@
       [selection]="selectedOrder()"
       (selectionChange)="toggleOrderSelection($event)"
       dataKey="id"
-      tableStyleClass="bg-content-background rounded-base overflow-hidden"
+      tableStyleClass="bg-content-background rounded-base overflow-hidden h-full"
       [loading]="loading()"
       [showLoader]="false"
     >

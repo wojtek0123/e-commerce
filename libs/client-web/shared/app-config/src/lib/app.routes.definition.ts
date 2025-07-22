@@ -43,8 +43,8 @@ export const APP_ROUTES_FEATURE = {
   } as const,
   SUPPORT: {
     BASE: 'support',
-    FAQ: 'faq'
-  }
+    FAQ: 'faq',
+  },
 } as const;
 
 const AUTH_FEATURE_PATHS = {
@@ -62,6 +62,7 @@ const BROWSE_FEATURE_PATHS = {
 } as const;
 
 const ACCOUNT_FEATURE_PATHS = {
+  ACCOUNT: () => `${APP_ROUTES_FEATURE.ACCOUNT.BASE}`,
   INFORMATION: () =>
     `/${APP_ROUTES_FEATURE.ACCOUNT.BASE}/${APP_ROUTES_FEATURE.ACCOUNT.INFORMATION}`,
   ORDERS: () =>
@@ -80,8 +81,9 @@ const CART_FEATURE_PATHS = {
 } as const;
 
 const SUPPORT_FEATURE_PATHS = {
-  FAQ: () => `/${APP_ROUTES_FEATURE.SUPPORT.BASE}/${APP_ROUTES_FEATURE.SUPPORT.FAQ}`
-} as const
+  FAQ: () =>
+    `/${APP_ROUTES_FEATURE.SUPPORT.BASE}/${APP_ROUTES_FEATURE.SUPPORT.FAQ}`,
+} as const;
 
 const APP_ROUTE_PATHS = {
   HOME: () => `/${APP_ROUTES_FEATURE.HOME.BASE}`,
@@ -89,9 +91,8 @@ const APP_ROUTE_PATHS = {
   ...BROWSE_FEATURE_PATHS,
   ...ACCOUNT_FEATURE_PATHS,
   ...CART_FEATURE_PATHS,
-  ...SUPPORT_FEATURE_PATHS
+  ...SUPPORT_FEATURE_PATHS,
 } as const;
-
 
 export const provideAppRoutePaths: Provider = {
   provide: APP_ROUTE_PATHS_TOKEN,
