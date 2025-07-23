@@ -4,6 +4,7 @@ export interface BooksQueryParam {
   tags: string | null;
   authors: string | null;
   categories: string | null;
+  publishers: string | null;
   search: string | null;
   minPrice: number | null;
   maxPrice: number | null;
@@ -16,6 +17,7 @@ export interface BooksQueryParam {
 export enum BooksQueryParamKey {
   CATEGORIES = 'categories',
   AUTHORS = 'authors',
+  PUBLISHERS = 'publishers',
   TAGS = 'tags',
   PAGE = 'page',
   SIZE = 'size',

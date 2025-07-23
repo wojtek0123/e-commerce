@@ -82,6 +82,15 @@
     <lib-accordion-panel [key]="3">
       <lib-accordion-filter-header
         slot="header"
+        header="Publishers"
+        [selectedItemsCount]="selectedPublishers().length"
+        (onClearFilter)="clearSelectedItems('publisher')"
+      />
+      <lib-filter slot="content" libPublishers />
+    </lib-accordion-panel>
+    <lib-accordion-panel [key]="4">
+      <lib-accordion-filter-header
+        slot="header"
         header="Price"
         [selectedItemsCount]="selectedPrices().length"
         (onClearFilter)="clearPriceFilter()"

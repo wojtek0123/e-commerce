@@ -21,7 +21,7 @@ export class BooksApiService {
     tagIn?: BookTag[];
     publishDateFrom?: string;
     publishedDateTo?: string;
-    publisherIds?: string[];
+    publisherIdIn?: string[];
     priceFrom?: number;
     priceTo?: number;
     authorName?: string;
@@ -35,7 +35,7 @@ export class BooksApiService {
       ...params,
       categoryIdIn: params.categoryIdIn?.join(',') ?? '',
       tagIn: params.tagIn?.join(',') ?? '',
-      publisherIds: params.publisherIds?.join(',') ?? '',
+      publisherIdIn: params.publisherIdIn?.join(',') ?? '',
       authorIdIn: params.authorIdIn?.join(',') ?? '',
     };
 

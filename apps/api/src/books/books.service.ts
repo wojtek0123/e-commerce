@@ -58,12 +58,14 @@ export class BooksService {
     size,
     page,
     authorIdIn,
+    publisherIdIn,
     sortBy,
     sortByMode,
   }: {
     categoryIdIn?: string;
     tagIn?: string;
     titleLike?: string;
+    publisherIdIn?: string;
     priceFrom?: string;
     priceTo?: string;
     size?: string;
@@ -79,6 +81,7 @@ export class BooksService {
       const parsedCategories = parseQueryParams(categoryIdIn);
       const parsedTags = parseQueryParams(tagIn);
       const parsedAuthors = parseQueryParams(authorIdIn);
+      const parsedPublishers = parseQueryParams(publisherIdIn);
 
       const parsedSortByMode = ['asc', 'desc'].includes(sortByMode)
         ? sortByMode
@@ -105,6 +108,9 @@ export class BooksService {
           },
           parsedAuthors.length > 0
             ? { authors: { some: { authorId: { in: parsedAuthors } } } }
+            : {},
+          parsedPublishers.length > 0
+            ? { publisher: { id: { in: parsedPublishers } } }
             : {},
         ],
       };

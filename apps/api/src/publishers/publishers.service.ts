@@ -10,7 +10,12 @@ export class PublishersService {
     return this.prisma.publisher.create({ data });
   }
 
-  findAll(opts: { nameLike?: string }) {
+  findAll(opts: {
+    page?: number;
+    size?: number;
+    nameLike?: string;
+    nameIn?: string;
+  }) {
     return this.prisma.publisher.findMany({
       where: {
         name: {
@@ -18,6 +23,8 @@ export class PublishersService {
           mode: 'insensitive',
         },
       },
+      take: opts.size || 20,
+      skip: (opts.size || 20) * ((opts.page || 1) - 1),
     });
   }
 

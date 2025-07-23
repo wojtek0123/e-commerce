@@ -43,9 +43,22 @@ export class PublishersController {
   @Get()
   @ApiOkResponse({ type: PublisherDto, isArray: true })
   @ApiOperation({ summary: 'Get publishers' })
-  @ApiQuery({ name: 'nameLike', type: String, required: false })
-  findAll(@Query('nameLike') nameLike?: string) {
-    return this.publishersService.findAll({ nameLike });
+  @ApiQuery({ name: 'page', required: false, type: Number })
+  @ApiQuery({ name: 'size', required: false, type: Number })
+  @ApiQuery({ name: 'nameLike', required: false, type: String })
+  @ApiQuery({ name: 'nameIn', required: false, type: String })
+  findAll(
+    @Query('page') page?: number,
+    @Query('size') size?: number,
+    @Query('nameLike') nameLike?: string,
+    @Query('nameIn') nameIn?: string,
+  ) {
+    return this.publishersService.findAll({
+      nameLike,
+      nameIn,
+      page: +page,
+      size: +size,
+    });
   }
 
   @Get(':id')

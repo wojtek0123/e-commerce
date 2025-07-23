@@ -3,8 +3,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   inject,
-  Pipe,
-  PipeTransform,
   signal,
 } from '@angular/core';
 import {
@@ -90,6 +88,7 @@ export class LoadFiltersComponent {
     const queryParams: BooksQueryParam = {
       categories: this.parseActiveFilterToQueryParam(filters.get('category')),
       tags: this.parseActiveFilterToQueryParam(filters.get('tag')),
+      publishers: this.parseActiveFilterToQueryParam(filters.get('publisher')),
       authors: this.parseActiveFilterToQueryParam(filters.get('author')),
       minPrice: Number(filters.get('minPrice')?.at(0)?.value) || null,
       maxPrice: Number(filters.get('maxPrice')?.at(0)?.value) || null,

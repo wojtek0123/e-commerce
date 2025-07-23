@@ -28,6 +28,7 @@ import { BreakpointObserver } from '@angular/cdk/layout';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter, map } from 'rxjs';
 import { OverlayBadgeModule } from 'primeng/overlaybadge';
+import { PublishersDirective } from './directives/publishers.directive';
 
 @Component({
   selector: 'lib-filters',
@@ -47,6 +48,7 @@ import { OverlayBadgeModule } from 'primeng/overlaybadge';
     AccordionComponent,
     AccordionPanelComponent,
     OverlayBadgeModule,
+    PublishersDirective,
   ],
   templateUrl: './filters.component.html',
   styleUrl: './filters.component.scss',
@@ -59,6 +61,7 @@ export class FiltersComponent {
   selectedTags = this.#booksStore.selectedTags;
   selectedAuthors = this.#booksStore.selectedAuthors;
   selectedCategories = this.#booksStore.selectedCategories;
+  selectedPublishers = this.#booksStore.selectedPublishers;
   selectedPrices = this.#booksStore.enteredPrices;
   isAnyFilterSelected = this.#booksStore.isAnyFilterSelected;
 

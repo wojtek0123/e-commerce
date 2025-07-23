@@ -2,6 +2,7 @@ import {
   AuthorApiService,
   BooksApiService,
   CategoryApiService,
+  PublisherApiService,
 } from '@e-commerce/client-web/shared/data-access/api-services';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
@@ -11,6 +12,7 @@ import {
   BookTag,
   Category,
   ResponseError,
+  Publisher,
 } from '@e-commerce/shared/api-models';
 import {
   getState,
@@ -103,6 +105,7 @@ export interface BooksState {
       tag: Filter<{ id: BookTag; name: BookTag }>;
       author: Filter<Author>;
       category: Filter<Category>;
+      publisher: Filter<Publisher>;
     };
     singleValue: {
       minPrice: number | null;
@@ -146,6 +149,7 @@ export const initialBooksState: BooksState = {
       tag: { items: [], selectedItems: [] },
       author: { items: [], selectedItems: [] },
       category: { items: [], selectedItems: [] },
+      publisher: { items: [], selectedItems: [] },
     },
     singleValue: {
       minPrice: null,
@@ -160,6 +164,9 @@ export const BooksStore = signalStore(
   withEntities(activeFilterConfig),
   withComputed(({ filters, _activeFiltersEntities }) => ({
     selectedAuthors: computed(() => filters().multiSelect.author.selectedItems),
+    selectedPublishers: computed(
+      () => filters().multiSelect.publisher.selectedItems,
+    ),
     selectedCategories: computed(
       () => filters().multiSelect.category.selectedItems,
     ),
@@ -180,6 +187,7 @@ export const BooksStore = signalStore(
     _bookApi: inject(BooksApiService),
     _authorApi: inject(AuthorApiService),
     _categoryApi: inject(CategoryApiService),
+    _publisherApi: inject(PublisherApiService),
     _messageService: inject(MessageService),
     _router: inject(Router),
     _route: inject(ActivatedRoute),
@@ -204,6 +212,10 @@ export const BooksStore = signalStore(
           const selectedAuthorsId = multiSelect.author.selectedItems.map(
             ({ id }) => id,
           );
+
+          const selectedPublishersId = multiSelect.publisher.selectedItems.map(
+            ({ id }) => id,
+          );
           const selectedCategoriesId = multiSelect.category.selectedItems.map(
             ({ id }) => id,
           );
@@ -216,6 +228,7 @@ export const BooksStore = signalStore(
               tagIn: selectedTags,
               authorIdIn: selectedAuthorsId,
               categoryIdIn: selectedCategoriesId,
+              publisherIdIn: selectedPublishersId,
               page,
               size,
               sortBy: sort.key,
@@ -264,6 +277,45 @@ export const BooksStore = signalStore(
                         author: {
                           ...state.filters.multiSelect.author,
                           items: authors,
+                        },
+                      },
+                    },
+                  }));
+                },
+                error: (error: ResponseError) => {
+                  store._messageService.add({
+                    summary: 'Error',
+                    severity: 'error',
+                    detail:
+                      error?.error?.message ??
+                      'Error occured while getting authors to filter',
+                  });
+                },
+              }),
+            ),
+        ),
+      ),
+    ),
+    getPublishers: rxMethod<{ search: string }>(
+      pipe(
+        switchMap(({ search }) =>
+          store._publisherApi
+            .getAll$({
+              nameLike: search,
+              page: FILTER_PAGE,
+              size: FILTER_SIZE,
+            })
+            .pipe(
+              tapResponse({
+                next: (publishers) => {
+                  patchState(store, (state) => ({
+                    filters: {
+                      ...state.filters,
+                      multiSelect: {
+                        ...state.filters.multiSelect,
+                        publisher: {
+                          ...state.filters.multiSelect.publisher,
+                          items: publishers,
                         },
                       },
                     },
@@ -515,6 +567,10 @@ export const BooksStore = signalStore(
               ...state.filters.multiSelect.author,
               selectedItems: [],
             },
+            publisher: {
+              ...state.filters.multiSelect.publisher,
+              selectedItems: [],
+            },
           },
           singleValue: {
             minPrice: null,
@@ -531,6 +587,7 @@ export const BooksStore = signalStore(
           [BooksQueryParamKey.TAGS]: queryParam.tags || null,
           [BooksQueryParamKey.CATEGORIES]: queryParam.categories || null,
           [BooksQueryParamKey.AUTHORS]: queryParam.authors || null,
+          [BooksQueryParamKey.PUBLISHERS]: queryParam.publishers || null,
           [BooksQueryParamKey.SEARCH]: queryParam.search || null,
           [BooksQueryParamKey.MIN_PRICE]: queryParam.minPrice || null,
           [BooksQueryParamKey.MAX_PRICE]: queryParam.maxPrice || null,
@@ -551,6 +608,7 @@ export const BooksStore = signalStore(
           return {
             categories: queryParam.get(BooksQueryParamKey.CATEGORIES),
             authors: queryParam.get(BooksQueryParamKey.AUTHORS),
+            publishers: queryParam.get(BooksQueryParamKey.PUBLISHERS),
             tags: queryParam.get(BooksQueryParamKey.TAGS),
             page: queryParam.get(BooksQueryParamKey.PAGE),
             size: queryParam.get(BooksQueryParamKey.SIZE),
@@ -572,6 +630,12 @@ export const BooksStore = signalStore(
             authors$: params.authors
               ? store._authorApi.getAll$({
                   nameIn: getSelectedItemsFromQueryParam(params.authors),
+                })
+              : of([]),
+
+            publishers$: params.publishers
+              ? store._publisherApi.getAll$({
+                  nameIn: getSelectedItemsFromQueryParam(params.publishers),
                 })
               : of([]),
 
@@ -610,6 +674,7 @@ export const BooksStore = signalStore(
             map((requests) => ({
               categories: requests.categories$,
               authors: requests.authors$,
+              publishers: requests.publishers$,
               tags: requests.tags$,
               size: requests.size$,
               sortBy: requests.sortBy$,
@@ -634,6 +699,12 @@ export const BooksStore = signalStore(
                 id: a.id,
                 filter:
                   'author' satisfies MultiSelectFilters as MultiSelectFilters,
+                value: a.name,
+              })),
+              ...params.publishers.map((a) => ({
+                id: a.id,
+                filter:
+                  'publisher' satisfies MultiSelectFilters as MultiSelectFilters,
                 value: a.name,
               })),
               ...params.tags.map((t) => ({
@@ -686,6 +757,10 @@ export const BooksStore = signalStore(
                       ...state.filters.multiSelect.author,
                       selectedItems: params.authors,
                     },
+                    publisher: {
+                      ...state.filters.multiSelect.publisher,
+                      selectedItems: params.publishers,
+                    },
                     tag: {
                       ...state.filters.multiSelect.tag,
                       selectedItems: params.tags,
@@ -723,6 +798,9 @@ export const BooksStore = signalStore(
       const categories = multiSelect.category.selectedItems
         .map(({ name }) => name)
         .join(',');
+      const publishers = multiSelect.publisher.selectedItems
+        .map(({ name }) => name)
+        .join(',');
       const search = singleValue.search;
       const minPrice = singleValue.minPrice;
       const maxPrice = singleValue.maxPrice;
@@ -732,6 +810,7 @@ export const BooksStore = signalStore(
       store.setQueryParam({
         tags,
         categories,
+        publishers,
         authors,
         search,
         minPrice,
@@ -750,6 +829,7 @@ export const BooksStore = signalStore(
             tags: queryParam.tags,
             categories: queryParam.categories,
             authors: queryParam.authors,
+            publishers: queryParam.publishers,
             search: queryParam.search,
             minPrice: queryParam.minPrice,
             maxPrice: queryParam.maxPrice,
@@ -766,6 +846,7 @@ export const BooksStore = signalStore(
       store.getTags('');
       store.getCategories({ search: '' });
       store.getAuthors({ search: '' });
+      store.getPublishers({ search: '' });
     },
   })),
   withMethods((store) => ({
@@ -776,6 +857,7 @@ export const BooksStore = signalStore(
           [BooksQueryParamKey.TAGS]: queryParam.tags,
           [BooksQueryParamKey.CATEGORIES]: queryParam.categories,
           [BooksQueryParamKey.AUTHORS]: queryParam.authors,
+          [BooksQueryParamKey.PUBLISHERS]: queryParam.publishers,
           [BooksQueryParamKey.SEARCH]: queryParam.search || null,
           [BooksQueryParamKey.MIN_PRICE]: queryParam.minPrice,
           [BooksQueryParamKey.MAX_PRICE]: queryParam.maxPrice,
@@ -840,6 +922,10 @@ export const BooksStore = signalStore(
           ),
           categories: buildSelectedItemsQueryParam(
             store.selectedCategories(),
+            'name',
+          ),
+          publishers: buildSelectedItemsQueryParam(
+            store.selectedPublishers(),
             'name',
           ),
           search: store.search(),

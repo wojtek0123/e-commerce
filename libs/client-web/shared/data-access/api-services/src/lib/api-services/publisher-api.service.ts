@@ -4,12 +4,12 @@ import { API_URL } from '@e-commerce/client-web/shared/app-config';
 import { Pagination, Author } from '@e-commerce/shared/api-models';
 
 @Injectable({ providedIn: 'root' })
-export class AuthorApiService {
+export class PublisherApiService {
   private http = inject(HttpClient);
   private apiUrl = inject(API_URL);
 
   public getAll$(params: { nameLike?: string; nameIn?: string } & Pagination) {
-    return this.http.get<Author[]>(`${this.apiUrl}/authors`, {
+    return this.http.get<Author[]>(`${this.apiUrl}/publishers`, {
       params: { ...params },
     });
   }
