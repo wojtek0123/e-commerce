@@ -28,7 +28,7 @@
         [ngModel]="searchText()"
         (ngModelChange)="searchText.set($event)"
         (keydown.enter)="search()"
-        class="pr-12 h-10"
+        class="pr-12 h-10 w-full"
         placeholder="Search by title"
       />
       @if (!!searchText()) {
