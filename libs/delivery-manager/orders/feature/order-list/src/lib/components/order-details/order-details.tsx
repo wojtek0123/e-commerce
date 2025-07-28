@@ -55,7 +55,7 @@ export function OrderDetails({
     staleTime: Infinity,
   });
 
-  const { mutate, isLoading: isUpdating } = useMutation<
+  const { mutate, isPending: isUpdating } = useMutation<
     void,
     Error,
     { orderId: Order['id']; status: OrderStatus }
@@ -217,7 +217,7 @@ export function OrderDetails({
                 Name
               </span>
               <span className="text-base !text-start">
-                {order.shippingMethod.name}
+                {order.orderShippingMethod.name}
               </span>
             </span>
 
@@ -226,7 +226,7 @@ export function OrderDetails({
                 Price
               </span>
               <span className="text-base !text-start">
-                {order.shippingMethod.price}
+                {order.orderShippingMethod.price}
               </span>
             </span>
           </div>
