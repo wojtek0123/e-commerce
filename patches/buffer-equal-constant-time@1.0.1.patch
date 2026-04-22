@@ -1,0 +1,37 @@
+diff --git a/index.js b/index.js
+index 5462c1f830bdbe79bf2b1fcfd811cd9799b4dd11..8603c81141f661e0936e2a05ecefcfc32d853342 100644
+--- a/index.js
++++ b/index.js
+@@ -1,7 +1,8 @@
+ /*jshint node:true */
+ 'use strict';
+ var Buffer = require('buffer').Buffer; // browserify
+-var SlowBuffer = require('buffer').SlowBuffer;
++// SlowBuffer was removed in Node.js v22+; fall back to null to avoid runtime errors
++var SlowBuffer = require('buffer').SlowBuffer || null;
+ 
+ module.exports = bufferEq;
+ 
+@@ -28,14 +29,19 @@ function bufferEq(a, b) {
+ }
+ 
+ bufferEq.install = function() {
+-  Buffer.prototype.equal = SlowBuffer.prototype.equal = function equal(that) {
++  Buffer.prototype.equal = function equal(that) {
+     return bufferEq(this, that);
+   };
++  if (SlowBuffer) {
++    SlowBuffer.prototype.equal = Buffer.prototype.equal;
++  }
+ };
+ 
+ var origBufEqual = Buffer.prototype.equal;
+-var origSlowBufEqual = SlowBuffer.prototype.equal;
++var origSlowBufEqual = SlowBuffer ? SlowBuffer.prototype.equal : undefined;
+ bufferEq.restore = function() {
+   Buffer.prototype.equal = origBufEqual;
+-  SlowBuffer.prototype.equal = origSlowBufEqual;
++  if (SlowBuffer) {
++    SlowBuffer.prototype.equal = origSlowBufEqual;
++  }
+ };
