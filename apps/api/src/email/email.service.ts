@@ -37,8 +37,6 @@ export class EmailService {
 
     transport.use('compile', hbs(x));
 
-    // handlebars.tem
-
     const options: nodemailer.SendMailOptions = {
       from: this.config.get('MAIL_USER'),
       to: recipients,

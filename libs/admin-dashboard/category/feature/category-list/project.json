@@ -3,17 +3,11 @@
   "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/admin-dashboard/category/feature/category-list/src",
   "projectType": "library",
-  "tags": [
-    "scope:admin-dashboard",
-    "type:feature",
-    "domain:category"
-  ],
+  "tags": ["scope:admin-dashboard", "type:feature", "domain:category"],
   "targets": {
     "build": {
       "executor": "@nx/vite:build",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
         "outputPath": "dist/libs/admin-dashboard/category/feature/category-list"
@@ -28,10 +22,8 @@
       }
     },
     "test": {
-      "executor": "@nx/vite:test",
-      "outputs": [
-        "{options.reportsDirectory}"
-      ],
+      "executor": "@nx/vitest:test",
+      "outputs": ["{options.reportsDirectory}"],
       "options": {
         "reportsDirectory": "../../../../../coverage/libs/admin-dashboard/category/feature/category-list"
       }
